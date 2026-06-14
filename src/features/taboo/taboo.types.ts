@@ -3,7 +3,7 @@ import type { GameParticipant } from '../players/players.types'
 
 export type TabooMode = 'individual' | 'teams'
 export type TabooSkipLimit = 'unlimited' | 1 | 3 | 5
-export type TabooPhase = 'turn-intro' | 'playing' | 'turn-summary' | 'finished'
+export type TabooPhase = 'turn-intro' | 'playing' | 'turn-summary' | 'round-summary' | 'finished'
 export type TabooFinishedReason = 'turns-complete' | 'deck-exhausted'
 
 export type TabooConfig = {

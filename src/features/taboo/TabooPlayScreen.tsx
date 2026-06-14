@@ -6,7 +6,7 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { AppHaptics } from '../../lib/capacitor/haptics'
 import { cn } from '../../lib/utils/cn'
-import { canSkip, getCurrentEntityName, getRemainingSeconds, getSkipsRemaining } from './taboo.session'
+import { canSkip, getCurrentEntityName, getCurrentRoundNumber, getRemainingSeconds, getSkipsRemaining } from './taboo.session'
 import { useTabooStore } from './taboo.store'
 import { useTabooInitialization } from './useTabooInitialization'
 
@@ -33,17 +33,23 @@ export function TabooPlayScreen() {
   if (!deck || !session) return <div className="p-6 text-slate-400">Carregando partida...</div>
   const entityName = getCurrentEntityName(session)
   const card = deck.cards.find((item) => item.id === session.currentCardId)
+  const currentRound = getCurrentRoundNumber(session)
 
   if (session.phase === 'turn-intro') {
-    return <div className="min-h-dvh pb-10"><Header backTo="/games/taboo" title={`Turno ${session.currentTurnIndex + 1} de ${session.turnQueue.length}`} /><section className="px-5 py-10 text-center">
-      <Card className="mx-auto max-w-lg border-emerald-400/30 bg-emerald-500/10 p-6"><p className="text-sm font-black uppercase tracking-[0.18em] text-amber-300">Adivinhador da vez</p><h1 className="mt-2 text-4xl font-black text-emerald-200">{entityName}</h1><div className="mt-6 rounded-2xl border border-amber-300/30 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100"><p className="font-black">Atenção!</p><p>Passe o celular para quem vai dar as dicas. {entityName} NÃO deve olhar a tela.</p></div><p className="mt-5 text-sm text-slate-400">Vocês terão <strong>{session.config.turnDurationSeconds} segundos</strong> para acertar o máximo de cards.</p><Button className="mt-6 w-full" size="lg" onClick={async () => { await beginTurn(); await AppHaptics.light() }}>Começar turno</Button></Card>
+    return <div className="min-h-dvh pb-10"><Header backTo="/games/taboo" title={`Rodada ${currentRound} de ${session.config.roundsPerEntity}`} /><section className="px-5 py-10 text-center">
+      <Card className="mx-auto max-w-lg border-emerald-400/30 bg-emerald-500/10 p-6"><p className="text-sm font-black uppercase tracking-[0.18em] text-amber-300">Adivinhador da vez</p><h1 className="mt-2 text-4xl font-black text-emerald-200">{entityName}</h1><p className="mt-2 text-sm font-bold text-slate-300">Turno {session.currentTurnIndex + 1} de {session.turnQueue.length}</p><div className="mt-6 rounded-2xl border border-amber-300/30 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100"><p className="font-black">Atenção!</p><p>Passe o celular para quem vai dar as dicas. {entityName} NÃO deve olhar a tela.</p></div><p className="mt-5 text-sm text-slate-400">Vocês terão <strong>{session.config.turnDurationSeconds} segundos</strong> para acertar o máximo de cards.</p><Button className="mt-6 w-full" size="lg" onClick={async () => { await beginTurn(); await AppHaptics.light() }}>Começar turno</Button></Card>
       <Scoreboard session={session} />
     </section></div>
   }
 
   if (session.phase === 'turn-summary' && session.lastTurnResult) {
+    const endOfRound = (session.currentTurnIndex + 1) % (session.config.mode === 'individual' ? session.participants.length : session.teams.length) === 0
+    return <div className="min-h-dvh pb-10"><Header backTo="/games/taboo" title="Resumo do turno" /><section className="px-5 py-8 text-center"><Trophy className="mx-auto text-amber-300" size={56} /><h1 className="mt-4 text-3xl font-black">{entityName}</h1><Card className="mx-auto mt-6 max-w-lg p-5"><div className="grid grid-cols-3 gap-3 text-center"><Metric label="Acertos" value={session.lastTurnResult.correct} /><Metric label="Pulos" value={session.lastTurnResult.skips} /><Metric label="Pontos" value={session.lastTurnResult.points} /></div></Card><Scoreboard session={session} /><Button className="mx-auto mt-6 w-full max-w-lg" size="lg" onClick={async () => { const finished = await continueSummary(); if (finished) navigate('/games/taboo/result'); else await AppHaptics.light() }}>{endOfRound ? 'Ver resumo da rodada' : 'Próximo turno'}<ArrowRight size={19} /></Button></section></div>
+  }
+
+  if (session.phase === 'round-summary') {
     const finishing = session.pendingFinishedReason !== null
-    return <div className="min-h-dvh pb-10"><Header backTo="/games/taboo" title="Resumo do turno" /><section className="px-5 py-8 text-center"><Trophy className="mx-auto text-amber-300" size={56} /><h1 className="mt-4 text-3xl font-black">{entityName}</h1><Card className="mx-auto mt-6 max-w-lg p-5"><div className="grid grid-cols-3 gap-3 text-center"><Metric label="Acertos" value={session.lastTurnResult.correct} /><Metric label="Pulos" value={session.lastTurnResult.skips} /><Metric label="Pontos" value={session.lastTurnResult.points} /></div></Card><Scoreboard session={session} /><Button className="mx-auto mt-6 w-full max-w-lg" size="lg" onClick={async () => { const finished = await continueSummary(); if (finished) navigate('/games/taboo/result'); else await AppHaptics.light() }}>{finishing ? 'Ver resultado' : 'Próximo turno'}<ArrowRight size={19} /></Button></section></div>
+    return <div className="min-h-dvh pb-10"><Header backTo="/games/taboo" title={`Resumo da rodada ${currentRound}`} /><section className="px-5 py-8 text-center"><Trophy className="mx-auto text-amber-300" size={56} /><h1 className="mt-4 text-3xl font-black">Rodada {currentRound} concluída</h1><p className="mt-2 text-slate-400">Todos já foram adivinhadores nesta rodada.</p><Scoreboard session={session} /><Button className="mx-auto mt-6 w-full max-w-lg" size="lg" onClick={async () => { const finished = await continueSummary(); if (finished) navigate('/games/taboo/result'); else await AppHaptics.light() }}>{finishing ? 'Ver resultado' : 'Próxima rodada'}<ArrowRight size={19} /></Button></section></div>
   }
 
   if (!card) return <div className="p-6 text-slate-400">Não foi possível localizar o card atual.</div>

@@ -15,6 +15,7 @@ import { useTabooInitialization } from './useTabooInitialization'
 
 const durations: TabooConfig['turnDurationSeconds'][] = [30, 60, 90, 120]
 const skipLimits: TabooSkipLimit[] = ['unlimited', 1, 3, 5]
+const roundOptions = [1, 2, 3, 4, 5]
 
 export function TabooSetupScreen() {
   const navigate = useNavigate()
@@ -22,6 +23,7 @@ export function TabooSetupScreen() {
   const start = useTabooStore((state) => state.start)
   const [mode, setMode] = useState<TabooMode>('individual')
   const [duration, setDuration] = useState<TabooConfig['turnDurationSeconds']>(60)
+  const [rounds, setRounds] = useState(3)
   const [allowSkips, setAllowSkips] = useState(true)
   const [skipLimit, setSkipLimit] = useState<TabooSkipLimit>(3)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
@@ -53,12 +55,13 @@ export function TabooSetupScreen() {
     const participants = [...selectedPlayers.map(playerToParticipant), ...guests]
     if (mode === 'individual' && (participants.length < 2 || participants.length > 12)) { setError('Selecione entre 2 e 12 jogadores.'); return }
     if (mode === 'teams' && teams.length < 2) { setError('Crie pelo menos 2 times.'); return }
-    await start(participants, teams, { mode, turnDurationSeconds: duration, allowSkips, skipLimit, roundsPerEntity: 1 })
+    await start(participants, teams, { mode, turnDurationSeconds: duration, allowSkips, skipLimit, roundsPerEntity: rounds })
     navigate('/games/taboo/play')
   }
   const canStart = mode === 'individual' ? count >= 2 : teams.length >= 2
   return <div className="min-h-dvh pb-10"><Header backTo="/games/taboo" title="Configurar partida" /><section className="px-5 py-6">
     <Card className="p-5"><h2 className="text-lg font-black">Modo de jogo</h2><div className="mt-4 grid grid-cols-2 gap-3"><Button size="lg" variant={mode === 'individual' ? 'primary' : 'secondary'} onClick={() => setMode('individual')}>Individual</Button><Button size="lg" variant={mode === 'teams' ? 'primary' : 'secondary'} onClick={() => setMode('teams')}>Times</Button></div></Card>
+    <Card className="mt-5 p-5"><h2 className="text-lg font-black">Rodadas</h2><p className="mt-1 text-sm text-slate-400">Cada jogador será o adivinhador uma vez por rodada.</p><div className="mt-4 grid grid-cols-5 gap-2">{roundOptions.map((item) => <Button className={cn(item === rounds && 'ring-2 ring-amber-300')} key={item} variant={item === rounds ? 'primary' : 'secondary'} onClick={() => setRounds(item)}>{item}</Button>)}</div></Card>
     <Card className="mt-5 p-5"><h2 className="text-lg font-black">Tempo por turno</h2><div className="mt-4 grid grid-cols-4 gap-2">{durations.map((item) => <Button className={cn(item === duration && 'ring-2 ring-amber-300')} key={item} variant={item === duration ? 'primary' : 'secondary'} onClick={() => setDuration(item)}>{item}s</Button>)}</div></Card>
     <Card className="mt-5 p-5"><div className="flex items-center justify-between gap-4"><h2 className="text-lg font-black">Permitir pulos</h2><button aria-pressed={allowSkips} className={cn('h-7 w-12 rounded-full p-1 transition', allowSkips ? 'bg-emerald-500' : 'bg-white/15')} onClick={() => setAllowSkips((current) => !current)} type="button"><span className={cn('block size-5 rounded-full bg-white transition', allowSkips && 'translate-x-5')} /></button></div><div className="mt-4 grid grid-cols-4 gap-2">{skipLimits.map((item) => <Button disabled={!allowSkips} key={String(item)} variant={item === skipLimit ? 'primary' : 'secondary'} onClick={() => setSkipLimit(item)}>{item === 'unlimited' ? 'Ilimitado' : item}</Button>)}</div></Card>
     {mode === 'individual' ? <section className="mt-5"><div className="flex items-center justify-between gap-3"><div><h1 className="text-2xl font-black">Jogadores</h1><p className="text-sm text-slate-400">{count}/12 selecionados</p></div><Button variant="secondary" onClick={() => navigate('/players')}><Settings2 size={18} />Minha Galera</Button></div>

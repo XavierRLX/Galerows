@@ -6,17 +6,655 @@
   "version": 1,
   "title": "Palavras proibidas iniciais",
   "cards": [
-    {"id":"churrasqueira","word":"Churrasqueira","category":"Casa","difficulty":"easy","forbiddenWords":["Carne","Churrasco","Fogo","Carvão","Grelha"]},
-    {"id":"espremedor","word":"Espremedor","category":"Cozinha","difficulty":"easy","forbiddenWords":["Suco","Laranja","Apertar","Fruta","Cozinha"]},
-    {"id":"praia","word":"Praia","category":"Lugares","difficulty":"easy","forbiddenWords":["Areia","Mar","Sol","Onda","Guarda-sol"]},
-    {"id":"cinema","word":"Cinema","category":"Entretenimento","difficulty":"easy","forbiddenWords":["Filme","Tela","Pipoca","Ingresso","Sessão"]},
-    {"id":"dentista","word":"Dentista","category":"Profissões","difficulty":"medium","forbiddenWords":["Dente","Consultório","Cárie","Aparelho","Boca"]},
-    {"id":"biblioteca","word":"Biblioteca","category":"Lugares","difficulty":"medium","forbiddenWords":["Livro","Ler","Silêncio","Estante","Empréstimo"]},
-    {"id":"astronauta","word":"Astronauta","category":"Profissões","difficulty":"medium","forbiddenWords":["Espaço","Foguete","Lua","NASA","Capacete"]},
-    {"id":"carnaval","word":"Carnaval","category":"Festas","difficulty":"easy","forbiddenWords":["Folia","Desfile","Samba","Fantasia","Bloco"]},
-    {"id":"internet","word":"Internet","category":"Tecnologia","difficulty":"easy","forbiddenWords":["Wi-Fi","Site","Rede","Online","Navegar"]},
-    {"id":"geladeira","word":"Geladeira","category":"Casa","difficulty":"easy","forbiddenWords":["Frio","Comida","Cozinha","Freezer","Porta"]},
-    {"id":"montanha-russa","word":"Montanha-russa","category":"Diversão","difficulty":"medium","forbiddenWords":["Parque","Carrinho","Subida","Descida","Adrenalina"]},
-    {"id":"guarda-chuva","word":"Guarda-chuva","category":"Objetos","difficulty":"easy","forbiddenWords":["Chuva","Molhar","Abrir","Cabo","Temporal"]}
+    {
+      "id": "praia",
+      "word": "Praia",
+      "category": "Lugares",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Areia",
+        "Mar",
+        "Sol",
+        "Onda",
+        "Guarda-sol"
+      ]
+    },
+    {
+      "id": "pizza",
+      "word": "Pizza",
+      "category": "Comida",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Queijo",
+        "Massa",
+        "Molho",
+        "Calabresa",
+        "Forno"
+      ]
+    },
+    {
+      "id": "cachorro",
+      "word": "Cachorro",
+      "category": "Animais",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Latir",
+        "Osso",
+        "Coleira",
+        "Rabo",
+        "Pet"
+      ]
+    },
+    {
+      "id": "gato",
+      "word": "Gato",
+      "category": "Animais",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Miar",
+        "Bigode",
+        "Arranhar",
+        "Leite",
+        "Felino"
+      ]
+    },
+    {
+      "id": "futebol",
+      "word": "Futebol",
+      "category": "Esportes",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Bola",
+        "Gol",
+        "Campo",
+        "Time",
+        "Juiz"
+      ]
+    },
+    {
+      "id": "escola",
+      "word": "Escola",
+      "category": "Lugares",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Aluno",
+        "Professor",
+        "Sala",
+        "Prova",
+        "Caderno"
+      ]
+    },
+    {
+      "id": "celular",
+      "word": "Celular",
+      "category": "Tecnologia",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Telefone",
+        "Tela",
+        "Aplicativo",
+        "Mensagem",
+        "Bateria"
+      ]
+    },
+    {
+      "id": "bicicleta",
+      "word": "Bicicleta",
+      "category": "Objetos",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Pedal",
+        "Roda",
+        "Guidão",
+        "Corrente",
+        "Freio"
+      ]
+    },
+    {
+      "id": "sorvete",
+      "word": "Sorvete",
+      "category": "Comida",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Gelado",
+        "Casquinha",
+        "Sabor",
+        "Picolé",
+        "Chocolate"
+      ]
+    },
+    {
+      "id": "cinema",
+      "word": "Cinema",
+      "category": "Entretenimento",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Filme",
+        "Pipoca",
+        "Tela",
+        "Ingresso",
+        "Poltrona"
+      ]
+    },
+    {
+      "id": "hospital",
+      "word": "Hospital",
+      "category": "Lugares",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Médico",
+        "Enfermeiro",
+        "Paciente",
+        "Remédio",
+        "Emergência"
+      ]
+    },
+    {
+      "id": "supermercado",
+      "word": "Supermercado",
+      "category": "Lugares",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Compra",
+        "Carrinho",
+        "Caixa",
+        "Prateleira",
+        "Mercado"
+      ]
+    },
+    {
+      "id": "aviao",
+      "word": "Avião",
+      "category": "Transportes",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Voar",
+        "Piloto",
+        "Asa",
+        "Aeroporto",
+        "Passageiro"
+      ]
+    },
+    {
+      "id": "chuva",
+      "word": "Chuva",
+      "category": "Natureza",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Água",
+        "Nuvem",
+        "Temporal",
+        "Molhar",
+        "Goteira"
+      ]
+    },
+    {
+      "id": "aniversario",
+      "word": "Aniversário",
+      "category": "Eventos",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Bolo",
+        "Parabéns",
+        "Vela",
+        "Festa",
+        "Presente"
+      ]
+    },
+    {
+      "id": "cafe",
+      "word": "Café",
+      "category": "Comida",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Bebida",
+        "Xícara",
+        "Acordar",
+        "Leite",
+        "Grão"
+      ]
+    },
+    {
+      "id": "livro",
+      "word": "Livro",
+      "category": "Objetos",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Página",
+        "Ler",
+        "Capa",
+        "História",
+        "Biblioteca"
+      ]
+    },
+    {
+      "id": "carro",
+      "word": "Carro",
+      "category": "Transportes",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Motor",
+        "Roda",
+        "Volante",
+        "Dirigir",
+        "Gasolina"
+      ]
+    },
+    {
+      "id": "computador",
+      "word": "Computador",
+      "category": "Tecnologia",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Teclado",
+        "Mouse",
+        "Tela",
+        "Internet",
+        "Programa"
+      ]
+    },
+    {
+      "id": "violao",
+      "word": "Violão",
+      "category": "Música",
+      "difficulty": "easy",
+      "forbiddenWords": [
+        "Corda",
+        "Tocar",
+        "Música",
+        "Guitarra",
+        "Acorde"
+      ]
+    },
+    {
+      "id": "maquina-de-lavar",
+      "word": "Máquina de lavar",
+      "category": "Casa",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Roupa",
+        "Sabão",
+        "Centrifugar",
+        "Tanque",
+        "Limpar"
+      ]
+    },
+    {
+      "id": "cartao-de-credito",
+      "word": "Cartão de crédito",
+      "category": "Objetos",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Banco",
+        "Compra",
+        "Limite",
+        "Senha",
+        "Fatura"
+      ]
+    },
+    {
+      "id": "elevador",
+      "word": "Elevador",
+      "category": "Objetos",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Andar",
+        "Prédio",
+        "Subir",
+        "Descer",
+        "Botão"
+      ]
+    },
+    {
+      "id": "aeroporto",
+      "word": "Aeroporto",
+      "category": "Lugares",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Avião",
+        "Viagem",
+        "Embarque",
+        "Mala",
+        "Portão"
+      ]
+    },
+    {
+      "id": "bombeiro",
+      "word": "Bombeiro",
+      "category": "Profissões",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Fogo",
+        "Incêndio",
+        "Mangueira",
+        "Resgate",
+        "Caminhão"
+      ]
+    },
+    {
+      "id": "farmacia",
+      "word": "Farmácia",
+      "category": "Lugares",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Remédio",
+        "Receita",
+        "Balconista",
+        "Dor",
+        "Xarope"
+      ]
+    },
+    {
+      "id": "carnaval",
+      "word": "Carnaval",
+      "category": "Eventos",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Folia",
+        "Samba",
+        "Fantasia",
+        "Bloco",
+        "Desfile"
+      ]
+    },
+    {
+      "id": "receita",
+      "word": "Receita",
+      "category": "Comida",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Cozinhar",
+        "Ingredientes",
+        "Modo",
+        "Médico",
+        "Bolo"
+      ]
+    },
+    {
+      "id": "restaurante",
+      "word": "Restaurante",
+      "category": "Lugares",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Garçom",
+        "Cardápio",
+        "Mesa",
+        "Pedido",
+        "Conta"
+      ]
+    },
+    {
+      "id": "controle-remoto",
+      "word": "Controle remoto",
+      "category": "Objetos",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Televisão",
+        "Botão",
+        "Canal",
+        "Pilhas",
+        "Volume"
+      ]
+    },
+    {
+      "id": "capacete",
+      "word": "Capacete",
+      "category": "Objetos",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Cabeça",
+        "Moto",
+        "Proteção",
+        "Segurança",
+        "Queda"
+      ]
+    },
+    {
+      "id": "guarda-chuva",
+      "word": "Guarda-chuva",
+      "category": "Objetos",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Chuva",
+        "Molhar",
+        "Abrir",
+        "Cabo",
+        "Sombrinha"
+      ]
+    },
+    {
+      "id": "micro-ondas",
+      "word": "Micro-ondas",
+      "category": "Casa",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Esquentar",
+        "Comida",
+        "Prato",
+        "Tempo",
+        "Cozinha"
+      ]
+    },
+    {
+      "id": "rede-social",
+      "word": "Rede social",
+      "category": "Tecnologia",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Postar",
+        "Curtir",
+        "Seguidor",
+        "Foto",
+        "Perfil"
+      ]
+    },
+    {
+      "id": "parque-de-diversoes",
+      "word": "Parque de diversões",
+      "category": "Entretenimento",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Brinquedo",
+        "Montanha-russa",
+        "Ingresso",
+        "Roda-gigante",
+        "Fila"
+      ]
+    },
+    {
+      "id": "academia",
+      "word": "Academia",
+      "category": "Lugares",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Treino",
+        "Peso",
+        "Esteira",
+        "Músculo",
+        "Exercício"
+      ]
+    },
+    {
+      "id": "chaveiro",
+      "word": "Chaveiro",
+      "category": "Profissões",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Chave",
+        "Fechadura",
+        "Porta",
+        "Cópia",
+        "Abrir"
+      ]
+    },
+    {
+      "id": "passagem",
+      "word": "Passagem",
+      "category": "Viagem",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Ônibus",
+        "Avião",
+        "Bilhete",
+        "Comprar",
+        "Destino"
+      ]
+    },
+    {
+      "id": "barbeiro",
+      "word": "Barbeiro",
+      "category": "Profissões",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Cabelo",
+        "Barba",
+        "Tesoura",
+        "Máquina",
+        "Corte"
+      ]
+    },
+    {
+      "id": "foguete",
+      "word": "Foguete",
+      "category": "Tecnologia",
+      "difficulty": "medium",
+      "forbiddenWords": [
+        "Espaço",
+        "Lançamento",
+        "Astronauta",
+        "Lua",
+        "Propulsão"
+      ]
+    },
+    {
+      "id": "criptomoeda",
+      "word": "Criptomoeda",
+      "category": "Tecnologia",
+      "difficulty": "hard",
+      "forbiddenWords": [
+        "Bitcoin",
+        "Blockchain",
+        "Digital",
+        "Carteira",
+        "Investimento"
+      ]
+    },
+    {
+      "id": "fotossintese",
+      "word": "Fotossíntese",
+      "category": "Ciência",
+      "difficulty": "hard",
+      "forbiddenWords": [
+        "Planta",
+        "Luz",
+        "Sol",
+        "Oxigênio",
+        "Clorofila"
+      ]
+    },
+    {
+      "id": "eclipse",
+      "word": "Eclipse",
+      "category": "Natureza",
+      "difficulty": "hard",
+      "forbiddenWords": [
+        "Lua",
+        "Sol",
+        "Sombra",
+        "Astronomia",
+        "Escurecer"
+      ]
+    },
+    {
+      "id": "gps",
+      "word": "GPS",
+      "category": "Tecnologia",
+      "difficulty": "hard",
+      "forbiddenWords": [
+        "Localização",
+        "Mapa",
+        "Satélite",
+        "Rota",
+        "Navegação"
+      ]
+    },
+    {
+      "id": "algoritmo",
+      "word": "Algoritmo",
+      "category": "Tecnologia",
+      "difficulty": "hard",
+      "forbiddenWords": [
+        "Código",
+        "Programa",
+        "Passo",
+        "Computador",
+        "Lógica"
+      ]
+    },
+    {
+      "id": "deserto",
+      "word": "Deserto",
+      "category": "Natureza",
+      "difficulty": "hard",
+      "forbiddenWords": [
+        "Areia",
+        "Calor",
+        "Cacto",
+        "Camelo",
+        "Seco"
+      ]
+    },
+    {
+      "id": "labirinto",
+      "word": "Labirinto",
+      "category": "Lugares",
+      "difficulty": "hard",
+      "forbiddenWords": [
+        "Caminho",
+        "Saída",
+        "Perdido",
+        "Parede",
+        "Enigma"
+      ]
+    },
+    {
+      "id": "orquestra",
+      "word": "Orquestra",
+      "category": "Música",
+      "difficulty": "hard",
+      "forbiddenWords": [
+        "Músicos",
+        "Maestro",
+        "Instrumentos",
+        "Sinfonia",
+        "Concerto"
+      ]
+    },
+    {
+      "id": "xadrez",
+      "word": "Xadrez",
+      "category": "Jogos",
+      "difficulty": "hard",
+      "forbiddenWords": [
+        "Rei",
+        "Rainha",
+        "Peão",
+        "Tabuleiro",
+        "Xeque"
+      ]
+    },
+    {
+      "id": "vacina",
+      "word": "Vacina",
+      "category": "Saúde",
+      "difficulty": "hard",
+      "forbiddenWords": [
+        "Injeção",
+        "Doença",
+        "Imunidade",
+        "Dose",
+        "Posto"
+      ]
+    }
   ]
 }

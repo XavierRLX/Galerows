@@ -5,7 +5,7 @@ import type { GameParticipant } from '../players/players.types'
 import type { TabooDeck } from './content/tabooContent.types'
 import type { TabooConfig, TabooFinishedReason, TabooOpeningHistory, TabooSession, TabooSkipLimit, TabooTeam, TabooTurnResult } from './taboo.types'
 
-const PHASES = ['turn-intro', 'playing', 'turn-summary', 'finished'] as const
+const PHASES = ['turn-intro', 'playing', 'turn-summary', 'round-summary', 'finished'] as const
 const MODES = ['individual', 'teams'] as const
 const DURATIONS = [30, 60, 90, 120] as const
 const SKIP_LIMITS: TabooSkipLimit[] = ['unlimited', 1, 3, 5]
@@ -59,40 +59,52 @@ export function beginTabooTurn(session: TabooSession, now: Date = new Date()) {
   return touch({ ...session, phase: 'playing', turnStartedAt: now.toISOString() })
 }
 
-export function recordCorrectGuess(session: TabooSession) {
+export function recordCorrectGuess(session: TabooSession, deck?: TabooDeck) {
   if (session.phase !== 'playing') return session
   const currentEntityId = getCurrentEntityId(session)
   if (!currentEntityId) return session
   const scoringId = currentEntityId
   if (!scoringId || !canScore(session, scoringId)) return session
   const scores = { ...session.scores, [scoringId]: (session.scores[scoringId] ?? 0) + 1 }
-  const advanced = advanceCard({ ...session, scores, currentTurnCorrect: session.currentTurnCorrect + 1 })
+  const advanced = advanceCard({ ...session, scores, currentTurnCorrect: session.currentTurnCorrect + 1 }, deck)
   if (!advanced.currentCardId) return finishTurn(advanced, 'deck-exhausted')
   return touch(advanced)
 }
 
-export function skipTabooCard(session: TabooSession) {
+export function skipTabooCard(session: TabooSession, deck?: TabooDeck) {
   if (session.phase !== 'playing' || !canSkip(session)) return session
-  const advanced = advanceCard({ ...session, skipsUsedThisTurn: session.skipsUsedThisTurn + 1 })
+  const advanced = advanceCard({ ...session, skipsUsedThisTurn: session.skipsUsedThisTurn + 1 }, deck)
   if (!advanced.currentCardId) return finishTurn(advanced, 'deck-exhausted')
   return touch(advanced)
 }
 
-export function endTabooTurn(session: TabooSession, reason?: TabooFinishedReason) {
+export function endTabooTurn(session: TabooSession, reason?: TabooFinishedReason, deck?: TabooDeck) {
   if (session.phase !== 'playing') return session
-  const advanced = session.currentCardId ? advanceCard(session) : session
+  const advanced = session.currentCardId ? advanceCard(session, deck) : session
   const finishedReason = reason ?? (!advanced.currentCardId ? 'deck-exhausted' : nextTurnIndex(advanced) >= advanced.turnQueue.length ? 'turns-complete' : null)
   return finishTurn(advanced, finishedReason)
 }
 
-export function finishExpiredTurn(session: TabooSession, now: Date = new Date()) {
+export function finishExpiredTurn(session: TabooSession, now: Date = new Date(), deck?: TabooDeck) {
   if (session.phase !== 'playing' || getRemainingSeconds(session, now) > 0) return session
-  return endTabooTurn(session)
+  return endTabooTurn(session, undefined, deck)
 }
 
 export function continueAfterTabooSummary(session: TabooSession) {
+  if (session.phase === 'round-summary') {
+    if (session.pendingFinishedReason) return touch({ ...session, phase: 'finished', finishedReason: session.pendingFinishedReason, pendingFinishedReason: null })
+    return touch({
+      ...session,
+      phase: 'turn-intro',
+      currentTurnIndex: nextTurnIndex(session),
+      turnStartedAt: null,
+      currentTurnCorrect: 0,
+      skipsUsedThisTurn: 0,
+      lastTurnResult: null,
+    })
+  }
   if (session.phase !== 'turn-summary' || !session.lastTurnResult) return session
-  if (session.pendingFinishedReason) return touch({ ...session, phase: 'finished', finishedReason: session.pendingFinishedReason, pendingFinishedReason: null })
+  if (isEndOfRound(session)) return touch({ ...session, phase: 'round-summary' })
   return touch({
     ...session,
     phase: 'turn-intro',
@@ -130,6 +142,14 @@ export function getCurrentEntityName(session: TabooSession) {
   if (!id) return ''
   if (session.config.mode === 'individual') return session.participants.find((participant) => participant.id === id)?.name ?? ''
   return session.teams.find((team) => team.id === id)?.name ?? ''
+}
+
+export function getEntitiesPerRound(session: TabooSession) {
+  return session.config.mode === 'individual' ? session.participants.length : session.teams.length
+}
+
+export function getCurrentRoundNumber(session: TabooSession) {
+  return Math.min(session.config.roundsPerEntity, Math.floor(session.currentTurnIndex / getEntitiesPerRound(session)) + 1)
 }
 
 export function rankTabooEntities(session: TabooSession) {
@@ -178,7 +198,7 @@ export function isTabooSessionCompatible(value: unknown, deck: TabooDeck): value
     && Number.isInteger(session.currentTurnIndex) && session.currentTurnIndex! >= 0 && session.currentTurnIndex! < session.turnQueue!.length
     && (session.currentCardId === null || (typeof session.currentCardId === 'string' && cardIds.has(session.currentCardId)))
     && isUniqueIdList(session.cardQueue, cardIds)
-    && isUniqueIdList(session.usedCardIds, cardIds)
+    && isIdList(session.usedCardIds, cardIds)
     && (session.currentCardId === null || session.usedCardIds?.includes(session.currentCardId))
     && (session.turnStartedAt === null || typeof session.turnStartedAt === 'string')
     && Number.isInteger(session.currentTurnCorrect) && session.currentTurnCorrect! >= 0
@@ -190,8 +210,9 @@ export function isTabooSessionCompatible(value: unknown, deck: TabooDeck): value
     && typeof session.updatedAt === 'string')
 }
 
-function advanceCard(session: TabooSession): TabooSession {
-  const [currentCardId, ...cardQueue] = session.cardQueue
+function advanceCard(session: TabooSession, deck?: TabooDeck): TabooSession {
+  const refillQueue = deck ? deck.cards.map((card) => card.id).filter((id) => id !== session.currentCardId) : []
+  const [currentCardId, ...cardQueue] = session.cardQueue.length ? session.cardQueue : refillQueue
   return {
     ...session,
     currentCardId: currentCardId ?? null,
@@ -215,6 +236,10 @@ function finishTurn(session: TabooSession, finishedReason: TabooFinishedReason |
 
 function nextTurnIndex(session: TabooSession) {
   return session.currentTurnIndex + 1
+}
+
+function isEndOfRound(session: TabooSession) {
+  return nextTurnIndex(session) % getEntitiesPerRound(session) === 0
 }
 
 function canScore(session: TabooSession, scoringId: string) {
@@ -268,6 +293,10 @@ function isEntityList(value: unknown, entityIds: Set<unknown>) {
 
 function isUniqueIdList(value: unknown, validIds: Set<string>) {
   return Array.isArray(value) && new Set(value).size === value.length && value.every((id) => typeof id === 'string' && validIds.has(id))
+}
+
+function isIdList(value: unknown, validIds: Set<string>) {
+  return Array.isArray(value) && value.every((id) => typeof id === 'string' && validIds.has(id))
 }
 
 function isTurnResult(value: unknown, entityIds: Set<unknown>) {

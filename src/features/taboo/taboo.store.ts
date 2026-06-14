@@ -64,10 +64,10 @@ export const useTabooStore = create<TabooState>((set, get) => ({
     set({ session, resumeError: null })
   },
   beginTurn: async () => { await mutateSession(get, set, (session) => beginTabooTurn(session)) },
-  correct: async () => { await mutateSession(get, set, (session) => recordCorrectGuess(session)) },
-  skip: async () => { await mutateSession(get, set, (session) => skipTabooCard(session)) },
-  endTurn: async () => { await mutateSession(get, set, (session) => endTabooTurn(session)) },
-  expireTurn: async () => { await mutateSession(get, set, (session) => finishExpiredTurn(session)) },
+  correct: async () => { await mutateSession(get, set, (session, deck) => recordCorrectGuess(session, deck)) },
+  skip: async () => { await mutateSession(get, set, (session, deck) => skipTabooCard(session, deck)) },
+  endTurn: async () => { await mutateSession(get, set, (session, deck) => endTabooTurn(session, undefined, deck)) },
+  expireTurn: async () => { await mutateSession(get, set, (session, deck) => finishExpiredTurn(session, new Date(), deck)) },
   continueSummary: async () => {
     const session = await mutateSession(get, set, (current) => continueAfterTabooSummary(current))
     return session?.phase === 'finished'

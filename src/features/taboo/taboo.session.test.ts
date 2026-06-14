@@ -18,11 +18,12 @@ const noShuffle = () => 0.999999
 
 describe('Taboo session', () => {
   it('creates individual and team sessions with equal fixed turns', () => {
-    const individual = createTabooSession(participants, [], individualConfig, deck, noShuffle)
+    const individual = createTabooSession(participants, [], { ...individualConfig, roundsPerEntity: 3 }, deck, noShuffle)
     const teamSession = createTabooSession([], teams, teamConfig, deck, noShuffle)
 
     expect(individual.phase).toBe('turn-intro')
-    expect(individual.turnQueue).toHaveLength(participants.length)
+    expect(individual.turnQueue).toHaveLength(participants.length * 3)
+    expect(individual.turnQueue.filter((id) => id === participants[0].id)).toHaveLength(3)
     expect(Object.keys(individual.scores)).toEqual(participants.map((participant) => participant.id))
     expect(teamSession.turnQueue).toHaveLength(teams.length)
     expect(Object.keys(teamSession.scores)).toEqual(teams.map((team) => team.id))
@@ -83,8 +84,27 @@ describe('Taboo session', () => {
 
     expect(session.pendingFinishedReason).toBe('turns-complete')
     session = continueAfterTabooSummary(session)
+    expect(session.phase).toBe('round-summary')
+    session = continueAfterTabooSummary(session)
     expect(session.phase).toBe('finished')
     expect(rankTabooEntities(session).map((team) => team.id)).toEqual(teams.map((team) => team.id))
     expect(getTabooWinners(session)).toHaveLength(2)
+  })
+
+  it('shows a round summary before starting the next round', () => {
+    const config: TabooConfig = { ...individualConfig, roundsPerEntity: 2 }
+    let session = createTabooSession(participants, [], config, deck, noShuffle)
+
+    for (let index = 0; index < participants.length; index += 1) {
+      session = beginTabooTurn(session)
+      session = endTabooTurn(session, undefined, deck)
+      session = continueAfterTabooSummary(session)
+    }
+
+    expect(session.phase).toBe('round-summary')
+    expect(session.currentTurnIndex).toBe(participants.length - 1)
+    session = continueAfterTabooSummary(session)
+    expect(session.phase).toBe('turn-intro')
+    expect(session.currentTurnIndex).toBe(participants.length)
   })
 })
