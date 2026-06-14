@@ -20,15 +20,15 @@
     "pointing": "No pointing at objects."
   },
   "tipTitle": "Tip:",
-  "tip": "Hand the phone to the clue giver. Guessers should not see the forbidden words.",
+  "tip": "The current player is the guesser. Hand the phone to the clue giver.",
   "configureGame": "Set up game",
   "continueGame": "Continue game",
   "discardGame": "Discard game",
   "howToPlay": "How to play",
   "rules": [
-    "Hand the phone to the clue giver.",
+    "The current player is the guesser and should not look at the screen.",
     "The clue giver explains the main word without saying the 5 forbidden words.",
-    "In individual mode, choose who guessed to record the point.",
+    "In individual mode, each correct guess scores only for the current guesser.",
     "In team mode, the point goes to the current team.",
     "When time runs out, pass to the next player or team."
   ]

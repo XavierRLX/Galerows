@@ -28,15 +28,15 @@ describe('Taboo session', () => {
     expect(Object.keys(teamSession.scores)).toEqual(teams.map((team) => team.id))
   })
 
-  it('scores individual points for the guesser, not the clue giver', () => {
+  it('scores individual points for the player whose turn is active', () => {
     let session = beginTabooTurn(createTabooSession(participants, [], individualConfig, deck, noShuffle))
-    const clueGiverId = session.turnQueue[session.currentTurnIndex]
-    const guesser = participants.find((participant) => participant.id !== clueGiverId)!
+    const guesserId = session.turnQueue[session.currentTurnIndex]
+    const otherPlayer = participants.find((participant) => participant.id !== guesserId)!
 
-    session = recordCorrectGuess(session, guesser.id)
+    session = recordCorrectGuess(session)
 
-    expect(session.scores[guesser.id]).toBe(1)
-    expect(session.scores[clueGiverId]).toBe(0)
+    expect(session.scores[guesserId]).toBe(1)
+    expect(session.scores[otherPlayer.id]).toBe(0)
     expect(session.currentTurnCorrect).toBe(1)
   })
 

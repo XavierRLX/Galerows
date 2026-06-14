@@ -59,11 +59,11 @@ export function beginTabooTurn(session: TabooSession, now: Date = new Date()) {
   return touch({ ...session, phase: 'playing', turnStartedAt: now.toISOString() })
 }
 
-export function recordCorrectGuess(session: TabooSession, guesserId?: string) {
+export function recordCorrectGuess(session: TabooSession) {
   if (session.phase !== 'playing') return session
   const currentEntityId = getCurrentEntityId(session)
   if (!currentEntityId) return session
-  const scoringId = session.config.mode === 'individual' ? guesserId : currentEntityId
+  const scoringId = currentEntityId
   if (!scoringId || !canScore(session, scoringId)) return session
   const scores = { ...session.scores, [scoringId]: (session.scores[scoringId] ?? 0) + 1 }
   const advanced = advanceCard({ ...session, scores, currentTurnCorrect: session.currentTurnCorrect + 1 })
@@ -130,11 +130,6 @@ export function getCurrentEntityName(session: TabooSession) {
   if (!id) return ''
   if (session.config.mode === 'individual') return session.participants.find((participant) => participant.id === id)?.name ?? ''
   return session.teams.find((team) => team.id === id)?.name ?? ''
-}
-
-export function getEligibleGuessers(session: TabooSession) {
-  const currentEntityId = getCurrentEntityId(session)
-  return session.participants.filter((participant) => participant.id !== currentEntityId)
 }
 
 export function rankTabooEntities(session: TabooSession) {
@@ -223,7 +218,7 @@ function nextTurnIndex(session: TabooSession) {
 }
 
 function canScore(session: TabooSession, scoringId: string) {
-  if (session.config.mode === 'individual') return session.participants.some((participant) => participant.id === scoringId) && scoringId !== getCurrentEntityId(session)
+  if (session.config.mode === 'individual') return session.participants.some((participant) => participant.id === scoringId) && scoringId === getCurrentEntityId(session)
   return session.teams.some((team) => team.id === scoringId)
 }
 

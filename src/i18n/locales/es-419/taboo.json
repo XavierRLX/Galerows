@@ -20,15 +20,15 @@
     "pointing": "No se puede señalar objetos."
   },
   "tipTitle": "Consejo:",
-  "tip": "Pasa el celular a quien dará las pistas. Quien adivina no debe ver las palabras prohibidas.",
+  "tip": "El jugador en turno es quien adivina. Pasa el celular a quien dará las pistas.",
   "configureGame": "Configurar partida",
   "continueGame": "Continuar partida",
   "discardGame": "Descartar partida",
   "howToPlay": "Cómo jugar",
   "rules": [
-    "Pasa el celular a quien dará las pistas.",
+    "El jugador en turno adivina y no debe mirar la pantalla.",
     "La persona explica la palabra principal sin decir las 5 palabras prohibidas.",
-    "En modo individual, elige quién adivinó para registrar el punto.",
+    "En modo individual, cada acierto suma solo para quien adivina en ese turno.",
     "En modo equipos, el punto va para el equipo en turno.",
     "Cuando termine el tiempo, pasa al siguiente jugador o equipo."
   ]

@@ -17,7 +17,7 @@ type TabooState = {
   initialize: (locale: SupportedLocale) => Promise<void>
   start: (participants: GameParticipant[], teams: TabooTeam[], config: TabooConfig) => Promise<void>
   beginTurn: () => Promise<void>
-  correct: (guesserId?: string) => Promise<void>
+  correct: () => Promise<void>
   skip: () => Promise<void>
   endTurn: () => Promise<void>
   expireTurn: () => Promise<void>
@@ -64,7 +64,7 @@ export const useTabooStore = create<TabooState>((set, get) => ({
     set({ session, resumeError: null })
   },
   beginTurn: async () => { await mutateSession(get, set, (session) => beginTabooTurn(session)) },
-  correct: async (guesserId) => { await mutateSession(get, set, (session) => recordCorrectGuess(session, guesserId)) },
+  correct: async () => { await mutateSession(get, set, (session) => recordCorrectGuess(session)) },
   skip: async () => { await mutateSession(get, set, (session) => skipTabooCard(session)) },
   endTurn: async () => { await mutateSession(get, set, (session) => endTabooTurn(session)) },
   expireTurn: async () => { await mutateSession(get, set, (session) => finishExpiredTurn(session)) },

@@ -20,15 +20,15 @@
     "pointing": "Não pode apontar para objetos."
   },
   "tipTitle": "Dica:",
-  "tip": "Passe o celular para quem vai dar as dicas. O adivinhador não deve ver as palavras proibidas.",
+  "tip": "O jogador da vez é o adivinhador. Passe o celular para quem vai dar as dicas.",
   "configureGame": "Configurar partida",
   "continueGame": "Continuar partida",
   "discardGame": "Descartar partida",
   "howToPlay": "Como jogar",
   "rules": [
-    "Passe o celular para quem vai dar as dicas.",
+    "O jogador da vez é o adivinhador e não deve olhar a tela.",
     "A pessoa explica a palavra principal sem falar as 5 palavras proibidas.",
-    "No modo individual, selecione quem adivinhou para registrar o ponto.",
+    "No modo individual, cada acerto dá ponto só para o adivinhador da vez.",
     "No modo times, o ponto vai para o time da vez.",
     "Quando o tempo acabar, passe para o próximo jogador ou time."
   ]

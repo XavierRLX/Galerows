@@ -33,7 +33,6 @@ describe('Taboo complete flow', () => {
     await user.click(screen.getByRole('button', { name: /iniciar jogo/i }))
     await user.click(await screen.findByRole('button', { name: /começar turno/i }))
     await user.click(await screen.findByRole('button', { name: /acertou/i }))
-    await user.click(screen.getByRole('button', { name: 'Ana' }))
     await user.click(screen.getByRole('button', { name: /pular/i }))
     await user.click(screen.getByRole('button', { name: /encerrar/i }))
     await user.click(await screen.findByRole('button', { name: /próximo turno/i }))
@@ -41,7 +40,7 @@ describe('Taboo complete flow', () => {
     await user.click(await screen.findByRole('button', { name: /encerrar/i }))
     await user.click(await screen.findByRole('button', { name: /ver resultado/i }))
 
-    expect(await screen.findByRole('heading', { name: /Ana venceu/i })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: /Bia venceu/i })).toBeInTheDocument()
     expect(screen.getByText('1 pontos')).toBeInTheDocument()
   })
 })

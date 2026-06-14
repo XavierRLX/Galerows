@@ -1,4 +1,4 @@
-import { ArrowRight, Check, EyeOff, FastForward, Square, Timer, Trophy } from 'lucide-react'
+import { ArrowRight, Check, FastForward, Square, Timer, Trophy } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Header } from '../../components/layout/Header'
@@ -6,7 +6,7 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { AppHaptics } from '../../lib/capacitor/haptics'
 import { cn } from '../../lib/utils/cn'
-import { canSkip, getCurrentEntityName, getEligibleGuessers, getRemainingSeconds, getSkipsRemaining } from './taboo.session'
+import { canSkip, getCurrentEntityName, getRemainingSeconds, getSkipsRemaining } from './taboo.session'
 import { useTabooStore } from './taboo.store'
 import { useTabooInitialization } from './useTabooInitialization'
 
@@ -14,7 +14,6 @@ export function TabooPlayScreen() {
   const navigate = useNavigate()
   const { deck, session, initialized, beginTurn, correct, skip, endTurn, expireTurn, continueSummary } = useTabooStore()
   const [remaining, setRemaining] = useState(0)
-  const [choosingGuesser, setChoosingGuesser] = useState(false)
   useTabooInitialization()
   useEffect(() => {
     if (initialized && !session) navigate('/games/taboo', { replace: true })
@@ -37,7 +36,7 @@ export function TabooPlayScreen() {
 
   if (session.phase === 'turn-intro') {
     return <div className="min-h-dvh pb-10"><Header backTo="/games/taboo" title={`Turno ${session.currentTurnIndex + 1} de ${session.turnQueue.length}`} /><section className="px-5 py-10 text-center">
-      <Card className="mx-auto max-w-lg border-emerald-400/30 bg-emerald-500/10 p-6"><p className="text-sm font-black uppercase tracking-[0.18em] text-amber-300">Vez de</p><h1 className="mt-2 text-4xl font-black text-emerald-200">{entityName}</h1><div className="mt-6 rounded-2xl border border-amber-300/30 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100"><p className="font-black">Atenção!</p><p>Passe o celular para quem vai dar as dicas. O adivinhador NÃO deve olhar a tela.</p></div><p className="mt-5 text-sm text-slate-400">Vocês terão <strong>{session.config.turnDurationSeconds} segundos</strong> para acertar o máximo de cards.</p><Button className="mt-6 w-full" size="lg" onClick={async () => { await beginTurn(); await AppHaptics.light() }}>Começar turno</Button></Card>
+      <Card className="mx-auto max-w-lg border-emerald-400/30 bg-emerald-500/10 p-6"><p className="text-sm font-black uppercase tracking-[0.18em] text-amber-300">Adivinhador da vez</p><h1 className="mt-2 text-4xl font-black text-emerald-200">{entityName}</h1><div className="mt-6 rounded-2xl border border-amber-300/30 bg-amber-400/10 p-4 text-sm leading-6 text-amber-100"><p className="font-black">Atenção!</p><p>Passe o celular para quem vai dar as dicas. {entityName} NÃO deve olhar a tela.</p></div><p className="mt-5 text-sm text-slate-400">Vocês terão <strong>{session.config.turnDurationSeconds} segundos</strong> para acertar o máximo de cards.</p><Button className="mt-6 w-full" size="lg" onClick={async () => { await beginTurn(); await AppHaptics.light() }}>Começar turno</Button></Card>
       <Scoreboard session={session} />
     </section></div>
   }
@@ -51,8 +50,7 @@ export function TabooPlayScreen() {
   const skipRemaining = getSkipsRemaining(session)
   return <div className="min-h-dvh bg-emerald-950 pb-10 text-white"><div className="flex items-center justify-between px-5 py-5"><span className="inline-flex items-center gap-2 rounded-full bg-amber-300 px-4 py-2 font-black text-slate-950"><Trophy size={18} />{session.currentTurnCorrect}</span><div className={cn('flex size-20 items-center justify-center rounded-full border-4 text-xl font-black shadow-xl', remaining <= 10 ? 'border-rose-300 text-rose-100' : 'border-white text-white')}><Timer className="absolute -mt-10" size={16} />0:{String(remaining).padStart(2, '0')}</div></div>
     <section className="flex min-h-[calc(100dvh-11rem)] flex-col justify-center px-5"><Card className="mx-auto w-full max-w-lg overflow-hidden border-amber-300/60 bg-stone-50 text-slate-950"><div className="bg-emerald-800 px-5 py-5 text-center text-white"><p className="text-xs font-mono uppercase tracking-wider text-emerald-100">Carta {session.usedCardIds.length} de {deck.cards.length}</p><h1 className="mt-2 text-4xl font-black">{card.word}</h1>{card.difficulty ? <span className="mt-2 inline-flex rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold">{card.difficulty}</span> : null}</div><div className="p-5 text-center"><p className="font-black uppercase tracking-wider text-red-600">Palavras proibidas</p><div className="mt-4 flex flex-wrap justify-center gap-2">{card.forbiddenWords.map((word) => <span className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-bold text-red-700" key={word}>{word}</span>)}</div></div></Card>
-      <div className="mx-auto mt-8 grid w-full max-w-lg gap-3"><Button className="bg-emerald-500 text-white hover:bg-emerald-400" size="lg" onClick={async () => { if (session.config.mode === 'individual') setChoosingGuesser(true); else { await correct(); await AppHaptics.light() } }}><Check size={20} />Acertou! (+1 ponto)</Button><div className="grid grid-cols-2 gap-3"><Button className="bg-amber-400 text-slate-950 hover:bg-amber-300" disabled={!canSkip(session)} size="lg" onClick={async () => { await skip(); await AppHaptics.light() }}><FastForward size={19} />Pular {skipRemaining === Infinity ? '' : `(${skipRemaining})`}</Button><Button className="bg-red-600 text-white hover:bg-red-500" size="lg" onClick={() => void endTurn()}><Square size={18} />Encerrar</Button></div></div>
-      {choosingGuesser ? <Card className="mx-auto mt-5 w-full max-w-lg p-5"><div className="flex items-center gap-2 font-black"><EyeOff size={18} />Quem adivinhou?</div><div className="mt-4 grid gap-2">{getEligibleGuessers(session).map((participant) => <Button key={participant.id} variant="secondary" onClick={async () => { await correct(participant.id); setChoosingGuesser(false); await AppHaptics.light() }}>{participant.name}</Button>)}</div><Button className="mt-3 w-full" variant="ghost" onClick={() => setChoosingGuesser(false)}>Cancelar</Button></Card> : null}
+      <div className="mx-auto mt-8 grid w-full max-w-lg gap-3"><Button className="bg-emerald-500 text-white hover:bg-emerald-400" size="lg" onClick={async () => { await correct(); await AppHaptics.light() }}><Check size={20} />Acertou! (+1 ponto)</Button><div className="grid grid-cols-2 gap-3"><Button className="bg-amber-400 text-slate-950 hover:bg-amber-300" disabled={!canSkip(session)} size="lg" onClick={async () => { await skip(); await AppHaptics.light() }}><FastForward size={19} />Pular {skipRemaining === Infinity ? '' : `(${skipRemaining})`}</Button><Button className="bg-red-600 text-white hover:bg-red-500" size="lg" onClick={() => void endTurn()}><Square size={18} />Encerrar</Button></div></div>
     </section></div>
 }
 
