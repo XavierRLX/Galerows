@@ -1,0 +1,21 @@
+{
+  "name": "Galerows",
+  "short_name": "Galerows",
+  "icons": [
+    {
+      "src": "/icon-galerows.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#111827",
+  "background_color": "#020617",
+  "display": "standalone"
+}
