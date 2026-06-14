@@ -21,7 +21,7 @@ describe('Impostor da Palavra complete flow', () => {
     useImpostorDaPalavraStore.setState({ deck: null, session: null, initialized: false, loading: false, resumeError: null })
   })
 
-  it('creates guests and plays a full group cycle to the result', async () => {
+  it('creates guests and plays a full game with independent impostor draws', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/games/impostor-da-palavra']}><AppRoutes /></MemoryRouter>)
     await user.click(await screen.findByRole('button', { name: /configurar partida/i }))
@@ -47,8 +47,9 @@ describe('Impostor da Palavra complete flow', () => {
       await user.click(screen.getByRole('button', { name: round === 2 ? /ver resultado/i : /próxima rodada/i }))
     }
 
-    expect(await screen.findByRole('heading', { name: /temos um empate/i })).toBeInTheDocument()
-    expect(screen.getAllByText(/2 pontos/i)).toHaveLength(3)
+    expect(await screen.findByRole('heading', { name: /bia venceu/i })).toBeInTheDocument()
+    expect(screen.getByText(/6 pontos/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/0 pontos/i)).toHaveLength(2)
   })
 })
 

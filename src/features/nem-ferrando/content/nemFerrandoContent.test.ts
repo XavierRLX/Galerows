@@ -8,8 +8,8 @@ describe('Nem Ferrando content', () => {
     expect(decks).toHaveLength(3)
     expect(decks.every((deck) => validateNemFerrandoDeck(deck, deck.locale).valid)).toBe(true)
     expect(validateDeckParity(decks)).toEqual({ valid: true, errors: [] })
-    expect(decks[0].cards.map((card) => card.number)).toEqual([1, 2, 3, 4])
-    expect(decks[0].cards.reduce((total, card) => total + card.curiosities.length, 0)).toBe(12)
+    expect(decks[0].cards.map((card) => card.number)).toEqual(Array.from({ length: 50 }, (_, index) => index + 1))
+    expect(decks[0].cards.reduce((total, card) => total + card.curiosities.length, 0)).toBe(150)
   })
 
   it('reports exact paths for invalid fields', () => {
@@ -28,7 +28,7 @@ describe('Nem Ferrando content', () => {
     expect(validateNemFerrandoDeck(duplicate).errors).toContain('$.cards[1].number está duplicado.')
     const translated = structuredClone(decks[1])
     translated.cards[0].number = 99
-    expect(validateDeckParity([decks[0], translated]).errors[0]).toMatch(/número da carta automoveis/i)
+    expect(validateDeckParity([decks[0], translated]).errors[0]).toMatch(/número da carta espaco/i)
   })
 
   it('falls back to pt-BR when the selected packaged locale is invalid', () => {

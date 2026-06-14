@@ -32,10 +32,9 @@ const noShuffle = () => 0.999999
 const defaultConfig: ImpostorDaPalavraConfig = { impostorMode: 'no-word', conversationMode: 'one-word' }
 
 describe('Impostor da Palavra session', () => {
-  it('creates one impostor turn per participant and does not persist reveal state', () => {
+  it('creates independent impostor draws and does not persist reveal state', () => {
     const session = createImpostorDaPalavraSession(participants, defaultConfig, deck, noShuffle)
-    expect(session.impostorQueue).toEqual(participants.map((participant) => participant.id))
-    expect(new Set(session.impostorQueue)).toEqual(new Set(participants.map((participant) => participant.id)))
+    expect(session.impostorQueue).toEqual(Array.from({ length: participants.length }, () => participants[0].id))
     expect(session.currentImpostorId).toBe(participants[0].id)
     expect(session.usedCardIds).toEqual([deck.cards[0].id])
     expect(Object.keys(session).some((key) => /reveal|visible|shown/i.test(key))).toBe(false)
@@ -94,7 +93,7 @@ describe('Impostor da Palavra session', () => {
     expect(participants.slice(1).map((participant) => session.scores[participant.id])).toEqual([1, 1, 1])
   })
 
-  it('uses every impostor and word once, varies the opening, then finishes', () => {
+  it('uses one word per round, allows repeated impostors, varies the opening, then finishes', () => {
     let session = createImpostorDaPalavraSession(participants, defaultConfig, deck, noShuffle)
     const impostors: string[] = []
     const cards: string[] = []
@@ -108,7 +107,7 @@ describe('Impostor da Palavra session', () => {
       session = continueAfterRound(session, deck, noShuffle)
     }
     expect(session.phase).toBe('finished')
-    expect(new Set(impostors)).toEqual(new Set(participants.map((participant) => participant.id)))
+    expect(impostors).toEqual(Array.from({ length: participants.length }, () => participants[0].id))
     expect(new Set(cards).size).toBe(participants.length)
     expect(openings.every((opening, index) => index === 0 || opening !== openings[index - 1])).toBe(true)
   })
@@ -124,7 +123,8 @@ describe('Impostor da Palavra session', () => {
     expect(isSessionCompatible(session, deck)).toBe(true)
     expect(isSessionCompatible({ ...session, schemaVersion: 2 }, deck)).toBe(false)
     expect(isSessionCompatible({ ...session, locale: 'en-US' }, deck)).toBe(false)
-    expect(isSessionCompatible({ ...session, impostorQueue: [participants[0].id, participants[0].id, participants[2].id, participants[3].id] }, deck)).toBe(false)
+    expect(isSessionCompatible({ ...session, impostorQueue: [participants[0].id, participants[0].id, participants[0].id, participants[0].id] }, deck)).toBe(true)
+    expect(isSessionCompatible({ ...session, impostorQueue: [participants[0].id, participants[1].id, participants[2].id, 'missing-participant'] }, deck)).toBe(false)
     expect(isSessionCompatible({ ...session, currentCardId: 'missing-card' }, deck)).toBe(false)
   })
 })

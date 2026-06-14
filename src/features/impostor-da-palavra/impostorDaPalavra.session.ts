@@ -16,7 +16,7 @@ export function createImpostorDaPalavraSession(
   openingHistory: ImpostorDaPalavraOpeningHistory | null = null,
 ): ImpostorDaPalavraSession {
   assertSetup(participants, config, deck)
-  const impostorQueue = shuffle(participants.map((participant) => participant.id), random)
+  const impostorQueue = createImpostorQueue(participants, random)
   const cardQueue = avoidFirst(shuffle(deck.cards.map((card) => card.id), random), openingHistory?.cardId)
   const [currentCardId, ...remainingCards] = cardQueue
   const speakingOrder = createSpeakingOrder(participants, openingHistory?.speakerIdentity, random)
@@ -169,7 +169,7 @@ export function isSessionCompatible(value: unknown, deck: ImpostorDaPalavraDeck)
     && isScoreRecord(session.scores, ids)
     && typeof session.phase === 'string' && (PHASES as readonly string[]).includes(session.phase)
     && Number.isInteger(session.round) && session.round! >= 1 && session.round! <= session.participants.length
-    && isPermutation(session.impostorQueue, ids)
+    && isParticipantIdList(session.impostorQueue, ids, session.participants.length)
     && typeof session.currentImpostorId === 'string' && session.currentImpostorId === session.impostorQueue?.[session.round! - 1]
     && typeof session.currentCardId === 'string' && cardIds.has(session.currentCardId)
     && isUniqueIdList(session.cardQueue, cardIds)
@@ -224,6 +224,10 @@ function createQuestionAssignments(session: ImpostorDaPalavraSession, deck: Impo
   return Object.fromEntries(session.speakingOrder.map((participantId, index) => [participantId, questions[index]]))
 }
 
+function createImpostorQueue(participants: GameParticipant[], random: () => number) {
+  return Array.from({ length: participants.length }, () => shuffle(participants.map((participant) => participant.id), random)[0])
+}
+
 function assertSetup(participants: GameParticipant[], config: ImpostorDaPalavraConfig, deck: ImpostorDaPalavraDeck) {
   if (participants.length < 3 || participants.length > 12) throw new Error('O jogo exige entre 3 e 12 participantes.')
   if (new Set(participants.map((participant) => participant.id)).size !== participants.length) throw new Error('Os participantes precisam ter IDs únicos.')
@@ -265,6 +269,10 @@ function isScoreRecord(value: unknown, participantIds: Set<string>) {
 
 function isPermutation(value: unknown, expectedIds: Set<string>) {
   return Array.isArray(value) && value.length === expectedIds.size && new Set(value).size === expectedIds.size && value.every((id) => typeof id === 'string' && expectedIds.has(id))
+}
+
+function isParticipantIdList(value: unknown, expectedIds: Set<string>, expectedLength: number) {
+  return Array.isArray(value) && value.length === expectedLength && value.every((id) => typeof id === 'string' && expectedIds.has(id))
 }
 
 function isUniqueIdList(value: unknown, validIds: Set<string>) {

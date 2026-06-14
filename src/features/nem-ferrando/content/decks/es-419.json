@@ -3,28 +3,1271 @@
   "gameId": "nem-ferrando",
   "deckId": "curiosidades-iniciais",
   "locale": "es-419",
-  "version": 2,
+  "version": 3,
   "title": "Curiosidades iniciales",
   "cards": [
-    {"id":"automoveis","number":1,"theme":"Automóviles","irons":4,"curiosities":[
-      {"id":"f1-velocidade","question":"Velocidad máxima aproximada de un auto de Fórmula 1","answer":370,"unit":"km/h"},
-      {"id":"veyron-potencia","question":"Potencia del Bugatti Veyron Super Sport","answer":1200,"unit":"cv"},
-      {"id":"tesla-aceleracao","question":"Tiempo aproximado de 0 a 100 km/h del Tesla Model S Plaid","answer":2.1,"unit":"segundos"}
-    ]},
-    {"id":"planeta-terra","number":2,"theme":"Planeta Tierra","irons":3,"curiosities":[
-      {"id":"terra-circunferencia","question":"Circunferencia aproximada de la Tierra en el ecuador","answer":40075,"unit":"km"},
-      {"id":"everest-altura","question":"Altitud del monte Everest","answer":8849,"unit":"m"},
-      {"id":"oceanos-percentual","question":"Porcentaje aproximado de la superficie terrestre cubierto por océanos","answer":71,"unit":"%"}
-    ]},
-    {"id":"corpo-humano","number":3,"theme":"Cuerpo humano","irons":2,"curiosities":[
-      {"id":"ossos-adulto","question":"Cantidad de huesos en el cuerpo humano adulto","answer":206},
-      {"id":"coracao-dia","question":"Latidos aproximados del corazón en un día","answer":100000},
-      {"id":"pele-area","question":"Área aproximada de la piel de un adulto","answer":2,"unit":"m²"}
-    ]},
-    {"id":"espaco","number":4,"theme":"Espacio","irons":5,"curiosities":[
-      {"id":"lua-distancia","question":"Distancia media entre la Tierra y la Luna","answer":384400,"unit":"km"},
-      {"id":"luz-sol","question":"Tiempo aproximado para que la luz del Sol llegue a la Tierra","answer":8.3,"unit":"minutos"},
-      {"id":"jupiter-luas","question":"Cantidad de lunas conocidas de Júpiter usada en este mazo","answer":95}
-    ]}
+    {
+      "id": "espaco",
+      "number": 1,
+      "theme": "Espacio",
+      "irons": 5,
+      "curiosities": [
+        {
+          "id": "espaco-lua-distancia",
+          "question": "Distancia media entre la Tierra y la Luna",
+          "answer": 384400,
+          "unit": "km"
+        },
+        {
+          "id": "espaco-luz-sol",
+          "question": "Tiempo de la luz del Sol hasta la Tierra",
+          "answer": 8.3,
+          "unit": "minutos"
+        },
+        {
+          "id": "espaco-diametro-sol",
+          "question": "Diámetro aproximado del Sol",
+          "answer": 1392700,
+          "unit": "km"
+        }
+      ]
+    },
+    {
+      "id": "sistema-solar",
+      "number": 2,
+      "theme": "Sistema Solar",
+      "irons": 5,
+      "curiosities": [
+        {
+          "id": "sistema-solar-planetas",
+          "question": "Cantidad de planetas en el Sistema Solar",
+          "answer": 8
+        },
+        {
+          "id": "sistema-solar-jupiter-diametro",
+          "question": "Diámetro aproximado de Júpiter",
+          "answer": 139820,
+          "unit": "km"
+        },
+        {
+          "id": "sistema-solar-saturno-aneis",
+          "question": "Ancho aproximado de los anillos de Saturno",
+          "answer": 282000,
+          "unit": "km"
+        }
+      ]
+    },
+    {
+      "id": "terra",
+      "number": 3,
+      "theme": "Tierra",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "terra-circunferencia",
+          "question": "Circunferencia aproximada de la Tierra",
+          "answer": 40075,
+          "unit": "km"
+        },
+        {
+          "id": "terra-idade",
+          "question": "Edad aproximada de la Tierra",
+          "answer": 4500000000,
+          "unit": "años"
+        },
+        {
+          "id": "terra-agua-superficie",
+          "question": "Porcentaje de la superficie cubierta por agua",
+          "answer": 71,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "id": "brasil",
+      "number": 4,
+      "theme": "Brasil",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "brasil-area",
+          "question": "Área aproximada de Brasil",
+          "answer": 8510000,
+          "unit": "km²"
+        },
+        {
+          "id": "brasil-estados",
+          "question": "Cantidad de estados brasileños",
+          "answer": 26
+        },
+        {
+          "id": "brasil-litoral",
+          "question": "Extensión aproximada del litoral brasileño",
+          "answer": 7491,
+          "unit": "km"
+        }
+      ]
+    },
+    {
+      "id": "mundo",
+      "number": 5,
+      "theme": "Mundo",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "mundo-paises",
+          "question": "Cantidad aproximada de países en el mundo",
+          "answer": 195
+        },
+        {
+          "id": "mundo-populacao",
+          "question": "Población aproximada del planeta",
+          "answer": 8100000000,
+          "unit": "personas"
+        },
+        {
+          "id": "mundo-continentes",
+          "question": "Cantidad de continentes más usada",
+          "answer": 7
+        }
+      ]
+    },
+    {
+      "id": "geografia-gigante",
+      "number": 6,
+      "theme": "Geografía",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "geografia-russia-area",
+          "question": "Área aproximada de Rusia",
+          "answer": 17100000,
+          "unit": "km²"
+        },
+        {
+          "id": "geografia-canada-area",
+          "question": "Área aproximada de Canadá",
+          "answer": 9985000,
+          "unit": "km²"
+        },
+        {
+          "id": "geografia-china-populacao",
+          "question": "Población aproximada de China",
+          "answer": 1410000000,
+          "unit": "personas"
+        }
+      ]
+    },
+    {
+      "id": "oceanos",
+      "number": 7,
+      "theme": "Océanos",
+      "irons": 5,
+      "curiosities": [
+        {
+          "id": "oceanos-pacifico-area",
+          "question": "Área aproximada del Océano Pacífico",
+          "answer": 165000000,
+          "unit": "km²"
+        },
+        {
+          "id": "oceanos-mariana-profundidade",
+          "question": "Profundidad aproximada de la Fosa de las Marianas",
+          "answer": 11000,
+          "unit": "m"
+        },
+        {
+          "id": "oceanos-agua-salgada",
+          "question": "Porcentaje del agua de la Tierra que es salada",
+          "answer": 97,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "id": "rios",
+      "number": 8,
+      "theme": "Ríos",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "rios-nilo-comprimento",
+          "question": "Longitud aproximada del rio Nilo",
+          "answer": 6650,
+          "unit": "km"
+        },
+        {
+          "id": "rios-amazonas-vazao",
+          "question": "Caudal medio aproximado del rio Amazonas",
+          "answer": 209000,
+          "unit": "m³/s"
+        },
+        {
+          "id": "rios-mississippi-comprimento",
+          "question": "Longitud aproximada del Mississippi-Misuri",
+          "answer": 6275,
+          "unit": "km"
+        }
+      ]
+    },
+    {
+      "id": "montanhas",
+      "number": 9,
+      "theme": "Montañas",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "montanhas-everest-altura",
+          "question": "Altura aproximada del monte Everest",
+          "answer": 8849,
+          "unit": "m"
+        },
+        {
+          "id": "montanhas-k2-altura",
+          "question": "Altura aproximada del K2",
+          "answer": 8611,
+          "unit": "m"
+        },
+        {
+          "id": "montanhas-aconcagua-altura",
+          "question": "Altura aproximada del Aconcagua",
+          "answer": 6961,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "id": "desertos",
+      "number": 10,
+      "theme": "Desiertos",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "desertos-saara-area",
+          "question": "Área aproximada del desierto del Sahara",
+          "answer": 9200000,
+          "unit": "km²"
+        },
+        {
+          "id": "desertos-antartida-area",
+          "question": "Área aproximada del desierto de la Antártida",
+          "answer": 14000000,
+          "unit": "km²"
+        },
+        {
+          "id": "desertos-atacama-chuva",
+          "question": "Lluvia media anual en partes del Atacama",
+          "answer": 15,
+          "unit": "mm"
+        }
+      ]
+    },
+    {
+      "id": "animais-gigantes",
+      "number": 11,
+      "theme": "Animales",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "animais-baleia-azul-peso",
+          "question": "Peso aproximado de una ballena azul adulta",
+          "answer": 150000,
+          "unit": "kg"
+        },
+        {
+          "id": "animais-elefante-africano-peso",
+          "question": "Peso aproximado de un elefante africano",
+          "answer": 6000,
+          "unit": "kg"
+        },
+        {
+          "id": "animais-girafa-altura",
+          "question": "Altura aproximada de una jirafa adulta",
+          "answer": 5.5,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "id": "animais-velozes",
+      "number": 12,
+      "theme": "Velocidad Animal",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "animais-guepardo-velocidade",
+          "question": "Velocidad máxima aproximada de un guepardo",
+          "answer": 110,
+          "unit": "km/h"
+        },
+        {
+          "id": "animais-falcao-peregrino-velocidade",
+          "question": "Velocidad de picada del halcón peregrino",
+          "answer": 320,
+          "unit": "km/h"
+        },
+        {
+          "id": "animais-avestruz-velocidade",
+          "question": "Velocidad máxima aproximada de un avestruz",
+          "answer": 70,
+          "unit": "km/h"
+        }
+      ]
+    },
+    {
+      "id": "insetos",
+      "number": 13,
+      "theme": "Insectos",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "insetos-formigas-especies",
+          "question": "Cantidad aproximada de especies de hormigas",
+          "answer": 14000
+        },
+        {
+          "id": "insetos-abelha-batidas-asas",
+          "question": "Batidos de alas de una abeja por segundo",
+          "answer": 200,
+          "unit": "veces"
+        },
+        {
+          "id": "insetos-borboletas-especies",
+          "question": "Cantidad aproximada de especies de mariposas",
+          "answer": 18000
+        }
+      ]
+    },
+    {
+      "id": "dinossauros",
+      "number": 14,
+      "theme": "Dinosaurios",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "dinossauros-trex-comprimento",
+          "question": "Longitud aproximada de un T. rex",
+          "answer": 12,
+          "unit": "m"
+        },
+        {
+          "id": "dinossauros-brachiosaurus-altura",
+          "question": "Altura aproximada de un braquiosaurio",
+          "answer": 13,
+          "unit": "m"
+        },
+        {
+          "id": "dinossauros-extincao",
+          "question": "Tiempo desde la extinción de los dinosaurios",
+          "answer": 66000000,
+          "unit": "años"
+        }
+      ]
+    },
+    {
+      "id": "corpo-humano",
+      "number": 15,
+      "theme": "Cuerpo Humano",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "corpo-humano-ossos-adulto",
+          "question": "Cantidad de huesos en el cuerpo adulto",
+          "answer": 206
+        },
+        {
+          "id": "corpo-humano-batimentos-dia",
+          "question": "Latidos cardíacos aproximados por dia",
+          "answer": 100000,
+          "unit": "latidos"
+        },
+        {
+          "id": "corpo-humano-sangue",
+          "question": "Volumen medio de sangre en un adulto",
+          "answer": 5,
+          "unit": "litros"
+        }
+      ]
+    },
+    {
+      "id": "cerebro",
+      "number": 16,
+      "theme": "Cerebro",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "cerebro-neuronios",
+          "question": "Cantidad aproximada de neuronas en el cerebro",
+          "answer": 86000000000
+        },
+        {
+          "id": "cerebro-peso",
+          "question": "Peso aproximado del cerebro adulto",
+          "answer": 1.4,
+          "unit": "kg"
+        },
+        {
+          "id": "cerebro-energia",
+          "question": "Porcentaje de energía del cuerpo usado por el cerebro",
+          "answer": 20,
+          "unit": "%"
+        }
+      ]
+    },
+    {
+      "id": "historia-antiga",
+      "number": 17,
+      "theme": "Historia Antigua",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "historia-antiga-piramide-idade",
+          "question": "Edad aproximada de la Gran Pirámide de Guiza",
+          "answer": 4500,
+          "unit": "años"
+        },
+        {
+          "id": "historia-antiga-roma-fundacao",
+          "question": "Año tradicional de la fundación de Roma",
+          "answer": 753,
+          "unit": "a. C."
+        },
+        {
+          "id": "historia-antiga-coliseu-capacidade",
+          "question": "Capacidad aproximada del Coliseo",
+          "answer": 50000,
+          "unit": "personas"
+        }
+      ]
+    },
+    {
+      "id": "historia-moderna",
+      "number": 18,
+      "theme": "Historia",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "historia-moderna-independencia-brasil",
+          "question": "Año de la Independencia de Brasil",
+          "answer": 1822
+        },
+        {
+          "id": "historia-moderna-queda-berlim",
+          "question": "Año de la caída del Muro de Berlín",
+          "answer": 1989
+        },
+        {
+          "id": "historia-moderna-primeira-guerra-duracao",
+          "question": "Duración aproximada de la Primera Guerra Mundial",
+          "answer": 4,
+          "unit": "años"
+        }
+      ]
+    },
+    {
+      "id": "imperios",
+      "number": 19,
+      "theme": "Imperios",
+      "irons": 5,
+      "curiosities": [
+        {
+          "id": "imperios-romano-area",
+          "question": "Área máxima aproximada del Imperio Romano",
+          "answer": 5000000,
+          "unit": "km²"
+        },
+        {
+          "id": "imperios-mongol-area",
+          "question": "Área máxima aproximada del Imperio Mongol",
+          "answer": 24000000,
+          "unit": "km²"
+        },
+        {
+          "id": "imperios-britanico-area",
+          "question": "Área máxima aproximada del Imperio Britanico",
+          "answer": 35000000,
+          "unit": "km²"
+        }
+      ]
+    },
+    {
+      "id": "exploracoes",
+      "number": 20,
+      "theme": "Exploraciones",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "exploracoes-lua-primeiro-pouso",
+          "question": "Año del primer alunizaje humano",
+          "answer": 1969
+        },
+        {
+          "id": "exploracoes-everest-primeira-subida",
+          "question": "Año de la primera subida confirmada al Everest",
+          "answer": 1953
+        },
+        {
+          "id": "exploracoes-colombo-america",
+          "question": "Año de la llegada de Colón a América",
+          "answer": 1492
+        }
+      ]
+    },
+    {
+      "id": "automotivo",
+      "number": 21,
+      "theme": "Automotriz",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "automotivo-bugatti-velocidade",
+          "question": "Velocidad registrada del Bugatti Chiron Super Sport 300+",
+          "answer": 490,
+          "unit": "km/h"
+        },
+        {
+          "id": "automotivo-fusca-vendas",
+          "question": "Ventas aproximadas del VW Beetle en el mundo",
+          "answer": 21500000,
+          "unit": "unidades"
+        },
+        {
+          "id": "automotivo-model-t-producao",
+          "question": "Producción aproximada del Ford Model T",
+          "answer": 15000000,
+          "unit": "unidades"
+        }
+      ]
+    },
+    {
+      "id": "corridas",
+      "number": 22,
+      "theme": "Carreras",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "corridas-f1-volta-monaco",
+          "question": "Vueltas del GP de Monaco de F1",
+          "answer": 78
+        },
+        {
+          "id": "corridas-indy-500-milhas",
+          "question": "Distancia de la Indy 500",
+          "answer": 500,
+          "unit": "millas"
+        },
+        {
+          "id": "corridas-le-mans-duracao",
+          "question": "Duración de las 24 Horas de Le Mans",
+          "answer": 24,
+          "unit": "horas"
+        }
+      ]
+    },
+    {
+      "id": "motos",
+      "number": 23,
+      "theme": "Motos",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "motos-motogp-velocidade",
+          "question": "Velocidad máxima aproximada de una MotoGP",
+          "answer": 360,
+          "unit": "km/h"
+        },
+        {
+          "id": "motos-honda-cg-cilindradas",
+          "question": "Cilindrada común de la Honda CG 160",
+          "answer": 162,
+          "unit": "cc"
+        },
+        {
+          "id": "motos-maior-salto",
+          "question": "Salto aproximado en moto en records extremos",
+          "answer": 107,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "id": "futebol",
+      "number": 24,
+      "theme": "Futbol",
+      "irons": 2,
+      "curiosities": [
+        {
+          "id": "futebol-campo-comprimento",
+          "question": "Longitud máxima de una cancha oficial",
+          "answer": 120,
+          "unit": "m"
+        },
+        {
+          "id": "futebol-copa-times",
+          "question": "Selecciones en el Mundial masculino de 2022",
+          "answer": 32
+        },
+        {
+          "id": "futebol-pele-gols",
+          "question": "Goles atribuidos a Pele en conteos historicos",
+          "answer": 1281,
+          "unit": "goles"
+        }
+      ]
+    },
+    {
+      "id": "esportes",
+      "number": 25,
+      "theme": "Deportes",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "esportes-maratona-distancia",
+          "question": "Distancia oficial de una maratón",
+          "answer": 42.195,
+          "unit": "km"
+        },
+        {
+          "id": "esportes-nba-tempo-jogo",
+          "question": "Duración oficial de un juego de la NBA",
+          "answer": 48,
+          "unit": "minutos"
+        },
+        {
+          "id": "esportes-piscina-olimpica",
+          "question": "Longitud de una piscina olímpica",
+          "answer": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "id": "olimpiadas",
+      "number": 26,
+      "theme": "Olimpiadas",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "olimpiadas-aneis",
+          "question": "Cantidad de anillos olímpicos",
+          "answer": 5
+        },
+        {
+          "id": "olimpiadas-bolt-recorde",
+          "question": "Récord mundial de 100 m de Usain Bolt",
+          "answer": 9.58,
+          "unit": "segundos"
+        },
+        {
+          "id": "olimpiadas-primeira-moderna",
+          "question": "Año de la primera Olimpiada moderna",
+          "answer": 1896
+        }
+      ]
+    },
+    {
+      "id": "cinema",
+      "number": 27,
+      "theme": "Cine",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "cinema-titanic-duracao",
+          "question": "Duración aproximada de la película Titanic",
+          "answer": 195,
+          "unit": "minutos"
+        },
+        {
+          "id": "cinema-avatar-bilheteria",
+          "question": "Recaudación aproximada de Avatar",
+          "answer": 2900000000,
+          "unit": "dólares"
+        },
+        {
+          "id": "cinema-oscar-categorias",
+          "question": "Categorías competitivas aproximadas del Oscar",
+          "answer": 23
+        }
+      ]
+    },
+    {
+      "id": "series",
+      "number": 28,
+      "theme": "Series",
+      "irons": 2,
+      "curiosities": [
+        {
+          "id": "series-friends-episodios",
+          "question": "Cantidad de episodios de Friends",
+          "answer": 236
+        },
+        {
+          "id": "series-breaking-bad-episodios",
+          "question": "Cantidad de episodios de Breaking Bad",
+          "answer": 62
+        },
+        {
+          "id": "series-game-of-thrones-episodios",
+          "question": "Cantidad de episodios de Game of Thrones",
+          "answer": 73
+        }
+      ]
+    },
+    {
+      "id": "musica",
+      "number": 29,
+      "theme": "Musica",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "musica-beatles-albuns",
+          "question": "Álbumes de estudio lanzados por los Beatles en Reino Unido",
+          "answer": 12
+        },
+        {
+          "id": "musica-thriller-vendas",
+          "question": "Ventas aproximadas del álbum Thriller",
+          "answer": 70000000,
+          "unit": "copias"
+        },
+        {
+          "id": "musica-piano-teclas",
+          "question": "Cantidad de teclas en un piano estándar",
+          "answer": 88
+        }
+      ]
+    },
+    {
+      "id": "internet",
+      "number": 30,
+      "theme": "Internet",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "internet-usuarios",
+          "question": "Usuarios aproximados de internet en el mundo",
+          "answer": 5400000000,
+          "unit": "personas"
+        },
+        {
+          "id": "internet-youtube-horas-minuto",
+          "question": "Horas de video subidas a YouTube por minuto",
+          "answer": 500,
+          "unit": "horas"
+        },
+        {
+          "id": "internet-google-buscas-dia",
+          "question": "Búsquedas aproximadas en Google por dia",
+          "answer": 8500000000,
+          "unit": "busquedas"
+        }
+      ]
+    },
+    {
+      "id": "redes-sociais",
+      "number": 31,
+      "theme": "Redes Sociales",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "redes-sociais-instagram-usuarios",
+          "question": "Usuarios aproximados de Instagram",
+          "answer": 2000000000,
+          "unit": "personas"
+        },
+        {
+          "id": "redes-sociais-tiktok-usuarios",
+          "question": "Usuarios aproximados de TikTok",
+          "answer": 1500000000,
+          "unit": "personas"
+        },
+        {
+          "id": "redes-sociais-whatsapp-usuarios",
+          "question": "Usuarios aproximados de WhatsApp",
+          "answer": 2000000000,
+          "unit": "personas"
+        }
+      ]
+    },
+    {
+      "id": "videogames",
+      "number": 32,
+      "theme": "Videojuegos",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "videogames-minecraft-vendas",
+          "question": "Ventas aproximadas de Minecraft",
+          "answer": 300000000,
+          "unit": "copias"
+        },
+        {
+          "id": "videogames-gta-v-vendas",
+          "question": "Ventas aproximadas de GTA V",
+          "answer": 200000000,
+          "unit": "copias"
+        },
+        {
+          "id": "videogames-pokemon-franquia",
+          "question": "Año de lanzamiento de los primeros juegos Pokemon",
+          "answer": 1996
+        }
+      ]
+    },
+    {
+      "id": "comida",
+      "number": 33,
+      "theme": "Comida",
+      "irons": 2,
+      "curiosities": [
+        {
+          "id": "comida-big-mac-calorias",
+          "question": "Calorías aproximadas de un Big Mac",
+          "answer": 550,
+          "unit": "kcal"
+        },
+        {
+          "id": "comida-pizza-maior",
+          "question": "Diámetro aproximado de pizzas gigantes recordistas",
+          "answer": 40,
+          "unit": "m"
+        },
+        {
+          "id": "comida-cafe-producao-brasil",
+          "question": "Sacos de café producidos por Brasil en años fuertes",
+          "answer": 60000000,
+          "unit": "sacos"
+        }
+      ]
+    },
+    {
+      "id": "bebidas",
+      "number": 34,
+      "theme": "Bebidas",
+      "irons": 2,
+      "curiosities": [
+        {
+          "id": "bebidas-cafe-xicara-cafeina",
+          "question": "Caféína aproximada en una taza de café",
+          "answer": 95,
+          "unit": "mg"
+        },
+        {
+          "id": "bebidas-refrigerante-lata",
+          "question": "Volumen de una lata común de refresco",
+          "answer": 350,
+          "unit": "ml"
+        },
+        {
+          "id": "bebidas-agua-recomendada",
+          "question": "Agua diaria sugerida por una regla popular",
+          "answer": 2,
+          "unit": "litros"
+        }
+      ]
+    },
+    {
+      "id": "dinheiro",
+      "number": 35,
+      "theme": "Dinero",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "dinheiro-nota-real-maior",
+          "question": "Mayor billete común del real brasileño en circulación",
+          "answer": 200,
+          "unit": "BRL"
+        },
+        {
+          "id": "dinheiro-bitcoin-limite",
+          "question": "Límite máximo de bitcoins",
+          "answer": 21000000,
+          "unit": "BTC"
+        },
+        {
+          "id": "dinheiro-dolar-nota-maior",
+          "question": "Mayor billete de dólar emitido para circulación publica",
+          "answer": 10000,
+          "unit": "dólares"
+        }
+      ]
+    },
+    {
+      "id": "arquitetura",
+      "number": 36,
+      "theme": "Arquitectura",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "arquitetura-burj-khalifa-altura",
+          "question": "Altura del Burj Khalifa",
+          "answer": 828,
+          "unit": "m"
+        },
+        {
+          "id": "arquitetura-eiffel-altura",
+          "question": "Altura aproximada de la Torre Eiffel",
+          "answer": 330,
+          "unit": "m"
+        },
+        {
+          "id": "arquitetura-cristo-redentor-altura",
+          "question": "Altura aproximada del Cristo Redentor con pedestal",
+          "answer": 38,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "id": "transporte",
+      "number": 37,
+      "theme": "Transporte",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "transporte-shinkansen-velocidade",
+          "question": "Velocidad operativa aproximada del Shinkansen",
+          "answer": 320,
+          "unit": "km/h"
+        },
+        {
+          "id": "transporte-maior-navio-comprimento",
+          "question": "Longitud aproximada de los mayores portacontenedores",
+          "answer": 400,
+          "unit": "m"
+        },
+        {
+          "id": "transporte-canal-panama-comprimento",
+          "question": "Longitud aproximada del Canal de Panama",
+          "answer": 82,
+          "unit": "km"
+        }
+      ]
+    },
+    {
+      "id": "aviacao",
+      "number": 38,
+      "theme": "Aviación",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "aviacao-boeing-747-comprimento",
+          "question": "Longitud aproximada de un Boeing 747-8",
+          "answer": 76,
+          "unit": "m"
+        },
+        {
+          "id": "aviacao-a380-passageiros",
+          "question": "Capacidad máxima aproximada del Airbus A380",
+          "answer": 853,
+          "unit": "pasajeros"
+        },
+        {
+          "id": "aviacao-concorde-velocidade",
+          "question": "Velocidad de crucero aproximada del Concorde",
+          "answer": 2179,
+          "unit": "km/h"
+        }
+      ]
+    },
+    {
+      "id": "ciencia",
+      "number": 39,
+      "theme": "Ciencia",
+      "irons": 5,
+      "curiosities": [
+        {
+          "id": "ciencia-velocidade-luz",
+          "question": "Velocidad de la luz en el vacío",
+          "answer": 299792,
+          "unit": "km/s"
+        },
+        {
+          "id": "ciencia-gravidade-terra",
+          "question": "Aceleración de la gravedad en la Tierra",
+          "answer": 9.8,
+          "unit": "m/s²"
+        },
+        {
+          "id": "ciencia-agua-fervura",
+          "question": "Temperatura de ebullición del agua al nivel del mar",
+          "answer": 100,
+          "unit": "°C"
+        }
+      ]
+    },
+    {
+      "id": "quimica",
+      "number": 40,
+      "theme": "Química",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "quimica-elementos-tabela",
+          "question": "Elementos químicos reconocidos en la tabla periódica",
+          "answer": 118
+        },
+        {
+          "id": "quimica-ouro-numero-atomico",
+          "question": "Número atómico del oro",
+          "answer": 79
+        },
+        {
+          "id": "quimica-ph-neutro",
+          "question": "pH considerado neutro",
+          "answer": 7
+        }
+      ]
+    },
+    {
+      "id": "tecnologia",
+      "number": 41,
+      "theme": "Tecnología",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "tecnologia-iphone-primeiro-ano",
+          "question": "Año de lanzamiento del primer iPhone",
+          "answer": 2007
+        },
+        {
+          "id": "tecnologia-cd-capacidade",
+          "question": "Capacidad común de un CD",
+          "answer": 700,
+          "unit": "MB"
+        },
+        {
+          "id": "tecnologia-dvd-capacidade",
+          "question": "Capacidad común de un DVD simple",
+          "answer": 4.7,
+          "unit": "GB"
+        }
+      ]
+    },
+    {
+      "id": "energia",
+      "number": 42,
+      "theme": "Energía",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "energia-itaipu-potencia",
+          "question": "Potencia instalada aproximada de Itaipu",
+          "answer": 14000,
+          "unit": "MW"
+        },
+        {
+          "id": "energia-lampada-led-potencia",
+          "question": "Potencia común de una lámpara LED residencial",
+          "answer": 9,
+          "unit": "W"
+        },
+        {
+          "id": "energia-raio-temperatura",
+          "question": "Temperatura aproximada de un rayo",
+          "answer": 30000,
+          "unit": "°C"
+        }
+      ]
+    },
+    {
+      "id": "recordes",
+      "number": 43,
+      "theme": "Récords",
+      "irons": 5,
+      "curiosities": [
+        {
+          "id": "recordes-homem-mais-alto",
+          "question": "Altura del hombre más alto registrado",
+          "answer": 2.72,
+          "unit": "m"
+        },
+        {
+          "id": "recordes-mulher-mais-velha",
+          "question": "Edad de la persona más vieja registrada",
+          "answer": 122,
+          "unit": "años"
+        },
+        {
+          "id": "recordes-unha-comprimento",
+          "question": "Longitud total aproximada de unas recordistas",
+          "answer": 13,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "id": "cultura-pop",
+      "number": 44,
+      "theme": "Cultura Pop",
+      "irons": 2,
+      "curiosities": [
+        {
+          "id": "cultura-pop-harry-potter-livros",
+          "question": "Cantidad de libros principales de Harry Potter",
+          "answer": 7
+        },
+        {
+          "id": "cultura-pop-star-wars-filmes-saga",
+          "question": "Películas de la saga principal Star Wars",
+          "answer": 9
+        },
+        {
+          "id": "cultura-pop-marvel-fases-iniciais",
+          "question": "Películas de la Saga del Infinito de Marvel",
+          "answer": 23
+        }
+      ]
+    },
+    {
+      "id": "livros",
+      "number": 45,
+      "theme": "Libros",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "livros-dom-quixote-publicacao",
+          "question": "Año de la primera parte de Don Quijote",
+          "answer": 1605
+        },
+        {
+          "id": "livros-biblia-livros-catolica",
+          "question": "Libros en la Biblia Católica",
+          "answer": 73
+        },
+        {
+          "id": "livros-senhor-aneis-paginas",
+          "question": "Páginas aproximadas de El Señor de los Anillos",
+          "answer": 1200,
+          "unit": "paginas"
+        }
+      ]
+    },
+    {
+      "id": "arte",
+      "number": 46,
+      "theme": "Arte",
+      "irons": 3,
+      "curiosities": [
+        {
+          "id": "arte-mona-lisa-ano",
+          "question": "Año aproximado de conclusión de la Mona Lisa",
+          "answer": 1517
+        },
+        {
+          "id": "arte-capela-sistina-anos",
+          "question": "Tiempo aproximado para pintar el techo de la Capilla Sixtina",
+          "answer": 4,
+          "unit": "años"
+        },
+        {
+          "id": "arte-van-gogh-quadros",
+          "question": "Pinturas aproximadas de Van Gogh",
+          "answer": 900
+        }
+      ]
+    },
+    {
+      "id": "cidades",
+      "number": 47,
+      "theme": "Ciudades",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "cidades-toquio-populacao-metro",
+          "question": "Población aproximada del Gran Tokio",
+          "answer": 37000000,
+          "unit": "personas"
+        },
+        {
+          "id": "cidades-sao-paulo-populacao",
+          "question": "Población aproximada de la ciudad de São Paulo",
+          "answer": 11400000,
+          "unit": "personas"
+        },
+        {
+          "id": "cidades-nova-york-populacao",
+          "question": "Población aproximada de la ciudad de Nueva York",
+          "answer": 8300000,
+          "unit": "personas"
+        }
+      ]
+    },
+    {
+      "id": "ilhas",
+      "number": 48,
+      "theme": "Islas",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "ilhas-groenlandia-area",
+          "question": "Área aproximada de Groenlandia",
+          "answer": 2166000,
+          "unit": "km²"
+        },
+        {
+          "id": "ilhas-madagascar-area",
+          "question": "Área aproximada de Madagascar",
+          "answer": 587000,
+          "unit": "km²"
+        },
+        {
+          "id": "ilhas-australia-area",
+          "question": "Área aproximada de Australia",
+          "answer": 7692000,
+          "unit": "km²"
+        }
+      ]
+    },
+    {
+      "id": "clima",
+      "number": 49,
+      "theme": "Clima",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "clima-temperatura-mais-alta",
+          "question": "Mayor temperatura del aire registrada oficialmente",
+          "answer": 56.7,
+          "unit": "°C"
+        },
+        {
+          "id": "clima-temperatura-mais-baixa",
+          "question": "Menor temperatura del aire registrada oficialmente",
+          "answer": -89.2,
+          "unit": "°C"
+        },
+        {
+          "id": "clima-furacao-vento",
+          "question": "Los vientos de huracanes extremos pueden superar",
+          "answer": 300,
+          "unit": "km/h"
+        }
+      ]
+    },
+    {
+      "id": "volcoes",
+      "number": 50,
+      "theme": "Volcanes",
+      "irons": 4,
+      "curiosities": [
+        {
+          "id": "volcoes-mauna-loa-altura-base",
+          "question": "Altura aproximada del Mauna Loa desde la base",
+          "answer": 9000,
+          "unit": "m"
+        },
+        {
+          "id": "volcoes-krakatoa-ano",
+          "question": "Año de la gran erupcion del Krakatoa",
+          "answer": 1883
+        },
+        {
+          "id": "volcoes-vesuvio-pompeia",
+          "question": "Año de la erupcion del Vesubio que alcanzó Pompeya",
+          "answer": 79
+        }
+      ]
+    }
   ]
 }

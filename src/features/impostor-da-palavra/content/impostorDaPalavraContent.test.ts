@@ -26,7 +26,7 @@ describe('Impostor da Palavra content', () => {
     expect(validateImpostorDaPalavraDeckParity(decks)).toEqual({ valid: true, errors: [] })
     decks.forEach((deck) => {
       const questionIds = new Set(deck.questions.map((question) => question.id))
-      expect(deck.cards).toHaveLength(36)
+      expect(deck.cards).toHaveLength(50)
       expect(deck.questions).toHaveLength(12)
       deck.cards.forEach((card) => {
         expect(card.questionIds).toHaveLength(12)
@@ -73,7 +73,7 @@ describe('Impostor da Palavra content', () => {
 
     expect(result.valid).toBe(false)
     expect(result.errors).toContain('en-US: os IDs e a ordem das perguntas não correspondem a pt-BR.')
-    expect(result.errors).toContain('en-US: questionIds da carta relogio não correspondem a pt-BR.')
+    expect(result.errors).toContain('en-US: questionIds da carta garrafa-de-agua não correspondem a pt-BR.')
   })
 
   it('falls back to pt-BR when a packaged locale is invalid', () => {
