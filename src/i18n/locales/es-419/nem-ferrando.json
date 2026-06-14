@@ -1,0 +1,34 @@
+{
+  "name": "Ni de Broma",
+  "eyebrow": "Apuestas, valor y Hierros",
+  "summary": "Una batalla de estimaciones crecientes: sigue aumentando o di Ni de Broma cuando creas que alguien superó la respuesta.",
+  "objectiveTitle": "Objetivo",
+  "objective": "Haz avanzar las estimaciones sin superar la respuesta real. Desafía en el momento correcto y termina con menos Hierros.",
+  "flowTitle": "Cómo funciona una ronda",
+  "flow": {
+    "choose": "El jugador de la ronda elige una curiosidad de la carta y lee la pregunta en voz alta.",
+    "guess": "Empieza con una estimación. Siguiendo el orden, cada jugador puede aumentar la última cifra.",
+    "challenge": "En vez de aumentarla, el siguiente jugador puede dudar y decir Ni de Broma.",
+    "reveal": "Se revela la respuesta y se compara con la última estimación para decidir quién recibe los Hierros."
+  },
+  "penaltyTitle": "¿Quién recibe los Hierros?",
+  "penaltyIntro": "Compara la última estimación con la respuesta de la carta.",
+  "penalty": {
+    "safeTitle": "Estimación igual o menor",
+    "safe": "Si la última estimación no superó la respuesta, quien dijo Ni de Broma dudó demasiado pronto y recibe los Hierros.",
+    "overTitle": "Estimación mayor",
+    "over": "Si la última estimación superó la respuesta, quien dio esa cifra se pasó y recibe los Hierros."
+  },
+  "exampleTitle": "Ejemplo",
+  "example": "La pregunta es “¿Cuántos países hay en el mundo?” y la carta dice 195. Si la última estimación fue 180, quien dijo Ni de Broma recibe los Hierros. Si fue 200, quien dijo 200 los recibe.",
+  "configureGame": "Configurar partida",
+  "continueGame": "Continuar partida",
+  "discardGame": "Descartar partida",
+  "howToPlay": "Cómo jugar",
+  "rules": [
+    "El jugador de la ronda elige una curiosidad, la lee y empieza con una estimación.",
+    "Siguiendo el orden, el siguiente jugador aumenta la cifra o dice Ni de Broma.",
+    "Si la estimación es igual o menor que la respuesta, quien dudó recibe los Hierros. Si es mayor, los recibe quien se pasó.",
+    "La partida termina cuando alguien alcanza el límite. Gana quien tenga menos Hierros."
+  ]
+}

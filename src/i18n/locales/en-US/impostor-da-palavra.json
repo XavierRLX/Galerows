@@ -1,0 +1,29 @@
+{
+  "name": "Word Impostor",
+  "eyebrow": "Clues, bluffs, and deduction",
+  "summary": "Everyone gets a secret word, but one person has to improvise. Give smart clues, find the impostor, and do not reveal the answer.",
+  "objectiveTitle": "Objective",
+  "objective": "The group tries to identify who received different information. The impostor tries to blend in and can still steal the win by discovering the word.",
+  "flowTitle": "How it works",
+  "flow": { "reveal": "Pass the phone so each player can reveal their information privately.", "talk": "In the chosen order, everyone gives a clue or answers the displayed question.", "accuse": "The group discusses and chooses one suspect.", "score": "The impostor scores by escaping or guessing the word; the group scores by stopping both." },
+  "modesTitle": "Three impostor modes",
+  "modes": {
+    "no-word": { "name": "No word", "description": "The impostor knows their role but must bluff without a word." },
+    "hint": { "name": "With a hint", "description": "The impostor knows their role and receives a related hint." },
+    "alternate-word": { "name": "Different word", "description": "The impostor receives another word and does not know their role is different." }
+  },
+  "conversation": {
+    "one-word": { "name": "One word", "description": "Each player says one related word." },
+    "guided-questions": { "name": "Guided questions", "description": "The app gives each player a question to answer." }
+  },
+  "configureGame": "Set up game", "continueGame": "Continue game", "discardGame": "Discard game", "howToPlay": "How to play",
+  "rules": ["Each participant will be the impostor exactly once during the game.", "Do not say the secret word or give an overly obvious clue.", "After the clues, the group chooses one accused player together.", "If discovered, the impostor can still try to guess the word."],
+  "setup": {
+    "title": "Set up game", "playersTitle": "Who is playing?", "selected": "{{count}}/12 selected", "emptyGroup": "Your group is empty. You can add guests below.", "guestPlaceholder": "Temporary guest", "guestLabel": "Guest name", "guest": "guest", "add": "Add", "manage": "My Group", "modeTitle": "Impostor mode", "conversationTitle": "Conversation format", "rounds": "The game will have {{count}} rounds: everyone will be the impostor once.", "start": "Start game"
+  },
+  "play": {
+    "round": "Round {{current}} of {{total}}", "progress": "Player {{current}} of {{total}}", "passTo": "Pass the phone to {{name}}", "private": "Only {{name}} should look at the screen.", "show": "Show my information", "hide": "Hide and pass", "wordLabel": "Your word", "impostorTitle": "You are the impostor", "noWord": "You did not receive a word. Watch the clues and improvise.", "hintLabel": "Your hint", "alternateNotice": "Memorize your word and do not let anyone see it.", "everyoneReady": "Everyone has seen their information", "conversationIntro": "The clue round starts now. The app will guide the order.", "startConversation": "Start clues", "yourTurn": "{{name}}'s turn", "sayOneWord": "Say one related word without revealing the secret answer.", "questionLabel": "Answer the question", "nextClue": "Next player", "startDiscussion": "Start discussion", "discussionTitle": "Talk and find the impostor", "discussionText": "Review the answers and clues. When everyone agrees, record the accusation.", "chooseAccused": "Choose accused player", "accusationTitle": "Who is the impostor?", "accusationText": "Choose the group's final decision. It cannot be changed.", "confirmAccusation": "Confirm accusation: {{name}}", "wrongAccusation": "The accusation was wrong", "finalGuessTitle": "The impostor's last chance", "finalGuessText": "{{name}} must say the secret word out loud. Do not show the answer yet.", "guessCorrect": "Guessed the word", "guessWrong": "Did not guess the word", "summaryTitle": "Round summary", "secretWord": "Secret word", "impostorWas": "Impostor", "accusedWas": "Accused", "impostorInfo": "Impostor information", "pointsAwarded": "Points this round", "noPoints": "No points for this player", "nextRound": "Next round", "seeResult": "See result", "leave": "Leave and continue later"
+  },
+  "result": { "title": "Game over", "tie": "It is a tie!", "winner": "{{name}} wins!", "description": "The highest score after the full group cycle wins.", "points": "{{count}} points", "newGame": "New game", "hub": "Back to Hub" },
+  "errors": { "guestName": "Enter the guest's name.", "duplicateName": "Players must have different names.", "playerLimit": "The limit is 12 players.", "playerCount": "Select between 3 and 12 players." }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Impostor de la Palabra",
+  "eyebrow": "Pistas, engaños y deducción",
+  "summary": "Todos reciben una palabra secreta, pero una persona debe improvisar. Da buenas pistas, descubre al impostor y no reveles la respuesta.",
+  "objectiveTitle": "Objetivo",
+  "objective": "El grupo intenta identificar quién recibió información diferente. El impostor trata de pasar desapercibido y todavía puede robar la victoria si descubre la palabra.",
+  "flowTitle": "Cómo funciona",
+  "flow": { "reveal": "Pasa el celular para que cada jugador revele su información en secreto.", "talk": "En el orden sorteado, todos dan una pista o responden la pregunta mostrada.", "accuse": "El grupo conversa y elige a una persona sospechosa.", "score": "El impostor puntúa si escapa o adivina la palabra; el grupo puntúa si evita ambas cosas." },
+  "modesTitle": "Tres modos de impostor",
+  "modes": {
+    "no-word": { "name": "Sin palabra", "description": "El impostor conoce su rol, pero debe fingir sin ninguna palabra." },
+    "hint": { "name": "Con pista", "description": "El impostor conoce su rol y recibe una pista relacionada." },
+    "alternate-word": { "name": "Palabra diferente", "description": "El impostor recibe otra palabra y no sabe que su rol es diferente." }
+  },
+  "conversation": {
+    "one-word": { "name": "Una palabra", "description": "Cada jugador dice una sola palabra relacionada." },
+    "guided-questions": { "name": "Preguntas guiadas", "description": "La aplicación muestra una pregunta para que responda cada jugador." }
+  },
+  "configureGame": "Configurar partida", "continueGame": "Continuar partida", "discardGame": "Descartar partida", "howToPlay": "Cómo jugar",
+  "rules": ["Cada participante será el impostor exactamente una vez durante la partida.", "No digas la palabra secreta ni des una pista demasiado obvia.", "Después de las pistas, el grupo elige en conjunto a una persona acusada.", "Si lo descubren, el impostor todavía puede intentar adivinar la palabra."],
+  "setup": {
+    "title": "Configurar partida", "playersTitle": "¿Quiénes van a jugar?", "selected": "{{count}}/12 seleccionados", "emptyGroup": "Tu grupo todavía está vacío. Puedes agregar invitados abajo.", "guestPlaceholder": "Invitado temporal", "guestLabel": "Nombre del invitado", "guest": "invitado", "add": "Agregar", "manage": "Mi Grupo", "modeTitle": "Modo del impostor", "conversationTitle": "Formato de conversación", "rounds": "La partida tendrá {{count}} rondas: cada persona será el impostor una vez.", "start": "Iniciar partida"
+  },
+  "play": {
+    "round": "Ronda {{current}} de {{total}}", "progress": "Jugador {{current}} de {{total}}", "passTo": "Pasa el celular a {{name}}", "private": "Solo {{name}} debe mirar la pantalla.", "show": "Mostrar mi información", "hide": "Ocultar y pasar", "wordLabel": "Tu palabra", "impostorTitle": "Eres el impostor", "noWord": "No recibiste una palabra. Observa las pistas e improvisa.", "hintLabel": "Tu pista", "alternateNotice": "Memoriza tu palabra y no dejes que nadie la vea.", "everyoneReady": "Todos vieron su información", "conversationIntro": "Ahora empieza la ronda de pistas. La aplicación guiará el orden.", "startConversation": "Empezar las pistas", "yourTurn": "Turno de {{name}}", "sayOneWord": "Di una palabra relacionada sin revelar la respuesta secreta.", "questionLabel": "Responde la pregunta", "nextClue": "Siguiente jugador", "startDiscussion": "Empezar discusión", "discussionTitle": "Conversen y encuentren al impostor", "discussionText": "Recuerden las respuestas y pistas. Cuando estén de acuerdo, registren la acusación.", "chooseAccused": "Elegir acusado", "accusationTitle": "¿Quién es el impostor?", "accusationText": "Elige la decisión final del grupo. No podrá cambiarse.", "confirmAccusation": "Confirmar acusación: {{name}}", "wrongAccusation": "La acusación fue incorrecta", "finalGuessTitle": "Última oportunidad del impostor", "finalGuessText": "{{name}} debe decir en voz alta cuál cree que es la palabra secreta. No muestres la respuesta todavía.", "guessCorrect": "Adivinó la palabra", "guessWrong": "No adivinó la palabra", "summaryTitle": "Resumen de la ronda", "secretWord": "Palabra secreta", "impostorWas": "Impostor", "accusedWas": "Acusado", "impostorInfo": "Información del impostor", "pointsAwarded": "Puntos de esta ronda", "noPoints": "Sin puntos para este jugador", "nextRound": "Siguiente ronda", "seeResult": "Ver resultado", "leave": "Salir y continuar después"
+  },
+  "result": { "title": "Fin del juego", "tie": "¡Hay un empate!", "winner": "¡{{name}} ganó!", "description": "Gana quien acumule más puntos durante el ciclo completo del grupo.", "points": "{{count}} puntos", "newGame": "Nueva partida", "hub": "Volver al Hub" },
+  "errors": { "guestName": "Escribe el nombre del invitado.", "duplicateName": "Los jugadores deben tener nombres diferentes.", "playerLimit": "El límite es de 12 jugadores.", "playerCount": "Selecciona entre 3 y 12 jugadores." }
+}

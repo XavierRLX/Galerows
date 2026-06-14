@@ -1,0 +1,35 @@
+{
+  "name": "Dica Proibida",
+  "eyebrow": "Jogo das palavras proibidas",
+  "summary": "Dê dicas com palavras, evite as cinco palavras proibidas e corra contra o tempo para marcar pontos.",
+  "objectiveTitle": "Objetivo",
+  "objective": "Faça a galera adivinhar o máximo de cards possível sem falar nenhuma palavra proibida.",
+  "flowTitle": "Como funciona",
+  "flow": {
+    "giveHints": "Use apenas palavras para ajudar seu parceiro ou time a adivinhar.",
+    "forbidden": "Não fale nenhuma das 5 palavras proibidas mostradas no card.",
+    "timer": "Cada turno tem tempo limitado. Acerte o máximo possível.",
+    "score": "Cada acerto vale 1 ponto. Maior placar vence."
+  },
+  "bansTitle": "Proibições",
+  "bans": {
+    "gestures": "Não pode fazer mímica ou gestos.",
+    "rhymes": "Não pode usar rimas com a palavra.",
+    "spelling": "Não pode soletrar a palavra.",
+    "startsWith": "Não pode dizer \"rima com\" ou \"começa com\".",
+    "pointing": "Não pode apontar para objetos."
+  },
+  "tipTitle": "Dica:",
+  "tip": "Passe o celular para quem vai dar as dicas. O adivinhador não deve ver as palavras proibidas.",
+  "configureGame": "Configurar partida",
+  "continueGame": "Continuar partida",
+  "discardGame": "Descartar partida",
+  "howToPlay": "Como jogar",
+  "rules": [
+    "Passe o celular para quem vai dar as dicas.",
+    "A pessoa explica a palavra principal sem falar as 5 palavras proibidas.",
+    "No modo individual, selecione quem adivinhou para registrar o ponto.",
+    "No modo times, o ponto vai para o time da vez.",
+    "Quando o tempo acabar, passe para o próximo jogador ou time."
+  ]
+}

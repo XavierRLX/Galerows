@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "gameId": "taboo",
+  "deckId": "palavras-proibidas-iniciais",
+  "locale": "es-419",
+  "version": 1,
+  "title": "Palabras prohibidas iniciales",
+  "cards": [
+    {"id":"churrasqueira","word":"Parrilla","category":"Casa","difficulty":"easy","forbiddenWords":["Carne","Asado","Fuego","Carbón","Rejilla"]},
+    {"id":"espremedor","word":"Exprimidor","category":"Cocina","difficulty":"easy","forbiddenWords":["Jugo","Naranja","Apretar","Fruta","Cocina"]},
+    {"id":"praia","word":"Playa","category":"Lugares","difficulty":"easy","forbiddenWords":["Arena","Mar","Sol","Ola","Sombrilla"]},
+    {"id":"cinema","word":"Cine","category":"Entretenimiento","difficulty":"easy","forbiddenWords":["Película","Pantalla","Palomitas","Entrada","Función"]},
+    {"id":"dentista","word":"Dentista","category":"Profesiones","difficulty":"medium","forbiddenWords":["Diente","Consultorio","Caries","Frenos","Boca"]},
+    {"id":"biblioteca","word":"Biblioteca","category":"Lugares","difficulty":"medium","forbiddenWords":["Libro","Leer","Silencio","Estante","Préstamo"]},
+    {"id":"astronauta","word":"Astronauta","category":"Profesiones","difficulty":"medium","forbiddenWords":["Espacio","Cohete","Luna","NASA","Casco"]},
+    {"id":"carnaval","word":"Carnaval","category":"Fiestas","difficulty":"easy","forbiddenWords":["Desfile","Disfraz","Samba","Comparsa","Baile"]},
+    {"id":"internet","word":"Internet","category":"Tecnología","difficulty":"easy","forbiddenWords":["Wi-Fi","Sitio","Red","Online","Navegar"]},
+    {"id":"geladeira","word":"Refrigerador","category":"Casa","difficulty":"easy","forbiddenWords":["Frío","Comida","Cocina","Congelador","Puerta"]},
+    {"id":"montanha-russa","word":"Montaña rusa","category":"Diversión","difficulty":"medium","forbiddenWords":["Parque","Carrito","Subida","Bajada","Adrenalina"]},
+    {"id":"guarda-chuva","word":"Paraguas","category":"Objetos","difficulty":"easy","forbiddenWords":["Lluvia","Mojar","Abrir","Mango","Tormenta"]}
+  ]
+}

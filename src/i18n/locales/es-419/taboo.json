@@ -1,0 +1,35 @@
+{
+  "name": "Pista Prohibida",
+  "eyebrow": "Juego de palabras prohibidas",
+  "summary": "Da pistas solo con palabras, evita las cinco palabras prohibidas y corre contra el tiempo para sumar puntos.",
+  "objectiveTitle": "Objetivo",
+  "objective": "Haz que el grupo adivine la mayor cantidad de cartas posible sin decir ninguna palabra prohibida.",
+  "flowTitle": "Cómo funciona",
+  "flow": {
+    "giveHints": "Usa solo palabras para ayudar a tu pareja o equipo a adivinar.",
+    "forbidden": "No digas ninguna de las 5 palabras prohibidas de la carta.",
+    "timer": "Cada turno tiene tiempo limitado. Acierten lo máximo posible.",
+    "score": "Cada acierto vale 1 punto. Gana el mayor puntaje."
+  },
+  "bansTitle": "Prohibiciones",
+  "bans": {
+    "gestures": "No se puede hacer mímica ni gestos.",
+    "rhymes": "No se pueden usar rimas con la palabra.",
+    "spelling": "No se puede deletrear la palabra.",
+    "startsWith": "No se puede decir \"rima con\" o \"empieza con\".",
+    "pointing": "No se puede señalar objetos."
+  },
+  "tipTitle": "Consejo:",
+  "tip": "Pasa el celular a quien dará las pistas. Quien adivina no debe ver las palabras prohibidas.",
+  "configureGame": "Configurar partida",
+  "continueGame": "Continuar partida",
+  "discardGame": "Descartar partida",
+  "howToPlay": "Cómo jugar",
+  "rules": [
+    "Pasa el celular a quien dará las pistas.",
+    "La persona explica la palabra principal sin decir las 5 palabras prohibidas.",
+    "En modo individual, elige quién adivinó para registrar el punto.",
+    "En modo equipos, el punto va para el equipo en turno.",
+    "Cuando termine el tiempo, pasa al siguiente jugador o equipo."
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Forbidden Clue",
+  "eyebrow": "Forbidden words game",
+  "summary": "Give word-only clues, avoid the five forbidden words, and race the timer to score points.",
+  "objectiveTitle": "Goal",
+  "objective": "Help the group guess as many cards as possible without saying any forbidden word.",
+  "flowTitle": "How it works",
+  "flow": {
+    "giveHints": "Use only words to help your partner or team guess.",
+    "forbidden": "Do not say any of the 5 forbidden words on the card.",
+    "timer": "Each turn has a time limit. Guess as many as possible.",
+    "score": "Each correct guess is worth 1 point. Highest score wins."
+  },
+  "bansTitle": "Bans",
+  "bans": {
+    "gestures": "No miming or gestures.",
+    "rhymes": "No rhymes with the word.",
+    "spelling": "No spelling the word.",
+    "startsWith": "No saying \"rhymes with\" or \"starts with\".",
+    "pointing": "No pointing at objects."
+  },
+  "tipTitle": "Tip:",
+  "tip": "Hand the phone to the clue giver. Guessers should not see the forbidden words.",
+  "configureGame": "Set up game",
+  "continueGame": "Continue game",
+  "discardGame": "Discard game",
+  "howToPlay": "How to play",
+  "rules": [
+    "Hand the phone to the clue giver.",
+    "The clue giver explains the main word without saying the 5 forbidden words.",
+    "In individual mode, choose who guessed to record the point.",
+    "In team mode, the point goes to the current team.",
+    "When time runs out, pass to the next player or team."
+  ]
+}

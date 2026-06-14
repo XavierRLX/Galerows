@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "gameId": "nem-ferrando",
+  "deckId": "curiosidades-iniciais",
+  "locale": "pt-BR",
+  "version": 2,
+  "title": "Curiosidades iniciais",
+  "cards": [
+    {"id":"automoveis","number":1,"theme":"Automóveis","irons":4,"curiosities":[
+      {"id":"f1-velocidade","question":"Velocidade máxima aproximada de um carro de Fórmula 1","answer":370,"unit":"km/h"},
+      {"id":"veyron-potencia","question":"Potência do Bugatti Veyron Super Sport","answer":1200,"unit":"cv"},
+      {"id":"tesla-aceleracao","question":"Tempo aproximado de 0 a 100 km/h do Tesla Model S Plaid","answer":2.1,"unit":"segundos"}
+    ]},
+    {"id":"planeta-terra","number":2,"theme":"Planeta Terra","irons":3,"curiosities":[
+      {"id":"terra-circunferencia","question":"Circunferência aproximada da Terra na linha do Equador","answer":40075,"unit":"km"},
+      {"id":"everest-altura","question":"Altitude do Monte Everest","answer":8849,"unit":"m"},
+      {"id":"oceanos-percentual","question":"Percentual aproximado da superfície terrestre coberto por oceanos","answer":71,"unit":"%"}
+    ]},
+    {"id":"corpo-humano","number":3,"theme":"Corpo humano","irons":2,"curiosities":[
+      {"id":"ossos-adulto","question":"Quantidade de ossos no corpo humano adulto","answer":206},
+      {"id":"coracao-dia","question":"Batimentos aproximados do coração em um dia","answer":100000},
+      {"id":"pele-area","question":"Área aproximada da pele de um adulto","answer":2,"unit":"m²"}
+    ]},
+    {"id":"espaco","number":4,"theme":"Espaço","irons":5,"curiosities":[
+      {"id":"lua-distancia","question":"Distância média entre a Terra e a Lua","answer":384400,"unit":"km"},
+      {"id":"luz-sol","question":"Tempo aproximado para a luz do Sol chegar à Terra","answer":8.3,"unit":"minutos"},
+      {"id":"jupiter-luas","question":"Quantidade de luas conhecidas de Júpiter neste baralho","answer":95}
+    ]}
+  ]
+}

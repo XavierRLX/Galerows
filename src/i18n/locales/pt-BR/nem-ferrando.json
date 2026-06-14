@@ -1,0 +1,34 @@
+{
+  "name": "Nem Ferrando",
+  "eyebrow": "Palpites, coragem e Ferros",
+  "summary": "Uma disputa de palpites crescentes: continue aumentando ou diga Nem Ferrando quando achar que alguém passou da resposta.",
+  "objectiveTitle": "Objetivo",
+  "objective": "Faça os palpites avançarem sem ultrapassar a resposta real. Duvide na hora certa e termine a partida com menos Ferros que a galera.",
+  "flowTitle": "Como funciona a rodada",
+  "flow": {
+    "choose": "O jogador da rodada escolhe uma curiosidade da carta e lê a pergunta em voz alta.",
+    "guess": "Ele começa com um palpite. Seguindo a ordem da roda, cada jogador pode aumentar o último palpite.",
+    "challenge": "Em vez de aumentar, o próximo jogador pode duvidar e dizer Nem Ferrando.",
+    "reveal": "A resposta é revelada e comparada com o último palpite para definir quem recebe os Ferros."
+  },
+  "penaltyTitle": "Quem leva os Ferros?",
+  "penaltyIntro": "Compare o último palpite com a resposta da carta.",
+  "penalty": {
+    "safeTitle": "Palpite igual ou menor",
+    "safe": "Se o último palpite não ultrapassou a resposta, quem disse Nem Ferrando duvidou cedo demais e recebe os Ferros.",
+    "overTitle": "Palpite maior",
+    "over": "Se o último palpite ultrapassou a resposta, quem deu esse palpite foi longe demais e recebe os Ferros."
+  },
+  "exampleTitle": "Exemplo",
+  "example": "A pergunta é “Quantos países existem no mundo?” e a resposta da carta é 195. Se o último palpite foi 180, quem disse Nem Ferrando leva os Ferros. Se o último palpite foi 200, quem falou 200 leva os Ferros.",
+  "configureGame": "Configurar partida",
+  "continueGame": "Continuar partida",
+  "discardGame": "Descartar partida",
+  "howToPlay": "Como jogar",
+  "rules": [
+    "O jogador da rodada escolhe uma curiosidade, lê para todos e começa com um palpite.",
+    "Na ordem da roda, o próximo jogador aumenta o palpite ou diz Nem Ferrando.",
+    "Se o palpite for igual ou menor que a resposta, quem duvidou recebe os Ferros. Se for maior, quem ultrapassou recebe.",
+    "A partida termina quando alguém alcança o limite. Vence quem tiver menos Ferros."
+  ]
+}

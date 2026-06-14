@@ -1,0 +1,34 @@
+{
+  "name": "No Way",
+  "eyebrow": "Guesses, courage, and Irons",
+  "summary": "A battle of rising guesses: keep increasing the number or say No Way when you think someone passed the answer.",
+  "objectiveTitle": "Objective",
+  "objective": "Keep the guesses moving without going over the real answer. Challenge at the right moment and finish with the fewest Irons.",
+  "flowTitle": "How a round works",
+  "flow": {
+    "choose": "The round's player chooses a curiosity from the card and reads the question aloud.",
+    "guess": "They start with a guess. Going around the group, each player may increase the latest guess.",
+    "challenge": "Instead of increasing it, the next player may challenge by saying No Way.",
+    "reveal": "Reveal the answer and compare it with the latest guess to decide who receives the Irons."
+  },
+  "penaltyTitle": "Who gets the Irons?",
+  "penaltyIntro": "Compare the latest guess with the card's answer.",
+  "penalty": {
+    "safeTitle": "Guess is equal or lower",
+    "safe": "If the latest guess did not exceed the answer, the challenger doubted too soon and receives the Irons.",
+    "overTitle": "Guess is higher",
+    "over": "If the latest guess exceeded the answer, the player who made that guess went too far and receives the Irons."
+  },
+  "exampleTitle": "Example",
+  "example": "The question is “How many countries are there in the world?” and the card says 195. If the latest guess was 180, the challenger gets the Irons. If it was 200, the player who said 200 gets them.",
+  "configureGame": "Set up game",
+  "continueGame": "Continue game",
+  "discardGame": "Discard game",
+  "howToPlay": "How to play",
+  "rules": [
+    "The round's player chooses a curiosity, reads it aloud, and starts with a guess.",
+    "Going around the group, the next player increases the guess or says No Way.",
+    "If the guess is equal to or below the answer, the challenger gets the Irons. If it is higher, the player who went over gets them.",
+    "The game ends when someone reaches the limit. The player with the fewest Irons wins."
+  ]
+}

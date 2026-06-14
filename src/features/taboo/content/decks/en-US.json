@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "gameId": "taboo",
+  "deckId": "palavras-proibidas-iniciais",
+  "locale": "en-US",
+  "version": 1,
+  "title": "Starter forbidden words",
+  "cards": [
+    {"id":"churrasqueira","word":"Grill","category":"Home","difficulty":"easy","forbiddenWords":["Meat","Barbecue","Fire","Charcoal","Grate"]},
+    {"id":"espremedor","word":"Juicer","category":"Kitchen","difficulty":"easy","forbiddenWords":["Juice","Orange","Squeeze","Fruit","Kitchen"]},
+    {"id":"praia","word":"Beach","category":"Places","difficulty":"easy","forbiddenWords":["Sand","Sea","Sun","Wave","Umbrella"]},
+    {"id":"cinema","word":"Movie theater","category":"Entertainment","difficulty":"easy","forbiddenWords":["Movie","Screen","Popcorn","Ticket","Showtime"]},
+    {"id":"dentista","word":"Dentist","category":"Jobs","difficulty":"medium","forbiddenWords":["Tooth","Office","Cavity","Braces","Mouth"]},
+    {"id":"biblioteca","word":"Library","category":"Places","difficulty":"medium","forbiddenWords":["Book","Read","Quiet","Shelf","Borrow"]},
+    {"id":"astronauta","word":"Astronaut","category":"Jobs","difficulty":"medium","forbiddenWords":["Space","Rocket","Moon","NASA","Helmet"]},
+    {"id":"carnaval","word":"Carnival","category":"Parties","difficulty":"easy","forbiddenWords":["Parade","Costume","Music","Float","Dance"]},
+    {"id":"internet","word":"Internet","category":"Technology","difficulty":"easy","forbiddenWords":["Wi-Fi","Website","Network","Online","Browse"]},
+    {"id":"geladeira","word":"Refrigerator","category":"Home","difficulty":"easy","forbiddenWords":["Cold","Food","Kitchen","Freezer","Door"]},
+    {"id":"montanha-russa","word":"Roller coaster","category":"Fun","difficulty":"medium","forbiddenWords":["Park","Cart","Climb","Drop","Adrenaline"]},
+    {"id":"guarda-chuva","word":"Umbrella","category":"Objects","difficulty":"easy","forbiddenWords":["Rain","Wet","Open","Handle","Storm"]}
+  ]
+}

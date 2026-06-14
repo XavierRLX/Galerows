@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "gameId": "nem-ferrando",
+  "deckId": "curiosidades-iniciais",
+  "locale": "en-US",
+  "version": 2,
+  "title": "Starter curiosities",
+  "cards": [
+    {"id":"automoveis","number":1,"theme":"Cars","irons":4,"curiosities":[
+      {"id":"f1-velocidade","question":"Approximate top speed of a Formula 1 car","answer":370,"unit":"km/h"},
+      {"id":"veyron-potencia","question":"Power of the Bugatti Veyron Super Sport","answer":1200,"unit":"hp"},
+      {"id":"tesla-aceleracao","question":"Approximate 0 to 100 km/h time of a Tesla Model S Plaid","answer":2.1,"unit":"seconds"}
+    ]},
+    {"id":"planeta-terra","number":2,"theme":"Planet Earth","irons":3,"curiosities":[
+      {"id":"terra-circunferencia","question":"Approximate circumference of Earth at the Equator","answer":40075,"unit":"km"},
+      {"id":"everest-altura","question":"Elevation of Mount Everest","answer":8849,"unit":"m"},
+      {"id":"oceanos-percentual","question":"Approximate percentage of Earth's surface covered by oceans","answer":71,"unit":"%"}
+    ]},
+    {"id":"corpo-humano","number":3,"theme":"Human body","irons":2,"curiosities":[
+      {"id":"ossos-adulto","question":"Number of bones in the adult human body","answer":206},
+      {"id":"coracao-dia","question":"Approximate heartbeats in one day","answer":100000},
+      {"id":"pele-area","question":"Approximate skin area of an adult","answer":2,"unit":"m²"}
+    ]},
+    {"id":"espaco","number":4,"theme":"Space","irons":5,"curiosities":[
+      {"id":"lua-distancia","question":"Average distance between Earth and the Moon","answer":384400,"unit":"km"},
+      {"id":"luz-sol","question":"Approximate time for sunlight to reach Earth","answer":8.3,"unit":"minutes"},
+      {"id":"jupiter-luas","question":"Number of known moons of Jupiter used by this deck","answer":95}
+    ]}
+  ]
+}
