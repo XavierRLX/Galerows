@@ -16,6 +16,7 @@ const coverFallbacks: Record<string, string> = {
   'impostor-da-palavra': 'radial-gradient(circle at 88% 24%, rgba(127,29,29,0.34), transparent 22%), linear-gradient(135deg, rgba(30,5,8,0.96), rgba(15,23,42,0.92) 58%, rgba(69,10,10,0.72))',
   taboo: 'radial-gradient(circle at 12% 34%, rgba(22,101,52,0.34), transparent 24%), linear-gradient(135deg, rgba(5,46,22,0.96), rgba(15,23,42,0.92) 58%, rgba(20,83,45,0.72))',
   'nem-ferrando': 'radial-gradient(circle at 18% 28%, rgba(120,74,35,0.32), transparent 26%), linear-gradient(135deg, rgba(24,10,2,0.98), rgba(49,31,18,0.95) 58%, rgba(15,23,42,0.9))',
+  'quem-sou-eu': 'radial-gradient(circle at 18% 26%, rgba(56,189,248,0.32), transparent 24%), linear-gradient(135deg, rgba(8,47,73,0.98), rgba(15,23,42,0.94) 58%, rgba(14,116,144,0.68))',
   'cidade-dorme': 'radial-gradient(circle at 18% 26%, rgba(37,99,235,0.3), transparent 24%), linear-gradient(135deg, rgba(2,6,23,0.98), rgba(15,23,42,0.94) 58%, rgba(30,58,138,0.68))',
 }
 
@@ -36,6 +37,11 @@ const cardThemes: Record<string, { icon: string; title: string; action: string }
     icon: 'border-[#166534]/50 bg-slate-950/55 text-[#22c55e] shadow-[#052e16]/35',
     title: 'text-[#22c55e]',
     action: 'border-[#166534] text-[#22c55e] hover:border-transparent hover:bg-[#166534] hover:text-white',
+  },
+  'quem-sou-eu': {
+    icon: 'border-sky-400/45 bg-slate-950/55 text-sky-300 shadow-sky-950/35',
+    title: 'text-sky-300',
+    action: 'border-sky-400 text-sky-300 hover:border-transparent hover:bg-sky-400 hover:text-slate-950',
   },
 }
 

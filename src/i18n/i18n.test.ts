@@ -11,6 +11,7 @@ describe('i18n', () => {
       expect(i18n.t('games.nem-ferrando.name', { ns: 'hub' })).toBeTruthy()
       expect(i18n.t('games.impostor-da-palavra.name', { ns: 'hub' })).toBeTruthy()
       expect(i18n.t('name', { ns: 'impostor-da-palavra' })).toBeTruthy()
+      expect(i18n.t('name', { ns: 'quem-sou-eu' })).toBeTruthy()
     }
     await i18n.changeLanguage('pt-BR')
   })

@@ -7,6 +7,7 @@ export const STORAGE_KEYS = {
   impostorDaPalavraOpeningHistory: 'galerows.games.impostor-da-palavra.opening-history',
   tabooSession: 'galerows.games.taboo.session',
   tabooOpeningHistory: 'galerows.games.taboo.opening-history',
+  quemSouEuSession: 'galerows.games.quem-sou-eu.session',
 } as const
 
 export function contentOverrideKey(gameId: string, locale: string) {

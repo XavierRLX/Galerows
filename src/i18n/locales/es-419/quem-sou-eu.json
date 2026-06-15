@@ -1,0 +1,66 @@
+{
+  "name":"Quién Soy",
+  "eyebrow":"Adivinanza en la frente",
+  "summary":"El grupo escribe las palabras, tú giras el celular o lo pones en la frente e intentas adivinar qué eres.",
+  "objectiveTitle":"Objetivo",
+  "objective":"Adivina tantas palabras como puedas. El celular solo sirve para esconder y revelar el desafío.",
+  "upToWords":"Hasta 5 palabras",
+  "flowTitle":"Cómo funciona",
+  "flow":{"write":"Pasa el celular a otra persona para que escriba o elija hasta 5 palabras.","hide":"La cuenta regresiva de 5 segundos te da tiempo para girar la pantalla o poner el celular en la frente.","guess":"Cuando aciertes, toma el celular y marca Acerté. Si te trabas, marca Saltar."},
+  "tipTitle":"Consejo:",
+  "tip":"Usa famosos, personajes, objetos o ideas absurdas para que la ronda sea más divertida.",
+  "discardGame":"Descartar partida",
+  "continueGame":"Continuar partida",
+  "startGame":"Empezar",
+  "howToPlay":"Cómo jugar",
+  "rules":["Elige de 1 a 5 palabras para que una persona las adivine.","Quien adivina no debe mirar la pantalla antes de que termine la cuenta.","El grupo solo puede responder sí o no a las preguntas de quien adivina.","Después de cada palabra, marca Acerté o Saltar para avanzar."],
+  "loading":"Cargando partida...",
+  "setup":{
+    "title":"Preparar palabras",
+    "eyebrow":"Modo individual",
+    "heading":"Pasa el celular al grupo",
+    "description":"Entrega el celular al grupo para que escriba lo que debes adivinar. También puedes tocar sugerencias de temas variados.",
+    "wordsTitle":"Palabras",
+    "wordCount":"{{count}}/5 palabras",
+    "addField":"Agregar",
+    "wordLabel":"Palabra {{number}}",
+    "wordPlaceholder":"Ej.: Beyoncé, Wi-Fi, piña...",
+    "removeWord":"Quitar palabra {{number}}",
+    "start":"Iniciar juego",
+    "errors":{"empty":"Ingresa al menos una palabra."}
+  },
+  "suggestions":{
+    "title":"Temas variados",
+    "description":"Toca sugerencias para llenar rápido, o escribe cualquier cosa en los campos de arriba.",
+    "hiddenDescription":"Las sugerencias quedan ocultas para no revelar las palabras antes de tiempo.",
+    "show":"Mostrar sugerencias",
+    "refresh":"Actualizar palabras",
+    "groups":[
+      {"title":"Personas y personajes","items":["Neymar","Beyoncé","Harry Potter","Anitta","Spider-Man","Shakira","Goku","Taylor Swift","Batman","Barbie","Merlina","Lady Gaga","Sonic","Elvis Presley","Cleopatra","Michael Jackson","Sherlock Holmes","Mario","Mujer Maravilla","The Rock"]},
+      {"title":"Cosas del día a día","items":["Wi-Fi","Freidora de aire","Sandalia","Pago instantáneo","Paraguas","Control remoto","Cepillo de dientes","Audífonos","Refrigerador","Cafetera","Enchufe","Mochila","Gafas de sol","Cargador","Jabón","Almohada","Elevador","Tarjeta de crédito","Silla gamer","Licuadora"]},
+      {"title":"Aleatorias","items":["Piña","Dinosaurio","Karaoke","Marte","Pizza fría","Unicornio","Agujero negro","Castillo de arena","Máquina del tiempo","Nube","Dragón","Tiburón","Bola de nieve","Volcán","Robot aspirador","Isla desierta","Tesoro pirata","Globo","Trofeo","Galleta de la suerte"]}
+    ]
+  },
+  "play":{
+    "progress":"{{current}} de {{total}}",
+    "exit":"Salir",
+    "getReady":"Prepara la frente",
+    "countdownHint":"Gira la pantalla hacia el grupo o pon el celular en la frente antes de que aparezca la palabra.",
+    "wordLabel":"¿Quién soy?",
+    "revealedHint":"Respondan solo sí o no, sin decir la palabra. Cuando la persona acierte o se rinda, tomen el celular y marquen el resultado.",
+    "correct":"Acerté",
+    "skip":"Saltar"
+  },
+  "result":{
+    "title":"Resumen",
+    "heading":"Ronda completa",
+    "description":"Así fue esta vez.",
+    "correct":"Aciertos",
+    "skipped":"Saltos",
+    "total":"Total",
+    "correctShort":"Acertó",
+    "skippedShort":"Saltó",
+    "newGame":"Nueva vez",
+    "backHome":"Volver al Hub"
+  }
+}

@@ -13,6 +13,10 @@ import { NemFerrandoResultScreen } from '../features/nem-ferrando/NemFerrandoRes
 import { NemFerrandoSetupScreen } from '../features/nem-ferrando/NemFerrandoSetupScreen'
 import { PremiumScreen } from '../features/premium/PremiumScreen'
 import { PlayersScreen } from '../features/players/PlayersScreen'
+import { QuemSouEuHomeScreen } from '../features/quem-sou-eu/QuemSouEuHomeScreen'
+import { QuemSouEuPlayScreen } from '../features/quem-sou-eu/QuemSouEuPlayScreen'
+import { QuemSouEuResultScreen } from '../features/quem-sou-eu/QuemSouEuResultScreen'
+import { QuemSouEuSetupScreen } from '../features/quem-sou-eu/QuemSouEuSetupScreen'
 import { SettingsScreen } from '../features/settings/SettingsScreen'
 import { TabooHomeScreen } from '../features/taboo/TabooHomeScreen'
 import { TabooPlayScreen } from '../features/taboo/TabooPlayScreen'
@@ -40,6 +44,10 @@ export function AppRoutes() {
         <Route path="games/taboo/setup" element={<TabooSetupScreen />} />
         <Route path="games/taboo/play" element={<TabooPlayScreen />} />
         <Route path="games/taboo/result" element={<TabooResultScreen />} />
+        <Route path="games/quem-sou-eu" element={<QuemSouEuHomeScreen />} />
+        <Route path="games/quem-sou-eu/setup" element={<QuemSouEuSetupScreen />} />
+        <Route path="games/quem-sou-eu/play" element={<QuemSouEuPlayScreen />} />
+        <Route path="games/quem-sou-eu/result" element={<QuemSouEuResultScreen />} />
         <Route path="*" element={<Navigate replace to="/" />} />
       </Route>
     </Routes>

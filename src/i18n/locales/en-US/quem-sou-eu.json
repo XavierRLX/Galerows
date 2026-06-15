@@ -1,0 +1,66 @@
+{
+  "name":"Who Am I",
+  "eyebrow":"Forehead guessing",
+  "summary":"Your friends write the words, you flip the phone or put it on your forehead, then try to guess what you are.",
+  "objectiveTitle":"Goal",
+  "objective":"Guess as many words as possible. The phone is just the hiding and reveal place.",
+  "upToWords":"Up to 5 words",
+  "flowTitle":"How it works",
+  "flow":{"write":"Hand the phone to someone else so they can write or pick up to 5 words.","hide":"The 5-second countdown gives you time to flip the screen or put the phone on your forehead.","guess":"When you get it right, take the phone and tap Correct. If you are stuck, tap Skip."},
+  "tipTitle":"Tip:",
+  "tip":"Use celebrities, characters, objects, or absurd ideas to make the round funnier.",
+  "discardGame":"Discard game",
+  "continueGame":"Continue game",
+  "startGame":"Start",
+  "howToPlay":"How to play",
+  "rules":["Choose 1 to 5 words for one person to guess.","The guesser should not look at the screen before the countdown ends.","The group can only answer yes or no to the guesser's questions.","After each word, tap Correct or Skip to move on."],
+  "loading":"Loading game...",
+  "setup":{
+    "title":"Prepare words",
+    "eyebrow":"Individual mode",
+    "heading":"Pass the phone to the group",
+    "description":"Hand the phone to your friends so they can write what you should guess. You can also tap mixed-theme suggestions.",
+    "wordsTitle":"Words",
+    "wordCount":"{{count}}/5 words",
+    "addField":"Add",
+    "wordLabel":"Word {{number}}",
+    "wordPlaceholder":"Ex.: Beyoncé, Wi-Fi, pineapple...",
+    "removeWord":"Remove word {{number}}",
+    "start":"Start game",
+    "errors":{"empty":"Enter at least one word."}
+  },
+  "suggestions":{
+    "title":"Mixed themes",
+    "description":"Tap suggestions to fill things quickly, or type anything in the fields above.",
+    "hiddenDescription":"Suggestions stay hidden so the words are not spoiled before the round.",
+    "show":"Show suggestions",
+    "refresh":"Refresh words",
+    "groups":[
+      {"title":"People and characters","items":["Neymar","Beyoncé","Harry Potter","Anitta","Spider-Man","Shakira","Goku","Taylor Swift","Batman","Barbie","Wednesday","Lady Gaga","Sonic","Elvis Presley","Cleopatra","Michael Jackson","Sherlock Holmes","Mario","Wonder Woman","The Rock"]},
+      {"title":"Everyday things","items":["Wi-Fi","Air fryer","Flip-flop","Instant payment","Umbrella","Remote control","Toothbrush","Headphones","Fridge","Coffee maker","Power outlet","Backpack","Sunglasses","Phone charger","Soap","Pillow","Elevator","Credit card","Gaming chair","Blender"]},
+      {"title":"Random","items":["Pineapple","Dinosaur","Karaoke","Mars","Cold pizza","Unicorn","Black hole","Sand castle","Time machine","Cloud","Dragon","Shark","Snowball","Volcano","Robot vacuum","Desert island","Pirate treasure","Balloon","Trophy","Fortune cookie"]}
+    ]
+  },
+  "play":{
+    "progress":"{{current}} of {{total}}",
+    "exit":"Exit",
+    "getReady":"Get your forehead ready",
+    "countdownHint":"Flip the screen to the group or put the phone on your forehead before the word appears.",
+    "wordLabel":"Who am I?",
+    "revealedHint":"Answer only yes or no, without saying the word. When the guesser gets it or gives up, take the phone and mark the result.",
+    "correct":"Correct",
+    "skip":"Skip"
+  },
+  "result":{
+    "title":"Summary",
+    "heading":"Round complete",
+    "description":"Here is how this turn went.",
+    "correct":"Correct",
+    "skipped":"Skipped",
+    "total":"Total",
+    "correctShort":"Correct",
+    "skippedShort":"Skipped",
+    "newGame":"New turn",
+    "backHome":"Back to Hub"
+  }
+}
