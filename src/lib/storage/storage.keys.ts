@@ -8,6 +8,7 @@ export const STORAGE_KEYS = {
   tabooSession: 'galerows.games.taboo.session',
   tabooOpeningHistory: 'galerows.games.taboo.opening-history',
   quemSouEuSession: 'galerows.games.quem-sou-eu.session',
+  adedonhaSession: 'galerows.games.adedonha.session',
 } as const
 
 export function contentOverrideKey(gameId: string, locale: string) {

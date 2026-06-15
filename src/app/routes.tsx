@@ -1,5 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from '../components/layout/AppShell'
+import { AdedonhaHomeScreen } from '../features/adedonha/AdedonhaHomeScreen'
+import { AdedonhaPlayScreen } from '../features/adedonha/AdedonhaPlayScreen'
+import { AdedonhaSetupScreen } from '../features/adedonha/AdedonhaSetupScreen'
 import { ContentAdminScreen } from '../features/content/ContentAdminScreen'
 import { contentAdminEnabled } from '../features/content/contentAdmin'
 import { HubScreen } from '../features/hub/HubScreen'
@@ -48,6 +51,9 @@ export function AppRoutes() {
         <Route path="games/quem-sou-eu/setup" element={<QuemSouEuSetupScreen />} />
         <Route path="games/quem-sou-eu/play" element={<QuemSouEuPlayScreen />} />
         <Route path="games/quem-sou-eu/result" element={<QuemSouEuResultScreen />} />
+        <Route path="games/adedonha" element={<AdedonhaHomeScreen />} />
+        <Route path="games/adedonha/setup" element={<AdedonhaSetupScreen />} />
+        <Route path="games/adedonha/play" element={<AdedonhaPlayScreen />} />
         <Route path="*" element={<Navigate replace to="/" />} />
       </Route>
     </Routes>

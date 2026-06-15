@@ -30,4 +30,11 @@ describe('app navigation', () => {
     await user.click(screen.getAllByRole('button', { name: /jogar agora/i })[3])
     expect(await screen.findByRole('heading', { name: 'Quem Sou Eu', level: 1 })).toBeInTheDocument()
   })
+
+  it('opens Adedonha internally', async () => {
+    const user = userEvent.setup()
+    render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
+    await user.click(screen.getAllByRole('button', { name: /jogar agora/i })[4])
+    expect(await screen.findByRole('heading', { name: 'Adedonha', level: 1 })).toBeInTheDocument()
+  })
 })
