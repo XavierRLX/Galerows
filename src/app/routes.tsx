@@ -10,6 +10,10 @@ import { ImpostorDaPalavraHomeScreen } from '../features/impostor-da-palavra/Imp
 import { ImpostorDaPalavraPlayScreen } from '../features/impostor-da-palavra/ImpostorDaPalavraPlayScreen'
 import { ImpostorDaPalavraResultScreen } from '../features/impostor-da-palavra/ImpostorDaPalavraResultScreen'
 import { ImpostorDaPalavraSetupScreen } from '../features/impostor-da-palavra/ImpostorDaPalavraSetupScreen'
+import { MimicaHomeScreen } from '../features/mimica/MimicaHomeScreen'
+import { MimicaPlayScreen } from '../features/mimica/MimicaPlayScreen'
+import { MimicaResultScreen } from '../features/mimica/MimicaResultScreen'
+import { MimicaSetupScreen } from '../features/mimica/MimicaSetupScreen'
 import { NemFerrandoHomeScreen } from '../features/nem-ferrando/NemFerrandoHomeScreen'
 import { NemFerrandoPlayScreen } from '../features/nem-ferrando/NemFerrandoPlayScreen'
 import { NemFerrandoResultScreen } from '../features/nem-ferrando/NemFerrandoResultScreen'
@@ -47,6 +51,10 @@ export function AppRoutes() {
         <Route path="games/taboo/setup" element={<TabooSetupScreen />} />
         <Route path="games/taboo/play" element={<TabooPlayScreen />} />
         <Route path="games/taboo/result" element={<TabooResultScreen />} />
+        <Route path="games/mimica" element={<MimicaHomeScreen />} />
+        <Route path="games/mimica/setup" element={<MimicaSetupScreen />} />
+        <Route path="games/mimica/play" element={<MimicaPlayScreen />} />
+        <Route path="games/mimica/result" element={<MimicaResultScreen />} />
         <Route path="games/quem-sou-eu" element={<QuemSouEuHomeScreen />} />
         <Route path="games/quem-sou-eu/setup" element={<QuemSouEuSetupScreen />} />
         <Route path="games/quem-sou-eu/play" element={<QuemSouEuPlayScreen />} />

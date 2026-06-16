@@ -1,0 +1,26 @@
+{
+  "name": "Mímica",
+  "eyebrow": "Sin hablar, solo actuar",
+  "summary": "Elige una acción, haz que la adivinen y marca los puntos de cada ronda.",
+  "objectiveTitle": "Objetivo",
+  "objective": "Haz mímicas para que alguien adivine la acción elegida. En modo individual, quien actúa gana más puntos y quien acierta también suma.",
+  "flowTitle": "Flujo del juego",
+  "flow": {
+    "choose": "El actor o equipo de turno revela una carta y elige una de tres acciones.",
+    "act": "La mímica empieza, con cronómetro opcional configurado al inicio.",
+    "score": "Registra quién acertó y sigue el marcador hasta el resultado final."
+  },
+  "rulesTitle": "Reglas rápidas",
+  "rules": [
+    "No se puede hablar, cantar, deletrear ni escribir en el aire.",
+    "En individual, quien hace la mímica gana el doble de puntos de la acción.",
+    "Quien acierta en individual también recibe los puntos base.",
+    "En equipos, el equipo de turno suma cuando acierta."
+  ],
+  "tipTitle": "Consejo:",
+  "tip": "Empieza por el contexto de la acción y luego agrega los detalles difíciles.",
+  "discardGame": "Descartar partida",
+  "howToPlay": "Cómo jugar",
+  "continueGame": "Continuar partida",
+  "configureGame": "Configurar partida"
+}

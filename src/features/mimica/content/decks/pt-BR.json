@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "gameId": "mimica",
+  "deckId": "mimicas-iniciais",
+  "locale": "pt-BR",
+  "version": 1,
+  "title": "Mímicas iniciais",
+  "cards": [
+    {
+      "id": "cotidiano",
+      "theme": "Cotidiano",
+      "difficulty": "easy",
+      "actions": [
+        { "id": "escovar-dentes", "label": "Escovar os dentes", "points": 1 },
+        { "id": "pegar-onibus", "label": "Pegar ônibus lotado", "points": 2 },
+        { "id": "procurar-chave", "label": "Procurar a chave atrasado", "points": 3 }
+      ]
+    },
+    {
+      "id": "esportes",
+      "theme": "Esportes",
+      "difficulty": "easy",
+      "actions": [
+        { "id": "cobrar-penalti", "label": "Cobrar um pênalti", "points": 1 },
+        { "id": "surfar-onda", "label": "Surfar uma onda", "points": 2 },
+        { "id": "levantar-trofeu", "label": "Levantar um troféu", "points": 3 }
+      ]
+    },
+    {
+      "id": "cinema",
+      "theme": "Cinema",
+      "difficulty": "medium",
+      "actions": [
+        { "id": "fugir-explosao", "label": "Fugir de uma explosão em câmera lenta", "points": 2 },
+        { "id": "detetive-lupa", "label": "Investigar com uma lupa", "points": 2 },
+        { "id": "robo-dancando", "label": "Robô aprendendo a dançar", "points": 4 }
+      ]
+    },
+    {
+      "id": "animais",
+      "theme": "Animais",
+      "difficulty": "medium",
+      "actions": [
+        { "id": "pinguim-andando", "label": "Andar como pinguim", "points": 1 },
+        { "id": "canguru-boxe", "label": "Canguru lutando boxe", "points": 3 },
+        { "id": "camaleao-escondido", "label": "Camaleão tentando se esconder", "points": 4 }
+      ]
+    },
+    {
+      "id": "profissoes",
+      "theme": "Profissões",
+      "difficulty": "hard",
+      "actions": [
+        { "id": "chef-apressado", "label": "Chef cozinhando atrasado", "points": 2 },
+        { "id": "astronauta-gravidade", "label": "Astronauta sem gravidade", "points": 4 },
+        { "id": "maestro-orquestra", "label": "Maestro regendo uma orquestra", "points": 5 }
+      ]
+    },
+    {
+      "id": "festa",
+      "theme": "Festa",
+      "difficulty": "easy",
+      "actions": [
+        { "id": "abrir-presente", "label": "Abrir um presente surpresa", "points": 1 },
+        { "id": "dancar-forro", "label": "Dançar forró sem par", "points": 2 },
+        { "id": "apagar-velas", "label": "Apagar velas que não apagam", "points": 3 }
+      ]
+    }
+  ]
+}

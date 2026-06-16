@@ -1,0 +1,26 @@
+{
+  "name": "Charades",
+  "eyebrow": "No talking, just acting",
+  "summary": "Pick an action, act it out, and score each round.",
+  "objectiveTitle": "Goal",
+  "objective": "Act out prompts so someone guesses the chosen action. In individual mode, the actor earns more points and the guesser scores too.",
+  "flowTitle": "Game flow",
+  "flow": {
+    "choose": "The actor or active team reveals one card and chooses one of three actions.",
+    "act": "The charade starts, with an optional timer configured before the game.",
+    "score": "Record who guessed correctly and follow the scoreboard to the final result."
+  },
+  "rulesTitle": "Quick rules",
+  "rules": [
+    "No talking, singing, spelling, or writing in the air.",
+    "In individual mode, the actor earns double the action points.",
+    "The correct guesser also earns the base points in individual mode.",
+    "In team mode, the active team scores when it guesses correctly."
+  ],
+  "tipTitle": "Tip:",
+  "tip": "Start with the action context, then add the tricky details.",
+  "discardGame": "Discard game",
+  "howToPlay": "How to play",
+  "continueGame": "Continue game",
+  "configureGame": "Configure game"
+}

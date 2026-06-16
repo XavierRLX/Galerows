@@ -7,6 +7,8 @@ export const STORAGE_KEYS = {
   impostorDaPalavraOpeningHistory: 'galerows.games.impostor-da-palavra.opening-history',
   tabooSession: 'galerows.games.taboo.session',
   tabooOpeningHistory: 'galerows.games.taboo.opening-history',
+  mimicaSession: 'galerows.games.mimica.session',
+  mimicaOpeningHistory: 'galerows.games.mimica.opening-history',
   quemSouEuSession: 'galerows.games.quem-sou-eu.session',
   adedonhaSession: 'galerows.games.adedonha.session',
 } as const

@@ -37,4 +37,11 @@ describe('app navigation', () => {
     await user.click(screen.getAllByRole('button', { name: /jogar agora/i })[4])
     expect(await screen.findByRole('heading', { name: 'Adedonha', level: 1 })).toBeInTheDocument()
   })
+
+  it('opens Mímica internally', async () => {
+    const user = userEvent.setup()
+    render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
+    await user.click(screen.getAllByRole('button', { name: /jogar agora/i })[5])
+    expect(await screen.findByRole('heading', { name: 'Mímica', level: 1 })).toBeInTheDocument()
+  })
 })
