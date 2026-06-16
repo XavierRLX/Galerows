@@ -8,12 +8,14 @@ import { Card } from '../../components/ui/Card'
 import { Modal } from '../../components/ui/Modal'
 import { cn } from '../../lib/utils/cn'
 import { shuffle } from '../../lib/utils/shuffle'
+import { useFakeAd } from '../ads/FakeAdProvider'
 import { decodeAdedonhaShare, defaultAdedonhaCategories, drawAdedonhaLetter, encodeAdedonhaShare, funAdedonhaCategories, normalizeAdedonhaCategories } from './adedonha.session'
 import { useAdedonhaStore } from './adedonha.store'
 import { AdedonhaQrScanner } from './AdedonhaQrScanner'
 
 export function AdedonhaSetupScreen() {
   const navigate = useNavigate()
+  const { showFakeAd } = useFakeAd()
   const [searchParams] = useSearchParams()
   const start = useAdedonhaStore((state) => state.start)
   const initialCode = searchParams.get('code') ?? ''
@@ -61,6 +63,7 @@ export function AdedonhaSetupScreen() {
     if (!cleanCategories.length) { setError('Adicione pelo menos um tema.'); return }
     const imported = decodeAdedonhaShare(shareCode)
     await start(cleanCategories, imported?.l)
+    await showFakeAd({ placement: 'start-match' })
     navigate('/games/adedonha/play')
   }
 

@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { createId } from '../../lib/utils/createId'
 import { cn } from '../../lib/utils/cn'
+import { useFakeAd } from '../ads/FakeAdProvider'
 import { createGuestParticipant, normalizePlayerName, playerToParticipant } from '../players/players.model'
 import { usePlayersStore } from '../players/players.store'
 import type { GameParticipant } from '../players/players.types'
@@ -19,6 +20,7 @@ const roundOptions = [1, 2, 3, 4, 5]
 
 export function TabooSetupScreen() {
   const navigate = useNavigate()
+  const { showFakeAd } = useFakeAd()
   const { group, hydrated, load } = usePlayersStore()
   const start = useTabooStore((state) => state.start)
   const [mode, setMode] = useState<TabooMode>('individual')
@@ -56,6 +58,7 @@ export function TabooSetupScreen() {
     if (mode === 'individual' && (participants.length < 2 || participants.length > 12)) { setError('Selecione entre 2 e 12 jogadores.'); return }
     if (mode === 'teams' && teams.length < 2) { setError('Crie pelo menos 2 times.'); return }
     await start(participants, teams, { mode, turnDurationSeconds: duration, allowSkips, skipLimit, roundsPerEntity: rounds })
+    await showFakeAd({ placement: 'start-match' })
     navigate('/games/taboo/play')
   }
   const canStart = mode === 'individual' ? count >= 2 : teams.length >= 2

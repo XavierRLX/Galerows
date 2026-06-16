@@ -6,6 +6,7 @@ import { Header } from '../../components/layout/Header'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { cn } from '../../lib/utils/cn'
+import { useFakeAd } from '../ads/FakeAdProvider'
 import { createGuestParticipant, normalizePlayerName, playerToParticipant } from '../players/players.model'
 import { usePlayersStore } from '../players/players.store'
 import type { GameParticipant } from '../players/players.types'
@@ -19,6 +20,7 @@ const conversations: ConversationMode[] = ['one-word', 'guided-questions']
 export function ImpostorDaPalavraSetupScreen() {
   const { t } = useTranslation('impostor-da-palavra')
   const navigate = useNavigate()
+  const { showFakeAd } = useFakeAd()
   const { group, hydrated, load } = usePlayersStore()
   const start = useImpostorDaPalavraStore((state) => state.start)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
@@ -43,6 +45,7 @@ export function ImpostorDaPalavraSetupScreen() {
   const begin = async () => {
     if (count < 3 || count > 12) { setError(t('errors.playerCount')); return }
     await start([...selectedPlayers.map(playerToParticipant), ...guests], { impostorMode, conversationMode })
+    await showFakeAd({ placement: 'start-match' })
     navigate('/games/impostor-da-palavra/play')
   }
 

@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { createId } from '../../lib/utils/createId'
 import { cn } from '../../lib/utils/cn'
+import { useFakeAd } from '../ads/FakeAdProvider'
 import { createGuestParticipant, normalizePlayerName, playerToParticipant } from '../players/players.model'
 import { usePlayersStore } from '../players/players.store'
 import type { GameParticipant } from '../players/players.types'
@@ -18,6 +19,7 @@ const roundOptions = [1, 2, 3, 4, 5]
 
 export function MimicaSetupScreen() {
   const navigate = useNavigate()
+  const { showFakeAd } = useFakeAd()
   const { group, hydrated, load } = usePlayersStore()
   const start = useMimicaStore((state) => state.start)
   const [mode, setMode] = useState<MimicaMode>('individual')
@@ -54,6 +56,7 @@ export function MimicaSetupScreen() {
     if (mode === 'individual' && (participants.length < 2 || participants.length > 12)) { setError('Selecione entre 2 e 12 jogadores.'); return }
     if (mode === 'teams' && teams.length < 2) { setError('Crie pelo menos 2 times.'); return }
     await start(participants, teams, { mode, useTimer, turnDurationSeconds: duration, roundsPerEntity: rounds })
+    await showFakeAd({ placement: 'start-match' })
     navigate('/games/mimica/play')
   }
   const canStart = mode === 'individual' ? count >= 2 : teams.length >= 2

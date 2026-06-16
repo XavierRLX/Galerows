@@ -8,6 +8,7 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { cn } from '../../lib/utils/cn'
 import { AppHaptics } from '../../lib/capacitor/haptics'
+import { useFakeAd } from '../ads/FakeAdProvider'
 import { GameIcon } from '../games/GameIcon'
 import { GameStatusBadge } from '../games/GameStatusBadge'
 import type { GameModule } from '../games/games.types'
@@ -60,6 +61,7 @@ const defaultTheme = {
 export function GameCard({ game }: { game: GameModule }) {
   const { t } = useTranslation('hub')
   const navigate = useNavigate()
+  const { showFakeAd } = useFakeAd()
   const [tutorialOpen, setTutorialOpen] = useState(false)
   const available = game.status === 'available'
   const name = t(`games.${game.id}.name`, { defaultValue: game.name })
@@ -74,7 +76,7 @@ export function GameCard({ game }: { game: GameModule }) {
     backgroundPosition: game.coverImage ? 'center right' : 'center',
     backgroundSize: 'cover',
   }
-  const openGame = async () => { if (!available) return; await AppHaptics.light(); navigate(game.route) }
+  const openGame = async () => { if (!available) return; await AppHaptics.light(); await showFakeAd({ placement: 'hub-play' }); navigate(game.route) }
 
   return (
     <>

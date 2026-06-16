@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { cn } from '../../lib/utils/cn'
 import { shuffle } from '../../lib/utils/shuffle'
+import { useFakeAd } from '../ads/FakeAdProvider'
 import { normalizeQuemSouEuWords } from './quemSouEu.session'
 import { useQuemSouEuStore } from './quemSouEu.store'
 
@@ -18,6 +19,7 @@ type SuggestionGroup = {
 export function QuemSouEuSetupScreen() {
   const { t } = useTranslation('quem-sou-eu')
   const navigate = useNavigate()
+  const { showFakeAd } = useFakeAd()
   const start = useQuemSouEuStore((state) => state.start)
   const [words, setWords] = useState([''])
   const [error, setError] = useState('')
@@ -52,6 +54,7 @@ export function QuemSouEuSetupScreen() {
     const normalized = normalizeQuemSouEuWords(words)
     if (!normalized.length) { setError(t('setup.errors.empty')); return }
     await start(normalized)
+    await showFakeAd({ placement: 'start-match' })
     navigate('/games/quem-sou-eu/play')
   }
 

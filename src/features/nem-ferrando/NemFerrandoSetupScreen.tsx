@@ -5,6 +5,7 @@ import { Header } from '../../components/layout/Header'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { cn } from '../../lib/utils/cn'
+import { useFakeAd } from '../ads/FakeAdProvider'
 import { createGuestParticipant, normalizePlayerName, playerToParticipant } from '../players/players.model'
 import { usePlayersStore } from '../players/players.store'
 import type { GameParticipant } from '../players/players.types'
@@ -15,6 +16,7 @@ import { useNemFerrandoInitialization } from './useNemFerrandoInitialization'
 const limits: IronLimit[] = [10, 15, 20]
 export function NemFerrandoSetupScreen() {
   const navigate = useNavigate(); const { group, hydrated, load } = usePlayersStore(); const start = useNemFerrandoStore((state) => state.start)
+  const { showFakeAd } = useFakeAd()
   const [selectedIds, setSelectedIds] = useState<string[]>([]); const [guests, setGuests] = useState<GameParticipant[]>([]); const [guestName, setGuestName] = useState(''); const [limit, setLimit] = useState<IronLimit>(10); const [error, setError] = useState('')
   useNemFerrandoInitialization()
   useEffect(() => { if (!hydrated) void load() }, [hydrated, load])
@@ -32,7 +34,7 @@ export function NemFerrandoSetupScreen() {
   const begin = async () => {
     if (count < 2 || count > 12) { setError('Selecione entre 2 e 12 jogadores.'); return }
     const participants = [...selectedPlayers.map(playerToParticipant), ...guests]
-    await start(participants, limit); navigate('/games/nem-ferrando/play')
+    await start(participants, limit); await showFakeAd({ placement: 'start-match' }); navigate('/games/nem-ferrando/play')
   }
   return <div className="min-h-dvh pb-10"><Header backTo="/games/nem-ferrando" title="Configurar partida" /><section className="px-5 py-6">
     <div className="flex items-center justify-between gap-3"><div><h1 className="text-2xl font-black">Quem vai jogar?</h1><p className="text-sm text-slate-400">{count}/12 selecionados</p></div><Button variant="secondary" onClick={() => navigate('/players')}><Settings2 size={18} />Minha Galera</Button></div>
