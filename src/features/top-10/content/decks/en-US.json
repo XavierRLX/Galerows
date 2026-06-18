@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "gameId": "top-10",
+  "deckId": "top-10-core",
+  "locale": "en-US",
+  "version": 1,
+  "title": "Starter Top 10",
+  "cards": [
+    {
+      "id": 1,
+      "theme": "Geography",
+      "question": "What are the most populous countries in the world in 2026?",
+      "answers": [
+        { "rank": 1, "label": "India", "note": "Worldometer 2026: 1,476,625,576" },
+        { "rank": 2, "label": "China", "note": "Worldometer 2026: 1,412,914,089" },
+        { "rank": 3, "label": "United States", "note": "Worldometer 2026: 349,035,494" },
+        { "rank": 4, "label": "Indonesia", "note": "Worldometer 2026: 287,886,782" },
+        { "rank": 5, "label": "Pakistan", "note": "Worldometer 2026: 259,299,791" },
+        { "rank": 6, "label": "Nigeria", "note": "Worldometer 2026: 242,431,832" },
+        { "rank": 7, "label": "Brazil", "note": "Worldometer 2026: 213,562,666" },
+        { "rank": 8, "label": "Bangladesh", "note": "Worldometer 2026: 177,818,044" },
+        { "rank": 9, "label": "Russia", "note": "Worldometer 2026: 143,394,458" },
+        { "rank": 10, "label": "Ethiopia", "note": "Worldometer 2026: 138,902,185" }
+      ]
+    },
+    {
+      "id": 2,
+      "theme": "Movies",
+      "question": "Which movies have the highest worldwide box office gross of all time?",
+      "answers": [
+        { "rank": 1, "label": "Avatar", "note": "The Numbers: $2.923B" },
+        { "rank": 2, "label": "Avengers: Endgame", "note": "The Numbers: $2.717B" },
+        { "rank": 3, "label": "Avatar: The Way of Water", "note": "The Numbers: $2.322B" },
+        { "rank": 4, "label": "Titanic", "note": "The Numbers: $2.223B" },
+        { "rank": 5, "label": "Star Wars: The Force Awakens", "note": "The Numbers: $2.056B" },
+        { "rank": 6, "label": "Avengers: Infinity War", "note": "The Numbers: $2.048B" },
+        { "rank": 7, "label": "Ne Zha 2", "note": "The Numbers: $2.001B" },
+        { "rank": 8, "label": "Spider-Man: No Way Home", "note": "The Numbers: $1.921B" },
+        { "rank": 9, "label": "Zootopia 2", "note": "The Numbers: $1.859B" },
+        { "rank": 10, "label": "Inside Out 2", "note": "The Numbers: $1.698B" }
+      ]
+    },
+    {
+      "id": 3,
+      "theme": "Sports",
+      "question": "Who are the top goalscorers in men's FIFA World Cup history?",
+      "answers": [
+        { "rank": 1, "label": "Miroslav Klose", "note": "16 goals" },
+        { "rank": 2, "label": "Lionel Messi", "note": "16 goals on Jun 17, 2026" },
+        { "rank": 3, "label": "Ronaldo", "note": "15 goals" },
+        { "rank": 4, "label": "Gerd Muller", "note": "14 goals" },
+        { "rank": 5, "label": "Kylian Mbappe", "note": "14 goals on Jun 17, 2026" },
+        { "rank": 6, "label": "Just Fontaine", "note": "13 goals" },
+        { "rank": 7, "label": "Pele", "note": "12 goals" },
+        { "rank": 8, "label": "Sandor Kocsis", "note": "11 goals" },
+        { "rank": 9, "label": "Jurgen Klinsmann", "note": "11 goals" },
+        { "rank": 10, "label": "Helmut Rahn", "note": "10 goals" }
+      ]
+    }
+  ]
+}

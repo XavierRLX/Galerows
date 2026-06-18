@@ -13,14 +13,17 @@ import type { NemFerrandoDeck } from '../nem-ferrando/content/nemFerrandoContent
 import { validateNemFerrandoDeck } from '../nem-ferrando/content/nemFerrandoContent.validator'
 import type { TabooDeck } from '../taboo/content/tabooContent.types'
 import { validateTabooDeck } from '../taboo/content/tabooContent.validator'
+import type { Top10Deck } from '../top-10/content/top10Content.types'
+import { validateTop10Deck } from '../top-10/content/top10Content.validator'
 
-type AdminGameId = 'nem-ferrando' | 'impostor-da-palavra' | 'taboo'
-type AdminDeck = NemFerrandoDeck | ImpostorDaPalavraDeck | TabooDeck
+type AdminGameId = 'nem-ferrando' | 'impostor-da-palavra' | 'taboo' | 'top-10'
+type AdminDeck = NemFerrandoDeck | ImpostorDaPalavraDeck | TabooDeck | Top10Deck
 
 const adminGames: { id: AdminGameId; name: string }[] = [
   { id: 'nem-ferrando', name: 'Nem Ferrando' },
   { id: 'impostor-da-palavra', name: 'Impostor da Palavra' },
   { id: 'taboo', name: 'Dica Proibida' },
+  { id: 'top-10', name: 'Top 10' },
 ]
 
 export function ContentAdminScreen() {
@@ -35,7 +38,7 @@ export function ContentAdminScreen() {
   const validate = () => {
     try {
       const parsed: unknown = JSON.parse(text)
-      const result = gameId === 'nem-ferrando' ? validateNemFerrandoDeck(parsed, currentLocale) : gameId === 'impostor-da-palavra' ? validateImpostorDaPalavraDeck(parsed, currentLocale) : validateTabooDeck(parsed, currentLocale)
+      const result = gameId === 'nem-ferrando' ? validateNemFerrandoDeck(parsed, currentLocale) : gameId === 'impostor-da-palavra' ? validateImpostorDaPalavraDeck(parsed, currentLocale) : gameId === 'taboo' ? validateTabooDeck(parsed, currentLocale) : validateTop10Deck(parsed, currentLocale)
       setErrors(result.errors)
       setDeck(result.valid ? parsed as AdminDeck : null)
       setMessage(result.valid ? 'JSON válido e pronto para teste.' : '')
@@ -65,7 +68,7 @@ export function ContentAdminScreen() {
           {message ? <p className="mt-4 text-sm font-bold text-lime-300" role="status">{message}</p> : null}
           {errors.length ? <div className="mt-4 rounded-2xl bg-rose-500/10 p-4 text-sm text-rose-200" role="alert">{errors.map((error) => <p key={error}>{error}</p>)}</div> : null}
         </Card>
-        {deck ? <Card className="mt-5 p-5"><p className="text-sm font-bold uppercase tracking-wider text-slate-400">Pré-visualização</p>{deck.gameId === 'nem-ferrando' ? <NemFerrandoPreview deck={deck as NemFerrandoDeck} /> : deck.gameId === 'impostor-da-palavra' ? <ImpostorPreview deck={deck as ImpostorDaPalavraDeck} /> : <TabooPreview deck={deck as TabooDeck} />}</Card> : null}
+        {deck ? <Card className="mt-5 p-5"><p className="text-sm font-bold uppercase tracking-wider text-slate-400">Pré-visualização</p>{deck.gameId === 'nem-ferrando' ? <NemFerrandoPreview deck={deck as NemFerrandoDeck} /> : deck.gameId === 'impostor-da-palavra' ? <ImpostorPreview deck={deck as ImpostorDaPalavraDeck} /> : deck.gameId === 'taboo' ? <TabooPreview deck={deck as TabooDeck} /> : <Top10Preview deck={deck as Top10Deck} />}</Card> : null}
       </section>
     </div>
   )
@@ -83,4 +86,9 @@ function ImpostorPreview({ deck }: { deck: ImpostorDaPalavraDeck }) {
 function TabooPreview({ deck }: { deck: TabooDeck }) {
   const card = deck.cards[0]
   return <div className="mt-3 rounded-3xl border border-emerald-400/40 bg-emerald-500/10 p-5"><p className="text-xs font-black uppercase tracking-wider text-emerald-200">{card.category}</p><h2 className="mt-1 text-3xl font-black text-emerald-100">{card.word}</h2><div className="mt-4 flex flex-wrap gap-2">{card.forbiddenWords.map((word) => <span className="rounded-xl bg-red-500/15 px-3 py-2 text-sm font-bold text-red-200" key={word}>{word}</span>)}</div></div>
+}
+
+function Top10Preview({ deck }: { deck: Top10Deck }) {
+  const card = deck.cards[0]
+  return <div className="mt-3 rounded-3xl border border-red-800/50 bg-red-950/30 p-5"><p className="text-xs font-black uppercase tracking-wider text-red-200">{card.theme}</p><h2 className="mt-1 text-2xl font-black text-red-100">{card.question}</h2><div className="mt-4 grid gap-2">{card.answers.map((answer) => <div className="flex items-center justify-between rounded-xl bg-white/10 px-3 py-2 text-sm" key={answer.rank}><span><strong className="text-red-300">#{answer.rank}</strong> {answer.label}</span><span className="font-black text-red-200">{11 - answer.rank} pts</span></div>)}</div></div>
 }

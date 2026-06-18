@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "gameId": "top-10",
+  "deckId": "top-10-core",
+  "locale": "es-419",
+  "version": 1,
+  "title": "Top 10 inicial",
+  "cards": [
+    {
+      "id": 1,
+      "theme": "Geografia",
+      "question": "Cuales son los paises mas poblados del mundo en 2026?",
+      "answers": [
+        { "rank": 1, "label": "India", "note": "Worldometer 2026: 1,476,625,576" },
+        { "rank": 2, "label": "China", "note": "Worldometer 2026: 1,412,914,089" },
+        { "rank": 3, "label": "Estados Unidos", "note": "Worldometer 2026: 349,035,494" },
+        { "rank": 4, "label": "Indonesia", "note": "Worldometer 2026: 287,886,782" },
+        { "rank": 5, "label": "Pakistan", "note": "Worldometer 2026: 259,299,791" },
+        { "rank": 6, "label": "Nigeria", "note": "Worldometer 2026: 242,431,832" },
+        { "rank": 7, "label": "Brasil", "note": "Worldometer 2026: 213,562,666" },
+        { "rank": 8, "label": "Bangladesh", "note": "Worldometer 2026: 177,818,044" },
+        { "rank": 9, "label": "Rusia", "note": "Worldometer 2026: 143,394,458" },
+        { "rank": 10, "label": "Etiopia", "note": "Worldometer 2026: 138,902,185" }
+      ]
+    },
+    {
+      "id": 2,
+      "theme": "Cine",
+      "question": "Que peliculas tienen la mayor taquilla mundial de todos los tiempos?",
+      "answers": [
+        { "rank": 1, "label": "Avatar", "note": "The Numbers: US$2.923 mil M" },
+        { "rank": 2, "label": "Avengers: Endgame", "note": "The Numbers: US$2.717 mil M" },
+        { "rank": 3, "label": "Avatar: The Way of Water", "note": "The Numbers: US$2.322 mil M" },
+        { "rank": 4, "label": "Titanic", "note": "The Numbers: US$2.223 mil M" },
+        { "rank": 5, "label": "Star Wars: The Force Awakens", "note": "The Numbers: US$2.056 mil M" },
+        { "rank": 6, "label": "Avengers: Infinity War", "note": "The Numbers: US$2.048 mil M" },
+        { "rank": 7, "label": "Ne Zha 2", "note": "The Numbers: US$2.001 mil M" },
+        { "rank": 8, "label": "Spider-Man: No Way Home", "note": "The Numbers: US$1.921 mil M" },
+        { "rank": 9, "label": "Zootopia 2", "note": "The Numbers: US$1.859 mil M" },
+        { "rank": 10, "label": "Inside Out 2", "note": "The Numbers: US$1.698 mil M" }
+      ]
+    },
+    {
+      "id": 3,
+      "theme": "Deportes",
+      "question": "Quienes son los maximos goleadores de la historia de la Copa Mundial masculina?",
+      "answers": [
+        { "rank": 1, "label": "Miroslav Klose", "note": "16 goles" },
+        { "rank": 2, "label": "Lionel Messi", "note": "16 goles el 17 jun 2026" },
+        { "rank": 3, "label": "Ronaldo", "note": "15 goles" },
+        { "rank": 4, "label": "Gerd Muller", "note": "14 goles" },
+        { "rank": 5, "label": "Kylian Mbappe", "note": "14 goles el 17 jun 2026" },
+        { "rank": 6, "label": "Just Fontaine", "note": "13 goles" },
+        { "rank": 7, "label": "Pele", "note": "12 goles" },
+        { "rank": 8, "label": "Sandor Kocsis", "note": "11 goles" },
+        { "rank": 9, "label": "Jurgen Klinsmann", "note": "11 goles" },
+        { "rank": 10, "label": "Helmut Rahn", "note": "10 goles" }
+      ]
+    }
+  ]
+}

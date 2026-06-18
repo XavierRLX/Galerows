@@ -19,6 +19,7 @@ const coverFallbacks: Record<string, string> = {
   'nem-ferrando': 'radial-gradient(circle at 18% 28%, rgba(120,74,35,0.32), transparent 26%), linear-gradient(135deg, rgba(24,10,2,0.98), rgba(49,31,18,0.95) 58%, rgba(15,23,42,0.9))',
   'quem-sou-eu': 'radial-gradient(circle at 18% 26%, rgba(56,189,248,0.32), transparent 24%), linear-gradient(135deg, rgba(8,47,73,0.98), rgba(15,23,42,0.94) 58%, rgba(14,116,144,0.68))',
   adedonha: 'radial-gradient(circle at 18% 26%, rgba(250,204,21,0.32), transparent 24%), linear-gradient(135deg, rgba(66,32,6,0.98), rgba(15,23,42,0.94) 58%, rgba(133,77,14,0.68))',
+  'top-10': 'radial-gradient(circle at 16% 26%, rgba(248,113,113,0.24), transparent 24%), linear-gradient(135deg, rgba(36,8,12,0.98), rgba(69,10,10,0.94) 58%, rgba(15,23,42,0.88))',
   'cidade-dorme': 'radial-gradient(circle at 18% 26%, rgba(37,99,235,0.3), transparent 24%), linear-gradient(135deg, rgba(2,6,23,0.98), rgba(15,23,42,0.94) 58%, rgba(30,58,138,0.68))',
 }
 
@@ -49,6 +50,11 @@ const cardThemes: Record<string, { icon: string; title: string; action: string }
     icon: 'border-yellow-300/45 bg-slate-950/55 text-yellow-300 shadow-yellow-950/35',
     title: 'text-yellow-300',
     action: 'border-yellow-300 text-yellow-300 hover:border-transparent hover:bg-yellow-300 hover:text-slate-950',
+  },
+  'top-10': {
+    icon: 'border-red-800/60 bg-slate-950/55 text-red-300 shadow-red-950/40',
+    title: 'text-red-300',
+    action: 'border-red-700 text-red-300 hover:border-transparent hover:bg-red-800 hover:text-white',
   },
 }
 

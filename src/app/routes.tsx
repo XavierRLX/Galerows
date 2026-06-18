@@ -32,6 +32,10 @@ const TabooHomeScreen = lazy(() => import('../features/taboo/TabooHomeScreen').t
 const TabooPlayScreen = lazy(() => import('../features/taboo/TabooPlayScreen').then((module) => ({ default: module.TabooPlayScreen })))
 const TabooResultScreen = lazy(() => import('../features/taboo/TabooResultScreen').then((module) => ({ default: module.TabooResultScreen })))
 const TabooSetupScreen = lazy(() => import('../features/taboo/TabooSetupScreen').then((module) => ({ default: module.TabooSetupScreen })))
+const Top10HomeScreen = lazy(() => import('../features/top-10/Top10HomeScreen').then((module) => ({ default: module.Top10HomeScreen })))
+const Top10PlayScreen = lazy(() => import('../features/top-10/Top10PlayScreen').then((module) => ({ default: module.Top10PlayScreen })))
+const Top10ResultScreen = lazy(() => import('../features/top-10/Top10ResultScreen').then((module) => ({ default: module.Top10ResultScreen })))
+const Top10SetupScreen = lazy(() => import('../features/top-10/Top10SetupScreen').then((module) => ({ default: module.Top10SetupScreen })))
 
 function RouteLoading() {
   return <div aria-label="Carregando tela" className="min-h-dvh bg-slate-950" role="status" />
@@ -47,6 +51,10 @@ export function AppRoutes() {
           {canDisplayAds() ? <Route path="premium" element={<PremiumScreen />} /> : null}
           <Route path="players" element={<PlayersScreen />} />
           {contentAdminEnabled ? <Route path="admin/content" element={<ContentAdminScreen />} /> : null}
+          <Route path="games/top-10" element={<Top10HomeScreen />} />
+          <Route path="games/top-10/setup" element={<Top10SetupScreen />} />
+          <Route path="games/top-10/play" element={<Top10PlayScreen />} />
+          <Route path="games/top-10/result" element={<Top10ResultScreen />} />
           <Route path="games/nem-ferrando" element={<NemFerrandoHomeScreen />} />
           <Route path="games/nem-ferrando/setup" element={<NemFerrandoSetupScreen />} />
           <Route path="games/nem-ferrando/play" element={<NemFerrandoPlayScreen />} />
