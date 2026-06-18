@@ -5,8 +5,8 @@ import { STORAGE_KEYS } from '../../lib/storage/storage.keys'
 import type { GameParticipant } from '../players/players.types'
 import { loadMimicaDeck } from './content/mimicaContent.service'
 import type { MimicaDeck } from './content/mimicaContent.types'
-import { beginMimicaTurn, chooseMimicaAction, continueAfterMimicaSummary, createMimicaSession, entityIdentity, expireMimicaTurn, isMimicaOpeningHistory, isMimicaSessionCompatible, markMimicaReadyToScore, recordMimicaMiss, recordMimicaSuccess } from './mimica.session'
-import type { MimicaConfig, MimicaOpeningHistory, MimicaSession, MimicaTeam } from './mimica.types'
+import { beginMimicaTurn, chooseMimicaAction, continueAfterMimicaSummary, createMimicaSession, entityIdentity, expireMimicaTurn, isMimicaOpeningHistory, isMimicaSessionCompatible, markMimicaReadyToScore, normalizeMimicaSession, recordMimicaMiss, recordMimicaSuccess } from './mimica.session'
+import type { MimicaChallengeSource, MimicaConfig, MimicaOpeningHistory, MimicaPreparedChallenge, MimicaSession, MimicaTeam } from './mimica.types'
 
 type MimicaState = {
   deck: MimicaDeck | null
@@ -15,7 +15,7 @@ type MimicaState = {
   loading: boolean
   resumeError: string | null
   initialize: (locale: SupportedLocale) => Promise<void>
-  start: (participants: GameParticipant[], teams: MimicaTeam[], config: MimicaConfig) => Promise<void>
+  start: (participants: GameParticipant[], teams: MimicaTeam[], config: MimicaConfig, challengeSource?: MimicaChallengeSource, preparedChallenges?: MimicaPreparedChallenge[]) => Promise<void>
   beginTurn: () => Promise<void>
   chooseAction: (actionId: string) => Promise<void>
   readyToScore: () => Promise<void>
@@ -45,13 +45,15 @@ export const useMimicaStore = create<MimicaState>((set, get) => ({
       set({ deck, session: null, initialized: true, loading: false, resumeError: 'A partida salva usa outro idioma ou outra versão do baralho e precisa ser reiniciada.' })
       return
     }
-    set({ deck, session: saved, initialized: true, loading: false, resumeError: null })
+    const session = normalizeMimicaSession(saved)
+    if (session !== saved) await persistSession(session)
+    set({ deck, session, initialized: true, loading: false, resumeError: null })
   },
-  start: async (participants, teams, config) => {
+  start: async (participants, teams, config, challengeSource = 'deck', preparedChallenges = []) => {
     const deck = requireDeck(get())
     const savedHistory = await LocalPreferences.getJson<unknown>(STORAGE_KEYS.mimicaOpeningHistory)
     const history = isMimicaOpeningHistory(savedHistory) ? savedHistory : null
-    const session = createMimicaSession(participants, teams, config, deck, Math.random, history)
+    const session = createMimicaSession(participants, teams, config, deck, Math.random, history, challengeSource, preparedChallenges)
     await persistSession(session)
     const currentEntityId = session.turnQueue[session.currentTurnIndex]
     if (session.currentCardId && currentEntityId) {

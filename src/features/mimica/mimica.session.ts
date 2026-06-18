@@ -3,10 +3,11 @@ import { shuffle } from '../../lib/utils/shuffle'
 import { normalizePlayerName } from '../players/players.model'
 import type { GameParticipant } from '../players/players.types'
 import type { MimicaDeck } from './content/mimicaContent.types'
-import type { MimicaConfig, MimicaOpeningHistory, MimicaSession, MimicaTeam, MimicaTurnResult } from './mimica.types'
+import type { MimicaChallengeSource, MimicaConfig, MimicaOpeningHistory, MimicaPreparedChallenge, MimicaSession, MimicaTeam, MimicaTurnResult } from './mimica.types'
 
 const PHASES = ['turn-intro', 'choosing', 'acting', 'scoring', 'turn-summary', 'round-summary', 'finished'] as const
 const MODES = ['individual', 'teams'] as const
+const CHALLENGE_SOURCES = ['deck', 'opponent-prepared'] as const
 const DURATIONS = [30, 60, 90, 120] as const
 const FINISHED_REASONS = ['turns-complete', 'deck-exhausted'] as const
 
@@ -17,12 +18,15 @@ export function createMimicaSession(
   deck: MimicaDeck,
   random: () => number = Math.random,
   openingHistory: MimicaOpeningHistory | null = null,
+  challengeSource: MimicaChallengeSource = 'deck',
+  preparedChallenges: MimicaPreparedChallenge[] = [],
 ): MimicaSession {
-  assertSetup(participants, teams, config, deck)
+  assertSetup(participants, teams, config, deck, challengeSource, preparedChallenges)
   const entities = config.mode === 'individual' ? participants.map((participant) => participant.id) : teams.map((team) => team.id)
   const shuffledEntities = avoidFirst(shuffle(entities, random), openingHistory?.entityIdentity, (id) => entityIdentity(id, participants, teams))
-  const turnQueue = Array.from({ length: config.roundsPerEntity }).flatMap(() => shuffledEntities)
-  const cardIds = avoidFirst(shuffle(deck.cards.map((card) => card.id), random), openingHistory?.cardId, (id) => id)
+  const orderedEntities = config.mode === 'teams' && challengeSource === 'opponent-prepared' ? entities : shuffledEntities
+  const turnQueue = Array.from({ length: config.roundsPerEntity }).flatMap(() => orderedEntities)
+  const cardIds = challengeSource === 'deck' ? avoidFirst(shuffle(deck.cards.map((card) => card.id), random), openingHistory?.cardId, (id) => id) : []
   const [currentCardId, ...cardQueue] = cardIds
   const now = new Date().toISOString()
   return {
@@ -36,10 +40,13 @@ export function createMimicaSession(
     participants: [...participants],
     teams: [...teams],
     config: { ...config },
+    challengeSource,
+    preparedChallenges: challengeSource === 'opponent-prepared' ? [...preparedChallenges] : [],
     scores: Object.fromEntries(entities.map((id) => [id, 0])),
     turnQueue,
     currentTurnIndex: 0,
     currentCardId: currentCardId ?? null,
+    currentPreparedChallengeId: null,
     selectedActionId: null,
     cardQueue,
     usedCardIds: currentCardId ? [currentCardId] : [],
@@ -52,13 +59,25 @@ export function createMimicaSession(
   }
 }
 
-export function beginMimicaTurn(session: MimicaSession) {
-  if (session.phase !== 'turn-intro' || !session.currentCardId) return session
+export function beginMimicaTurn(session: MimicaSession, now: Date = new Date()) {
+  if (session.phase !== 'turn-intro') return session
+  if (session.challengeSource === 'opponent-prepared') {
+    const challenge = getCurrentPreparedChallenge(session)
+    if (!challenge) return session
+    return touch({
+      ...session,
+      phase: 'acting',
+      currentPreparedChallengeId: challenge.id,
+      selectedActionId: null,
+      turnStartedAt: session.config.useTimer ? now.toISOString() : null,
+    })
+  }
+  if (!session.currentCardId) return session
   return touch({ ...session, phase: 'choosing', selectedActionId: null, turnStartedAt: null })
 }
 
 export function chooseMimicaAction(session: MimicaSession, actionId: string, deck: MimicaDeck, now: Date = new Date()) {
-  if (session.phase !== 'choosing') return session
+  if (session.phase !== 'choosing' || session.challengeSource !== 'deck') return session
   const card = deck.cards.find((item) => item.id === session.currentCardId)
   if (!card?.actions.some((action) => action.id === actionId)) return session
   return touch({ ...session, phase: 'acting', selectedActionId: actionId, turnStartedAt: session.config.useTimer ? now.toISOString() : null })
@@ -72,8 +91,7 @@ export function markMimicaReadyToScore(session: MimicaSession) {
 export function recordMimicaSuccess(session: MimicaSession, guesserId: string | null, deck: MimicaDeck) {
   if (session.phase !== 'acting' && session.phase !== 'scoring') return session
   const currentEntityId = getCurrentEntityId(session)
-  const card = deck.cards.find((item) => item.id === session.currentCardId)
-  const action = card?.actions.find((item) => item.id === session.selectedActionId) ?? null
+  const action = getCurrentMimicaAction(session, deck)
   if (!currentEntityId || !action) return session
   if (session.config.mode === 'individual' && (!guesserId || guesserId === currentEntityId || !session.participants.some((participant) => participant.id === guesserId))) return session
   if (session.config.mode === 'teams' && guesserId !== null) return session
@@ -103,6 +121,7 @@ export function continueAfterMimicaSummary(session: MimicaSession) {
       ...session,
       phase: 'turn-intro',
       currentTurnIndex: nextTurnIndex(session),
+      currentPreparedChallengeId: null,
       selectedActionId: null,
       turnStartedAt: null,
       lastTurnResult: null,
@@ -115,6 +134,7 @@ export function continueAfterMimicaSummary(session: MimicaSession) {
     ...session,
     phase: 'turn-intro',
     currentTurnIndex: nextTurnIndex(session),
+    currentPreparedChallengeId: null,
     selectedActionId: null,
     turnStartedAt: null,
     lastTurnResult: null,
@@ -146,6 +166,21 @@ export function getCurrentRoundNumber(session: MimicaSession) {
   return Math.min(session.config.roundsPerEntity, Math.floor(session.currentTurnIndex / getEntitiesPerRound(session)) + 1)
 }
 
+export function getCurrentPreparedChallenge(session: MimicaSession) {
+  const targetTeamId = getCurrentEntityId(session)
+  if (session.challengeSource !== 'opponent-prepared' || !targetTeamId) return null
+  return session.preparedChallenges.find((challenge) => challenge.targetTeamId === targetTeamId && challenge.round === getCurrentRoundNumber(session)) ?? null
+}
+
+export function getCurrentMimicaAction(session: MimicaSession, deck: MimicaDeck) {
+  if (session.challengeSource === 'opponent-prepared') {
+    const challenge = session.preparedChallenges.find((item) => item.id === session.currentPreparedChallengeId) ?? getCurrentPreparedChallenge(session)
+    return challenge ? { id: challenge.id, label: challenge.text, points: challenge.points } : null
+  }
+  const card = deck.cards.find((item) => item.id === session.currentCardId)
+  return card?.actions.find((item) => item.id === session.selectedActionId) ?? null
+}
+
 export function rankMimicaEntities(session: MimicaSession) {
   const entities = session.config.mode === 'individual' ? session.participants : session.teams
   return [...entities].sort((a, b) => (session.scores[b.id] ?? 0) - (session.scores[a.id] ?? 0))
@@ -169,13 +204,18 @@ export function isMimicaOpeningHistory(value: unknown): value is MimicaOpeningHi
   return value.schemaVersion === 1 && typeof value.cardId === 'string' && typeof value.entityIdentity === 'string'
 }
 
+export function normalizeMimicaSession(value: MimicaSession): MimicaSession {
+  return normalizePersistedSession(value) as MimicaSession
+}
+
 export function isMimicaSessionCompatible(value: unknown, deck: MimicaDeck): value is MimicaSession {
   if (!isRecord(value)) return false
-  const session = value as Partial<MimicaSession>
+  const session = normalizePersistedSession(value as Partial<MimicaSession>)
   if (!isConfig(session.config)) return false
   const participants = Array.isArray(session.participants) ? session.participants : []
   const teams = Array.isArray(session.teams) ? session.teams : []
   const entityIds = new Set(session.config.mode === 'individual' ? participants.map((participant) => participant?.id) : teams.map((team) => team?.id))
+  const teamIds = new Set(teams.map((team) => team?.id))
   const cardIds = new Set(deck.cards.map((card) => card.id))
   const actionIds = new Set(deck.cards.flatMap((card) => card.actions.map((action) => action.id)))
   return Boolean(session.schemaVersion === 1
@@ -187,15 +227,19 @@ export function isMimicaSessionCompatible(value: unknown, deck: MimicaDeck): val
     && participants.every(isParticipant)
     && teams.every(isTeam)
     && entityIds.size === (session.config.mode === 'individual' ? participants.length : teams.length)
+    && isChallengeSource(session.challengeSource)
+    && isPreparedChallengeList(session.preparedChallenges, teams, teamIds, session.config.roundsPerEntity, session.challengeSource)
     && isScoreRecord(session.scores, entityIds)
     && typeof session.phase === 'string' && (PHASES as readonly string[]).includes(session.phase)
+    && (session.challengeSource === 'deck' || session.phase !== 'choosing')
     && isEntityList(session.turnQueue, entityIds)
     && Number.isInteger(session.currentTurnIndex) && session.currentTurnIndex! >= 0 && session.currentTurnIndex! < session.turnQueue!.length
-    && (session.currentCardId === null || (typeof session.currentCardId === 'string' && cardIds.has(session.currentCardId)))
+    && (session.challengeSource === 'opponent-prepared' || session.currentCardId === null || (typeof session.currentCardId === 'string' && cardIds.has(session.currentCardId)))
+    && (session.currentPreparedChallengeId === null || (typeof session.currentPreparedChallengeId === 'string' && session.preparedChallenges?.some((challenge) => challenge.id === session.currentPreparedChallengeId)))
     && (session.selectedActionId === null || (typeof session.selectedActionId === 'string' && actionIds.has(session.selectedActionId)))
     && isUniqueIdList(session.cardQueue, cardIds)
     && isIdList(session.usedCardIds, cardIds)
-    && (session.currentCardId === null || session.usedCardIds?.includes(session.currentCardId))
+    && (session.challengeSource === 'opponent-prepared' || session.currentCardId === null || (typeof session.currentCardId === 'string' && session.usedCardIds?.includes(session.currentCardId)))
     && (session.turnStartedAt === null || typeof session.turnStartedAt === 'string')
     && isTurnResult(session.lastTurnResult, entityIds)
     && (session.pendingFinishedReason === null || (typeof session.pendingFinishedReason === 'string' && (FINISHED_REASONS as readonly string[]).includes(session.pendingFinishedReason)))
@@ -205,6 +249,9 @@ export function isMimicaSessionCompatible(value: unknown, deck: MimicaDeck): val
 }
 
 function advanceCard(session: MimicaSession): MimicaSession {
+  if (session.challengeSource === 'opponent-prepared') {
+    return { ...session, currentPreparedChallengeId: null }
+  }
   const [currentCardId, ...cardQueue] = session.cardQueue
   return {
     ...session,
@@ -217,10 +264,9 @@ function advanceCard(session: MimicaSession): MimicaSession {
 
 function finishTurn(session: MimicaSession, success: boolean, actorPoints: number, guesserId: string | null, guesserPoints: number, deck: MimicaDeck) {
   const entityId = getCurrentEntityId(session) ?? ''
-  const card = deck.cards.find((item) => item.id === session.currentCardId)
-  const action = card?.actions.find((item) => item.id === session.selectedActionId) ?? null
+  const action = getCurrentMimicaAction(session, deck)
   const advanced = advanceCard(session)
-  const finishedReason = !advanced.currentCardId && nextTurnIndex(advanced) < advanced.turnQueue.length ? 'deck-exhausted' : nextTurnIndex(advanced) >= advanced.turnQueue.length ? 'turns-complete' : null
+  const finishedReason = session.challengeSource === 'deck' && !advanced.currentCardId && nextTurnIndex(advanced) < advanced.turnQueue.length ? 'deck-exhausted' : nextTurnIndex(advanced) >= advanced.turnQueue.length ? 'turns-complete' : null
   const result: MimicaTurnResult = {
     turn: session.currentTurnIndex + 1,
     entityId,
@@ -242,12 +288,22 @@ function isEndOfRound(session: MimicaSession) {
   return nextTurnIndex(session) % getEntitiesPerRound(session) === 0
 }
 
-function assertSetup(participants: GameParticipant[], teams: MimicaTeam[], config: MimicaConfig, deck: MimicaDeck) {
+function assertSetup(
+  participants: GameParticipant[],
+  teams: MimicaTeam[],
+  config: MimicaConfig,
+  deck: MimicaDeck,
+  challengeSource: MimicaChallengeSource,
+  preparedChallenges: MimicaPreparedChallenge[],
+) {
   if (!isConfig(config)) throw new Error('A configuração do jogo é inválida.')
+  if (!isChallengeSource(challengeSource)) throw new Error('A fonte das mímicas é inválida.')
   if (config.mode === 'individual' && (participants.length < 2 || participants.length > 12)) throw new Error('Selecione entre 2 e 12 jogadores.')
   if (config.mode === 'teams' && teams.length < 2) throw new Error('Crie pelo menos 2 times.')
   if (config.mode === 'teams' && new Set(teams.map((team) => normalizePlayerName(team.name).toLocaleLowerCase('pt-BR'))).size !== teams.length) throw new Error('Os times precisam ter nomes diferentes.')
-  if (deck.cards.length < 1) throw new Error('O baralho não possui cartas suficientes.')
+  if (challengeSource === 'opponent-prepared' && config.mode !== 'teams') throw new Error('Mímicas da adversária só estão disponíveis no modo equipes.')
+  if (challengeSource === 'opponent-prepared' && !hasPreparedChallengesForEveryTurn(preparedChallenges, teams, config.roundsPerEntity)) throw new Error('Preencha todas as mímicas criadas pelas equipes.')
+  if (challengeSource === 'deck' && deck.cards.length < 1) throw new Error('O baralho não possui cartas suficientes.')
 }
 
 function avoidFirst(items: string[], previousIdentity: string | undefined, identityFor: (id: string) => string) {
@@ -264,6 +320,10 @@ function isConfig(value: unknown): value is MimicaConfig {
     && typeof value.useTimer === 'boolean'
     && typeof value.turnDurationSeconds === 'number' && (DURATIONS as readonly number[]).includes(value.turnDurationSeconds)
     && typeof value.roundsPerEntity === 'number' && Number.isInteger(value.roundsPerEntity) && value.roundsPerEntity > 0
+}
+
+function isChallengeSource(value: unknown): value is MimicaChallengeSource {
+  return typeof value === 'string' && (CHALLENGE_SOURCES as readonly string[]).includes(value)
 }
 
 function isParticipant(value: unknown): value is GameParticipant {
@@ -293,6 +353,45 @@ function isIdList(value: unknown, validIds: Set<string>) {
   return Array.isArray(value) && value.every((id) => typeof id === 'string' && validIds.has(id))
 }
 
+function isPreparedChallengeList(value: unknown, teams: MimicaTeam[], teamIds: Set<unknown>, roundsPerEntity: number, challengeSource: MimicaChallengeSource | undefined) {
+  if (!Array.isArray(value)) return false
+  if (challengeSource === 'deck') return value.length === 0
+  const challenges = value as unknown[]
+  return challenges.every((challenge) => isPreparedChallenge(challenge, teamIds, roundsPerEntity)) && hasPreparedChallengesForEveryTurn(challenges as MimicaPreparedChallenge[], teams, roundsPerEntity)
+}
+
+function isPreparedChallenge(value: unknown, teamIds: Set<unknown>, roundsPerEntity: number): value is MimicaPreparedChallenge {
+  if (!isRecord(value)) return false
+  return typeof value.id === 'string'
+    && typeof value.targetTeamId === 'string' && teamIds.has(value.targetTeamId)
+    && typeof value.authorTeamId === 'string' && teamIds.has(value.authorTeamId)
+    && value.authorTeamId !== value.targetTeamId
+    && typeof value.round === 'number' && Number.isInteger(value.round) && value.round >= 1 && value.round <= roundsPerEntity
+    && typeof value.text === 'string' && normalizeChallengeText(value.text).length > 0
+    && value.points === 1
+}
+
+function hasPreparedChallengesForEveryTurn(preparedChallenges: MimicaPreparedChallenge[], teams: MimicaTeam[], roundsPerEntity: number) {
+  const teamIds = new Set(teams.map((team) => team.id))
+  if (preparedChallenges.length !== teams.length * roundsPerEntity) return false
+  return teams.every((team, index) => {
+    const authorTeamId = teams[(index + teams.length - 1) % teams.length]?.id
+    return Array.from({ length: roundsPerEntity }).every((_, roundIndex) => {
+      const round = roundIndex + 1
+      return preparedChallenges.some((challenge) => challenge.targetTeamId === team.id
+        && challenge.authorTeamId === authorTeamId
+        && challenge.round === round
+        && challenge.points === 1
+        && teamIds.has(challenge.authorTeamId)
+        && normalizeChallengeText(challenge.text).length > 0)
+    })
+  })
+}
+
+function normalizeChallengeText(text: string) {
+  return text.trim().replace(/\s+/g, ' ')
+}
+
 function isTurnResult(value: unknown, entityIds: Set<unknown>) {
   if (value === null) return true
   if (!isRecord(value)) return false
@@ -309,6 +408,15 @@ function isTurnResult(value: unknown, entityIds: Set<unknown>) {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
+}
+
+function normalizePersistedSession(session: Partial<MimicaSession>): Partial<MimicaSession> {
+  return {
+    ...session,
+    challengeSource: session.challengeSource ?? 'deck',
+    preparedChallenges: session.challengeSource === 'opponent-prepared' && Array.isArray(session.preparedChallenges) ? session.preparedChallenges : [],
+    currentPreparedChallengeId: session.currentPreparedChallengeId ?? null,
+  }
 }
 
 function touch(session: MimicaSession): MimicaSession {

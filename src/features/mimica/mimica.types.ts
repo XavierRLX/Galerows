@@ -3,6 +3,7 @@ import type { GameParticipant } from '../players/players.types'
 import type { MimicaAction } from './content/mimicaContent.types'
 
 export type MimicaMode = 'individual' | 'teams'
+export type MimicaChallengeSource = 'deck' | 'opponent-prepared'
 export type MimicaPhase = 'turn-intro' | 'choosing' | 'acting' | 'scoring' | 'turn-summary' | 'round-summary' | 'finished'
 export type MimicaFinishedReason = 'turns-complete' | 'deck-exhausted'
 
@@ -16,6 +17,15 @@ export type MimicaConfig = {
 export type MimicaTeam = {
   id: string
   name: string
+}
+
+export type MimicaPreparedChallenge = {
+  id: string
+  targetTeamId: string
+  authorTeamId: string
+  round: number
+  text: string
+  points: 1
 }
 
 export type MimicaTurnResult = {
@@ -46,10 +56,13 @@ export type MimicaSession = {
   participants: GameParticipant[]
   teams: MimicaTeam[]
   config: MimicaConfig
+  challengeSource: MimicaChallengeSource
+  preparedChallenges: MimicaPreparedChallenge[]
   scores: Record<string, number>
   turnQueue: string[]
   currentTurnIndex: number
   currentCardId: string | null
+  currentPreparedChallengeId: string | null
   selectedActionId: string | null
   cardQueue: string[]
   usedCardIds: string[]
