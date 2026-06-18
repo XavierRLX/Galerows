@@ -18,7 +18,7 @@ describe('Adedonha flow', () => {
   it('creates categories and lets the player fill answers', async () => {
     render(<MemoryRouter initialEntries={['/games/adedonha/setup']}><AppRoutes /></MemoryRouter>)
 
-    fireEvent.change(screen.getByRole('textbox', { name: /novo tema/i }), { target: { value: 'Minha sogra é...' } })
+    fireEvent.change(await screen.findByRole('textbox', { name: /novo tema/i }), { target: { value: 'Minha sogra é...' } })
     fireEvent.click(screen.getByRole('button', { name: /adicionar/i }))
     fireEvent.click(screen.getByRole('button', { name: /começar folha/i }))
 

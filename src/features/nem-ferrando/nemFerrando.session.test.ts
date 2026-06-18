@@ -1,11 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import type { GameParticipant } from '../players/players.types'
 import type { NemFerrandoDeck } from './content/nemFerrandoContent.types'
-import { assertNemFerrandoDeck } from './content/nemFerrandoContent.validator'
-import ptDeck from './content/decks/pt-BR.json'
+import { nemFerrandoTestDeck } from './nemFerrando.testDeck'
 import { awardIrons, canSwapCard, challengeGuess, continueAfterSummary, createNemFerrandoSession, getDeckProgress, participantIdentity, rankParticipants, revealAnswer, revealFirstCard, selectCuriosity, swapCard } from './nemFerrando.session'
 
-const deck = assertNemFerrandoDeck(ptDeck)
+const deck = nemFerrandoTestDeck
 const participants: GameParticipant[] = [
   { id: 'ana-session', name: 'Ana', sourcePlayerId: 'ana', isGuest: false },
   { id: 'bia-session', name: 'Bia', sourcePlayerId: 'bia', isGuest: false },

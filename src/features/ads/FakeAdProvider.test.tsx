@@ -1,8 +1,9 @@
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AppRoutes } from '../../app/routes'
 import { initializeI18n } from '../../i18n'
+import { usePremiumStore } from '../premium/premium.store'
 import { FakeAdProvider } from './FakeAdProvider'
 
 vi.mock('../../lib/capacitor/haptics', () => ({
@@ -18,6 +19,7 @@ beforeAll(async () => { await initializeI18n() })
 
 beforeEach(() => {
   vi.useFakeTimers()
+  usePremiumStore.setState({ isPremium: false, snapshot: null })
 })
 
 afterEach(() => {
@@ -37,40 +39,36 @@ function renderAppAt(path: string) {
 
 async function flushAsyncWork() {
   await act(async () => {
+    await vi.dynamicImportSettled()
+  })
+  await act(async () => {
     await Promise.resolve()
     await Promise.resolve()
   })
 }
 
 describe('FakeAdProvider', () => {
-  it('shows a fake ad before navigating from the Hub game list', async () => {
+  it('skips the fake ad before navigating from the Hub game list while ads are temporarily disabled', async () => {
+    vi.useRealTimers()
     renderAppAt('/')
 
     fireEvent.click(screen.getAllByRole('button', { name: /jogar agora/i })[0])
     await flushAsyncWork()
 
-    expect(screen.getByRole('dialog', { name: /espaço reservado para anúncio/i })).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { name: 'Nem Ferrando', level: 1 })).not.toBeInTheDocument()
-
-    await act(async () => { vi.advanceTimersByTime(5000) })
-    await flushAsyncWork()
-
-    expect(screen.getByRole('heading', { name: 'Nem Ferrando', level: 1 })).toBeInTheDocument()
+    expect(screen.queryByRole('dialog', { name: /espaço reservado para anúncio/i })).not.toBeInTheDocument()
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Nem Ferrando', level: 1 })).toBeInTheDocument())
   })
 
-  it('shows a fake ad after setup validation before opening play', async () => {
+  it('skips the fake ad after setup validation while ads are temporarily disabled', async () => {
+    vi.useRealTimers()
     renderAppAt('/games/quem-sou-eu/setup')
+    await flushAsyncWork()
 
     fireEvent.change(screen.getByRole('textbox', { name: /palavra 1/i }), { target: { value: 'Batman' } })
     fireEvent.click(screen.getByRole('button', { name: /iniciar/i }))
     await flushAsyncWork()
 
-    expect(screen.getByRole('dialog', { name: /espaço reservado para anúncio/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /iniciar/i })).toBeInTheDocument()
-
-    await act(async () => { vi.advanceTimersByTime(5000) })
-    await flushAsyncWork()
-
+    expect(screen.queryByRole('dialog', { name: /espaço reservado para anúncio/i })).not.toBeInTheDocument()
     expect(screen.getByText(/prepare a testa/i)).toBeInTheDocument()
   })
 
@@ -78,5 +76,16 @@ describe('FakeAdProvider', () => {
     renderAppAt('/games/quem-sou-eu/play')
 
     expect(screen.queryByRole('dialog', { name: /espaço reservado para anúncio/i })).not.toBeInTheDocument()
+  })
+
+  it('skips fake ads for premium users', async () => {
+    usePremiumStore.setState({ isPremium: true })
+    renderAppAt('/')
+
+    fireEvent.click(screen.getAllByRole('button', { name: /jogar agora/i })[0])
+    await flushAsyncWork()
+
+    expect(screen.queryByRole('dialog', { name: /espaço reservado para anúncio/i })).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Nem Ferrando', level: 1 })).toBeInTheDocument()
   })
 })

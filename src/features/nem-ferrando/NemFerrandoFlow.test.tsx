@@ -5,8 +5,9 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { AppRoutes } from '../../app/routes'
 import { initializeI18n } from '../../i18n'
 import { LocalPreferences } from '../../lib/capacitor/preferences'
-import { STORAGE_KEYS } from '../../lib/storage/storage.keys'
+import { contentOverrideKey, STORAGE_KEYS } from '../../lib/storage/storage.keys'
 import { usePlayersStore } from '../players/players.store'
+import { nemFerrandoTestDeck } from './nemFerrando.testDeck'
 import { useNemFerrandoStore } from './nemFerrando.store'
 
 beforeAll(async () => { await initializeI18n() })
@@ -16,6 +17,7 @@ describe('Nem Ferrando complete flow', () => {
     await LocalPreferences.remove(STORAGE_KEYS.playerGroup)
     await LocalPreferences.remove(STORAGE_KEYS.nemFerrandoSession)
     await LocalPreferences.remove(STORAGE_KEYS.nemFerrandoOpeningHistory)
+    await LocalPreferences.setJson(contentOverrideKey('nem-ferrando', 'pt-BR'), nemFerrandoTestDeck)
     usePlayersStore.setState({ group: null, hydrated: false, error: null })
     useNemFerrandoStore.setState({ deck: null, session: null, initialized: false, loading: false, resumeError: null })
   })

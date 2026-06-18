@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { gamesRegistry } from '../games/games.registry'
+import { canDisplayAds } from '../ads/ads.visibility'
+import { usePremiumStore } from '../premium/premium.store'
 import { GameCard } from './GameCard'
 import { HubHeader } from './HubHeader'
 import { HubNativeAdCard } from './HubNativeAdCard'
@@ -8,6 +10,7 @@ const orderedGames = [...gamesRegistry].sort((a, b) => Number(b.status === 'avai
 
 export function HubScreen() {
   const { t } = useTranslation('hub')
+  const isPremium = usePremiumStore((state) => state.isPremium)
 
   return (
     <div className="pb-10">
@@ -18,7 +21,7 @@ export function HubScreen() {
           {orderedGames.map((game) => (
             <GameCard game={game} key={game.id} />
           )).flatMap((card, index) => (
-            (index + 1) % 3 === 0 && index < orderedGames.length - 1
+            canDisplayAds() && !isPremium && (index + 1) % 3 === 0 && index < orderedGames.length - 1
               ? [card, <HubNativeAdCard key={`hub-native-ad-${index}`} />]
               : [card]
           ))}

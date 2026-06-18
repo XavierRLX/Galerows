@@ -2,6 +2,7 @@ import { render, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { hideBanner, showBanner } from '../../features/ads/ads.service'
+import { usePremiumStore } from '../../features/premium/premium.store'
 import { AppShell } from './AppShell'
 
 vi.mock('../../features/ads/ads.service', () => ({
@@ -26,16 +27,21 @@ function renderAt(path: string) {
 }
 
 describe('AppShell ads placement', () => {
-  beforeEach(() => vi.clearAllMocks())
-
-  it('shows a test banner on game home screens', async () => {
-    renderAt('/games/taboo')
-    await waitFor(() => expect(showBanner).toHaveBeenCalledWith('game-home'))
+  beforeEach(() => {
+    vi.clearAllMocks()
+    usePremiumStore.setState({ isPremium: false, snapshot: null })
   })
 
-  it('shows a test banner on setup screens', async () => {
+  it('keeps ads hidden on game home screens while ads are temporarily disabled', async () => {
+    renderAt('/games/taboo')
+    await waitFor(() => expect(hideBanner).toHaveBeenCalled())
+    expect(showBanner).not.toHaveBeenCalled()
+  })
+
+  it('keeps ads hidden on setup screens while ads are temporarily disabled', async () => {
     renderAt('/games/taboo/setup')
-    await waitFor(() => expect(showBanner).toHaveBeenCalledWith('setup'))
+    await waitFor(() => expect(hideBanner).toHaveBeenCalled())
+    expect(showBanner).not.toHaveBeenCalled()
   })
 
   it('hides ads during play and result screens', async () => {
@@ -44,6 +50,15 @@ describe('AppShell ads placement', () => {
 
     vi.clearAllMocks()
     renderAt('/games/taboo/result')
+    await waitFor(() => expect(hideBanner).toHaveBeenCalled())
+    expect(showBanner).not.toHaveBeenCalled()
+  })
+
+  it('keeps ads hidden on ad routes when premium is active', async () => {
+    usePremiumStore.setState({ isPremium: true })
+
+    renderAt('/games/taboo/setup')
+
     await waitFor(() => expect(hideBanner).toHaveBeenCalled())
     expect(showBanner).not.toHaveBeenCalled()
   })

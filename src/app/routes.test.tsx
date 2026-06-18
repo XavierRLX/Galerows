@@ -8,6 +8,16 @@ import { AppRoutes } from './routes'
 beforeAll(async () => { await initializeI18n() })
 afterEach(() => cleanup())
 describe('app navigation', () => {
+  it('keeps premium entry points hidden while ads are temporarily disabled', async () => {
+    render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
+    expect(screen.queryByRole('button', { name: /premium/i })).not.toBeInTheDocument()
+
+    cleanup()
+    render(<MemoryRouter initialEntries={['/premium']}><AppRoutes /></MemoryRouter>)
+    expect(await screen.findByRole('heading', { name: /jogos da galera/i })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: /jogue sem anúncios/i })).not.toBeInTheDocument()
+  })
+
   it('opens Nem Ferrando internally and returns to the Hub', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)

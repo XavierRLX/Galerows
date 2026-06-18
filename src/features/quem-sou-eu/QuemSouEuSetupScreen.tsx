@@ -7,7 +7,7 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { cn } from '../../lib/utils/cn'
 import { shuffle } from '../../lib/utils/shuffle'
-import { useFakeAd } from '../ads/FakeAdProvider'
+import { useFakeAd } from '../ads/useFakeAd'
 import { normalizeQuemSouEuWords } from './quemSouEu.session'
 import { useQuemSouEuStore } from './quemSouEu.store'
 

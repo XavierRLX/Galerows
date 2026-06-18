@@ -2,6 +2,8 @@ import { Capacitor } from '@capacitor/core'
 import { AdMob, AdmobConsentStatus, BannerAdPosition, BannerAdSize, MaxAdContentRating } from '@capacitor-community/admob'
 import { adMobConfig } from './adMob.config'
 import type { AdBannerPlacement } from './ads.types'
+import { canDisplayAds } from './ads.visibility'
+import { isPremiumActive } from '../premium/premium.access'
 
 type AdsRuntime = {
   initialized: boolean
@@ -24,6 +26,7 @@ function canUseNativeAndroidAds() {
 }
 
 export async function initializeAds(): Promise<void> {
+  if (!canDisplayAds()) return
   if (!canUseNativeAndroidAds()) return
   if (runtime.initialized) return
   if (runtime.initializing) return runtime.initializing
@@ -98,7 +101,7 @@ export async function removeBanner(): Promise<void> {
 }
 
 export function isPrivacyOptionsRequired() {
-  return canUseNativeAndroidAds() && runtime.privacyOptionsRequired
+  return canDisplayAds() && canUseNativeAndroidAds() && runtime.privacyOptionsRequired
 }
 
 export async function showPrivacyOptions(): Promise<boolean> {
@@ -128,5 +131,5 @@ export function resetAdsRuntimeForTests() {
 }
 
 function canShowAds() {
-  return canUseNativeAndroidAds() && runtime.canRequestAds
+  return canDisplayAds() && canUseNativeAndroidAds() && runtime.canRequestAds && !isPremiumActive()
 }

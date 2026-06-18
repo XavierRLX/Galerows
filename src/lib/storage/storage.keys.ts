@@ -11,6 +11,7 @@ export const STORAGE_KEYS = {
   mimicaOpeningHistory: 'galerows.games.mimica.opening-history',
   quemSouEuSession: 'galerows.games.quem-sou-eu.session',
   adedonhaSession: 'galerows.games.adedonha.session',
+  premiumSnapshot: 'galerows.premium.snapshot',
 } as const
 
 export function contentOverrideKey(gameId: string, locale: string) {

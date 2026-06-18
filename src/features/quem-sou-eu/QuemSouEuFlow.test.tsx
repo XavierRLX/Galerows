@@ -20,26 +20,37 @@ describe('Quem Sou Eu complete flow', () => {
     vi.useRealTimers()
   })
 
+  async function flushAsyncWork() {
+    await act(async () => {
+      await vi.dynamicImportSettled()
+    })
+    await act(async () => {
+      await Promise.resolve()
+      await Promise.resolve()
+    })
+  }
+
   it('creates words, reveals them after countdown, and shows a simple summary', async () => {
     render(<MemoryRouter initialEntries={['/games/quem-sou-eu/setup']}><AppRoutes /></MemoryRouter>)
+    await flushAsyncWork()
 
     fireEvent.change(screen.getByRole('textbox', { name: /palavra 1/i }), { target: { value: 'Beyonce' } })
     fireEvent.click(screen.getByRole('button', { name: /^adicionar$/i }))
     fireEvent.change(screen.getByRole('textbox', { name: /palavra 2/i }), { target: { value: 'Wi-Fi' } })
     fireEvent.click(screen.getByRole('button', { name: /iniciar jogo/i }))
-    await act(async () => {})
+    await flushAsyncWork()
 
     expect(screen.getByText(/prepare a testa/i)).toBeInTheDocument()
     await act(async () => { vi.advanceTimersByTime(5000) })
     expect(screen.getByRole('heading', { name: 'Beyonce' })).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /acertei/i }))
-    await act(async () => {})
+    await flushAsyncWork()
 
     expect(screen.getByText(/2 de 2/i)).toBeInTheDocument()
     await act(async () => { vi.advanceTimersByTime(5000) })
     expect(screen.getByRole('heading', { name: 'Wi-Fi' })).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /pular/i }))
-    await act(async () => {})
+    await flushAsyncWork()
 
     expect(screen.getByRole('heading', { name: /rodada concluída/i })).toBeInTheDocument()
     expect(screen.getByText('Beyonce')).toBeInTheDocument()
@@ -48,8 +59,9 @@ describe('Quem Sou Eu complete flow', () => {
     expect(screen.getByText('Pulou')).toBeInTheDocument()
   })
 
-  it('keeps suggestions hidden until the player asks to show them', () => {
+  it('keeps suggestions hidden until the player asks to show them', async () => {
     render(<MemoryRouter initialEntries={['/games/quem-sou-eu/setup']}><AppRoutes /></MemoryRouter>)
+    await flushAsyncWork()
 
     expect(screen.queryByText('Pessoas e personagens')).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /mostrar sugestões/i }))

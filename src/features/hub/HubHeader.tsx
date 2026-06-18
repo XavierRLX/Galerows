@@ -1,7 +1,8 @@
-import { Gamepad2, Settings, Users } from 'lucide-react'
+import { Settings, Sparkles, Users } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
+import { canDisplayAds } from '../ads/ads.visibility'
 
 export function HubHeader() {
   const { t } = useTranslation('hub')
@@ -15,10 +16,27 @@ export function HubHeader() {
         <div className="absolute -bottom-24 left-1/2 size-72 -translate-x-1/2 rounded-full bg-fuchsia-500/20 blur-3xl" />
 
         <div className="relative flex items-center justify-between gap-4">
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl border border-cyan-300/40 bg-slate-950/70 text-cyan-300 shadow-lg shadow-fuchsia-500/20 ring-1 ring-white/10">
-            <Gamepad2 size={24} />
+          <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-cyan-300/40 bg-slate-950/70 shadow-lg shadow-fuchsia-500/20 ring-1 ring-white/10">
+            <img
+              alt="Galerows"
+              className="size-full object-cover"
+              height="48"
+              src="/icon-galerows.webp"
+              width="48"
+            />
           </div>
           <div className="flex gap-2">
+            {canDisplayAds() ? (
+              <Button
+                aria-label="Premium"
+                className="rounded-full border-lime-300/20 bg-lime-300/15 text-lime-200 shadow-lg shadow-violet-950/30 backdrop-blur hover:bg-lime-300/25"
+                size="icon"
+                variant="secondary"
+                onClick={() => navigate('/premium')}
+              >
+                <Sparkles size={19} />
+              </Button>
+            ) : null}
             <Button
               aria-label="Minha Galera"
               className="rounded-full border-white/10 bg-white/10 text-white shadow-lg shadow-violet-950/30 backdrop-blur hover:bg-white/15"

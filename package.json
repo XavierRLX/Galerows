@@ -1,7 +1,7 @@
 {
   "name": "galerows",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.3",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -27,6 +27,7 @@
     "@capacitor/preferences": "^8.0.1",
     "@capacitor/splash-screen": "^8.0.1",
     "@capacitor/status-bar": "^8.0.2",
+    "@revenuecat/purchases-capacitor": "^13.1.7",
     "@types/qrcode": "^1.5.6",
     "clsx": "^2.1.1",
     "i18next": "^26.3.1",

@@ -1,23 +1,24 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type PropsWithChildren } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type PropsWithChildren } from 'react'
+import { usePremiumStore } from '../premium/premium.store'
+import { FakeAdContext, type FakeAdPlacement } from './FakeAdContext'
+import { canDisplayAds } from './ads.visibility'
 
-type FakeAdPlacement = 'hub-play' | 'start-match'
 type FakeAdRequest = {
   placement: FakeAdPlacement
   resolve: () => void
 }
-type FakeAdContextValue = {
-  showFakeAd: (options?: { placement?: FakeAdPlacement }) => Promise<void>
-}
 
 const fakeAdDurationSeconds = 5
-const FakeAdContext = createContext<FakeAdContextValue>({ showFakeAd: async () => {} })
 
 export function FakeAdProvider({ children }: PropsWithChildren) {
+  const isPremium = usePremiumStore((state) => state.isPremium)
   const [request, setRequest] = useState<FakeAdRequest | null>(null)
   const [remaining, setRemaining] = useState(fakeAdDurationSeconds)
   const activePromise = useRef<Promise<void> | null>(null)
 
   const showFakeAd = useCallback((options?: { placement?: FakeAdPlacement }) => {
+    if (!canDisplayAds()) return Promise.resolve()
+    if (isPremium) return Promise.resolve()
     if (activePromise.current) return activePromise.current
     const promise = new Promise<void>((resolve) => {
       setRemaining(fakeAdDurationSeconds)
@@ -27,7 +28,7 @@ export function FakeAdProvider({ children }: PropsWithChildren) {
     })
     activePromise.current = promise
     return promise
-  }, [])
+  }, [isPremium])
 
   useEffect(() => {
     if (!request) return
@@ -73,8 +74,4 @@ export function FakeAdProvider({ children }: PropsWithChildren) {
       ) : null}
     </FakeAdContext.Provider>
   )
-}
-
-export function useFakeAd() {
-  return useContext(FakeAdContext)
 }
