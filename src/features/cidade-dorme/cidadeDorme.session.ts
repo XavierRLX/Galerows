@@ -1,5 +1,5 @@
 import { createId } from '../../lib/utils/createId'
-import { assignRolesToPlayers, canDoctorProtect, checkWinCondition, getAlivePlayers, resolveNight, resolveVoting } from './cidadeDorme.rules'
+import { assignRolesToPlayers, canDoctorProtect, checkWinCondition, getAlivePlayers, resolveMediatorDecisionVoting, resolveNight, resolveVoting } from './cidadeDorme.rules'
 import { isSupportedCidadeDormePlayerCount } from './cidadeDorme.setup'
 import { advancePhase, CIDADE_DORME_PHASES } from './cidadeDorme.stateMachine'
 import type { CidadeDormePlayerInput, GamePhase, GameSettings, GameState, NightAction, Player, VoteTargetId, VotingResolution } from './cidadeDorme.types'
@@ -91,7 +91,9 @@ export function resolveCurrentNight(session: GameState): GameState {
 export function recordVote(session: GameState, voterId: string, targetId: VoteTargetId): GameState {
   if (session.phase !== 'voting') return session
   const alivePlayerIds = new Set(getAlivePlayers(session.players).map((player) => player.id))
+  const revoteTargetIds = getCurrentRevoteTargetIds(session)
   if (!alivePlayerIds.has(voterId)) return session
+  if (revoteTargetIds && !revoteTargetIds.includes(targetId)) return session
   if (targetId === 'skip' && !session.settings.allowSkipVote) return session
   if (targetId !== 'skip' && !alivePlayerIds.has(targetId)) return session
   return touch({
@@ -106,8 +108,33 @@ export function recordVote(session: GameState, voterId: string, targetId: VoteTa
 export function resolveCurrentVoting(session: GameState): GameState {
   if (session.phase !== 'voteResolution') return session
   const existing = session.history.find((round) => round.round === session.round)
-  if (existing && existing.votes.length === session.currentVotes.length && existing.votes.length > 0) return session
+  if (existing?.votingResult && areVotesEqual(existing.votes, session.currentVotes)) return session
   const resolution = resolveVoting(session.players, session.currentVotes, session.settings, session.round)
+  return applyVotingResolution(session, resolution)
+}
+
+export function startTiedRevote(session: GameState): GameState {
+  if (session.phase !== 'voteResolution') return session
+  const existing = session.history.find((round) => round.round === session.round)
+  if (existing?.votingResult?.kind !== 'revote' || !existing.votingResult.tiedTargetIds?.length) return session
+  return touch({
+    ...session,
+    phase: 'voting',
+    currentVotes: [],
+  })
+}
+
+export function resolveCurrentVotingByMediator(session: GameState, chosenTargetId: VoteTargetId): GameState {
+  if (session.phase !== 'voteResolution') return session
+  const existing = session.history.find((round) => round.round === session.round)
+  const tiedTargetIds = existing?.votingResult?.kind === 'mediatorDecision' ? existing.votingResult.tiedTargetIds : undefined
+  if (tiedTargetIds && !tiedTargetIds.includes(chosenTargetId)) return session
+  const resolution = resolveMediatorDecisionVoting(session.players, session.currentVotes, session.settings, session.round, chosenTargetId)
+  if (resolution.kind === 'mediatorDecision') return session
+  return applyVotingResolution(session, resolution)
+}
+
+function applyVotingResolution(session: GameState, resolution: VotingResolution): GameState {
   const resolvedSession = {
     ...session,
     players: resolution.players,
@@ -145,6 +172,11 @@ function getPreviousProtectedPlayerId(session: GameState) {
   return [...session.history].reverse().find((round) => round.nightAction.protectedPlayerId)?.nightAction.protectedPlayerId
 }
 
+function getCurrentRevoteTargetIds(session: GameState) {
+  const votingResult = session.history.find((round) => round.round === session.round)?.votingResult
+  return votingResult?.kind === 'revote' && votingResult.tiedTargetIds?.length ? votingResult.tiedTargetIds : null
+}
+
 function createEmptyNightAction(round: number): NightAction {
   return { round }
 }
@@ -179,6 +211,12 @@ function mergeParallelWinners(current: NonNullable<GameState['parallelWinners']>
       return true
     }),
   ]
+}
+
+function areVotesEqual(left: readonly { voterId: string; targetId: VoteTargetId }[], right: readonly { voterId: string; targetId: VoteTargetId }[]) {
+  if (left.length !== right.length) return false
+  const rightByVoter = new Map(right.map((vote) => [vote.voterId, vote.targetId]))
+  return left.every((vote) => rightByVoter.get(vote.voterId) === vote.targetId)
 }
 
 function touch(session: GameState): GameState {

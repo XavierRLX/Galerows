@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 import { LocalPreferences } from '../../lib/capacitor/preferences'
 import { STORAGE_KEYS } from '../../lib/storage/storage.keys'
-import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, recordDetectiveInvestigation, recordDoctorProtection, recordKillerTarget, recordVote, resolveCurrentNight, resolveCurrentVoting } from './cidadeDorme.session'
+import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, recordDetectiveInvestigation, recordDoctorProtection, recordKillerTarget, recordVote, resolveCurrentNight, resolveCurrentVoting, resolveCurrentVotingByMediator, startTiedRevote } from './cidadeDorme.session'
 import { advancePhase as advanceCidadeDormePhase } from './cidadeDorme.stateMachine'
-import type { CidadeDormePlayerInput, GameSettings, GameState } from './cidadeDorme.types'
+import type { CidadeDormePlayerInput, GameSettings, GameState, VoteTargetId } from './cidadeDorme.types'
 
 type CidadeDormeState = {
   session: GameState | null
@@ -18,8 +18,10 @@ type CidadeDormeState = {
   chooseDoctorProtection: (protectedPlayerId: string) => Promise<void>
   chooseDetectiveTarget: (detectiveTargetId: string) => Promise<void>
   resolveNight: () => Promise<void>
-  castVote: (voterId: string, targetId: string) => Promise<void>
+  castVote: (voterId: string, targetId: VoteTargetId) => Promise<void>
   resolveVoting: () => Promise<void>
+  startRevote: () => Promise<void>
+  resolveMediatorDecision: (targetId: VoteTargetId) => Promise<void>
   discard: () => Promise<void>
 }
 
@@ -110,6 +112,22 @@ export const useCidadeDormeStore = create<CidadeDormeState>((set, get) => ({
     const current = get().session
     if (!current) return
     const session = resolveCurrentVoting(current)
+    if (session === current) return
+    await persistSession(session)
+    set({ session })
+  },
+  startRevote: async () => {
+    const current = get().session
+    if (!current) return
+    const session = startTiedRevote(current)
+    if (session === current) return
+    await persistSession(session)
+    set({ session })
+  },
+  resolveMediatorDecision: async (targetId) => {
+    const current = get().session
+    if (!current) return
+    const session = resolveCurrentVotingByMediator(current, targetId)
     if (session === current) return
     await persistSession(session)
     set({ session })

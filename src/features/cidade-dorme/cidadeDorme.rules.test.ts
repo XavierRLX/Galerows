@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { CidadeDormePlayerInput, GameSettings, Player, Vote } from './cidadeDorme.types'
-import { assignRolesToPlayers, canDoctorProtect, canStartGame, checkWinCondition, createRoleDeck, getAliveInnocents, getAliveKillers, getAlivePlayers, resolveNight, resolveVoting } from './cidadeDorme.rules'
+import { assignRolesToPlayers, canDoctorProtect, canStartGame, checkWinCondition, createRoleDeck, getAliveInnocents, getAliveKillers, getAlivePlayers, resolveMediatorDecisionVoting, resolveNight, resolveVoting } from './cidadeDorme.rules'
 
 const players: CidadeDormePlayerInput[] = [
   { id: 'ana', name: 'Ana' },
@@ -104,6 +104,21 @@ describe('Cidade Dorme rules', () => {
     expect(resolveVoting(assigned, tieVotes, { ...defaultSettings, tieRule: 'mediatorDecision' }, 1).kind).toBe('mediatorDecision')
   })
 
+  it('applies a mediator decision only to tied targets', () => {
+    const assigned = assignRolesToPlayers(players, defaultSettings, noShuffle)
+    const votes: Vote[] = [
+      { voterId: 'ana', targetId: 'eli' },
+      { voterId: 'bia', targetId: 'fefa' },
+    ]
+    const settings = { ...defaultSettings, tieRule: 'mediatorDecision' as const }
+
+    expect(resolveMediatorDecisionVoting(assigned, votes, settings, 1, 'caio')).toMatchObject({ kind: 'mediatorDecision' })
+
+    const resolution = resolveMediatorDecisionVoting(assigned, votes, settings, 1, 'eli')
+    expect(resolution).toMatchObject({ kind: 'eliminated', eliminatedPlayerId: 'eli' })
+    expect(resolution.players.find((player) => player.id === 'eli')).toMatchObject({ status: 'eliminated', eliminationReason: 'vote' })
+  })
+
   it('detects city, killer and instant jester wins', () => {
     expect(checkWinCondition(withRoles([
       ['ana', 'killer', 'eliminated', 'vote'],
@@ -144,4 +159,3 @@ function withRoles(entries: [string, NonNullable<Player['roleKey']>, Player['sta
     eliminationReason,
   }))
 }
-

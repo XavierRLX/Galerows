@@ -14,13 +14,15 @@ type VotingPhaseProps = {
 
 export function VotingPhase({ session, onCastVote, onFinishVoting }: VotingPhaseProps) {
   const alivePlayers = getAlivePlayers(session.players)
+  const currentVotingResult = session.history.find((round) => round.round === session.round)?.votingResult
+  const revoteTargetIds = currentVotingResult?.kind === 'revote' ? currentVotingResult.tiedTargetIds : undefined
   const [activeVoterId, setActiveVoterId] = useState(alivePlayers[0]?.id ?? '')
   const activeVote = session.currentVotes.find((vote) => vote.voterId === activeVoterId)
   const votedCount = new Set(session.currentVotes.map((vote) => vote.voterId)).size
   const targets = useMemo(() => [
     ...alivePlayers.map((player) => ({ id: player.id as VoteTargetId, label: player.name })),
     ...(session.settings.allowSkipVote ? [{ id: 'skip' as const, label: 'Pular eliminação' }] : []),
-  ], [alivePlayers, session.settings.allowSkipVote])
+  ].filter((target) => !revoteTargetIds?.length || revoteTargetIds.includes(target.id)), [alivePlayers, revoteTargetIds, session.settings.allowSkipVote])
 
   return <>
     <div className="text-center">
@@ -29,7 +31,7 @@ export function VotingPhase({ session, onCastVote, onFinishVoting }: VotingPhase
       </div>
       <h1 className="mt-5 text-3xl font-black">Votação</h1>
       <p className="mx-auto mt-3 max-w-md leading-7 text-slate-400">
-        Registre o voto de cada jogador vivo. Votos podem ser alterados antes da resolução.
+        {revoteTargetIds?.length ? 'Empate em andamento. Registre uma nova votação usando apenas os alvos empatados.' : 'Registre o voto de cada jogador vivo. Votos podem ser alterados antes da resolução.'}
       </p>
     </div>
 

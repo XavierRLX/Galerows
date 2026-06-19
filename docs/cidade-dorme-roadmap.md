@@ -10,7 +10,7 @@ O app deve ajudar o mediador a configurar a partida, sortear personagens, revela
 
 ## Estado Atual
 
-**Status:** FASE 9 concluída.
+**Status:** FASE 10A concluída. FASE 10 segue em andamento antes de liberar no hub.
 
 Já existe uma base pura e testável em `src/features/cidade-dorme/`, sem rotas, telas ou exposição jogável no hub.
 
@@ -67,6 +67,15 @@ Arquivos criados nas FASES 8 e 9:
 
 - `components/MediatorHistoryPanel.tsx`
 - `CidadeDormeResultScreen.tsx`
+
+Arquivos refinados na FASE 10A:
+
+- `cidadeDorme.rules.ts`
+- `cidadeDorme.session.ts`
+- `cidadeDorme.store.ts`
+- `components/VotingPhase.tsx`
+- `components/VoteResolutionPhase.tsx`
+- `CidadeDormePlayScreen.tsx`
 
 Verificações da FASE 1:
 
@@ -140,7 +149,7 @@ Verificações das FASES 5D, 5E, 6A e 7A:
 - Cidade, Assassinos e Coringa em modo `instant` levam a `gameOver`.
 - Coringa em modo `parallel` é registrado em `parallelWinners` sem encerrar sozinho a partida.
 - Testes focados do Cidade Dorme, typecheck e ESLint focado passaram.
-- Observação: empate com `revoteTied` e `mediatorDecision` ainda usa tratamento provisório sem eliminação; a UI dedicada de desempate/decisão fica para refinamento.
+- Observação atualizada na FASE 10A: empate com `revoteTied` e `mediatorDecision` agora tem fluxo dedicado.
 
 Verificações das FASES 8 e 9:
 
@@ -154,6 +163,16 @@ Verificações das FASES 8 e 9:
 - Ação de jogar novamente preserva jogadores e configurações, sorteando nova partida.
 - Ação de voltar ao hub descarta a partida encerrada.
 - Testes focados do Cidade Dorme, testes de rotas, typecheck e ESLint focado passaram.
+
+Verificações da FASE 10A:
+
+- Empate com regra `revoteTied` agora registra o empate e abre uma votação de desempate real.
+- A votação de desempate aceita apenas os alvos empatados.
+- A segunda votação pode eliminar normalmente e substituir o resultado provisório no histórico da rodada.
+- Empate com regra `mediatorDecision` agora exige escolha explícita do mediador entre os alvos empatados.
+- Escolha do mediador aplica eliminação ou skip quando skip estiver entre os empatados.
+- O fluxo não libera o jogo no hub ainda; publicação fica para depois de responsividade, asset, traduções e validação em aparelho.
+- Testes focados do Cidade Dorme, typecheck e ESLint focado passaram.
 
 ## Princípios de Arquitetura
 
@@ -551,18 +570,20 @@ Critérios de aceite:
 
 ### FASE 10 — Polimento e lançamento no hub
 
-**Status:** planejada.
+**Status:** em andamento.
 
 Entregas:
 
-- Revisar responsividade mobile.
-- Revisar contraste e tamanhos de toque.
-- Melhorar textos do mediador.
-- Adicionar microinterações e haptics.
-- Criar ou escolher asset visual do jogo.
-- Adicionar traduções quando o fluxo estiver estável.
-- Atualizar `games.registry.ts` de `coming-soon` para `available`.
-- Validar fluxo completo em aparelho real.
+- Refinar empate `revoteTied` com uma votação de desempate real — concluído na FASE 10A.
+- Refinar empate `mediatorDecision` com escolha explícita do mediador — concluído na FASE 10A.
+- Revisar responsividade mobile — pendente.
+- Revisar contraste e tamanhos de toque — pendente.
+- Melhorar textos do mediador — iniciado parcialmente na FASE 10A; revisão geral pendente.
+- Adicionar microinterações e haptics — parcialmente existente; revisão geral pendente.
+- Criar ou escolher asset visual do jogo — pendente.
+- Adicionar traduções quando o fluxo estiver estável — pendente.
+- Atualizar `games.registry.ts` de `coming-soon` para `available` — pendente.
+- Validar fluxo completo em aparelho real — pendente.
 
 Critérios de aceite:
 
@@ -571,10 +592,30 @@ Critérios de aceite:
 - Não há regressão nos jogos existentes.
 - Build de produção passa.
 
+#### FASE 10A — Desempate e decisão do mediador
+
+**Status:** concluída.
+
+Entregas:
+
+- Criar resolução pura para decisão explícita do mediador em empates.
+- Criar ação de sessão/store para iniciar revotação entre empatados.
+- Criar ação de sessão/store para aplicar decisão do mediador.
+- Restringir votos da revotação aos alvos empatados.
+- Atualizar tela de resolução da votação para mostrar ações corretas por regra de empate.
+- Cobrir regra e sessão com testes focados.
+
+Critérios de aceite:
+
+- `revoteTied` não vira mais “ninguém eliminado” provisório.
+- `mediatorDecision` não fica mais adiado para uma etapa futura.
+- Histórico da rodada mantém o resultado aplicado.
+- Jogo continua indisponível no hub até a revisão visual e validação final.
+
 ## Ordem Recomendada
 
-1. Refinar empate `revoteTied` com uma votação de desempate real.
-2. Refinar empate `mediatorDecision` com escolha explícita do mediador.
+1. Refinar empate `revoteTied` com uma votação de desempate real — concluído na FASE 10A.
+2. Refinar empate `mediatorDecision` com escolha explícita do mediador — concluído na FASE 10A.
 3. Revisar responsividade/textos do fluxo completo.
 4. Criar ou escolher asset visual do jogo.
 5. Validar em aparelho real e só então publicar no hub.

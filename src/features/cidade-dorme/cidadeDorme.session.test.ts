@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, recordDetectiveInvestigation, recordDoctorProtection, recordKillerTarget, recordVote, resolveCurrentNight, resolveCurrentVoting } from './cidadeDorme.session'
+import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, recordDetectiveInvestigation, recordDoctorProtection, recordKillerTarget, recordVote, resolveCurrentNight, resolveCurrentVoting, resolveCurrentVotingByMediator, startTiedRevote } from './cidadeDorme.session'
 import { createDefaultCidadeDormeSettings } from './cidadeDorme.setup'
 import type { CidadeDormePlayerInput } from './cidadeDorme.types'
 
@@ -123,6 +123,37 @@ describe('Cidade Dorme session', () => {
         tally: { skip: 1, ana: 2 },
       },
     })
+  })
+
+  it('starts a tied revote and restricts votes to tied targets', () => {
+    const settings = { ...createDefaultCidadeDormeSettings(players.length), tieRule: 'revoteTied' as const }
+    const session = createCidadeDormeSession(players, settings, () => 0.999999)
+    const voting = { ...session, phase: 'voting' as const }
+    const tiedVote = recordVote(recordVote(voting, 'ana', 'caio'), 'bia', 'dani')
+    const tiedResolution = resolveCurrentVoting({ ...tiedVote, phase: 'voteResolution' as const })
+    expect(tiedResolution.history[0]?.votingResult).toMatchObject({ kind: 'revote', tiedTargetIds: ['caio', 'dani'] })
+
+    const revote = startTiedRevote(tiedResolution)
+    expect(revote).toMatchObject({ phase: 'voting', currentVotes: [] })
+    expect(recordVote(revote, 'ana', 'bia')).toBe(revote)
+
+    const resolvedRevote = resolveCurrentVoting({
+      ...recordVote(recordVote(revote, 'ana', 'caio'), 'bia', 'caio'),
+      phase: 'voteResolution' as const,
+    })
+    expect(resolvedRevote.players.find((player) => player.id === 'caio')).toMatchObject({ status: 'eliminated', eliminationReason: 'vote' })
+    expect(resolvedRevote.history[0]?.votingResult).toMatchObject({ kind: 'eliminated', eliminatedPlayerId: 'caio' })
+  })
+
+  it('resolves a mediator decision by eliminating a tied target', () => {
+    const settings = { ...createDefaultCidadeDormeSettings(players.length), tieRule: 'mediatorDecision' as const }
+    const session = createCidadeDormeSession(players, settings, () => 0.999999)
+    const voting = { ...session, phase: 'voting' as const }
+    const tiedVote = recordVote(recordVote(voting, 'ana', 'caio'), 'bia', 'dani')
+    const resolved = resolveCurrentVotingByMediator({ ...tiedVote, phase: 'voteResolution' as const }, 'dani')
+
+    expect(resolved.players.find((player) => player.id === 'dani')).toMatchObject({ status: 'eliminated', eliminationReason: 'vote' })
+    expect(resolved.history[0]?.votingResult).toMatchObject({ kind: 'eliminated', eliminatedPlayerId: 'dani', tiedTargetIds: ['caio', 'dani'] })
   })
 
   it('validates compatible saved sessions', () => {

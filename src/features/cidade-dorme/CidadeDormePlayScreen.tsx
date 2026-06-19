@@ -23,7 +23,7 @@ import { useCidadeDormeInitialization } from './useCidadeDormeInitialization'
 
 export function CidadeDormePlayScreen() {
   const navigate = useNavigate()
-  const { session, initialized, advanceReveal, advancePhase, chooseKillerTarget, chooseDoctorProtection, chooseDetectiveTarget, resolveNight, castVote, resolveVoting } = useCidadeDormeStore()
+  const { session, initialized, advanceReveal, advancePhase, chooseKillerTarget, chooseDoctorProtection, chooseDetectiveTarget, resolveNight, castVote, resolveVoting, startRevote, resolveMediatorDecision } = useCidadeDormeStore()
   const [showSecret, setShowSecret] = useState(false)
   useCidadeDormeInitialization()
   useEffect(() => {
@@ -78,7 +78,7 @@ export function CidadeDormePlayScreen() {
   </Shell>
 
   if (session.phase === 'voteResolution') return <Shell historySession={session} title={`Dia ${session.round}`}>
-    <VoteResolutionPhase session={session} onResolveVoting={async () => { await resolveVoting(); await AppHaptics.medium() }} onContinue={async () => { await advancePhase(); await AppHaptics.light() }} />
+    <VoteResolutionPhase session={session} onResolveVoting={async () => { await resolveVoting(); await AppHaptics.medium() }} onStartRevote={async () => { await startRevote(); await AppHaptics.medium() }} onMediatorDecision={async (targetId) => { await resolveMediatorDecision(targetId); await AppHaptics.medium() }} onContinue={async () => { await advancePhase(); await AppHaptics.light() }} />
   </Shell>
 
   return <Shell title="Cidade Dorme"><p className="text-center text-slate-400">Esta fase será implementada na próxima etapa.</p></Shell>

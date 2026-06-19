@@ -109,6 +109,24 @@ export function resolveVoting(players: readonly Player[], votes: readonly Vote[]
   }
 }
 
+export function resolveMediatorDecisionVoting(players: readonly Player[], votes: readonly Vote[], settings: GameSettings, round: number, chosenTargetId: VoteTargetId): VotingResolution {
+  const preview = resolveVoting(players, votes, settings, round)
+  if (preview.kind !== 'mediatorDecision') return preview
+  if (!preview.tiedTargetIds?.includes(chosenTargetId)) return preview
+  if (chosenTargetId === 'skip') return { ...preview, kind: 'skipped' }
+
+  const eliminated = preview.players.find((player) => player.id === chosenTargetId && player.status === 'alive')
+  if (!eliminated) return preview
+
+  return {
+    ...preview,
+    kind: 'eliminated',
+    players: preview.players.map((player) => player.id === chosenTargetId ? eliminatePlayer(player, round, 'vote') : { ...player }),
+    eliminatedPlayerId: chosenTargetId,
+    jesterWinnerPlayerId: eliminated.roleKey === 'jester' ? chosenTargetId : undefined,
+  }
+}
+
 export function checkWinCondition(players: readonly Player[], settings: GameSettings): WinConditionResult {
   const votedOutJesters = players.filter((player) => player.roleKey === 'jester' && player.status === 'eliminated' && player.eliminationReason === 'vote')
   const parallelWinners = settings.jesterWinMode === 'parallel' ? votedOutJesters.map((player) => ({ winner: 'jester' as const, playerId: player.id })) : []
