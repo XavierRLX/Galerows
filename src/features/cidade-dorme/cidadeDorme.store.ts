@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { LocalPreferences } from '../../lib/capacitor/preferences'
 import { STORAGE_KEYS } from '../../lib/storage/storage.keys'
-import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, recordKillerTarget } from './cidadeDorme.session'
+import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, recordDoctorProtection, recordKillerTarget } from './cidadeDorme.session'
 import { advancePhase as advanceCidadeDormePhase } from './cidadeDorme.stateMachine'
 import type { CidadeDormePlayerInput, GameSettings, GameState } from './cidadeDorme.types'
 
@@ -15,6 +15,7 @@ type CidadeDormeState = {
   advanceReveal: () => Promise<void>
   advancePhase: () => Promise<void>
   chooseKillerTarget: (targetId: string) => Promise<void>
+  chooseDoctorProtection: (protectedPlayerId: string) => Promise<void>
   discard: () => Promise<void>
 }
 
@@ -64,6 +65,15 @@ export const useCidadeDormeStore = create<CidadeDormeState>((set, get) => ({
     const withTarget = recordKillerTarget(current, targetId)
     if (withTarget === current) return
     const session = advanceCidadeDormePhase(withTarget)
+    await persistSession(session)
+    set({ session })
+  },
+  chooseDoctorProtection: async (protectedPlayerId) => {
+    const current = get().session
+    if (!current) return
+    const withProtection = recordDoctorProtection(current, protectedPlayerId)
+    if (withProtection === current) return
+    const session = advanceCidadeDormePhase(withProtection)
     await persistSession(session)
     set({ session })
   },

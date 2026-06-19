@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { AppHaptics } from '../../lib/capacitor/haptics'
 import { cn } from '../../lib/utils/cn'
+import { DoctorTurnPhase } from './components/DoctorTurnPhase'
 import { KillerTurnPhase } from './components/KillerTurnPhase'
 import { NightIntroPhase } from './components/NightIntroPhase'
 import { getRoleDefinition } from './cidadeDorme.roles'
@@ -15,7 +16,7 @@ import { useCidadeDormeInitialization } from './useCidadeDormeInitialization'
 
 export function CidadeDormePlayScreen() {
   const navigate = useNavigate()
-  const { session, initialized, advanceReveal, advancePhase, chooseKillerTarget } = useCidadeDormeStore()
+  const { session, initialized, advanceReveal, advancePhase, chooseKillerTarget, chooseDoctorProtection } = useCidadeDormeStore()
   const [showSecret, setShowSecret] = useState(false)
   useCidadeDormeInitialization()
   useEffect(() => {
@@ -44,6 +45,10 @@ export function CidadeDormePlayScreen() {
 
   if (session.phase === 'killerTurn') return <Shell title={`Noite ${session.round}`}>
     <KillerTurnPhase session={session} onConfirmTarget={async (targetId) => { await chooseKillerTarget(targetId); await AppHaptics.medium() }} />
+  </Shell>
+
+  if (session.phase === 'doctorTurn') return <Shell title={`Noite ${session.round}`}>
+    <DoctorTurnPhase session={session} onConfirmProtection={async (protectedPlayerId) => { await chooseDoctorProtection(protectedPlayerId); await AppHaptics.medium() }} />
   </Shell>
 
   return <Shell title="Cidade Dorme"><p className="text-center text-slate-400">Esta fase será implementada na próxima etapa.</p></Shell>

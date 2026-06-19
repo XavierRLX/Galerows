@@ -10,7 +10,7 @@ O app deve ajudar o mediador a configurar a partida, sortear personagens, revela
 
 ## Estado Atual
 
-**Status:** FASE 5B concluída.
+**Status:** FASE 5C concluída.
 
 Já existe uma base pura e testável em `src/features/cidade-dorme/`, sem rotas, telas ou exposição jogável no hub.
 
@@ -50,6 +50,10 @@ Arquivos criados na FASE 5A:
 Arquivos criados na FASE 5B:
 
 - `components/KillerTurnPhase.tsx`
+
+Arquivos criados na FASE 5C:
+
+- `components/DoctorTurnPhase.tsx`
 
 Verificações da FASE 1:
 
@@ -95,6 +99,17 @@ Verificações da FASE 5B:
 - Mediador escolhe uma vítima entre jogadores vivos.
 - A escolha salva `killerTargetId` em `currentNightAction`.
 - Após confirmar a vítima, o app avança pela state machine para Médico, Detetive ou resolução.
+- A tela lista nomes sem revelar funções secretas.
+- Testes do Cidade Dorme, typecheck e ESLint focado passaram.
+
+Verificações da FASE 5C:
+
+- Turno do Médico foi separado em componente próprio.
+- Mediador escolhe uma proteção entre alvos vivos válidos.
+- A escolha salva `protectedPlayerId` em `currentNightAction`.
+- Autoproteção é bloqueada quando a configuração estiver desligada.
+- Repetição da proteção anterior é bloqueada quando a configuração estiver desligada e houver histórico anterior.
+- Após confirmar a proteção, o app avança pela state machine para Detetive ou resolução.
 - A tela lista nomes sem revelar funções secretas.
 - Testes do Cidade Dorme, typecheck e ESLint focado passaram.
 
@@ -294,19 +309,19 @@ Observações:
 
 ### FASE 5 — Fluxo da noite
 
-**Status:** em andamento. FASE 5B concluída.
+**Status:** em andamento. FASE 5C concluída.
 
 Entregas:
 
 - Criar componentes para:
   - `NightIntroPhase` — concluído na FASE 5A.
   - `KillerTurnPhase` — concluído na FASE 5B.
-  - `DoctorTurnPhase`
+  - `DoctorTurnPhase` — concluído na FASE 5C.
   - `DetectiveTurnPhase`
   - `NightResolutionPhase`
 - Exibir roteiro do mediador.
 - Assassino escolhe vítima — concluído na FASE 5B.
-- Médico escolhe protegido.
+- Médico escolhe protegido — concluído na FASE 5C.
 - Detetive escolhe investigado.
 - Resolver noite com `resolveNight`.
 - Mostrar ao mediador se houve morte ou proteção.
@@ -359,7 +374,7 @@ Critérios de aceite:
 
 #### FASE 5C — Turno do Médico
 
-**Status:** próxima.
+**Status:** concluída.
 
 Entregas:
 
@@ -369,6 +384,25 @@ Entregas:
 - Bloquear repetição da proteção anterior quando a regra estiver desligada.
 - Registrar `protectedPlayerId` em `currentNightAction`.
 - Avançar para Detetive ou resolução conforme state machine.
+
+Critérios de aceite:
+
+- Apenas jogadores vivos e válidos aparecem como alvos.
+- Confirmar proteção persiste a ação noturna.
+- A UI não exibe papéis, times ou status secretos.
+- O avanço respeita Detetive desativado ou eliminado.
+
+#### FASE 5D — Turno do Detetive
+
+**Status:** próxima.
+
+Entregas:
+
+- Criar `DetectiveTurnPhase`.
+- Listar jogadores vivos como investigáveis.
+- Registrar `detectiveTargetId` em `currentNightAction`.
+- Resolver ou preparar `detectiveResult` como informação privada do mediador.
+- Avançar para resolução da noite conforme state machine.
 
 ### FASE 6 — Fluxo do dia e votação
 
@@ -484,11 +518,11 @@ Critérios de aceite:
 
 ## Ordem Recomendada
 
-1. Implementar FASE 5C: seleção do Médico respeitando autoproteção e repetição.
-2. Implementar FASE 5D: seleção do Detetive e resultado privado.
-3. Implementar FASE 5E: resolução da noite com `resolveNight`.
-4. Implementar FASE 6 em ciclos pequenos para discussão e votação.
-5. Integrar histórico, resultado final e só então publicar no hub.
+1. Implementar FASE 5D: seleção do Detetive e resultado privado.
+2. Implementar FASE 5E: resolução da noite com `resolveNight`.
+3. Implementar FASE 6 em ciclos pequenos para discussão e votação.
+4. Integrar histórico privado do mediador.
+5. Integrar resultado final e só então publicar no hub.
 
 ## Arquivos Planejados
 
@@ -513,6 +547,7 @@ Arquivos já criados:
 - `src/features/cidade-dorme/CidadeDormePlayScreen.tsx`
 - `src/features/cidade-dorme/components/NightIntroPhase.tsx`
 - `src/features/cidade-dorme/components/KillerTurnPhase.tsx`
+- `src/features/cidade-dorme/components/DoctorTurnPhase.tsx`
 
 Arquivos prováveis nas próximas fases:
 

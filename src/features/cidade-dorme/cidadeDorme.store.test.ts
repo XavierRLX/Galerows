@@ -12,6 +12,11 @@ const players: CidadeDormePlayerInput[] = [
   { id: 'dani', name: 'Dani' },
 ]
 
+const playersWithDoctor: CidadeDormePlayerInput[] = [
+  ...players,
+  { id: 'eli', name: 'Eli' },
+]
+
 describe('Cidade Dorme store', () => {
   beforeEach(async () => {
     await LocalPreferences.remove(STORAGE_KEYS.cidadeDormeSession)
@@ -71,6 +76,38 @@ describe('Cidade Dorme store', () => {
     const saved = await LocalPreferences.getJson<GameState>(STORAGE_KEYS.cidadeDormeSession)
     expect(saved?.phase).toBe('detectiveTurn')
     expect(saved?.currentNightAction).toMatchObject({ round: 1, killerTargetId: 'bia' })
+  })
+
+  it('persists doctor protection and advances to the next night role', async () => {
+    await useCidadeDormeStore.getState().start(playersWithDoctor, createDefaultCidadeDormeSettings(playersWithDoctor.length))
+    const session = useCidadeDormeStore.getState().session!
+    const doctorTurn: GameState = {
+      ...session,
+      phase: 'doctorTurn',
+      players: session.players.map((player) => player.id === 'bia' ? { ...player, roleKey: 'doctor' } : player.id === 'caio' ? { ...player, roleKey: 'detective' } : player.id === 'ana' ? { ...player, roleKey: 'killer' } : { ...player, roleKey: 'citizen' }),
+    }
+    useCidadeDormeStore.setState({ session: doctorTurn })
+
+    await useCidadeDormeStore.getState().chooseDoctorProtection('caio')
+    const saved = await LocalPreferences.getJson<GameState>(STORAGE_KEYS.cidadeDormeSession)
+    expect(saved?.phase).toBe('detectiveTurn')
+    expect(saved?.currentNightAction).toMatchObject({ round: 1, protectedPlayerId: 'caio' })
+  })
+
+  it('does not persist invalid doctor protection', async () => {
+    await useCidadeDormeStore.getState().start(playersWithDoctor, createDefaultCidadeDormeSettings(playersWithDoctor.length))
+    const session = useCidadeDormeStore.getState().session!
+    const doctorTurn: GameState = {
+      ...session,
+      phase: 'doctorTurn',
+      players: session.players.map((player) => player.id === 'bia' ? { ...player, roleKey: 'doctor' } : player.id === 'caio' ? { ...player, roleKey: 'detective' } : player.id === 'ana' ? { ...player, roleKey: 'killer' } : { ...player, roleKey: 'citizen' }),
+    }
+    useCidadeDormeStore.setState({ session: doctorTurn })
+
+    await useCidadeDormeStore.getState().chooseDoctorProtection('bia')
+    const saved = await LocalPreferences.getJson<GameState>(STORAGE_KEYS.cidadeDormeSession)
+    expect(saved?.phase).toBe('revealRoles')
+    expect(useCidadeDormeStore.getState().session?.phase).toBe('doctorTurn')
   })
 
   it('discards the active session', async () => {

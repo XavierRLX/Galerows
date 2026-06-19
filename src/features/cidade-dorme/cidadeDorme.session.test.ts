@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, recordKillerTarget } from './cidadeDorme.session'
+import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, recordDoctorProtection, recordKillerTarget } from './cidadeDorme.session'
 import { createDefaultCidadeDormeSettings } from './cidadeDorme.setup'
 import type { CidadeDormePlayerInput } from './cidadeDorme.types'
 
@@ -8,6 +8,11 @@ const players: CidadeDormePlayerInput[] = [
   { id: 'bia', name: 'Bia' },
   { id: 'caio', name: 'Caio' },
   { id: 'dani', name: 'Dani' },
+]
+
+const playersWithDoctor: CidadeDormePlayerInput[] = [
+  ...players,
+  { id: 'eli', name: 'Eli' },
 ]
 
 describe('Cidade Dorme session', () => {
@@ -46,6 +51,31 @@ describe('Cidade Dorme session', () => {
     expect(recordKillerTarget(killerTurn, 'bia')).toMatchObject({
       phase: 'killerTurn',
       currentNightAction: { round: 1, killerTargetId: 'bia' },
+    })
+  })
+
+  it('records doctor protection only for valid targets during the doctor turn', () => {
+    const session = createCidadeDormeSession(playersWithDoctor, createDefaultCidadeDormeSettings(playersWithDoctor.length), () => 0.999999)
+    const doctorTurn = { ...session, phase: 'doctorTurn' as const }
+    expect(recordDoctorProtection(session, 'caio')).toBe(session)
+    expect(recordDoctorProtection(doctorTurn, 'missing')).toBe(doctorTurn)
+    expect(recordDoctorProtection(doctorTurn, 'bia')).toBe(doctorTurn)
+    expect(recordDoctorProtection(doctorTurn, 'caio')).toMatchObject({
+      phase: 'doctorTurn',
+      currentNightAction: { round: 1, protectedPlayerId: 'caio' },
+    })
+  })
+
+  it('blocks repeated doctor protection when the setting is disabled', () => {
+    const session = createCidadeDormeSession(playersWithDoctor, createDefaultCidadeDormeSettings(playersWithDoctor.length), () => 0.999999)
+    const doctorTurn = {
+      ...session,
+      phase: 'doctorTurn' as const,
+      history: [{ round: 1, nightAction: { round: 1, protectedPlayerId: 'caio' }, votes: [] }],
+    }
+    expect(recordDoctorProtection(doctorTurn, 'caio')).toBe(doctorTurn)
+    expect(recordDoctorProtection({ ...doctorTurn, settings: { ...doctorTurn.settings, doctorCanRepeatProtection: true } }, 'caio')).toMatchObject({
+      currentNightAction: { protectedPlayerId: 'caio' },
     })
   })
 
