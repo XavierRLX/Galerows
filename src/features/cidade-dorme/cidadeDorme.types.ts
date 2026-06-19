@@ -92,6 +92,14 @@ export type VotingResolution = {
   jesterWinnerPlayerId?: string
 }
 
+export type VotingHistoryResult = {
+  kind: VotingResolutionKind
+  tally: Record<VoteTargetId, number>
+  eliminatedPlayerId?: string
+  tiedTargetIds?: VoteTargetId[]
+  jesterWinnerPlayerId?: string
+}
+
 export type NightResolution = {
   players: Player[]
   action: NightAction
@@ -114,6 +122,7 @@ export type RoundHistory = {
   round: number
   nightAction: NightAction
   votes: Vote[]
+  votingResult?: VotingHistoryResult
   eliminatedByVoteId?: string
   notes?: string[]
 }

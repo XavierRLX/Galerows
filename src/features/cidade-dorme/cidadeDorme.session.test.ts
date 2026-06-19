@@ -115,7 +115,14 @@ describe('Cidade Dorme session', () => {
 
     const resolved = resolveCurrentVoting({ ...decisiveVote, phase: 'voteResolution' as const })
     expect(resolved.players.find((player) => player.id === 'ana')).toMatchObject({ status: 'eliminated', eliminationReason: 'vote' })
-    expect(resolved.history[0]).toMatchObject({ eliminatedByVoteId: 'ana' })
+    expect(resolved.history[0]).toMatchObject({
+      eliminatedByVoteId: 'ana',
+      votingResult: {
+        kind: 'eliminated',
+        eliminatedPlayerId: 'ana',
+        tally: { skip: 1, ana: 2 },
+      },
+    })
   })
 
   it('validates compatible saved sessions', () => {

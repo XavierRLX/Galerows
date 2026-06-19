@@ -2,7 +2,7 @@ import { createId } from '../../lib/utils/createId'
 import { assignRolesToPlayers, canDoctorProtect, checkWinCondition, getAlivePlayers, resolveNight, resolveVoting } from './cidadeDorme.rules'
 import { isSupportedCidadeDormePlayerCount } from './cidadeDorme.setup'
 import { advancePhase, CIDADE_DORME_PHASES } from './cidadeDorme.stateMachine'
-import type { CidadeDormePlayerInput, GamePhase, GameSettings, GameState, NightAction, Player, VoteTargetId } from './cidadeDorme.types'
+import type { CidadeDormePlayerInput, GamePhase, GameSettings, GameState, NightAction, Player, VoteTargetId, VotingResolution } from './cidadeDorme.types'
 
 export function createCidadeDormeSession(players: CidadeDormePlayerInput[], settings: GameSettings, random: () => number = Math.random): GameState {
   const assignedPlayers = assignRolesToPlayers(players, settings, random)
@@ -117,7 +117,7 @@ export function resolveCurrentVoting(session: GameState): GameState {
   return touch({
     ...resolvedSession,
     parallelWinners: mergeParallelWinners(resolvedSession.parallelWinners ?? [], winCondition.parallelWinners),
-    history: upsertRoundHistory(resolvedSession, resolution.eliminatedPlayerId),
+    history: upsertRoundHistory(resolvedSession, resolution),
   })
 }
 
@@ -149,13 +149,20 @@ function createEmptyNightAction(round: number): NightAction {
   return { round }
 }
 
-function upsertRoundHistory(session: GameState, eliminatedByVoteId?: string) {
+function upsertRoundHistory(session: GameState, votingResolution?: VotingResolution) {
   const existing = session.history.find((round) => round.round === session.round)
   const entry = {
     round: session.round,
     nightAction: session.currentNightAction,
     votes: session.currentVotes,
-    eliminatedByVoteId: eliminatedByVoteId ?? existing?.eliminatedByVoteId,
+    votingResult: votingResolution ? {
+      kind: votingResolution.kind,
+      tally: votingResolution.tally,
+      eliminatedPlayerId: votingResolution.eliminatedPlayerId,
+      tiedTargetIds: votingResolution.tiedTargetIds,
+      jesterWinnerPlayerId: votingResolution.jesterWinnerPlayerId,
+    } : existing?.votingResult,
+    eliminatedByVoteId: votingResolution?.eliminatedPlayerId ?? existing?.eliminatedByVoteId,
     notes: existing?.notes,
   }
   return [...session.history.filter((round) => round.round !== session.round), entry].sort((a, b) => a.round - b.round)

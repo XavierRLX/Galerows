@@ -10,7 +10,7 @@ O app deve ajudar o mediador a configurar a partida, sortear personagens, revela
 
 ## Estado Atual
 
-**Status:** FASE 7A concluída.
+**Status:** FASE 9 concluída.
 
 Já existe uma base pura e testável em `src/features/cidade-dorme/`, sem rotas, telas ou exposição jogável no hub.
 
@@ -62,7 +62,11 @@ Arquivos criados nas FASES 5D, 5E, 6A e 7A:
 - `components/DayDiscussionPhase.tsx`
 - `components/VotingPhase.tsx`
 - `components/VoteResolutionPhase.tsx`
-- `components/GameOverPhase.tsx`
+
+Arquivos criados nas FASES 8 e 9:
+
+- `components/MediatorHistoryPanel.tsx`
+- `CidadeDormeResultScreen.tsx`
 
 Verificações da FASE 1:
 
@@ -137,6 +141,19 @@ Verificações das FASES 5D, 5E, 6A e 7A:
 - Coringa em modo `parallel` é registrado em `parallelWinners` sem encerrar sozinho a partida.
 - Testes focados do Cidade Dorme, typecheck e ESLint focado passaram.
 - Observação: empate com `revoteTied` e `mediatorDecision` ainda usa tratamento provisório sem eliminação; a UI dedicada de desempate/decisão fica para refinamento.
+
+Verificações das FASES 8 e 9:
+
+- Histórico privado do mediador foi criado como painel recolhido.
+- Histórico mostra alvo dos Assassinos, proteção do Médico, investigação do Detetive, morte/proteção da noite, votos e placar da votação.
+- Resultado da votação agora fica registrado em `history.votingResult`.
+- A tela de resultado final foi criada em `CidadeDormeResultScreen.tsx`.
+- Rota `/games/cidade-dorme/result` foi adicionada.
+- `CidadeDormePlayScreen` redireciona para o resultado quando a fase chega em `gameOver`.
+- Resultado final mostra vencedor, vitórias paralelas, sobreviventes, eliminados, papéis revelados e histórico privado.
+- Ação de jogar novamente preserva jogadores e configurações, sorteando nova partida.
+- Ação de voltar ao hub descarta a partida encerrada.
+- Testes focados do Cidade Dorme, testes de rotas, typecheck e ESLint focado passaram.
 
 ## Princípios de Arquitetura
 
@@ -488,7 +505,7 @@ Critérios de aceite:
 
 ### FASE 8 — Histórico privado do mediador
 
-**Status:** planejada.
+**Status:** concluída.
 
 Entregas:
 
@@ -502,8 +519,8 @@ Entregas:
   - skip;
   - empate;
   - eliminado.
-- Registrar notas privadas do mediador, se necessário.
-- Criar visualização privada do histórico.
+- Registrar notas privadas do mediador, se necessário — adiado por não ser necessário para o fluxo atual.
+- Criar visualização privada do histórico — concluído.
 
 Critérios de aceite:
 
@@ -513,18 +530,18 @@ Critérios de aceite:
 
 ### FASE 9 — Resultado final
 
-**Status:** planejada.
+**Status:** concluída.
 
 Entregas:
 
-- Criar `CidadeDormeResultScreen.tsx`.
-- Mostrar vencedor.
-- Mostrar vitórias paralelas, se existirem.
-- Mostrar lista de jogadores e personagens.
-- Mostrar eliminados e sobreviventes.
-- Mostrar resumo da partida.
-- Criar ação para jogar novamente.
-- Criar ação para voltar ao hub.
+- Criar `CidadeDormeResultScreen.tsx` — concluído.
+- Mostrar vencedor — concluído.
+- Mostrar vitórias paralelas, se existirem — concluído.
+- Mostrar lista de jogadores e personagens — concluído.
+- Mostrar eliminados e sobreviventes — concluído.
+- Mostrar resumo da partida — concluído.
+- Criar ação para jogar novamente — concluído.
+- Criar ação para voltar ao hub — concluído.
 
 Critérios de aceite:
 
@@ -558,9 +575,9 @@ Critérios de aceite:
 
 1. Refinar empate `revoteTied` com uma votação de desempate real.
 2. Refinar empate `mediatorDecision` com escolha explícita do mediador.
-3. Integrar histórico privado do mediador.
-4. Integrar resultado final completo.
-5. Revisar responsividade/textos e só então publicar no hub.
+3. Revisar responsividade/textos do fluxo completo.
+4. Criar ou escolher asset visual do jogo.
+5. Validar em aparelho real e só então publicar no hub.
 
 ## Arquivos Planejados
 
@@ -591,11 +608,11 @@ Arquivos já criados:
 - `src/features/cidade-dorme/components/DayDiscussionPhase.tsx`
 - `src/features/cidade-dorme/components/VotingPhase.tsx`
 - `src/features/cidade-dorme/components/VoteResolutionPhase.tsx`
-- `src/features/cidade-dorme/components/GameOverPhase.tsx`
+- `src/features/cidade-dorme/components/MediatorHistoryPanel.tsx`
+- `src/features/cidade-dorme/CidadeDormeResultScreen.tsx`
 
 Arquivos prováveis nas próximas fases:
 
-- `src/features/cidade-dorme/CidadeDormeResultScreen.tsx`
 - `src/features/cidade-dorme/components/*`
 - `src/i18n/locales/pt-BR/cidade-dorme.json`
 - `src/i18n/locales/en-US/cidade-dorme.json`

@@ -13,6 +13,7 @@ const AdedonhaPlayScreen = lazy(() => import('../features/adedonha/AdedonhaPlayS
 const AdedonhaSetupScreen = lazy(() => import('../features/adedonha/AdedonhaSetupScreen').then((module) => ({ default: module.AdedonhaSetupScreen })))
 const CidadeDormeHomeScreen = lazy(() => import('../features/cidade-dorme/CidadeDormeHomeScreen').then((module) => ({ default: module.CidadeDormeHomeScreen })))
 const CidadeDormePlayScreen = lazy(() => import('../features/cidade-dorme/CidadeDormePlayScreen').then((module) => ({ default: module.CidadeDormePlayScreen })))
+const CidadeDormeResultScreen = lazy(() => import('../features/cidade-dorme/CidadeDormeResultScreen').then((module) => ({ default: module.CidadeDormeResultScreen })))
 const CidadeDormeSetupScreen = lazy(() => import('../features/cidade-dorme/CidadeDormeSetupScreen').then((module) => ({ default: module.CidadeDormeSetupScreen })))
 const ContentAdminScreen = lazy(() => import('../features/content/ContentAdminScreen').then((module) => ({ default: module.ContentAdminScreen })))
 const ImpostorDaPalavraHomeScreen = lazy(() => import('../features/impostor-da-palavra/ImpostorDaPalavraHomeScreen').then((module) => ({ default: module.ImpostorDaPalavraHomeScreen })))
@@ -84,6 +85,7 @@ export function AppRoutes() {
           <Route path="games/cidade-dorme" element={<CidadeDormeHomeScreen />} />
           <Route path="games/cidade-dorme/setup" element={<CidadeDormeSetupScreen />} />
           <Route path="games/cidade-dorme/play" element={<CidadeDormePlayScreen />} />
+          <Route path="games/cidade-dorme/result" element={<CidadeDormeResultScreen />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Route>
       </Routes>

@@ -9,8 +9,8 @@ import { cn } from '../../lib/utils/cn'
 import { DayDiscussionPhase } from './components/DayDiscussionPhase'
 import { DetectiveTurnPhase } from './components/DetectiveTurnPhase'
 import { DoctorTurnPhase } from './components/DoctorTurnPhase'
-import { GameOverPhase } from './components/GameOverPhase'
 import { KillerTurnPhase } from './components/KillerTurnPhase'
+import { MediatorHistoryPanel } from './components/MediatorHistoryPanel'
 import { NightIntroPhase } from './components/NightIntroPhase'
 import { NightResolutionPhase } from './components/NightResolutionPhase'
 import { VoteResolutionPhase } from './components/VoteResolutionPhase'
@@ -18,6 +18,7 @@ import { VotingPhase } from './components/VotingPhase'
 import { getRoleDefinition } from './cidadeDorme.roles'
 import { getClassicRoleTheme } from './cidadeDorme.theme'
 import { useCidadeDormeStore } from './cidadeDorme.store'
+import type { GameState } from './cidadeDorme.types'
 import { useCidadeDormeInitialization } from './useCidadeDormeInitialization'
 
 export function CidadeDormePlayScreen() {
@@ -28,6 +29,9 @@ export function CidadeDormePlayScreen() {
   useEffect(() => {
     if (initialized && !session) navigate('/games/cidade-dorme', { replace: true })
   }, [initialized, navigate, session])
+  useEffect(() => {
+    if (initialized && session?.phase === 'gameOver') navigate('/games/cidade-dorme/result', { replace: true })
+  }, [initialized, navigate, session?.phase])
   if (!session) return <div className="p-6 text-slate-400">Carregando partida...</div>
 
   if (session.phase === 'revealRoles') {
@@ -45,46 +49,42 @@ export function CidadeDormePlayScreen() {
     </Shell>
   }
 
-  if (session.phase === 'nightIntro') return <Shell title={`Noite ${session.round}`}>
+  if (session.phase === 'nightIntro') return <Shell historySession={session} title={`Noite ${session.round}`}>
     <NightIntroPhase round={session.round} onStartNightActions={async () => { await advancePhase(); await AppHaptics.medium() }} />
   </Shell>
 
-  if (session.phase === 'killerTurn') return <Shell title={`Noite ${session.round}`}>
+  if (session.phase === 'killerTurn') return <Shell historySession={session} title={`Noite ${session.round}`}>
     <KillerTurnPhase session={session} onConfirmTarget={async (targetId) => { await chooseKillerTarget(targetId); await AppHaptics.medium() }} />
   </Shell>
 
-  if (session.phase === 'doctorTurn') return <Shell title={`Noite ${session.round}`}>
+  if (session.phase === 'doctorTurn') return <Shell historySession={session} title={`Noite ${session.round}`}>
     <DoctorTurnPhase session={session} onConfirmProtection={async (protectedPlayerId) => { await chooseDoctorProtection(protectedPlayerId); await AppHaptics.medium() }} />
   </Shell>
 
-  if (session.phase === 'detectiveTurn') return <Shell title={`Noite ${session.round}`}>
+  if (session.phase === 'detectiveTurn') return <Shell historySession={session} title={`Noite ${session.round}`}>
     <DetectiveTurnPhase session={session} onConfirmInvestigation={async (detectiveTargetId) => { await chooseDetectiveTarget(detectiveTargetId); await AppHaptics.medium() }} />
   </Shell>
 
-  if (session.phase === 'nightResolution') return <Shell title={`Noite ${session.round}`}>
+  if (session.phase === 'nightResolution') return <Shell historySession={session} title={`Noite ${session.round}`}>
     <NightResolutionPhase session={session} onResolveNight={async () => { await resolveNight(); await AppHaptics.medium() }} onContinue={async () => { await advancePhase(); await AppHaptics.light() }} />
   </Shell>
 
-  if (session.phase === 'dayDiscussion') return <Shell title={`Dia ${session.round}`}>
+  if (session.phase === 'dayDiscussion') return <Shell historySession={session} title={`Dia ${session.round}`}>
     <DayDiscussionPhase round={session.round} onStartVoting={async () => { await advancePhase(); await AppHaptics.medium() }} />
   </Shell>
 
-  if (session.phase === 'voting') return <Shell title={`Dia ${session.round}`}>
+  if (session.phase === 'voting') return <Shell historySession={session} title={`Dia ${session.round}`}>
     <VotingPhase session={session} onCastVote={async (voterId, targetId) => { await castVote(voterId, targetId); await AppHaptics.light() }} onFinishVoting={async () => { await advancePhase(); await AppHaptics.medium() }} />
   </Shell>
 
-  if (session.phase === 'voteResolution') return <Shell title={`Dia ${session.round}`}>
+  if (session.phase === 'voteResolution') return <Shell historySession={session} title={`Dia ${session.round}`}>
     <VoteResolutionPhase session={session} onResolveVoting={async () => { await resolveVoting(); await AppHaptics.medium() }} onContinue={async () => { await advancePhase(); await AppHaptics.light() }} />
-  </Shell>
-
-  if (session.phase === 'gameOver') return <Shell title="Cidade Dorme">
-    <GameOverPhase session={session} />
   </Shell>
 
   return <Shell title="Cidade Dorme"><p className="text-center text-slate-400">Esta fase será implementada na próxima etapa.</p></Shell>
 }
 
-function Shell({ title, action, children }: { title: string; action?: string; children: React.ReactNode }) {
+function Shell({ title, action, historySession, children }: { title: string; action?: string; historySession?: GameState; children: React.ReactNode }) {
   const navigate = useNavigate()
-  return <div className="min-h-dvh pb-10"><Header backTo="/games/cidade-dorme" title={title} action={action ? <span className="text-sm font-black text-blue-300">{action}</span> : undefined} /><section className="px-5 py-8">{children}<Button className="mx-auto mt-8 flex max-w-lg" variant="ghost" onClick={() => navigate('/games/cidade-dorme')}><Home size={17} />Sair para o início</Button></section></div>
+  return <div className="min-h-dvh pb-10"><Header backTo="/games/cidade-dorme" title={title} action={action ? <span className="text-sm font-black text-blue-300">{action}</span> : undefined} /><section className="px-5 py-8">{children}{historySession ? <MediatorHistoryPanel session={historySession} /> : null}<Button className="mx-auto mt-8 flex max-w-lg" variant="ghost" onClick={() => navigate('/games/cidade-dorme')}><Home size={17} />Sair para o início</Button></section></div>
 }
