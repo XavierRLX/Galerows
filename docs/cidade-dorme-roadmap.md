@@ -1,6 +1,6 @@
 # Roadmap do Cidade Dorme
 
-Atualizado em: 18 de junho de 2026
+Atualizado em: 19 de junho de 2026
 
 ## Objetivo
 
@@ -10,7 +10,7 @@ O app deve ajudar o mediador a configurar a partida, sortear personagens, revela
 
 ## Estado Atual
 
-**Status:** FASE 5C concluída.
+**Status:** FASE 7A concluída.
 
 Já existe uma base pura e testável em `src/features/cidade-dorme/`, sem rotas, telas ou exposição jogável no hub.
 
@@ -54,6 +54,15 @@ Arquivos criados na FASE 5B:
 Arquivos criados na FASE 5C:
 
 - `components/DoctorTurnPhase.tsx`
+
+Arquivos criados nas FASES 5D, 5E, 6A e 7A:
+
+- `components/DetectiveTurnPhase.tsx`
+- `components/NightResolutionPhase.tsx`
+- `components/DayDiscussionPhase.tsx`
+- `components/VotingPhase.tsx`
+- `components/VoteResolutionPhase.tsx`
+- `components/GameOverPhase.tsx`
 
 Verificações da FASE 1:
 
@@ -112,6 +121,22 @@ Verificações da FASE 5C:
 - Após confirmar a proteção, o app avança pela state machine para Detetive ou resolução.
 - A tela lista nomes sem revelar funções secretas.
 - Testes do Cidade Dorme, typecheck e ESLint focado passaram.
+
+Verificações das FASES 5D, 5E, 6A e 7A:
+
+- Turno do Detetive registra `detectiveTargetId` em `currentNightAction`.
+- Resultado da investigação é calculado por `resolveNight()` como `suspect` ou `innocent`.
+- Resolução da noite aplica morte, proteção e investigação sem revelar papéis ao grupo.
+- Histórico interno da rodada recebe o resultado da noite para suportar repetição do Médico.
+- Discussão do dia avança para votação.
+- Votação registra um voto por jogador vivo e permite alterar voto antes da resolução.
+- Skip só aparece quando permitido pela configuração.
+- Resolução da votação usa `resolveVoting()` e aplica eliminação quando houver maioria.
+- Vitória é checada ao avançar depois da noite e depois da votação.
+- Cidade, Assassinos e Coringa em modo `instant` levam a `gameOver`.
+- Coringa em modo `parallel` é registrado em `parallelWinners` sem encerrar sozinho a partida.
+- Testes focados do Cidade Dorme, typecheck e ESLint focado passaram.
+- Observação: empate com `revoteTied` e `mediatorDecision` ainda usa tratamento provisório sem eliminação; a UI dedicada de desempate/decisão fica para refinamento.
 
 ## Princípios de Arquitetura
 
@@ -309,7 +334,7 @@ Observações:
 
 ### FASE 5 — Fluxo da noite
 
-**Status:** em andamento. FASE 5C concluída.
+**Status:** concluída em fluxo mínimo.
 
 Entregas:
 
@@ -317,15 +342,15 @@ Entregas:
   - `NightIntroPhase` — concluído na FASE 5A.
   - `KillerTurnPhase` — concluído na FASE 5B.
   - `DoctorTurnPhase` — concluído na FASE 5C.
-  - `DetectiveTurnPhase`
-  - `NightResolutionPhase`
+  - `DetectiveTurnPhase` — concluído na FASE 5D.
+  - `NightResolutionPhase` — concluído na FASE 5E.
 - Exibir roteiro do mediador.
 - Assassino escolhe vítima — concluído na FASE 5B.
 - Médico escolhe protegido — concluído na FASE 5C.
-- Detetive escolhe investigado.
-- Resolver noite com `resolveNight`.
-- Mostrar ao mediador se houve morte ou proteção.
-- Mostrar resultado da investigação apenas ao mediador.
+- Detetive escolhe investigado — concluído na FASE 5D.
+- Resolver noite com `resolveNight` — concluído na FASE 5E.
+- Mostrar ao mediador se houve morte ou proteção — concluído na FASE 5E.
+- Mostrar resultado da investigação apenas ao mediador — concluído na FASE 5E.
 
 Critérios de aceite:
 
@@ -394,7 +419,7 @@ Critérios de aceite:
 
 #### FASE 5D — Turno do Detetive
 
-**Status:** próxima.
+**Status:** concluída.
 
 Entregas:
 
@@ -404,23 +429,36 @@ Entregas:
 - Resolver ou preparar `detectiveResult` como informação privada do mediador.
 - Avançar para resolução da noite conforme state machine.
 
-### FASE 6 — Fluxo do dia e votação
+#### FASE 5E — Resolução da noite
 
-**Status:** planejada.
+**Status:** concluída.
 
 Entregas:
 
-- Criar fase de resultado da noite.
-- Criar fase de discussão.
-- Criar votação.
-- Permitir voto em jogador vivo.
-- Permitir skip se configurado.
-- Resolver votação com `resolveVoting`.
+- Criar `NightResolutionPhase`.
+- Resolver `currentNightAction` com `resolveNight`.
+- Aplicar eliminação noturna quando a vítima não estiver protegida.
+- Exibir proteção e morte apenas para o mediador.
+- Exibir resultado do Detetive apenas para o mediador.
+- Registrar resultado interno da rodada em `history`.
+
+### FASE 6 — Fluxo do dia e votação
+
+**Status:** concluída em fluxo mínimo.
+
+Entregas:
+
+- Criar fase de resultado da noite — concluído na FASE 5E.
+- Criar fase de discussão — concluído na FASE 6A.
+- Criar votação — concluído na FASE 6A.
+- Permitir voto em jogador vivo — concluído na FASE 6A.
+- Permitir skip se configurado — concluído na FASE 6A.
+- Resolver votação com `resolveVoting` — concluído na FASE 6A.
 - Tratar empate conforme regra:
-  - nenhuma eliminação;
-  - nova votação;
-  - decisão do mediador.
-- Eliminar jogador mais votado quando aplicável.
+  - nenhuma eliminação — fluxo mínimo concluído;
+  - nova votação — pendente UI dedicada;
+  - decisão do mediador — pendente UI dedicada.
+- Eliminar jogador mais votado quando aplicável — concluído na FASE 6A.
 
 Critérios de aceite:
 
@@ -431,15 +469,15 @@ Critérios de aceite:
 
 ### FASE 7 — Condições de vitória
 
-**Status:** planejada.
+**Status:** concluída em fluxo mínimo.
 
 Entregas:
 
-- Integrar `checkWinCondition` após noite e votação.
-- Encerrar partida quando cidade vencer.
-- Encerrar partida quando assassinos vencerem.
-- Encerrar partida quando Coringa vencer em modo `instant`.
-- Registrar vitória paralela do Coringa em modo `parallel`.
+- Integrar `checkWinCondition` após noite e votação — concluído na FASE 7A.
+- Encerrar partida quando cidade vencer — concluído na FASE 7A.
+- Encerrar partida quando assassinos vencerem — concluído na FASE 7A.
+- Encerrar partida quando Coringa vencer em modo `instant` — concluído na FASE 7A.
+- Registrar vitória paralela do Coringa em modo `parallel` — concluído na FASE 7A.
 
 Critérios de aceite:
 
@@ -518,11 +556,11 @@ Critérios de aceite:
 
 ## Ordem Recomendada
 
-1. Implementar FASE 5D: seleção do Detetive e resultado privado.
-2. Implementar FASE 5E: resolução da noite com `resolveNight`.
-3. Implementar FASE 6 em ciclos pequenos para discussão e votação.
-4. Integrar histórico privado do mediador.
-5. Integrar resultado final e só então publicar no hub.
+1. Refinar empate `revoteTied` com uma votação de desempate real.
+2. Refinar empate `mediatorDecision` com escolha explícita do mediador.
+3. Integrar histórico privado do mediador.
+4. Integrar resultado final completo.
+5. Revisar responsividade/textos e só então publicar no hub.
 
 ## Arquivos Planejados
 
@@ -548,6 +586,12 @@ Arquivos já criados:
 - `src/features/cidade-dorme/components/NightIntroPhase.tsx`
 - `src/features/cidade-dorme/components/KillerTurnPhase.tsx`
 - `src/features/cidade-dorme/components/DoctorTurnPhase.tsx`
+- `src/features/cidade-dorme/components/DetectiveTurnPhase.tsx`
+- `src/features/cidade-dorme/components/NightResolutionPhase.tsx`
+- `src/features/cidade-dorme/components/DayDiscussionPhase.tsx`
+- `src/features/cidade-dorme/components/VotingPhase.tsx`
+- `src/features/cidade-dorme/components/VoteResolutionPhase.tsx`
+- `src/features/cidade-dorme/components/GameOverPhase.tsx`
 
 Arquivos prováveis nas próximas fases:
 

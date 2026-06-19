@@ -6,9 +6,15 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { AppHaptics } from '../../lib/capacitor/haptics'
 import { cn } from '../../lib/utils/cn'
+import { DayDiscussionPhase } from './components/DayDiscussionPhase'
+import { DetectiveTurnPhase } from './components/DetectiveTurnPhase'
 import { DoctorTurnPhase } from './components/DoctorTurnPhase'
+import { GameOverPhase } from './components/GameOverPhase'
 import { KillerTurnPhase } from './components/KillerTurnPhase'
 import { NightIntroPhase } from './components/NightIntroPhase'
+import { NightResolutionPhase } from './components/NightResolutionPhase'
+import { VoteResolutionPhase } from './components/VoteResolutionPhase'
+import { VotingPhase } from './components/VotingPhase'
 import { getRoleDefinition } from './cidadeDorme.roles'
 import { getClassicRoleTheme } from './cidadeDorme.theme'
 import { useCidadeDormeStore } from './cidadeDorme.store'
@@ -16,7 +22,7 @@ import { useCidadeDormeInitialization } from './useCidadeDormeInitialization'
 
 export function CidadeDormePlayScreen() {
   const navigate = useNavigate()
-  const { session, initialized, advanceReveal, advancePhase, chooseKillerTarget, chooseDoctorProtection } = useCidadeDormeStore()
+  const { session, initialized, advanceReveal, advancePhase, chooseKillerTarget, chooseDoctorProtection, chooseDetectiveTarget, resolveNight, castVote, resolveVoting } = useCidadeDormeStore()
   const [showSecret, setShowSecret] = useState(false)
   useCidadeDormeInitialization()
   useEffect(() => {
@@ -49,6 +55,30 @@ export function CidadeDormePlayScreen() {
 
   if (session.phase === 'doctorTurn') return <Shell title={`Noite ${session.round}`}>
     <DoctorTurnPhase session={session} onConfirmProtection={async (protectedPlayerId) => { await chooseDoctorProtection(protectedPlayerId); await AppHaptics.medium() }} />
+  </Shell>
+
+  if (session.phase === 'detectiveTurn') return <Shell title={`Noite ${session.round}`}>
+    <DetectiveTurnPhase session={session} onConfirmInvestigation={async (detectiveTargetId) => { await chooseDetectiveTarget(detectiveTargetId); await AppHaptics.medium() }} />
+  </Shell>
+
+  if (session.phase === 'nightResolution') return <Shell title={`Noite ${session.round}`}>
+    <NightResolutionPhase session={session} onResolveNight={async () => { await resolveNight(); await AppHaptics.medium() }} onContinue={async () => { await advancePhase(); await AppHaptics.light() }} />
+  </Shell>
+
+  if (session.phase === 'dayDiscussion') return <Shell title={`Dia ${session.round}`}>
+    <DayDiscussionPhase round={session.round} onStartVoting={async () => { await advancePhase(); await AppHaptics.medium() }} />
+  </Shell>
+
+  if (session.phase === 'voting') return <Shell title={`Dia ${session.round}`}>
+    <VotingPhase session={session} onCastVote={async (voterId, targetId) => { await castVote(voterId, targetId); await AppHaptics.light() }} onFinishVoting={async () => { await advancePhase(); await AppHaptics.medium() }} />
+  </Shell>
+
+  if (session.phase === 'voteResolution') return <Shell title={`Dia ${session.round}`}>
+    <VoteResolutionPhase session={session} onResolveVoting={async () => { await resolveVoting(); await AppHaptics.medium() }} onContinue={async () => { await advancePhase(); await AppHaptics.light() }} />
+  </Shell>
+
+  if (session.phase === 'gameOver') return <Shell title="Cidade Dorme">
+    <GameOverPhase session={session} />
   </Shell>
 
   return <Shell title="Cidade Dorme"><p className="text-center text-slate-400">Esta fase será implementada na próxima etapa.</p></Shell>

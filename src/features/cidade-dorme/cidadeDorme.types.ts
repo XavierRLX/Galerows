@@ -130,9 +130,9 @@ export type GameState = {
   currentNightAction: NightAction
   currentVotes: Vote[]
   history: RoundHistory[]
+  parallelWinners?: ParallelWinner[]
   winner?: GameWinner
   winnerPlayerId?: string
   createdAt: string
   updatedAt: string
 }
-

@@ -1,8 +1,8 @@
 import { createId } from '../../lib/utils/createId'
-import { assignRolesToPlayers, canDoctorProtect, getAlivePlayers } from './cidadeDorme.rules'
+import { assignRolesToPlayers, canDoctorProtect, checkWinCondition, getAlivePlayers, resolveNight, resolveVoting } from './cidadeDorme.rules'
 import { isSupportedCidadeDormePlayerCount } from './cidadeDorme.setup'
 import { advancePhase, CIDADE_DORME_PHASES } from './cidadeDorme.stateMachine'
-import type { CidadeDormePlayerInput, GamePhase, GameSettings, GameState, NightAction, Player } from './cidadeDorme.types'
+import type { CidadeDormePlayerInput, GamePhase, GameSettings, GameState, NightAction, Player, VoteTargetId } from './cidadeDorme.types'
 
 export function createCidadeDormeSession(players: CidadeDormePlayerInput[], settings: GameSettings, random: () => number = Math.random): GameState {
   const assignedPlayers = assignRolesToPlayers(players, settings, random)
@@ -19,6 +19,7 @@ export function createCidadeDormeSession(players: CidadeDormePlayerInput[], sett
     currentNightAction: createEmptyNightAction(1),
     currentVotes: [],
     history: [],
+    parallelWinners: [],
     createdAt: now,
     updatedAt: now,
   }
@@ -59,6 +60,67 @@ export function recordDoctorProtection(session: GameState, protectedPlayerId: st
   })
 }
 
+export function recordDetectiveInvestigation(session: GameState, detectiveTargetId: string): GameState {
+  if (session.phase !== 'detectiveTurn') return session
+  if (!getAlivePlayers(session.players).some((player) => player.id === detectiveTargetId)) return session
+  return touch({
+    ...session,
+    currentNightAction: {
+      ...session.currentNightAction,
+      round: session.round,
+      detectiveTargetId,
+    },
+  })
+}
+
+export function resolveCurrentNight(session: GameState): GameState {
+  if (session.phase !== 'nightResolution') return session
+  if (typeof session.currentNightAction.wasProtected === 'boolean') return session
+  const resolution = resolveNight(session.players, { ...session.currentNightAction, round: session.round })
+  const resolvedSession = {
+    ...session,
+    players: resolution.players,
+    currentNightAction: resolution.action,
+  }
+  return touch({
+    ...resolvedSession,
+    history: upsertRoundHistory(resolvedSession),
+  })
+}
+
+export function recordVote(session: GameState, voterId: string, targetId: VoteTargetId): GameState {
+  if (session.phase !== 'voting') return session
+  const alivePlayerIds = new Set(getAlivePlayers(session.players).map((player) => player.id))
+  if (!alivePlayerIds.has(voterId)) return session
+  if (targetId === 'skip' && !session.settings.allowSkipVote) return session
+  if (targetId !== 'skip' && !alivePlayerIds.has(targetId)) return session
+  return touch({
+    ...session,
+    currentVotes: [
+      ...session.currentVotes.filter((vote) => vote.voterId !== voterId),
+      { voterId, targetId },
+    ],
+  })
+}
+
+export function resolveCurrentVoting(session: GameState): GameState {
+  if (session.phase !== 'voteResolution') return session
+  const existing = session.history.find((round) => round.round === session.round)
+  if (existing && existing.votes.length === session.currentVotes.length && existing.votes.length > 0) return session
+  const resolution = resolveVoting(session.players, session.currentVotes, session.settings, session.round)
+  const resolvedSession = {
+    ...session,
+    players: resolution.players,
+    currentVotes: resolution.votes,
+  }
+  const winCondition = checkWinCondition(resolvedSession.players, resolvedSession.settings)
+  return touch({
+    ...resolvedSession,
+    parallelWinners: mergeParallelWinners(resolvedSession.parallelWinners ?? [], winCondition.parallelWinners),
+    history: upsertRoundHistory(resolvedSession, resolution.eliminatedPlayerId),
+  })
+}
+
 export function isCidadeDormeSessionCompatible(value: unknown): value is GameState {
   if (!isRecord(value)) return false
   const session = value as Partial<GameState>
@@ -75,6 +137,7 @@ export function isCidadeDormeSessionCompatible(value: unknown): value is GameSta
   if (!isNightAction(session.currentNightAction, session.round!)) return false
   if (!Array.isArray(session.currentVotes)) return false
   if (!Array.isArray(session.history)) return false
+  if (session.parallelWinners !== undefined && !Array.isArray(session.parallelWinners)) return false
   return true
 }
 
@@ -84,6 +147,31 @@ function getPreviousProtectedPlayerId(session: GameState) {
 
 function createEmptyNightAction(round: number): NightAction {
   return { round }
+}
+
+function upsertRoundHistory(session: GameState, eliminatedByVoteId?: string) {
+  const existing = session.history.find((round) => round.round === session.round)
+  const entry = {
+    round: session.round,
+    nightAction: session.currentNightAction,
+    votes: session.currentVotes,
+    eliminatedByVoteId: eliminatedByVoteId ?? existing?.eliminatedByVoteId,
+    notes: existing?.notes,
+  }
+  return [...session.history.filter((round) => round.round !== session.round), entry].sort((a, b) => a.round - b.round)
+}
+
+function mergeParallelWinners(current: NonNullable<GameState['parallelWinners']>, next: NonNullable<GameState['parallelWinners']>) {
+  const seen = new Set(current.map((winner) => `${winner.winner}:${winner.playerId}`))
+  return [
+    ...current,
+    ...next.filter((winner) => {
+      const key = `${winner.winner}:${winner.playerId}`
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    }),
+  ]
 }
 
 function touch(session: GameState): GameState {

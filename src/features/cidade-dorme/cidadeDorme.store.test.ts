@@ -94,6 +94,55 @@ describe('Cidade Dorme store', () => {
     expect(saved?.currentNightAction).toMatchObject({ round: 1, protectedPlayerId: 'caio' })
   })
 
+  it('persists detective investigation and advances to night resolution', async () => {
+    await useCidadeDormeStore.getState().start(playersWithDoctor, createDefaultCidadeDormeSettings(playersWithDoctor.length))
+    const session = useCidadeDormeStore.getState().session!
+    useCidadeDormeStore.setState({ session: { ...session, phase: 'detectiveTurn' } })
+
+    await useCidadeDormeStore.getState().chooseDetectiveTarget('ana')
+    const saved = await LocalPreferences.getJson<GameState>(STORAGE_KEYS.cidadeDormeSession)
+    expect(saved?.phase).toBe('nightResolution')
+    expect(saved?.currentNightAction).toMatchObject({ round: 1, detectiveTargetId: 'ana' })
+  })
+
+  it('persists night resolution', async () => {
+    await useCidadeDormeStore.getState().start(playersWithDoctor, createDefaultCidadeDormeSettings(playersWithDoctor.length))
+    const session = useCidadeDormeStore.getState().session!
+    useCidadeDormeStore.setState({
+      session: {
+        ...session,
+        phase: 'nightResolution',
+        players: session.players.map((player) => player.id === 'ana' ? { ...player, roleKey: 'killer' } : player),
+        currentNightAction: { round: 1, killerTargetId: 'dani', protectedPlayerId: 'caio', detectiveTargetId: 'ana' },
+      },
+    })
+
+    await useCidadeDormeStore.getState().resolveNight()
+    const saved = await LocalPreferences.getJson<GameState>(STORAGE_KEYS.cidadeDormeSession)
+    expect(saved?.currentNightAction).toMatchObject({ eliminatedPlayerId: 'dani', detectiveResult: 'suspect' })
+    expect(saved?.history[0]?.nightAction).toMatchObject({ eliminatedPlayerId: 'dani' })
+  })
+
+  it('persists voting and detects winner after vote resolution advancement', async () => {
+    await useCidadeDormeStore.getState().start(players, createDefaultCidadeDormeSettings(players.length))
+    const session = useCidadeDormeStore.getState().session!
+    useCidadeDormeStore.setState({
+      session: {
+        ...session,
+        phase: 'voting',
+        players: session.players.map((player) => player.id === 'ana' ? { ...player, roleKey: 'killer' } : { ...player, roleKey: 'citizen' }),
+      },
+    })
+
+    await useCidadeDormeStore.getState().castVote('bia', 'ana')
+    await useCidadeDormeStore.getState().advancePhase()
+    await useCidadeDormeStore.getState().resolveVoting()
+    await useCidadeDormeStore.getState().advancePhase()
+    const saved = await LocalPreferences.getJson<GameState>(STORAGE_KEYS.cidadeDormeSession)
+    expect(saved?.phase).toBe('gameOver')
+    expect(saved?.winner).toBe('city')
+  })
+
   it('does not persist invalid doctor protection', async () => {
     await useCidadeDormeStore.getState().start(playersWithDoctor, createDefaultCidadeDormeSettings(playersWithDoctor.length))
     const session = useCidadeDormeStore.getState().session!

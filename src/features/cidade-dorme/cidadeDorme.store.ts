@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { LocalPreferences } from '../../lib/capacitor/preferences'
 import { STORAGE_KEYS } from '../../lib/storage/storage.keys'
-import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, recordDoctorProtection, recordKillerTarget } from './cidadeDorme.session'
+import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, recordDetectiveInvestigation, recordDoctorProtection, recordKillerTarget, recordVote, resolveCurrentNight, resolveCurrentVoting } from './cidadeDorme.session'
 import { advancePhase as advanceCidadeDormePhase } from './cidadeDorme.stateMachine'
 import type { CidadeDormePlayerInput, GameSettings, GameState } from './cidadeDorme.types'
 
@@ -16,6 +16,10 @@ type CidadeDormeState = {
   advancePhase: () => Promise<void>
   chooseKillerTarget: (targetId: string) => Promise<void>
   chooseDoctorProtection: (protectedPlayerId: string) => Promise<void>
+  chooseDetectiveTarget: (detectiveTargetId: string) => Promise<void>
+  resolveNight: () => Promise<void>
+  castVote: (voterId: string, targetId: string) => Promise<void>
+  resolveVoting: () => Promise<void>
   discard: () => Promise<void>
 }
 
@@ -74,6 +78,39 @@ export const useCidadeDormeStore = create<CidadeDormeState>((set, get) => ({
     const withProtection = recordDoctorProtection(current, protectedPlayerId)
     if (withProtection === current) return
     const session = advanceCidadeDormePhase(withProtection)
+    await persistSession(session)
+    set({ session })
+  },
+  chooseDetectiveTarget: async (detectiveTargetId) => {
+    const current = get().session
+    if (!current) return
+    const withInvestigation = recordDetectiveInvestigation(current, detectiveTargetId)
+    if (withInvestigation === current) return
+    const session = advanceCidadeDormePhase(withInvestigation)
+    await persistSession(session)
+    set({ session })
+  },
+  resolveNight: async () => {
+    const current = get().session
+    if (!current) return
+    const session = resolveCurrentNight(current)
+    if (session === current) return
+    await persistSession(session)
+    set({ session })
+  },
+  castVote: async (voterId, targetId) => {
+    const current = get().session
+    if (!current) return
+    const session = recordVote(current, voterId, targetId)
+    if (session === current) return
+    await persistSession(session)
+    set({ session })
+  },
+  resolveVoting: async () => {
+    const current = get().session
+    if (!current) return
+    const session = resolveCurrentVoting(current)
+    if (session === current) return
     await persistSession(session)
     set({ session })
   },
