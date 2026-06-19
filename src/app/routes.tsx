@@ -11,6 +11,9 @@ import { QuemSouEuSetupScreen } from '../features/quem-sou-eu/QuemSouEuSetupScre
 const AdedonhaHomeScreen = lazy(() => import('../features/adedonha/AdedonhaHomeScreen').then((module) => ({ default: module.AdedonhaHomeScreen })))
 const AdedonhaPlayScreen = lazy(() => import('../features/adedonha/AdedonhaPlayScreen').then((module) => ({ default: module.AdedonhaPlayScreen })))
 const AdedonhaSetupScreen = lazy(() => import('../features/adedonha/AdedonhaSetupScreen').then((module) => ({ default: module.AdedonhaSetupScreen })))
+const CidadeDormeHomeScreen = lazy(() => import('../features/cidade-dorme/CidadeDormeHomeScreen').then((module) => ({ default: module.CidadeDormeHomeScreen })))
+const CidadeDormePlayScreen = lazy(() => import('../features/cidade-dorme/CidadeDormePlayScreen').then((module) => ({ default: module.CidadeDormePlayScreen })))
+const CidadeDormeSetupScreen = lazy(() => import('../features/cidade-dorme/CidadeDormeSetupScreen').then((module) => ({ default: module.CidadeDormeSetupScreen })))
 const ContentAdminScreen = lazy(() => import('../features/content/ContentAdminScreen').then((module) => ({ default: module.ContentAdminScreen })))
 const ImpostorDaPalavraHomeScreen = lazy(() => import('../features/impostor-da-palavra/ImpostorDaPalavraHomeScreen').then((module) => ({ default: module.ImpostorDaPalavraHomeScreen })))
 const ImpostorDaPalavraPlayScreen = lazy(() => import('../features/impostor-da-palavra/ImpostorDaPalavraPlayScreen').then((module) => ({ default: module.ImpostorDaPalavraPlayScreen })))
@@ -78,6 +81,9 @@ export function AppRoutes() {
           <Route path="games/adedonha" element={<AdedonhaHomeScreen />} />
           <Route path="games/adedonha/setup" element={<AdedonhaSetupScreen />} />
           <Route path="games/adedonha/play" element={<AdedonhaPlayScreen />} />
+          <Route path="games/cidade-dorme" element={<CidadeDormeHomeScreen />} />
+          <Route path="games/cidade-dorme/setup" element={<CidadeDormeSetupScreen />} />
+          <Route path="games/cidade-dorme/play" element={<CidadeDormePlayScreen />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Route>
       </Routes>

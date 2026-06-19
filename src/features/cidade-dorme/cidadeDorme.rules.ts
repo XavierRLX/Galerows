@@ -1,8 +1,6 @@
 import { shuffle } from '../../lib/utils/shuffle'
+import { CIDADE_DORME_MAX_PLAYERS, CIDADE_DORME_MIN_PLAYERS } from './cidadeDorme.setup'
 import type { CidadeDormePlayerInput, GameSettings, NightAction, NightResolution, Player, RoleKey, Vote, VoteTargetId, VotingResolution, WinConditionResult } from './cidadeDorme.types'
-
-const MIN_PLAYERS = 4
-const MAX_PLAYERS = 12
 
 export function createRoleDeck(settings: GameSettings): RoleKey[] {
   assertSettings(settings)
@@ -31,7 +29,7 @@ export function canStartGame(players: readonly CidadeDormePlayerInput[], setting
 
 export function getStartGameErrors(players: readonly CidadeDormePlayerInput[], settings: GameSettings): string[] {
   const errors: string[] = []
-  if (players.length < MIN_PLAYERS || players.length > MAX_PLAYERS) errors.push('Cidade Dorme exige entre 4 e 12 jogadores.')
+  if (players.length < CIDADE_DORME_MIN_PLAYERS || players.length > CIDADE_DORME_MAX_PLAYERS) errors.push('Cidade Dorme exige entre 4 e 12 jogadores.')
   if (settings.playerCount !== players.length) errors.push('A quantidade configurada precisa bater com a lista de jogadores.')
   if (new Set(players.map((player) => player.id)).size !== players.length) errors.push('Os jogadores precisam ter IDs unicos.')
   if (new Set(players.map((player) => comparableName(player.name))).size !== players.length) errors.push('Os jogadores precisam ter nomes diferentes.')
@@ -126,7 +124,7 @@ export function checkWinCondition(players: readonly Player[], settings: GameSett
 }
 
 function assertSettings(settings: GameSettings) {
-  if (!Number.isInteger(settings.playerCount) || settings.playerCount < MIN_PLAYERS || settings.playerCount > MAX_PLAYERS) throw new Error('Cidade Dorme exige entre 4 e 12 jogadores.')
+  if (!Number.isInteger(settings.playerCount) || settings.playerCount < CIDADE_DORME_MIN_PLAYERS || settings.playerCount > CIDADE_DORME_MAX_PLAYERS) throw new Error('Cidade Dorme exige entre 4 e 12 jogadores.')
   if (!Number.isInteger(settings.killersCount) || settings.killersCount < 1) throw new Error('A partida precisa ter pelo menos 1 assassino.')
   if (settings.killersCount >= settings.playerCount) throw new Error('A partida precisa ter jogadores inocentes.')
 }

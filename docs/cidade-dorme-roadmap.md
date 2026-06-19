@@ -10,9 +10,9 @@ O app deve ajudar o mediador a configurar a partida, sortear personagens, revela
 
 ## Estado Atual
 
-**Status:** FASE 1 concluída.
+**Status:** FASE 5B concluída.
 
-Já existe uma base pura e testável em `src/features/cidade-dorme/`, sem rotas, telas ou exposição no hub.
+Já existe uma base pura e testável em `src/features/cidade-dorme/`, sem rotas, telas ou exposição jogável no hub.
 
 Arquivos criados na FASE 1:
 
@@ -22,12 +22,81 @@ Arquivos criados na FASE 1:
 - `cidadeDorme.rules.ts`
 - `cidadeDorme.rules.test.ts`
 
+Arquivos criados na FASE 2A:
+
+- `cidadeDorme.setup.ts`
+- `cidadeDorme.setup.test.ts`
+
+Arquivos criados nas FASES 2B e 3:
+
+- `cidadeDorme.session.ts`
+- `cidadeDorme.session.test.ts`
+- `cidadeDorme.store.ts`
+- `cidadeDorme.store.test.ts`
+- `useCidadeDormeInitialization.ts`
+- `CidadeDormeHomeScreen.tsx`
+- `CidadeDormeSetupScreen.tsx`
+- `CidadeDormePlayScreen.tsx`
+
+Arquivos criados na FASE 4:
+
+- `cidadeDorme.stateMachine.ts`
+- `cidadeDorme.stateMachine.test.ts`
+
+Arquivos criados na FASE 5A:
+
+- `components/NightIntroPhase.tsx`
+
+Arquivos criados na FASE 5B:
+
+- `components/KillerTurnPhase.tsx`
+
 Verificações da FASE 1:
 
 - Teste unitário do módulo passou.
 - Typecheck passou.
 - Suíte completa passou.
 - ESLint dos arquivos novos passou.
+
+Verificações da FASE 2A:
+
+- Presets de 4 a 12 jogadores passam em `canStartGame()`.
+- Limites de jogadores foram centralizados.
+- Hub corrigido para exibir Cidade Dorme como 4 a 12 jogadores, ainda `coming-soon`.
+
+Verificações das FASES 2B e 3:
+
+- Configuração visual cria sessão persistida.
+- Revelação individual mostra apenas uma função por vez.
+- Função fica escondida por padrão e precisa ser escondida antes de avançar.
+- Estado visual de segredo visível não é persistido.
+- Rotas internas foram adicionadas sem mudar o status `coming-soon` no hub.
+
+Verificações da FASE 4:
+
+- Transições válidas foram centralizadas em state machine pura.
+- Revelação individual só avança para noite depois do último jogador.
+- Turnos noturnos pulam Médico ou Detetive quando desativados ou eliminados.
+- Avanço de nova rodada reinicia ação noturna e votos temporários.
+- Condição de vitória já leva a `gameOver` quando detectada pela state machine.
+- Testes focados da state machine, sessão e store passaram.
+
+Verificações da FASE 5A:
+
+- Introdução da noite foi separada em componente próprio.
+- Mediador consegue iniciar ações noturnas pela UI.
+- Avanço `nightIntro` para `killerTurn` usa `advancePhase()` do store.
+- `killerTurn` ainda é uma tela de confirmação, sem seleção de vítima.
+- Testes do Cidade Dorme, typecheck e ESLint focado passaram.
+
+Verificações da FASE 5B:
+
+- Turno dos Assassinos foi separado em componente próprio.
+- Mediador escolhe uma vítima entre jogadores vivos.
+- A escolha salva `killerTargetId` em `currentNightAction`.
+- Após confirmar a vítima, o app avança pela state machine para Médico, Detetive ou resolução.
+- A tela lista nomes sem revelar funções secretas.
+- Testes do Cidade Dorme, typecheck e ESLint focado passaram.
 
 ## Princípios de Arquitetura
 
@@ -114,9 +183,29 @@ Critérios de aceite:
 - Tema não interfere na lógica.
 - Testes cobrem os caminhos principais.
 
-### FASE 2 — Configuração da partida
+### FASE 2A — Configuração pura e presets
 
-**Status:** planejada.
+**Status:** concluída.
+
+Entregas:
+
+- Criar constantes compartilhadas de mínimo e máximo de jogadores.
+- Criar `createDefaultCidadeDormeSettings`.
+- Criar recomendação automática de quantidade de assassinos por tamanho de grupo.
+- Criar resumo de quantidade de papéis por configuração.
+- Criar avisos para composições arriscadas.
+- Corrigir `games.registry.ts` para 4 a 12 jogadores mantendo `coming-soon`.
+- Cobrir presets com testes unitários.
+
+Critérios de aceite:
+
+- Todos os presets de 4 a 12 jogadores são válidos para iniciar.
+- Regras e UI futura usam os mesmos limites.
+- O jogo segue indisponível no hub até existir fluxo mínimo jogável.
+
+### FASE 2B — Configuração da partida na UI
+
+**Status:** concluída.
 
 Entregas:
 
@@ -134,7 +223,6 @@ Entregas:
   - médico pode proteger a si mesmo;
   - médico pode repetir proteção;
   - modo de vitória do Coringa.
-- Criar presets automáticos por quantidade de jogadores.
 - Adicionar rotas iniciais, mas manter o jogo como `coming-soon` até haver fluxo jogável.
 
 Critérios de aceite:
@@ -146,7 +234,7 @@ Critérios de aceite:
 
 ### FASE 3 — Sorteio e revelação individual
 
-**Status:** planejada.
+**Status:** concluída.
 
 Entregas:
 
@@ -168,11 +256,12 @@ Critérios de aceite:
 
 ### FASE 4 — State machine
 
-**Status:** planejada.
+**Status:** concluída.
 
 Entregas:
 
 - Criar `cidadeDorme.stateMachine.ts`.
+- Criar `cidadeDorme.stateMachine.test.ts`.
 - Definir transições válidas entre fases.
 - Criar helpers como:
   - `canTransitionToPhase`
@@ -197,20 +286,26 @@ Critérios de aceite:
   - fim ou próxima noite.
 - Transições inválidas são ignoradas ou retornam erro controlado.
 
+Observações:
+
+- A state machine já pula papéis noturnos desativados ou sem jogador vivo.
+- `advanceRoleReveal()` agora usa a state machine para entrar em `nightIntro`.
+- O store expõe `advancePhase()` para as próximas telas usarem sem manipular `phase` diretamente.
+
 ### FASE 5 — Fluxo da noite
 
-**Status:** planejada.
+**Status:** em andamento. FASE 5B concluída.
 
 Entregas:
 
 - Criar componentes para:
-  - `NightIntroPhase`
-  - `KillerTurnPhase`
+  - `NightIntroPhase` — concluído na FASE 5A.
+  - `KillerTurnPhase` — concluído na FASE 5B.
   - `DoctorTurnPhase`
   - `DetectiveTurnPhase`
   - `NightResolutionPhase`
 - Exibir roteiro do mediador.
-- Assassino escolhe vítima.
+- Assassino escolhe vítima — concluído na FASE 5B.
 - Médico escolhe protegido.
 - Detetive escolhe investigado.
 - Resolver noite com `resolveNight`.
@@ -224,6 +319,56 @@ Critérios de aceite:
 - Detetive recebe resultado `suspect` ou `innocent`.
 - Jogadores eliminados não aparecem como alvos válidos.
 - Ações secretas não vazam para tela pública.
+
+#### FASE 5A — Introdução da noite
+
+**Status:** concluída.
+
+Entregas:
+
+- Criar `NightIntroPhase`.
+- Exibir roteiro do mediador antes das ações secretas.
+- Avançar de `nightIntro` para `killerTurn` usando a state machine.
+- Persistir a nova fase ao iniciar ações noturnas.
+- Mostrar tela provisória de `killerTurn` sem selecionar vítima ainda.
+
+Critérios de aceite:
+
+- A tela informa que o celular deve ficar com o mediador.
+- O botão de iniciar ações noturnas muda a sessão para `killerTurn`.
+- A próxima etapa continua claramente delimitada como FASE 5B.
+
+#### FASE 5B — Turno dos Assassinos
+
+**Status:** concluída.
+
+Entregas:
+
+- Criar `KillerTurnPhase`.
+- Listar jogadores vivos como alvos.
+- Registrar `killerTargetId` em `currentNightAction`.
+- Avançar para Médico, Detetive ou resolução conforme state machine.
+- Não mostrar papéis secretos na escolha.
+
+Critérios de aceite:
+
+- Apenas jogadores vivos aparecem como alvos.
+- Confirmar vítima persiste a ação noturna.
+- A UI não exibe papéis, times ou status secretos.
+- O avanço respeita papéis especiais desativados.
+
+#### FASE 5C — Turno do Médico
+
+**Status:** próxima.
+
+Entregas:
+
+- Criar `DoctorTurnPhase`.
+- Listar alvos válidos usando `canDoctorProtect`.
+- Bloquear autoproteção quando a regra estiver desligada.
+- Bloquear repetição da proteção anterior quando a regra estiver desligada.
+- Registrar `protectedPlayerId` em `currentNightAction`.
+- Avançar para Detetive ou resolução conforme state machine.
 
 ### FASE 6 — Fluxo do dia e votação
 
@@ -339,13 +484,11 @@ Critérios de aceite:
 
 ## Ordem Recomendada
 
-1. Finalizar FASE 2 para ter entrada e configuração.
-2. Implementar FASE 3 para transformar configuração em sessão real.
-3. Implementar FASE 4 antes de crescer o fluxo de telas.
-4. Implementar FASE 5 e FASE 6 em ciclos pequenos.
-5. Integrar FASE 7 assim que noite e votação existirem.
-6. Adicionar histórico e resultado final.
-7. Polir e só então publicar no hub.
+1. Implementar FASE 5C: seleção do Médico respeitando autoproteção e repetição.
+2. Implementar FASE 5D: seleção do Detetive e resultado privado.
+3. Implementar FASE 5E: resolução da noite com `resolveNight`.
+4. Implementar FASE 6 em ciclos pequenos para discussão e votação.
+5. Integrar histórico, resultado final e só então publicar no hub.
 
 ## Arquivos Planejados
 
@@ -356,15 +499,23 @@ Arquivos já criados:
 - `src/features/cidade-dorme/cidadeDorme.theme.ts`
 - `src/features/cidade-dorme/cidadeDorme.rules.ts`
 - `src/features/cidade-dorme/cidadeDorme.rules.test.ts`
-
-Arquivos prováveis nas próximas fases:
-
+- `src/features/cidade-dorme/cidadeDorme.setup.ts`
+- `src/features/cidade-dorme/cidadeDorme.setup.test.ts`
+- `src/features/cidade-dorme/cidadeDorme.session.ts`
+- `src/features/cidade-dorme/cidadeDorme.session.test.ts`
 - `src/features/cidade-dorme/cidadeDorme.store.ts`
+- `src/features/cidade-dorme/cidadeDorme.store.test.ts`
 - `src/features/cidade-dorme/cidadeDorme.stateMachine.ts`
+- `src/features/cidade-dorme/cidadeDorme.stateMachine.test.ts`
 - `src/features/cidade-dorme/useCidadeDormeInitialization.ts`
 - `src/features/cidade-dorme/CidadeDormeHomeScreen.tsx`
 - `src/features/cidade-dorme/CidadeDormeSetupScreen.tsx`
 - `src/features/cidade-dorme/CidadeDormePlayScreen.tsx`
+- `src/features/cidade-dorme/components/NightIntroPhase.tsx`
+- `src/features/cidade-dorme/components/KillerTurnPhase.tsx`
+
+Arquivos prováveis nas próximas fases:
+
 - `src/features/cidade-dorme/CidadeDormeResultScreen.tsx`
 - `src/features/cidade-dorme/components/*`
 - `src/i18n/locales/pt-BR/cidade-dorme.json`
@@ -405,4 +556,3 @@ O jogo estará pronto para aparecer no hub quando:
 - Resultado final mostrar vencedor e papéis.
 - O fluxo completo funcionar offline.
 - Testes, typecheck e build passarem.
-

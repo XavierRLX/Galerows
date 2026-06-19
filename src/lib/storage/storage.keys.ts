@@ -12,6 +12,7 @@ export const STORAGE_KEYS = {
   top10Session: 'galerows.games.top-10.session',
   quemSouEuSession: 'galerows.games.quem-sou-eu.session',
   adedonhaSession: 'galerows.games.adedonha.session',
+  cidadeDormeSession: 'galerows.games.cidade-dorme.session',
   premiumSnapshot: 'galerows.premium.snapshot',
 } as const
 
