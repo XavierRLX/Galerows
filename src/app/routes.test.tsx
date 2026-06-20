@@ -21,7 +21,7 @@ describe('app navigation', () => {
   it('opens Nem Ferrando internally and returns to the Hub', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getAllByRole('button', { name: /jogar agora/i })[0])
+    await user.click(screen.getByRole('button', { name: /jogar agora nem ferrando/i }))
     expect(await screen.findByRole('heading', { name: 'Nem Ferrando', level: 1 })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /voltar/i }))
     expect(screen.getByRole('heading', { name: /jogos da galera/i })).toBeInTheDocument()
@@ -30,35 +30,35 @@ describe('app navigation', () => {
   it('opens Impostor da Palavra internally', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getAllByRole('button', { name: /jogar agora/i })[1])
+    await user.click(screen.getByRole('button', { name: /jogar agora impostor da palavra/i }))
     expect(await screen.findByRole('heading', { name: 'Impostor da Palavra', level: 1 })).toBeInTheDocument()
   })
 
   it('opens Quem Sou Eu internally', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getAllByRole('button', { name: /jogar agora/i })[3])
+    await user.click(screen.getByRole('button', { name: /jogar agora quem sou eu/i }))
     expect(await screen.findByRole('heading', { name: 'Quem Sou Eu', level: 1 })).toBeInTheDocument()
   })
 
   it('opens Adedonha internally', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getAllByRole('button', { name: /jogar agora/i })[4])
+    await user.click(screen.getByRole('button', { name: /jogar agora adedonha/i }))
     expect(await screen.findByRole('heading', { name: 'Adedonha', level: 1 })).toBeInTheDocument()
   })
 
   it('opens Mímica internally', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getAllByRole('button', { name: /jogar agora/i })[5])
+    await user.click(screen.getByRole('button', { name: /jogar agora mímica/i }))
     expect(await screen.findByRole('heading', { name: 'Mímica', level: 1 })).toBeInTheDocument()
   })
 
   it('opens Cidade Dorme from the Hub', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getAllByRole('button', { name: /jogar agora/i })[7])
+    await user.click(screen.getByRole('button', { name: /jogar agora cidade dorme/i }))
     expect(await screen.findByRole('heading', { name: 'Cidade Dorme', level: 1 })).toBeInTheDocument()
   })
 })

@@ -8,53 +8,2852 @@
   "cards": [
     {
       "id": 1,
-      "theme": "Geografia",
-      "question": "Quais sao os paises mais populosos do mundo em 2026?",
+      "theme": "Cinema",
+      "question": "Quais sao os filmes com maior bilheteria mundial?",
       "answers": [
-        { "rank": 1, "label": "India", "note": "Worldometer 2026: 1,476,625,576" },
-        { "rank": 2, "label": "China", "note": "Worldometer 2026: 1,412,914,089" },
-        { "rank": 3, "label": "Estados Unidos", "note": "Worldometer 2026: 349,035,494" },
-        { "rank": 4, "label": "Indonesia", "note": "Worldometer 2026: 287,886,782" },
-        { "rank": 5, "label": "Paquistao", "note": "Worldometer 2026: 259,299,791" },
-        { "rank": 6, "label": "Nigeria", "note": "Worldometer 2026: 242,431,832" },
-        { "rank": 7, "label": "Brasil", "note": "Worldometer 2026: 213,562,666" },
-        { "rank": 8, "label": "Bangladesh", "note": "Worldometer 2026: 177,818,044" },
-        { "rank": 9, "label": "Russia", "note": "Worldometer 2026: 143,394,458" },
-        { "rank": 10, "label": "Etiopia", "note": "Worldometer 2026: 138,902,185" }
+        {
+          "rank": 1,
+          "label": "Avatar",
+          "note": "US$ 2,923 bi; ranking mundial nominal do Box Office Mojo, consulta 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Avengers: Endgame",
+          "note": "US$ 2,799 bi; Box Office Mojo, bilheteria mundial nominal."
+        },
+        {
+          "rank": 3,
+          "label": "Avatar: The Way of Water",
+          "note": "US$ 2,334 bi; Box Office Mojo, bilheteria mundial nominal."
+        },
+        {
+          "rank": 4,
+          "label": "Ne Zha 2",
+          "note": "US$ 2,267 bi; Box Office Mojo, bilheteria mundial nominal."
+        },
+        {
+          "rank": 5,
+          "label": "Titanic",
+          "note": "US$ 2,264 bi; Box Office Mojo, inclui relancamentos."
+        },
+        {
+          "rank": 6,
+          "label": "Star Wars: The Force Awakens",
+          "note": "US$ 2,071 bi; Box Office Mojo, bilheteria mundial nominal."
+        },
+        {
+          "rank": 7,
+          "label": "Avengers: Infinity War",
+          "note": "US$ 2,052 bi; Box Office Mojo, bilheteria mundial nominal."
+        },
+        {
+          "rank": 8,
+          "label": "Spider-Man: No Way Home",
+          "note": "US$ 1,922 bi; Box Office Mojo, bilheteria mundial nominal."
+        },
+        {
+          "rank": 9,
+          "label": "Inside Out 2",
+          "note": "US$ 1,699 bi; Box Office Mojo, bilheteria mundial nominal."
+        },
+        {
+          "rank": 10,
+          "label": "Jurassic World",
+          "note": "US$ 1,672 bi; Box Office Mojo, bilheteria mundial nominal."
+        }
       ]
     },
     {
       "id": 2,
       "theme": "Cinema",
-      "question": "Quais filmes tem as maiores bilheterias mundiais de todos os tempos?",
+      "question": "Quais sao as animacoes com maior bilheteria mundial?",
       "answers": [
-        { "rank": 1, "label": "Avatar", "note": "The Numbers: US$2.923 bi" },
-        { "rank": 2, "label": "Avengers: Endgame", "note": "The Numbers: US$2.717 bi" },
-        { "rank": 3, "label": "Avatar: The Way of Water", "note": "The Numbers: US$2.322 bi" },
-        { "rank": 4, "label": "Titanic", "note": "The Numbers: US$2.223 bi" },
-        { "rank": 5, "label": "Star Wars: The Force Awakens", "note": "The Numbers: US$2.056 bi" },
-        { "rank": 6, "label": "Avengers: Infinity War", "note": "The Numbers: US$2.048 bi" },
-        { "rank": 7, "label": "Ne Zha 2", "note": "The Numbers: US$2.001 bi" },
-        { "rank": 8, "label": "Spider-Man: No Way Home", "note": "The Numbers: US$1.921 bi" },
-        { "rank": 9, "label": "Zootopia 2", "note": "The Numbers: US$1.859 bi" },
-        { "rank": 10, "label": "Inside Out 2", "note": "The Numbers: US$1.698 bi" }
+        {
+          "rank": 1,
+          "label": "Inside Out 2",
+          "note": "Cerca de US$ 1,699 bi; Box Office Mojo/The Numbers, bilheteria mundial nominal."
+        },
+        {
+          "rank": 2,
+          "label": "The Lion King",
+          "note": "Cerca de US$ 1,663 bi; remake animado por CGI, Box Office Mojo."
+        },
+        {
+          "rank": 3,
+          "label": "Frozen II",
+          "note": "Cerca de US$ 1,453 bi; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 4,
+          "label": "The Super Mario Bros. Movie",
+          "note": "Cerca de US$ 1,362 bi; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 5,
+          "label": "Frozen",
+          "note": "Cerca de US$ 1,306 bi; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 6,
+          "label": "Incredibles 2",
+          "note": "Cerca de US$ 1,243 bi; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 7,
+          "label": "Minions",
+          "note": "Cerca de US$ 1,159 bi; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 8,
+          "label": "Toy Story 4",
+          "note": "Cerca de US$ 1,073 bi; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 9,
+          "label": "Toy Story 3",
+          "note": "Cerca de US$ 1,067 bi; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 10,
+          "label": "Despicable Me 3",
+          "note": "Cerca de US$ 1,035 bi; Box Office Mojo/The Numbers."
+        }
       ]
     },
     {
       "id": 3,
-      "theme": "Esportes",
-      "question": "Quem sao os maiores artilheiros da historia da Copa do Mundo masculina?",
+      "theme": "Cinema",
+      "question": "Quais foram os filmes que mais ganharam Oscars?",
       "answers": [
-        { "rank": 1, "label": "Miroslav Klose", "note": "16 gols" },
-        { "rank": 2, "label": "Lionel Messi", "note": "16 gols em 17 jun 2026" },
-        { "rank": 3, "label": "Ronaldo", "note": "15 gols" },
-        { "rank": 4, "label": "Gerd Muller", "note": "14 gols" },
-        { "rank": 5, "label": "Kylian Mbappe", "note": "14 gols em 17 jun 2026" },
-        { "rank": 6, "label": "Just Fontaine", "note": "13 gols" },
-        { "rank": 7, "label": "Pele", "note": "12 gols" },
-        { "rank": 8, "label": "Sandor Kocsis", "note": "11 gols" },
-        { "rank": 9, "label": "Jurgen Klinsmann", "note": "11 gols" },
-        { "rank": 10, "label": "Helmut Rahn", "note": "10 gols" }
+        {
+          "rank": 1,
+          "label": "Ben-Hur",
+          "note": "11 Oscars; empatado no recorde, ordenado por ano de premiacao mais antigo."
+        },
+        {
+          "rank": 2,
+          "label": "Titanic",
+          "note": "11 Oscars; empatado no recorde, criterio de desempate por ano."
+        },
+        {
+          "rank": 3,
+          "label": "The Lord of the Rings: The Return of the King",
+          "note": "11 Oscars; empatado no recorde, venceu todas as categorias indicadas."
+        },
+        {
+          "rank": 4,
+          "label": "West Side Story",
+          "note": "10 Oscars; Academia de Artes e Ciencias Cinematograficas."
+        },
+        {
+          "rank": 5,
+          "label": "Gigi",
+          "note": "9 Oscars; empate ordenado por ano de premiacao."
+        },
+        {
+          "rank": 6,
+          "label": "The Last Emperor",
+          "note": "9 Oscars; empate ordenado por ano de premiacao."
+        },
+        {
+          "rank": 7,
+          "label": "The English Patient",
+          "note": "9 Oscars; empate ordenado por ano de premiacao."
+        },
+        {
+          "rank": 8,
+          "label": "Gone with the Wind",
+          "note": "8 Oscars competitivos; AMPAS, filme de 1939."
+        },
+        {
+          "rank": 9,
+          "label": "From Here to Eternity",
+          "note": "8 Oscars; AMPAS, filme de 1953."
+        },
+        {
+          "rank": 10,
+          "label": "On the Waterfront",
+          "note": "8 Oscars; AMPAS, filme de 1954."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "theme": "Series",
+      "question": "Quais sao as series mais populares da Netflix de todos os tempos?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Wednesday S1",
+          "note": "252,1 mi de views nos primeiros 91 dias; lista oficial Netflix Tudum, consulta 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Adolescence",
+          "note": "142,6 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 3,
+          "label": "Stranger Things 4",
+          "note": "140,7 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 4,
+          "label": "Stranger Things 5",
+          "note": "133,8 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 5,
+          "label": "Wednesday S2",
+          "note": "119,3 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 6,
+          "label": "DAHMER",
+          "note": "115,6 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 7,
+          "label": "Bridgerton S1",
+          "note": "113,3 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 8,
+          "label": "The Queen's Gambit",
+          "note": "112,8 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 9,
+          "label": "Bridgerton S3",
+          "note": "106,0 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 10,
+          "label": "His & Hers",
+          "note": "98,2 mi de views nos primeiros 91 dias; Netflix Tudum."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "theme": "Streaming",
+      "question": "Quais sao os filmes mais populares da Netflix de todos os tempos?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "KPop Demon Hunters",
+          "note": "325,1 mi de views nos primeiros 91 dias; lista oficial Netflix Tudum, consulta 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Red Notice",
+          "note": "230,9 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 3,
+          "label": "Carry-On",
+          "note": "172,1 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 4,
+          "label": "Don't Look Up",
+          "note": "171,4 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 5,
+          "label": "The Adam Project",
+          "note": "157,6 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 6,
+          "label": "Bird Box",
+          "note": "157,4 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 7,
+          "label": "Back in Action",
+          "note": "147,2 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 8,
+          "label": "Leave the World Behind",
+          "note": "143,4 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 9,
+          "label": "War Machine",
+          "note": "139,9 mi de views nos primeiros 91 dias; Netflix Tudum."
+        },
+        {
+          "rank": 10,
+          "label": "The Gray Man",
+          "note": "139,3 mi de views nos primeiros 91 dias; Netflix Tudum."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "theme": "Games",
+      "question": "Quais sao os jogos mais vendidos da historia?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Minecraft",
+          "note": "Cerca de 350 mi de copias; lista de vendas reportadas por publishers, consulta 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Grand Theft Auto V",
+          "note": "Cerca de 225 mi de copias; Take-Two/Rockstar, vendas acumuladas."
+        },
+        {
+          "rank": 3,
+          "label": "Wii Sports",
+          "note": "82,9 mi; Nintendo inclui copias vendidas em bundle do Wii."
+        },
+        {
+          "rank": 4,
+          "label": "Red Dead Redemption 2",
+          "note": "Cerca de 82 mi; Take-Two, vendas acumuladas."
+        },
+        {
+          "rank": 5,
+          "label": "Mario Kart 8 / Deluxe",
+          "note": "Cerca de 79,5 mi; Nintendo, Wii U + Switch."
+        },
+        {
+          "rank": 6,
+          "label": "PUBG: Battlegrounds",
+          "note": "Cerca de 75 mi antes de ficar free-to-play; Krafton."
+        },
+        {
+          "rank": 7,
+          "label": "Terraria",
+          "note": "Cerca de 64 mi; Re-Logic, vendas acumuladas."
+        },
+        {
+          "rank": 8,
+          "label": "Super Mario Bros.",
+          "note": "58 mi; Nintendo, NES/Famicom."
+        },
+        {
+          "rank": 9,
+          "label": "Overwatch",
+          "note": "Cerca de 50 mi; Blizzard, antes da transicao para Overwatch 2."
+        },
+        {
+          "rank": 10,
+          "label": "The Witcher 3",
+          "note": "Cerca de 50 mi; CD Projekt, vendas acumuladas."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "theme": "Games",
+      "question": "Quais sao os consoles mais vendidos da historia?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "PlayStation 2",
+          "note": "Mais de 160 mi; Sony, lider historico em vendas de hardware."
+        },
+        {
+          "rank": 2,
+          "label": "Nintendo Switch",
+          "note": "155,37 mi ate dez/2025; Nintendo, superou o Nintendo DS."
+        },
+        {
+          "rank": 3,
+          "label": "Nintendo DS",
+          "note": "154,02 mi; Nintendo, portatil de duas telas."
+        },
+        {
+          "rank": 4,
+          "label": "Game Boy / Color",
+          "note": "118,69 mi; Nintendo, soma Game Boy e Game Boy Color."
+        },
+        {
+          "rank": 5,
+          "label": "PlayStation 4",
+          "note": "117,2 mi; Sony, vendas acumuladas oficiais."
+        },
+        {
+          "rank": 6,
+          "label": "PlayStation",
+          "note": "102,49 mi; Sony, primeiro PlayStation."
+        },
+        {
+          "rank": 7,
+          "label": "Nintendo Wii",
+          "note": "101,63 mi; Nintendo, foco em controle por movimento."
+        },
+        {
+          "rank": 8,
+          "label": "PlayStation 3",
+          "note": "87,4 mi; Sony, vendas acumuladas."
+        },
+        {
+          "rank": 9,
+          "label": "Xbox 360",
+          "note": "84 mi; Microsoft, estimativa consolidada."
+        },
+        {
+          "rank": 10,
+          "label": "Game Boy Advance",
+          "note": "81,51 mi; Nintendo, vendas acumuladas oficiais."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "theme": "Games",
+      "question": "Quais sao as franquias de games mais vendidas?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Mario",
+          "note": "Mais de 890 mi de unidades; ranking de franquias por vendas de software."
+        },
+        {
+          "rank": 2,
+          "label": "Tetris",
+          "note": "Mais de 520 mi; inclui varias versoes oficiais da franquia."
+        },
+        {
+          "rank": 3,
+          "label": "Pokemon",
+          "note": "Mais de 480 mi; The Pokemon Company/Nintendo, jogos principais e derivados."
+        },
+        {
+          "rank": 4,
+          "label": "Call of Duty",
+          "note": "Mais de 425 mi; Activision, vendas acumuladas da franquia."
+        },
+        {
+          "rank": 5,
+          "label": "Grand Theft Auto",
+          "note": "Mais de 435 mi; Take-Two/Rockstar, ordem por estimativas publicas recentes."
+        },
+        {
+          "rank": 6,
+          "label": "FIFA / EA Sports FC",
+          "note": "Mais de 325 mi; EA, serie anual de futebol."
+        },
+        {
+          "rank": 7,
+          "label": "Minecraft",
+          "note": "Mais de 350 mi; Mojang/Microsoft, tratado como franquia pelo jogo base."
+        },
+        {
+          "rank": 8,
+          "label": "Wii",
+          "note": "Mais de 215 mi; Nintendo, serie Wii Sports/Fit/Play."
+        },
+        {
+          "rank": 9,
+          "label": "The Sims",
+          "note": "Mais de 200 mi; Electronic Arts, franquia de simulacao."
+        },
+        {
+          "rank": 10,
+          "label": "Final Fantasy",
+          "note": "Mais de 190 mi; Square Enix, RPGs principais e derivados."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "theme": "Musica",
+      "question": "Quais foram os artistas globais mais vendidos de 2024?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Taylor Swift",
+          "note": "1o no IFPI Global Recording Artist Chart 2024; vendas + streams + fisico."
+        },
+        {
+          "rank": 2,
+          "label": "Drake",
+          "note": "2o no IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 3,
+          "label": "SEVENTEEN",
+          "note": "3o no IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 4,
+          "label": "Billie Eilish",
+          "note": "4o no IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 5,
+          "label": "Stray Kids",
+          "note": "5o no IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 6,
+          "label": "Zach Bryan",
+          "note": "6o no IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 7,
+          "label": "The Weeknd",
+          "note": "7o no IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 8,
+          "label": "Eminem",
+          "note": "8o no IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 9,
+          "label": "Kendrick Lamar",
+          "note": "9o no IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 10,
+          "label": "Sabrina Carpenter",
+          "note": "10o no IFPI Global Recording Artist Chart 2024."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "theme": "Musica",
+      "question": "Quais sao os artistas mais vendidos da historia?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "The Beatles",
+          "note": "Lideram listas historicas; ChartMasters estima mais de 520 mi de album-equivalent sales."
+        },
+        {
+          "rank": 2,
+          "label": "Michael Jackson",
+          "note": "Cerca de 340 mi em estimativas ChartMasters; maior solo masculino."
+        },
+        {
+          "rank": 3,
+          "label": "Elvis Presley",
+          "note": "Mais de 320 mi em estimativas ChartMasters; vendas historicas variam por fonte."
+        },
+        {
+          "rank": 4,
+          "label": "Queen",
+          "note": "Mais de 280 mi em estimativas ChartMasters; catalogo forte em streaming e vendas."
+        },
+        {
+          "rank": 5,
+          "label": "Taylor Swift",
+          "note": "Mais de 260 mi em estimativas ChartMasters; maior artista feminina por esse criterio."
+        },
+        {
+          "rank": 6,
+          "label": "Madonna",
+          "note": "Mais de 240 mi em estimativas ChartMasters; recordista feminina historica por decadas."
+        },
+        {
+          "rank": 7,
+          "label": "Elton John",
+          "note": "Mais de 240 mi em estimativas ChartMasters; catalogo longo desde 1970."
+        },
+        {
+          "rank": 8,
+          "label": "Led Zeppelin",
+          "note": "Mais de 240 mi em estimativas ChartMasters; vendas altas de albuns."
+        },
+        {
+          "rank": 9,
+          "label": "Rihanna",
+          "note": "Mais de 230 mi em estimativas ChartMasters; forte em singles e streaming."
+        },
+        {
+          "rank": 10,
+          "label": "Pink Floyd",
+          "note": "Mais de 220 mi em estimativas ChartMasters; catalogo de albuns classicos."
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "theme": "Musica",
+      "question": "Quais sao os albuns mais vendidos da historia?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Thriller",
+          "note": "Michael Jackson; cerca de 70 mi de copias estimadas, Guinness/listas historicas."
+        },
+        {
+          "rank": 2,
+          "label": "Back in Black",
+          "note": "AC/DC; cerca de 50 mi de copias estimadas."
+        },
+        {
+          "rank": 3,
+          "label": "The Dark Side of the Moon",
+          "note": "Pink Floyd; cerca de 45 mi de copias estimadas."
+        },
+        {
+          "rank": 4,
+          "label": "The Bodyguard",
+          "note": "Trilha sonora; cerca de 45 mi, desempate por estimativa/fonte."
+        },
+        {
+          "rank": 5,
+          "label": "Bat Out of Hell",
+          "note": "Meat Loaf; cerca de 43 mi de copias estimadas."
+        },
+        {
+          "rank": 6,
+          "label": "Their Greatest Hits",
+          "note": "Eagles; cerca de 42 mi de copias estimadas."
+        },
+        {
+          "rank": 7,
+          "label": "Saturday Night Fever",
+          "note": "Trilha sonora; cerca de 40 mi de copias estimadas."
+        },
+        {
+          "rank": 8,
+          "label": "Rumours",
+          "note": "Fleetwood Mac; cerca de 40 mi, empate ordenado por ano/fonte."
+        },
+        {
+          "rank": 9,
+          "label": "Come On Over",
+          "note": "Shania Twain; cerca de 40 mi, maior album country/pop feminino."
+        },
+        {
+          "rank": 10,
+          "label": "Led Zeppelin IV",
+          "note": "Led Zeppelin; cerca de 37 mi de copias estimadas."
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "theme": "Livros",
+      "question": "Quais sao os livros de ficcao mais vendidos da historia?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Don Quixote",
+          "note": "Estimativa comum de 500 mi; listas historicas de livros, exclui textos religiosos/politicos."
+        },
+        {
+          "rank": 2,
+          "label": "A Tale of Two Cities",
+          "note": "Mais de 200 mi; Charles Dickens, estimativa historica recorrente."
+        },
+        {
+          "rank": 3,
+          "label": "The Little Prince",
+          "note": "Cerca de 200 mi; Antoine de Saint-Exupery, estimativa consolidada."
+        },
+        {
+          "rank": 4,
+          "label": "The Lord of the Rings",
+          "note": "Cerca de 150 mi; Tolkien, muitas listas contam como volume unico."
+        },
+        {
+          "rank": 5,
+          "label": "The Alchemist",
+          "note": "Cerca de 150 mi; Paulo Coelho, empate ordenado por criterio de lista."
+        },
+        {
+          "rank": 6,
+          "label": "Harry Potter and the Philosopher's Stone",
+          "note": "Cerca de 120 mi; J.K. Rowling, primeiro livro da serie."
+        },
+        {
+          "rank": 7,
+          "label": "And Then There Were None",
+          "note": "Cerca de 100 mi; Agatha Christie."
+        },
+        {
+          "rank": 8,
+          "label": "Dream of the Red Chamber",
+          "note": "Cerca de 100 mi; classico chines, estimativa historica."
+        },
+        {
+          "rank": 9,
+          "label": "The Hobbit",
+          "note": "Cerca de 100 mi; J.R.R. Tolkien."
+        },
+        {
+          "rank": 10,
+          "label": "Alice's Adventures in Wonderland",
+          "note": "Cerca de 100 mi; Lewis Carroll."
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "theme": "Brasil",
+      "question": "Quais sao os estados mais populosos do Brasil?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Sao Paulo",
+          "note": "Maior populacao estadual no Censo 2022 do IBGE."
+        },
+        {
+          "rank": 2,
+          "label": "Minas Gerais",
+          "note": "2o no Censo 2022 do IBGE."
+        },
+        {
+          "rank": 3,
+          "label": "Rio de Janeiro",
+          "note": "3o no Censo 2022 do IBGE."
+        },
+        {
+          "rank": 4,
+          "label": "Bahia",
+          "note": "4o no Censo 2022 do IBGE."
+        },
+        {
+          "rank": 5,
+          "label": "Parana",
+          "note": "5o no Censo 2022 do IBGE."
+        },
+        {
+          "rank": 6,
+          "label": "Rio Grande do Sul",
+          "note": "6o no Censo 2022 do IBGE."
+        },
+        {
+          "rank": 7,
+          "label": "Pernambuco",
+          "note": "7o no Censo 2022 do IBGE."
+        },
+        {
+          "rank": 8,
+          "label": "Ceara",
+          "note": "8o no Censo 2022 do IBGE."
+        },
+        {
+          "rank": 9,
+          "label": "Para",
+          "note": "9o no Censo 2022 do IBGE."
+        },
+        {
+          "rank": 10,
+          "label": "Santa Catarina",
+          "note": "10o no Censo 2022 do IBGE."
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "theme": "Brasil",
+      "question": "Quais sao as cidades mais populosas do Brasil?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Sao Paulo",
+          "note": "11,45 mi de habitantes; municipio, Censo 2022 do IBGE."
+        },
+        {
+          "rank": 2,
+          "label": "Rio de Janeiro",
+          "note": "6,21 mi; municipio, Censo 2022 do IBGE."
+        },
+        {
+          "rank": 3,
+          "label": "Brasilia",
+          "note": "2,82 mi; Distrito Federal tratado como municipio pelo IBGE."
+        },
+        {
+          "rank": 4,
+          "label": "Fortaleza",
+          "note": "2,43 mi; Censo 2022 do IBGE."
+        },
+        {
+          "rank": 5,
+          "label": "Salvador",
+          "note": "2,42 mi; Censo 2022 do IBGE."
+        },
+        {
+          "rank": 6,
+          "label": "Belo Horizonte",
+          "note": "2,32 mi; Censo 2022 do IBGE."
+        },
+        {
+          "rank": 7,
+          "label": "Manaus",
+          "note": "2,06 mi; Censo 2022 do IBGE."
+        },
+        {
+          "rank": 8,
+          "label": "Curitiba",
+          "note": "1,77 mi; Censo 2022 do IBGE."
+        },
+        {
+          "rank": 9,
+          "label": "Recife",
+          "note": "1,49 mi; Censo 2022 do IBGE."
+        },
+        {
+          "rank": 10,
+          "label": "Goiania",
+          "note": "1,44 mi; Censo 2022 do IBGE."
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "theme": "Brasil",
+      "question": "Quais sao os maiores estados do Brasil por area?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Amazonas",
+          "note": "Maior area territorial; IBGE, area oficial em km2."
+        },
+        {
+          "rank": 2,
+          "label": "Para",
+          "note": "2o maior estado por area; IBGE."
+        },
+        {
+          "rank": 3,
+          "label": "Mato Grosso",
+          "note": "3o maior estado por area; IBGE."
+        },
+        {
+          "rank": 4,
+          "label": "Minas Gerais",
+          "note": "4o maior estado por area; IBGE."
+        },
+        {
+          "rank": 5,
+          "label": "Bahia",
+          "note": "5o maior estado por area; IBGE."
+        },
+        {
+          "rank": 6,
+          "label": "Mato Grosso do Sul",
+          "note": "6o maior estado por area; IBGE."
+        },
+        {
+          "rank": 7,
+          "label": "Goias",
+          "note": "7o maior estado por area; IBGE."
+        },
+        {
+          "rank": 8,
+          "label": "Maranhao",
+          "note": "8o maior estado por area; IBGE."
+        },
+        {
+          "rank": 9,
+          "label": "Rio Grande do Sul",
+          "note": "9o maior estado por area; IBGE."
+        },
+        {
+          "rank": 10,
+          "label": "Tocantins",
+          "note": "10o maior estado por area; IBGE."
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "theme": "Mundo",
+      "question": "Quais sao os paises mais populosos do mundo?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "India",
+          "note": "Cerca de 1,45 bi em 2024; Banco Mundial/ONU."
+        },
+        {
+          "rank": 2,
+          "label": "China",
+          "note": "Cerca de 1,41 bi em 2024; Banco Mundial/ONU."
+        },
+        {
+          "rank": 3,
+          "label": "Estados Unidos",
+          "note": "Cerca de 340 mi em 2024; Banco Mundial/ONU."
+        },
+        {
+          "rank": 4,
+          "label": "Indonesia",
+          "note": "Cerca de 283 mi em 2024; Banco Mundial/ONU."
+        },
+        {
+          "rank": 5,
+          "label": "Paquistao",
+          "note": "Cerca de 251 mi em 2024; Banco Mundial/ONU."
+        },
+        {
+          "rank": 6,
+          "label": "Nigeria",
+          "note": "Cerca de 232 mi em 2024; Banco Mundial/ONU."
+        },
+        {
+          "rank": 7,
+          "label": "Brasil",
+          "note": "Cerca de 212 mi em 2024; Banco Mundial/ONU."
+        },
+        {
+          "rank": 8,
+          "label": "Bangladesh",
+          "note": "Cerca de 174 mi em 2024; Banco Mundial/ONU."
+        },
+        {
+          "rank": 9,
+          "label": "Russia",
+          "note": "Cerca de 144 mi em 2024; Banco Mundial/ONU."
+        },
+        {
+          "rank": 10,
+          "label": "Etiopia",
+          "note": "Cerca de 132 mi em 2024; Banco Mundial/ONU."
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "theme": "Mundo",
+      "question": "Quais sao os maiores paises do mundo por area?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Russia",
+          "note": "17,1 mi km2; area total, World Factbook/Worldometers."
+        },
+        {
+          "rank": 2,
+          "label": "Canada",
+          "note": "10,0 mi km2; area total."
+        },
+        {
+          "rank": 3,
+          "label": "China",
+          "note": "9,7 mi km2; area total, criterio inclui areas administradas."
+        },
+        {
+          "rank": 4,
+          "label": "Estados Unidos",
+          "note": "9,4 mi km2; area total."
+        },
+        {
+          "rank": 5,
+          "label": "Brasil",
+          "note": "8,5 mi km2; area total, IBGE/World Factbook."
+        },
+        {
+          "rank": 6,
+          "label": "Australia",
+          "note": "7,7 mi km2; area total."
+        },
+        {
+          "rank": 7,
+          "label": "India",
+          "note": "3,3 mi km2; area total."
+        },
+        {
+          "rank": 8,
+          "label": "Argentina",
+          "note": "2,8 mi km2; area total."
+        },
+        {
+          "rank": 9,
+          "label": "Cazaquistao",
+          "note": "2,7 mi km2; maior pais sem litoral."
+        },
+        {
+          "rank": 10,
+          "label": "Argelia",
+          "note": "2,4 mi km2; maior pais da Africa."
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "theme": "Economia",
+      "question": "Quais sao as maiores economias do mundo por PIB nominal?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Estados Unidos",
+          "note": "1o em PIB nominal; FMI World Economic Outlook 2024/2025."
+        },
+        {
+          "rank": 2,
+          "label": "China",
+          "note": "2o em PIB nominal; FMI WEO."
+        },
+        {
+          "rank": 3,
+          "label": "Alemanha",
+          "note": "3o em PIB nominal; FMI WEO."
+        },
+        {
+          "rank": 4,
+          "label": "Japao",
+          "note": "4o em PIB nominal; FMI WEO."
+        },
+        {
+          "rank": 5,
+          "label": "India",
+          "note": "5o em PIB nominal; FMI WEO."
+        },
+        {
+          "rank": 6,
+          "label": "Reino Unido",
+          "note": "6o em PIB nominal; FMI WEO."
+        },
+        {
+          "rank": 7,
+          "label": "Franca",
+          "note": "7o em PIB nominal; FMI WEO."
+        },
+        {
+          "rank": 8,
+          "label": "Italia",
+          "note": "8o em PIB nominal; FMI WEO."
+        },
+        {
+          "rank": 9,
+          "label": "Canada",
+          "note": "9o em PIB nominal; FMI WEO."
+        },
+        {
+          "rank": 10,
+          "label": "Brasil",
+          "note": "10o em PIB nominal em estimativas recentes do FMI."
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "theme": "Mundo",
+      "question": "Quais sao os idiomas mais falados do mundo somando nativos e nao nativos?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Ingles",
+          "note": "Cerca de 1,5 bi de falantes; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Mandarim",
+          "note": "Cerca de 1,1 a 1,2 bi; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Hindi",
+          "note": "Cerca de 609 mi; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 4,
+          "label": "Espanhol",
+          "note": "Cerca de 559 mi; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 5,
+          "label": "Arabe padrao",
+          "note": "Cerca de 332 mi; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 6,
+          "label": "Frances",
+          "note": "Cerca de 312 mi; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Bengali",
+          "note": "Cerca de 278 mi; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 8,
+          "label": "Portugues",
+          "note": "Cerca de 264 mi; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 9,
+          "label": "Russo",
+          "note": "Cerca de 255 mi; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 10,
+          "label": "Urdu",
+          "note": "Cerca de 237 mi; Ethnologue/Babbel 2026."
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "theme": "Viagem",
+      "question": "Quais sao os aeroportos mais movimentados do mundo?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Atlanta ATL",
+          "note": "106,3 mi de passageiros em 2025; Airports Council International."
+        },
+        {
+          "rank": 2,
+          "label": "Dubai DXB",
+          "note": "95,2 mi de passageiros em 2025; ACI World."
+        },
+        {
+          "rank": 3,
+          "label": "Tokyo Haneda HND",
+          "note": "91,7 mi de passageiros em 2025; ACI World."
+        },
+        {
+          "rank": 4,
+          "label": "Dallas/Fort Worth DFW",
+          "note": "85,7 mi de passageiros em 2025; ACI World."
+        },
+        {
+          "rank": 5,
+          "label": "Shanghai Pudong PVG",
+          "note": "85,0 mi de passageiros em 2025; ACI World."
+        },
+        {
+          "rank": 6,
+          "label": "Chicago O'Hare ORD",
+          "note": "84,8 mi de passageiros em 2025; ACI World."
+        },
+        {
+          "rank": 7,
+          "label": "London Heathrow LHR",
+          "note": "84,5 mi de passageiros em 2025; ACI World."
+        },
+        {
+          "rank": 8,
+          "label": "Istanbul IST",
+          "note": "84,4 mi de passageiros em 2025; ACI World."
+        },
+        {
+          "rank": 9,
+          "label": "Guangzhou CAN",
+          "note": "83,6 mi de passageiros em 2025; ACI World."
+        },
+        {
+          "rank": 10,
+          "label": "Denver DEN",
+          "note": "82,4 mi de passageiros em 2025; ACI World."
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "theme": "Viagem",
+      "question": "Quais sao os paises mais visitados por turistas internacionais?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Franca",
+          "note": "Cerca de 100 mi de chegadas em 2023; UN Tourism."
+        },
+        {
+          "rank": 2,
+          "label": "Espanha",
+          "note": "Cerca de 85 mi de chegadas em 2023; UN Tourism."
+        },
+        {
+          "rank": 3,
+          "label": "Estados Unidos",
+          "note": "Cerca de 66 mi de chegadas em 2023; UN Tourism."
+        },
+        {
+          "rank": 4,
+          "label": "Italia",
+          "note": "Cerca de 57 mi de chegadas em 2023; UN Tourism."
+        },
+        {
+          "rank": 5,
+          "label": "Turquia",
+          "note": "Cerca de 55 mi de chegadas em 2023; UN Tourism."
+        },
+        {
+          "rank": 6,
+          "label": "Mexico",
+          "note": "Cerca de 42 mi de chegadas em 2023; UN Tourism."
+        },
+        {
+          "rank": 7,
+          "label": "Reino Unido",
+          "note": "Cerca de 37 mi de chegadas em 2023; UN Tourism."
+        },
+        {
+          "rank": 8,
+          "label": "Alemanha",
+          "note": "Cerca de 35 mi de chegadas em 2023; UN Tourism."
+        },
+        {
+          "rank": 9,
+          "label": "Grecia",
+          "note": "Cerca de 33 mi de chegadas em 2023; UN Tourism."
+        },
+        {
+          "rank": 10,
+          "label": "Austria",
+          "note": "Cerca de 31 mi de chegadas em 2023; UN Tourism."
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "theme": "Marcas",
+      "question": "Quais sao as marcas mais valiosas do mundo?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Google",
+          "note": "US$ 1,5 tri; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Apple",
+          "note": "US$ 1,4 tri; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Microsoft",
+          "note": "US$ 1,1 tri; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 4,
+          "label": "Amazon",
+          "note": "US$ 1,0 tri; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 5,
+          "label": "NVIDIA",
+          "note": "US$ 814,9 bi; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 6,
+          "label": "Facebook",
+          "note": "US$ 366,6 bi; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Instagram",
+          "note": "US$ 286,2 bi; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 8,
+          "label": "Tencent",
+          "note": "US$ 251,6 bi; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 9,
+          "label": "Oracle",
+          "note": "US$ 235,8 bi; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 10,
+          "label": "McDonald's",
+          "note": "US$ 235,1 bi; Kantar BrandZ Global 2026."
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "theme": "Automotivo",
+      "question": "Quais sao os carros mais vendidos da historia?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Toyota Corolla",
+          "note": "Mais de 50 mi de unidades; ranking de nameplates automotivas."
+        },
+        {
+          "rank": 2,
+          "label": "Ford F-Series",
+          "note": "Mais de 43 mi; picape mais vendida da historia."
+        },
+        {
+          "rank": 3,
+          "label": "Volkswagen Golf",
+          "note": "Cerca de 37 mi; nameplate global desde 1974."
+        },
+        {
+          "rank": 4,
+          "label": "Volkswagen Passat",
+          "note": "Cerca de 34 mi; nameplate global desde 1973."
+        },
+        {
+          "rank": 5,
+          "label": "Honda Civic",
+          "note": "Cerca de 28 mi; vendas acumuladas do modelo."
+        },
+        {
+          "rank": 6,
+          "label": "Toyota Camry",
+          "note": "Cerca de 22 mi; sedan global da Toyota."
+        },
+        {
+          "rank": 7,
+          "label": "Ford Fiesta",
+          "note": "Cerca de 22 mi; produzido ate 2023."
+        },
+        {
+          "rank": 8,
+          "label": "Volkswagen Beetle",
+          "note": "Cerca de 21,5 mi; Fusca/Besouro original."
+        },
+        {
+          "rank": 9,
+          "label": "Toyota Hilux",
+          "note": "Cerca de 21 mi; picape global da Toyota."
+        },
+        {
+          "rank": 10,
+          "label": "Honda Accord",
+          "note": "Cerca de 19,5 mi; vendas acumuladas do modelo."
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "theme": "Tecnologia",
+      "question": "Quais sao os celulares mais vendidos da historia?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Nokia 1100",
+          "note": "Mais de 250 mi de unidades; ranking historico de modelos."
+        },
+        {
+          "rank": 2,
+          "label": "Nokia 1110",
+          "note": "Mais de 250 mi de unidades; ranking historico de modelos."
+        },
+        {
+          "rank": 3,
+          "label": "iPhone 6 / 6 Plus",
+          "note": "Mais de 222 mi; iPhones mais vendidos da historia."
+        },
+        {
+          "rank": 4,
+          "label": "Nokia 105",
+          "note": "Cerca de 200 mi; soma variantes do modelo."
+        },
+        {
+          "rank": 5,
+          "label": "iPhone 6S / 6S Plus",
+          "note": "Cerca de 174 mi; Apple, geracao 2015."
+        },
+        {
+          "rank": 6,
+          "label": "iPhone 5S",
+          "note": "Cerca de 165 mi; Apple, geracao 2013."
+        },
+        {
+          "rank": 7,
+          "label": "Nokia 3210",
+          "note": "Cerca de 160 mi; classico de 1999."
+        },
+        {
+          "rank": 8,
+          "label": "iPhone 7 / 7 Plus",
+          "note": "Cerca de 160 mi; Apple, geracao 2016."
+        },
+        {
+          "rank": 9,
+          "label": "iPhone 11",
+          "note": "Cerca de 159 mi; Apple, geracao 2019."
+        },
+        {
+          "rank": 10,
+          "label": "iPhone XR",
+          "note": "Cerca de 151 mi; Apple, geracao 2018."
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "theme": "Internet",
+      "question": "Quais sao os videos mais vistos da historia do YouTube?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Baby Shark Dance",
+          "note": "Video mais visto; ranking de views do YouTube/Wikipedia, consulta 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Despacito",
+          "note": "Luis Fonsi e Daddy Yankee; 2o em views acumuladas."
+        },
+        {
+          "rank": 3,
+          "label": "Johny Johny Yes Papa",
+          "note": "LooLoo Kids; conteudo infantil entre os maiores do YouTube."
+        },
+        {
+          "rank": 4,
+          "label": "Bath Song",
+          "note": "Cocomelon; conteudo infantil, views acumuladas."
+        },
+        {
+          "rank": 5,
+          "label": "Shape of You",
+          "note": "Ed Sheeran; clipe musical entre os maiores em views."
+        },
+        {
+          "rank": 6,
+          "label": "See You Again",
+          "note": "Wiz Khalifa ft. Charlie Puth; clipe musical."
+        },
+        {
+          "rank": 7,
+          "label": "Wheels on the Bus",
+          "note": "Cocomelon; conteudo infantil."
+        },
+        {
+          "rank": 8,
+          "label": "Phonics Song",
+          "note": "ChuChu TV; conteudo infantil educativo."
+        },
+        {
+          "rank": 9,
+          "label": "Uptown Funk",
+          "note": "Mark Ronson ft. Bruno Mars; clipe musical."
+        },
+        {
+          "rank": 10,
+          "label": "Learning Colors",
+          "note": "Miroshka TV; conteudo infantil."
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "theme": "Internet",
+      "question": "Quais sao os canais com mais inscritos no YouTube?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "MrBeast",
+          "note": "Maior canal por inscritos; ranking SocialBlade/Wikipedia, consulta 2026."
+        },
+        {
+          "rank": 2,
+          "label": "T-Series",
+          "note": "Canal indiano de musica; ficou anos na lideranca."
+        },
+        {
+          "rank": 3,
+          "label": "Cocomelon",
+          "note": "Canal infantil com altissimo volume de inscritos."
+        },
+        {
+          "rank": 4,
+          "label": "SET India",
+          "note": "Canal de entretenimento indiano."
+        },
+        {
+          "rank": 5,
+          "label": "Vlad and Niki",
+          "note": "Canal infantil familiar."
+        },
+        {
+          "rank": 6,
+          "label": "Kids Diana Show",
+          "note": "Canal infantil familiar."
+        },
+        {
+          "rank": 7,
+          "label": "Like Nastya",
+          "note": "Canal infantil familiar."
+        },
+        {
+          "rank": 8,
+          "label": "Zee Music Company",
+          "note": "Canal indiano de musica."
+        },
+        {
+          "rank": 9,
+          "label": "PewDiePie",
+          "note": "Criador individual historico do YouTube."
+        },
+        {
+          "rank": 10,
+          "label": "WWE",
+          "note": "Canal oficial de wrestling/entretenimento."
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "theme": "Futebol",
+      "question": "Quais sao as selecoes com melhor historico em finais de Copa do Mundo masculina?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Brasil",
+          "note": "5 titulos e 2 vices; FIFA, criterio: titulos, depois vices."
+        },
+        {
+          "rank": 2,
+          "label": "Alemanha",
+          "note": "4 titulos e 4 vices; FIFA."
+        },
+        {
+          "rank": 3,
+          "label": "Italia",
+          "note": "4 titulos e 2 vices; fica atras da Alemanha pelo numero de vices."
+        },
+        {
+          "rank": 4,
+          "label": "Argentina",
+          "note": "3 titulos e 3 vices; FIFA."
+        },
+        {
+          "rank": 5,
+          "label": "Franca",
+          "note": "2 titulos e 2 vices; FIFA."
+        },
+        {
+          "rank": 6,
+          "label": "Uruguai",
+          "note": "2 titulos e 0 vices; FIFA."
+        },
+        {
+          "rank": 7,
+          "label": "Inglaterra",
+          "note": "1 titulo e 0 vices; campea em 1966."
+        },
+        {
+          "rank": 8,
+          "label": "Espanha",
+          "note": "1 titulo e 0 vices; campea em 2010, desempate por ano mais recente."
+        },
+        {
+          "rank": 9,
+          "label": "Holanda",
+          "note": "0 titulos e 3 vices; melhor selecao sem titulo por finais."
+        },
+        {
+          "rank": 10,
+          "label": "Hungria",
+          "note": "0 titulos e 2 vices; empate historico ordenado por campanha e tradicao FIFA."
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "theme": "Futebol",
+      "question": "Quais sao os clubes com mais titulos da Libertadores?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Independiente",
+          "note": "7 titulos; CONMEBOL Libertadores."
+        },
+        {
+          "rank": 2,
+          "label": "Boca Juniors",
+          "note": "6 titulos; CONMEBOL Libertadores."
+        },
+        {
+          "rank": 3,
+          "label": "Penarol",
+          "note": "5 titulos; CONMEBOL Libertadores."
+        },
+        {
+          "rank": 4,
+          "label": "River Plate",
+          "note": "4 titulos; empate, ordenado por titulo mais recente."
+        },
+        {
+          "rank": 5,
+          "label": "Estudiantes",
+          "note": "4 titulos; empate, fica apos River pelo criterio de titulo mais antigo."
+        },
+        {
+          "rank": 6,
+          "label": "Olimpia",
+          "note": "3 titulos; empate de 3, ordenado por primeiro titulo."
+        },
+        {
+          "rank": 7,
+          "label": "Nacional",
+          "note": "3 titulos; CONMEBOL Libertadores."
+        },
+        {
+          "rank": 8,
+          "label": "Sao Paulo",
+          "note": "3 titulos; CONMEBOL Libertadores."
+        },
+        {
+          "rank": 9,
+          "label": "Gremio",
+          "note": "3 titulos; CONMEBOL Libertadores."
+        },
+        {
+          "rank": 10,
+          "label": "Santos",
+          "note": "3 titulos; CONMEBOL Libertadores."
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "theme": "Futebol",
+      "question": "Quais sao os clubes com mais Champions League masculina?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Real Madrid",
+          "note": "15 titulos ate 2023-24; UEFA Champions League/Copa dos Campeoes."
+        },
+        {
+          "rank": 2,
+          "label": "Milan",
+          "note": "7 titulos; UEFA."
+        },
+        {
+          "rank": 3,
+          "label": "Bayern Munich",
+          "note": "6 titulos; empate ordenado por titulo mais recente."
+        },
+        {
+          "rank": 4,
+          "label": "Liverpool",
+          "note": "6 titulos; UEFA."
+        },
+        {
+          "rank": 5,
+          "label": "Barcelona",
+          "note": "5 titulos; UEFA."
+        },
+        {
+          "rank": 6,
+          "label": "Ajax",
+          "note": "4 titulos; UEFA."
+        },
+        {
+          "rank": 7,
+          "label": "Inter",
+          "note": "3 titulos; empate ordenado por titulo mais recente."
+        },
+        {
+          "rank": 8,
+          "label": "Manchester United",
+          "note": "3 titulos; UEFA."
+        },
+        {
+          "rank": 9,
+          "label": "Juventus",
+          "note": "2 titulos; empate de 2, ordenado por finais e historico UEFA."
+        },
+        {
+          "rank": 10,
+          "label": "Benfica",
+          "note": "2 titulos; UEFA."
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "theme": "Futebol",
+      "question": "Quais sao os maiores campeoes do Campeonato Brasileiro?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Palmeiras",
+          "note": "12 titulos nacionais reconhecidos pela CBF ate 2023."
+        },
+        {
+          "rank": 2,
+          "label": "Santos",
+          "note": "8 titulos nacionais reconhecidos pela CBF."
+        },
+        {
+          "rank": 3,
+          "label": "Corinthians",
+          "note": "7 titulos nacionais reconhecidos pela CBF."
+        },
+        {
+          "rank": 4,
+          "label": "Flamengo",
+          "note": "7 titulos nacionais reconhecidos pela CBF; empate ordenado por criterio historico."
+        },
+        {
+          "rank": 5,
+          "label": "Sao Paulo",
+          "note": "6 titulos nacionais reconhecidos pela CBF."
+        },
+        {
+          "rank": 6,
+          "label": "Cruzeiro",
+          "note": "4 titulos nacionais reconhecidos pela CBF."
+        },
+        {
+          "rank": 7,
+          "label": "Fluminense",
+          "note": "4 titulos nacionais reconhecidos pela CBF."
+        },
+        {
+          "rank": 8,
+          "label": "Vasco",
+          "note": "4 titulos nacionais reconhecidos pela CBF."
+        },
+        {
+          "rank": 9,
+          "label": "Internacional",
+          "note": "3 titulos nacionais reconhecidos pela CBF."
+        },
+        {
+          "rank": 10,
+          "label": "Atletico-MG",
+          "note": "3 titulos nacionais reconhecidos pela CBF."
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "theme": "Esportes",
+      "question": "Quais sao as equipes com mais titulos da NBA?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Boston Celtics",
+          "note": "18 titulos ate a temporada 2023-24; NBA.com."
+        },
+        {
+          "rank": 2,
+          "label": "Los Angeles Lakers",
+          "note": "17 titulos; NBA.com."
+        },
+        {
+          "rank": 3,
+          "label": "Golden State Warriors",
+          "note": "7 titulos; NBA.com."
+        },
+        {
+          "rank": 4,
+          "label": "Chicago Bulls",
+          "note": "6 titulos; NBA.com."
+        },
+        {
+          "rank": 5,
+          "label": "San Antonio Spurs",
+          "note": "5 titulos; NBA.com."
+        },
+        {
+          "rank": 6,
+          "label": "Philadelphia 76ers",
+          "note": "3 titulos; empate ordenado por primeiro titulo da franquia."
+        },
+        {
+          "rank": 7,
+          "label": "Detroit Pistons",
+          "note": "3 titulos; NBA.com."
+        },
+        {
+          "rank": 8,
+          "label": "Miami Heat",
+          "note": "3 titulos; NBA.com."
+        },
+        {
+          "rank": 9,
+          "label": "Milwaukee Bucks",
+          "note": "2 titulos; empate ordenado por titulo mais recente."
+        },
+        {
+          "rank": 10,
+          "label": "New York Knicks",
+          "note": "2 titulos; NBA.com."
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "theme": "Esportes",
+      "question": "Quais sao os pilotos com mais titulos mundiais de Formula 1?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Lewis Hamilton",
+          "note": "7 titulos; FIA/F1, empatado no recorde."
+        },
+        {
+          "rank": 2,
+          "label": "Michael Schumacher",
+          "note": "7 titulos; empatado, ordenado apos Hamilton por titulo mais antigo."
+        },
+        {
+          "rank": 3,
+          "label": "Juan Manuel Fangio",
+          "note": "5 titulos; FIA/F1."
+        },
+        {
+          "rank": 4,
+          "label": "Alain Prost",
+          "note": "4 titulos; empate, ordenado por ano do ultimo titulo."
+        },
+        {
+          "rank": 5,
+          "label": "Sebastian Vettel",
+          "note": "4 titulos; FIA/F1."
+        },
+        {
+          "rank": 6,
+          "label": "Max Verstappen",
+          "note": "4 titulos ate 2024; FIA/F1."
+        },
+        {
+          "rank": 7,
+          "label": "Jack Brabham",
+          "note": "3 titulos; empate de tricampeoes ordenado por ano."
+        },
+        {
+          "rank": 8,
+          "label": "Jackie Stewart",
+          "note": "3 titulos; FIA/F1."
+        },
+        {
+          "rank": 9,
+          "label": "Niki Lauda",
+          "note": "3 titulos; FIA/F1."
+        },
+        {
+          "rank": 10,
+          "label": "Nelson Piquet",
+          "note": "3 titulos; FIA/F1."
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "theme": "Esportes",
+      "question": "Quais sao os homens com mais Grand Slams de simples no tenis?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Novak Djokovic",
+          "note": "24 titulos; ATP/Grand Slam, consulta 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Rafael Nadal",
+          "note": "22 titulos; ATP/Grand Slam."
+        },
+        {
+          "rank": 3,
+          "label": "Roger Federer",
+          "note": "20 titulos; ATP/Grand Slam."
+        },
+        {
+          "rank": 4,
+          "label": "Pete Sampras",
+          "note": "14 titulos; ATP/Grand Slam."
+        },
+        {
+          "rank": 5,
+          "label": "Roy Emerson",
+          "note": "12 titulos; lista historica inclui era amadora."
+        },
+        {
+          "rank": 6,
+          "label": "Bjorn Borg",
+          "note": "11 titulos; empate ordenado por criterio ATP moderno."
+        },
+        {
+          "rank": 7,
+          "label": "Rod Laver",
+          "note": "11 titulos; inclui era amadora e profissional."
+        },
+        {
+          "rank": 8,
+          "label": "Bill Tilden",
+          "note": "10 titulos; era amadora."
+        },
+        {
+          "rank": 9,
+          "label": "Andre Agassi",
+          "note": "8 titulos; empate de 8, ordenado por Golden Slam/carreira."
+        },
+        {
+          "rank": 10,
+          "label": "Jimmy Connors",
+          "note": "8 titulos; ATP/Grand Slam."
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "theme": "Esportes",
+      "question": "Quais sao os paises com mais ouros olimpicos na historia?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Estados Unidos",
+          "note": "Lider em ouros no quadro historico combinado; Olympedia/COI."
+        },
+        {
+          "rank": 2,
+          "label": "Uniao Sovietica",
+          "note": "2o historico em ouros, mesmo sem competir desde 1991."
+        },
+        {
+          "rank": 3,
+          "label": "Alemanha",
+          "note": "Soma historica por NOC conforme tabelas Olympedia."
+        },
+        {
+          "rank": 4,
+          "label": "China",
+          "note": "Entrou forte a partir de 1984; top 4 por ouros."
+        },
+        {
+          "rank": 5,
+          "label": "Gra-Bretanha",
+          "note": "Top 5 historico por ouros olimpicos."
+        },
+        {
+          "rank": 6,
+          "label": "Franca",
+          "note": "Top 6 historico por ouros olimpicos."
+        },
+        {
+          "rank": 7,
+          "label": "Italia",
+          "note": "Top 7 historico por ouros olimpicos."
+        },
+        {
+          "rank": 8,
+          "label": "Suecia",
+          "note": "Tradicao forte em Jogos de Verao e Inverno."
+        },
+        {
+          "rank": 9,
+          "label": "Noruega",
+          "note": "Muito forte em Jogos de Inverno."
+        },
+        {
+          "rank": 10,
+          "label": "Russia",
+          "note": "NOC moderno separado da URSS em tabelas historicas."
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "theme": "Esportes",
+      "question": "Quais foram os homens mais rapidos nos 100 metros rasos?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Usain Bolt",
+          "note": "9s58; recorde mundial, World Athletics."
+        },
+        {
+          "rank": 2,
+          "label": "Tyson Gay",
+          "note": "9s69; empate de tempo, ordenado por data/ratificacao."
+        },
+        {
+          "rank": 3,
+          "label": "Yohan Blake",
+          "note": "9s69; World Athletics."
+        },
+        {
+          "rank": 4,
+          "label": "Asafa Powell",
+          "note": "9s72; World Athletics."
+        },
+        {
+          "rank": 5,
+          "label": "Justin Gatlin",
+          "note": "9s74; World Athletics."
+        },
+        {
+          "rank": 6,
+          "label": "Christian Coleman",
+          "note": "9s76; World Athletics."
+        },
+        {
+          "rank": 7,
+          "label": "Trayvon Bromell",
+          "note": "9s76; empate, ordenado por data."
+        },
+        {
+          "rank": 8,
+          "label": "Fred Kerley",
+          "note": "9s76; World Athletics."
+        },
+        {
+          "rank": 9,
+          "label": "Ferdinand Omanyala",
+          "note": "9s77; recorde africano."
+        },
+        {
+          "rank": 10,
+          "label": "Nesta Carter",
+          "note": "9s78; World Athletics, marca ratificada."
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "theme": "Animais",
+      "question": "Quais sao os animais mais rapidos do mundo?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Falcao-peregrino",
+          "note": "Ate cerca de 389 km/h em mergulho; Guinness/listas zoologicas."
+        },
+        {
+          "rank": 2,
+          "label": "Aguia-real",
+          "note": "Cerca de 240 a 320 km/h em mergulho; listas zoologicas."
+        },
+        {
+          "rank": 3,
+          "label": "Falcao-gerifalte",
+          "note": "Cerca de 209 km/h em voo/mergulho; listas zoologicas."
+        },
+        {
+          "rank": 4,
+          "label": "Andorinha-rabao-branco",
+          "note": "Cerca de 169 km/h em voo; listas de velocidade animal."
+        },
+        {
+          "rank": 5,
+          "label": "Falcao-subbuteo",
+          "note": "Cerca de 160 km/h; listas zoologicas."
+        },
+        {
+          "rank": 6,
+          "label": "Morcego-cauda-livre",
+          "note": "Cerca de 160 km/h em voo nivelado; estudos de mamiferos voadores."
+        },
+        {
+          "rank": 7,
+          "label": "Fragata",
+          "note": "Cerca de 153 km/h; listas zoologicas."
+        },
+        {
+          "rank": 8,
+          "label": "Pombo-correio",
+          "note": "Cerca de 149 km/h; registros de voo."
+        },
+        {
+          "rank": 9,
+          "label": "Ganso-de-asa-esporada",
+          "note": "Cerca de 142 km/h; listas de aves."
+        },
+        {
+          "rank": 10,
+          "label": "Marlin-negro",
+          "note": "Cerca de 129 km/h; peixe rapido, dado estimado."
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "theme": "Animais",
+      "question": "Quais sao os animais vivos mais pesados?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Baleia-azul",
+          "note": "Maior animal vivo; ate cerca de 190 t medidas, WWF/enciclopedias."
+        },
+        {
+          "rank": 2,
+          "label": "Baleia-franca-do-Pacifico",
+          "note": "Pode passar de 100 t; ranking por massa maxima estimada."
+        },
+        {
+          "rank": 3,
+          "label": "Baleia-fin",
+          "note": "Segundo maior tipo de baleia por comprimento; ate cerca de 120 t."
+        },
+        {
+          "rank": 4,
+          "label": "Cachalote",
+          "note": "Maior predador dentado; machos podem passar de 50 t."
+        },
+        {
+          "rank": 5,
+          "label": "Baleia-da-Groenlandia",
+          "note": "Pode passar de 70 t; estimativas variam por individuo."
+        },
+        {
+          "rank": 6,
+          "label": "Baleia-jubarte",
+          "note": "Ate cerca de 40 t; grandes adultos."
+        },
+        {
+          "rank": 7,
+          "label": "Tubarao-baleia",
+          "note": "Maior peixe vivo; ate cerca de 20 t ou mais."
+        },
+        {
+          "rank": 8,
+          "label": "Elefante-africano",
+          "note": "Maior animal terrestre vivo; machos podem passar de 6 t."
+        },
+        {
+          "rank": 9,
+          "label": "Elefante-marinho-do-sul",
+          "note": "Maior carnivoro vivo; machos podem passar de 4 t."
+        },
+        {
+          "rank": 10,
+          "label": "Rinoceronte-branco",
+          "note": "Um dos maiores terrestres; machos perto de 2 a 3,6 t."
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "theme": "Animais",
+      "question": "Quais sao os maiores felinos vivos?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Tigre",
+          "note": "Maior felino vivo por massa media e maxima; dados zoologicos."
+        },
+        {
+          "rank": 2,
+          "label": "Leao",
+          "note": "2o maior felino; machos adultos podem passar de 180 kg."
+        },
+        {
+          "rank": 3,
+          "label": "Jaguar",
+          "note": "Maior felino das Americas; corpo robusto."
+        },
+        {
+          "rank": 4,
+          "label": "Puma",
+          "note": "Tambem chamado onca-parda; grande felino americano."
+        },
+        {
+          "rank": 5,
+          "label": "Leopardo",
+          "note": "Ampla variacao de peso; entre os grandes Panthera."
+        },
+        {
+          "rank": 6,
+          "label": "Leopardo-das-neves",
+          "note": "Grande felino de montanha da Asia."
+        },
+        {
+          "rank": 7,
+          "label": "Guepardo",
+          "note": "Mais leve que outros grandes, mas alto e comprido."
+        },
+        {
+          "rank": 8,
+          "label": "Lince-eurasiano",
+          "note": "Maior especie de lince."
+        },
+        {
+          "rank": 9,
+          "label": "Leopardo-nebuloso",
+          "note": "Felino asiatico de porte medio-grande."
+        },
+        {
+          "rank": 10,
+          "label": "Caracal",
+          "note": "Felino medio; entra no top 10 por peso maximo aproximado."
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "theme": "Natureza",
+      "question": "Quais sao as montanhas mais altas do mundo?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Everest",
+          "note": "8.849 m; Himalaias, medida amplamente aceita."
+        },
+        {
+          "rank": 2,
+          "label": "K2",
+          "note": "8.611 m; Karakoram."
+        },
+        {
+          "rank": 3,
+          "label": "Kangchenjunga",
+          "note": "8.586 m; Himalaias."
+        },
+        {
+          "rank": 4,
+          "label": "Lhotse",
+          "note": "8.516 m; Himalaias."
+        },
+        {
+          "rank": 5,
+          "label": "Makalu",
+          "note": "8.485 m; Himalaias."
+        },
+        {
+          "rank": 6,
+          "label": "Cho Oyu",
+          "note": "8.188 m; Himalaias."
+        },
+        {
+          "rank": 7,
+          "label": "Dhaulagiri I",
+          "note": "8.167 m; Himalaias."
+        },
+        {
+          "rank": 8,
+          "label": "Manaslu",
+          "note": "8.163 m; Himalaias."
+        },
+        {
+          "rank": 9,
+          "label": "Nanga Parbat",
+          "note": "8.126 m; Himalaias."
+        },
+        {
+          "rank": 10,
+          "label": "Annapurna I",
+          "note": "8.091 m; Himalaias."
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "theme": "Natureza",
+      "question": "Quais sao os rios mais longos do mundo?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Nilo",
+          "note": "Cerca de 6.650 km; ranking tradicional, ha disputa com o Amazonas."
+        },
+        {
+          "rank": 2,
+          "label": "Amazonas",
+          "note": "Cerca de 6.400 a 6.992 km; ordem varia por criterio de nascente."
+        },
+        {
+          "rank": 3,
+          "label": "Yangtze",
+          "note": "Cerca de 6.300 km; maior rio da Asia."
+        },
+        {
+          "rank": 4,
+          "label": "Mississippi-Missouri",
+          "note": "Cerca de 6.275 km; sistema fluvial da America do Norte."
+        },
+        {
+          "rank": 5,
+          "label": "Yenisei",
+          "note": "Cerca de 5.539 km; sistema da Siberia."
+        },
+        {
+          "rank": 6,
+          "label": "Rio Amarelo",
+          "note": "Cerca de 5.464 km; Huang He, China."
+        },
+        {
+          "rank": 7,
+          "label": "Ob-Irtysh",
+          "note": "Cerca de 5.410 km; sistema da Siberia."
+        },
+        {
+          "rank": 8,
+          "label": "Parana",
+          "note": "Cerca de 4.880 km no sistema Parana-Prata; America do Sul."
+        },
+        {
+          "rank": 9,
+          "label": "Congo",
+          "note": "Cerca de 4.700 km; Africa central."
+        },
+        {
+          "rank": 10,
+          "label": "Amur",
+          "note": "Cerca de 4.444 km; fronteira Russia-China."
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "theme": "Espaco",
+      "question": "Quais sao as maiores luas do Sistema Solar?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Ganimedes",
+          "note": "5.268 km de diametro; lua de Jupiter, maior que Mercurio."
+        },
+        {
+          "rank": 2,
+          "label": "Tita",
+          "note": "5.149 km; lua de Saturno."
+        },
+        {
+          "rank": 3,
+          "label": "Calisto",
+          "note": "4.821 km; lua de Jupiter."
+        },
+        {
+          "rank": 4,
+          "label": "Io",
+          "note": "3.643 km; lua vulcanica de Jupiter."
+        },
+        {
+          "rank": 5,
+          "label": "Lua",
+          "note": "3.475 km; satelite natural da Terra."
+        },
+        {
+          "rank": 6,
+          "label": "Europa",
+          "note": "3.122 km; lua de Jupiter."
+        },
+        {
+          "rank": 7,
+          "label": "Tritao",
+          "note": "2.707 km; maior lua de Netuno."
+        },
+        {
+          "rank": 8,
+          "label": "Titania",
+          "note": "1.578 km; maior lua de Urano."
+        },
+        {
+          "rank": 9,
+          "label": "Reia",
+          "note": "1.528 km; lua de Saturno."
+        },
+        {
+          "rank": 10,
+          "label": "Oberon",
+          "note": "1.523 km; lua de Urano."
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "theme": "Espaco",
+      "question": "Quais sao os maiores planetas e planetas-anoes por diametro?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Jupiter",
+          "note": "139.820 km de diametro medio; NASA."
+        },
+        {
+          "rank": 2,
+          "label": "Saturno",
+          "note": "116.460 km; NASA."
+        },
+        {
+          "rank": 3,
+          "label": "Urano",
+          "note": "50.724 km; NASA."
+        },
+        {
+          "rank": 4,
+          "label": "Netuno",
+          "note": "49.244 km; NASA."
+        },
+        {
+          "rank": 5,
+          "label": "Terra",
+          "note": "12.742 km; NASA."
+        },
+        {
+          "rank": 6,
+          "label": "Venus",
+          "note": "12.104 km; NASA."
+        },
+        {
+          "rank": 7,
+          "label": "Marte",
+          "note": "6.779 km; NASA."
+        },
+        {
+          "rank": 8,
+          "label": "Mercurio",
+          "note": "4.879 km; NASA."
+        },
+        {
+          "rank": 9,
+          "label": "Plutao",
+          "note": "2.377 km; planeta-anao, NASA."
+        },
+        {
+          "rank": 10,
+          "label": "Eris",
+          "note": "Cerca de 2.326 km; planeta-anao, NASA/IAU."
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "theme": "Comida",
+      "question": "Quais sao os maiores produtores de cafe do mundo?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Brasil",
+          "note": "Maior produtor mundial; dados ICO/USDA/FAO em anos recentes."
+        },
+        {
+          "rank": 2,
+          "label": "Vietna",
+          "note": "2o maior produtor; muito forte em robusta."
+        },
+        {
+          "rank": 3,
+          "label": "Colombia",
+          "note": "3o maior produtor; reconhecida por arabica lavado."
+        },
+        {
+          "rank": 4,
+          "label": "Indonesia",
+          "note": "4o maior produtor; robusta e arabica."
+        },
+        {
+          "rank": 5,
+          "label": "Etiopia",
+          "note": "5o maior produtor; origem historica do cafe arabica."
+        },
+        {
+          "rank": 6,
+          "label": "Honduras",
+          "note": "6o em rankings recentes de producao."
+        },
+        {
+          "rank": 7,
+          "label": "Uganda",
+          "note": "7o em rankings recentes; destaque para robusta."
+        },
+        {
+          "rank": 8,
+          "label": "India",
+          "note": "8o em rankings recentes; cafe do sul da India."
+        },
+        {
+          "rank": 9,
+          "label": "Peru",
+          "note": "9o em rankings recentes; arabica de altitude."
+        },
+        {
+          "rank": 10,
+          "label": "Mexico",
+          "note": "10o em rankings recentes; producao latino-americana relevante."
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "theme": "Comida",
+      "question": "Quais sao os maiores produtores de cacau do mundo?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Costa do Marfim",
+          "note": "Maior produtor mundial; FAO/ICCO, lidera com larga vantagem."
+        },
+        {
+          "rank": 2,
+          "label": "Gana",
+          "note": "2o maior produtor; grande exportador da Africa Ocidental."
+        },
+        {
+          "rank": 3,
+          "label": "Equador",
+          "note": "3o em rankings recentes; forte em cacau fino e de aroma."
+        },
+        {
+          "rank": 4,
+          "label": "Camaroes",
+          "note": "4o em rankings recentes; FAO/ICCO."
+        },
+        {
+          "rank": 5,
+          "label": "Nigeria",
+          "note": "5o em rankings recentes; Africa Ocidental."
+        },
+        {
+          "rank": 6,
+          "label": "Brasil",
+          "note": "6o em rankings recentes; Bahia e Para sao polos importantes."
+        },
+        {
+          "rank": 7,
+          "label": "Indonesia",
+          "note": "7o em rankings recentes; Sudeste Asiatico."
+        },
+        {
+          "rank": 8,
+          "label": "Peru",
+          "note": "8o em rankings recentes; cacau fino e organico."
+        },
+        {
+          "rank": 9,
+          "label": "Republica Dominicana",
+          "note": "9o em rankings recentes; destaque em cacau organico."
+        },
+        {
+          "rank": 10,
+          "label": "Colombia",
+          "note": "10o em rankings recentes; producao andina e amazonica."
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "theme": "Internet",
+      "question": "Quais foram os emojis mais usados do mundo?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Rosto chorando de rir",
+          "note": "1o no ranking Unicode Emoji Frequency 2021."
+        },
+        {
+          "rank": 2,
+          "label": "Coracao vermelho",
+          "note": "2o no ranking Unicode 2021."
+        },
+        {
+          "rank": 3,
+          "label": "Rolando de rir",
+          "note": "3o no ranking Unicode 2021."
+        },
+        {
+          "rank": 4,
+          "label": "Joinha",
+          "note": "4o no ranking Unicode 2021."
+        },
+        {
+          "rank": 5,
+          "label": "Rosto chorando",
+          "note": "5o no ranking Unicode 2021."
+        },
+        {
+          "rank": 6,
+          "label": "Maos juntas",
+          "note": "6o no ranking Unicode 2021."
+        },
+        {
+          "rank": 7,
+          "label": "Beijo com coracao",
+          "note": "7o no ranking Unicode 2021."
+        },
+        {
+          "rank": 8,
+          "label": "Rosto sorrindo com coracoes",
+          "note": "8o no ranking Unicode 2021."
+        },
+        {
+          "rank": 9,
+          "label": "Rosto com olhos de coracao",
+          "note": "9o no ranking Unicode 2021."
+        },
+        {
+          "rank": 10,
+          "label": "Rosto sorrindo",
+          "note": "10o no ranking Unicode 2021."
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "theme": "Natureza",
+      "question": "Quais sao os paises com maior area de floresta?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Russia",
+          "note": "Cerca de 832,6 mi ha; FAO Global Forest Resources Assessment 2025."
+        },
+        {
+          "rank": 2,
+          "label": "Brasil",
+          "note": "Cerca de 486 mi ha; FAO GFRA 2025."
+        },
+        {
+          "rank": 3,
+          "label": "Canada",
+          "note": "Cerca de 368,8 mi ha; FAO GFRA 2025."
+        },
+        {
+          "rank": 4,
+          "label": "Estados Unidos",
+          "note": "Cerca de 308,9 mi ha; FAO GFRA 2025."
+        },
+        {
+          "rank": 5,
+          "label": "China",
+          "note": "Cerca de 227,2 mi ha; FAO GFRA 2025."
+        },
+        {
+          "rank": 6,
+          "label": "Australia",
+          "note": "Cerca de 134 mi ha; FAO GFRA 2025."
+        },
+        {
+          "rank": 7,
+          "label": "RD Congo",
+          "note": "Cerca de 126 mi ha; FAO GFRA 2025."
+        },
+        {
+          "rank": 8,
+          "label": "Indonesia",
+          "note": "Cerca de 92 mi ha; FAO GFRA 2025."
+        },
+        {
+          "rank": 9,
+          "label": "Peru",
+          "note": "Cerca de 72 mi ha; FAO GFRA 2025."
+        },
+        {
+          "rank": 10,
+          "label": "India",
+          "note": "Cerca de 72 mi ha; FAO GFRA 2025, muito proxima do Peru."
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "theme": "Mundo",
+      "question": "Quais sao as maiores ilhas do mundo?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Groenlandia",
+          "note": "Cerca de 2,16 mi km2; maior ilha nao continental."
+        },
+        {
+          "rank": 2,
+          "label": "Nova Guine",
+          "note": "Cerca de 785 mil km2; dividida entre Indonesia e Papua-Nova Guine."
+        },
+        {
+          "rank": 3,
+          "label": "Borneu",
+          "note": "Cerca de 748 mil km2; Indonesia, Malasia e Brunei."
+        },
+        {
+          "rank": 4,
+          "label": "Madagascar",
+          "note": "Cerca de 587 mil km2; ilha-pais no Indico."
+        },
+        {
+          "rank": 5,
+          "label": "Ilha de Baffin",
+          "note": "Cerca de 507 mil km2; Canada."
+        },
+        {
+          "rank": 6,
+          "label": "Sumatra",
+          "note": "Cerca de 443 mil km2; Indonesia."
+        },
+        {
+          "rank": 7,
+          "label": "Honshu",
+          "note": "Cerca de 228 mil km2; principal ilha do Japao."
+        },
+        {
+          "rank": 8,
+          "label": "Ilha Victoria",
+          "note": "Cerca de 217 mil km2; Canada."
+        },
+        {
+          "rank": 9,
+          "label": "Gra-Bretanha",
+          "note": "Cerca de 209 mil km2; Inglaterra, Escocia e Pais de Gales."
+        },
+        {
+          "rank": 10,
+          "label": "Ellesmere",
+          "note": "Cerca de 196 mil km2; Canada."
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "theme": "Natureza",
+      "question": "Quais sao os maiores desertos do mundo?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Antartico",
+          "note": "Cerca de 14,2 mi km2; deserto polar por baixa precipitacao."
+        },
+        {
+          "rank": 2,
+          "label": "Artico",
+          "note": "Cerca de 13,9 mi km2; deserto polar."
+        },
+        {
+          "rank": 3,
+          "label": "Saara",
+          "note": "Cerca de 9,2 mi km2; maior deserto quente."
+        },
+        {
+          "rank": 4,
+          "label": "Arabico",
+          "note": "Cerca de 2,3 mi km2; Peninsula Arabica."
+        },
+        {
+          "rank": 5,
+          "label": "Gobi",
+          "note": "Cerca de 1,3 mi km2; Mongolia e China."
+        },
+        {
+          "rank": 6,
+          "label": "Kalahari",
+          "note": "Cerca de 900 mil km2; Africa Austral."
+        },
+        {
+          "rank": 7,
+          "label": "Grande Victoria",
+          "note": "Cerca de 647 mil km2; Australia."
+        },
+        {
+          "rank": 8,
+          "label": "Patagonico",
+          "note": "Cerca de 620 mil km2; Argentina."
+        },
+        {
+          "rank": 9,
+          "label": "Sirio",
+          "note": "Cerca de 520 mil km2; Oriente Medio."
+        },
+        {
+          "rank": 10,
+          "label": "Great Basin",
+          "note": "Cerca de 492 mil km2; oeste dos Estados Unidos."
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "theme": "Arquitetura",
+      "question": "Quais sao os predios mais altos do mundo?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Burj Khalifa",
+          "note": "828 m; Dubai, CTBUH, predio concluido."
+        },
+        {
+          "rank": 2,
+          "label": "Merdeka 118",
+          "note": "679 m; Kuala Lumpur, CTBUH."
+        },
+        {
+          "rank": 3,
+          "label": "Shanghai Tower",
+          "note": "632 m; Shanghai, CTBUH."
+        },
+        {
+          "rank": 4,
+          "label": "Makkah Clock Tower",
+          "note": "601 m; Meca, CTBUH."
+        },
+        {
+          "rank": 5,
+          "label": "Ping An Finance Center",
+          "note": "599 m; Shenzhen, CTBUH."
+        },
+        {
+          "rank": 6,
+          "label": "Lotte World Tower",
+          "note": "555 m; Seul, CTBUH."
+        },
+        {
+          "rank": 7,
+          "label": "One World Trade Center",
+          "note": "541 m; Nova York, CTBUH."
+        },
+        {
+          "rank": 8,
+          "label": "Guangzhou CTF",
+          "note": "530 m; Guangzhou, CTBUH."
+        },
+        {
+          "rank": 9,
+          "label": "Tianjin CTF",
+          "note": "530 m; Tianjin, empate ordenado por criterio CTBUH."
+        },
+        {
+          "rank": 10,
+          "label": "CITIC Tower",
+          "note": "528 m; Pequim, CTBUH."
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "theme": "Esportes",
+      "question": "Quais sao os maiores estadios do mundo por capacidade?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Narendra Modi Stadium",
+          "note": "Cerca de 132 mil lugares; cricket, India."
+        },
+        {
+          "rank": 2,
+          "label": "Rungrado 1st of May",
+          "note": "Cerca de 114 mil; Coreia do Norte, capacidade reportada varia."
+        },
+        {
+          "rank": 3,
+          "label": "Michigan Stadium",
+          "note": "Cerca de 107 mil; futebol americano universitario, EUA."
+        },
+        {
+          "rank": 4,
+          "label": "Beaver Stadium",
+          "note": "Cerca de 106 mil; Penn State, EUA."
+        },
+        {
+          "rank": 5,
+          "label": "Ohio Stadium",
+          "note": "Cerca de 103 mil; Ohio State, EUA."
+        },
+        {
+          "rank": 6,
+          "label": "Kyle Field",
+          "note": "Cerca de 102 mil; Texas A&M, EUA."
+        },
+        {
+          "rank": 7,
+          "label": "Tiger Stadium",
+          "note": "Cerca de 102 mil; LSU, EUA."
+        },
+        {
+          "rank": 8,
+          "label": "Neyland Stadium",
+          "note": "Cerca de 101 mil; Tennessee, EUA."
+        },
+        {
+          "rank": 9,
+          "label": "Darrell K Royal-Texas",
+          "note": "Cerca de 100 mil; University of Texas, EUA."
+        },
+        {
+          "rank": 10,
+          "label": "Bryant-Denny Stadium",
+          "note": "Cerca de 100 mil; Alabama, EUA."
+        }
       ]
     }
   ]

@@ -9,8 +9,8 @@ export function HubHeader() {
   const navigate = useNavigate()
 
   return (
-    <section className="relative isolate pb-6">
-      <div className="hub-header-panel relative overflow-hidden bg-[#180735] px-5 pb-12 pt-5 shadow-2xl shadow-violet-950/50 sm:px-6 sm:pb-14 sm:pt-6">
+    <section className="relative isolate pb-4">
+      <div className="hub-header-panel relative overflow-hidden bg-[#180735] px-5 pb-8 pt-4 shadow-2xl shadow-violet-950/50 sm:px-6 sm:pb-9 sm:pt-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(139,92,246,0.5),transparent_28%),radial-gradient(circle_at_82%_16%,rgba(14,165,233,0.28),transparent_30%),linear-gradient(135deg,rgba(88,28,135,0.92),rgba(2,6,23,0.25)_58%)]" />
         <div className="absolute -right-16 top-14 size-60 rounded-full border border-cyan-300/20 bg-cyan-400/10 blur-sm" />
         <div className="absolute -bottom-24 left-1/2 size-72 -translate-x-1/2 rounded-full bg-fuchsia-500/20 blur-3xl" />
@@ -58,10 +58,9 @@ export function HubHeader() {
           </div>
         </div>
 
-        <div className="relative mt-9 max-w-xl">
-          <p className="text-xs font-extrabold uppercase tracking-[0.24em] text-cyan-200/85">{t('brand')}</p>
-          <h1 className="mt-2 text-4xl font-black tracking-tight text-white sm:text-5xl">{t('subtitle')}</h1>
-          <p className="mt-3 text-sm leading-6 text-violet-100/80 sm:text-base sm:leading-7">{t('description')}</p>
+        <div className="relative mt-6 max-w-xl">
+          <h1 className="text-3xl font-black leading-none tracking-tight text-white sm:text-4xl">{t('brand')}</h1>
+          <p className="mt-1.5 text-sm font-extrabold uppercase tracking-[0.16em] text-cyan-200/85 sm:text-[0.95rem]">{t('subtitle')}</p>
         </div>
       </div>
     </section>

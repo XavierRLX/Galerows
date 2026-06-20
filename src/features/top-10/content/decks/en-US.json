@@ -8,53 +8,2852 @@
   "cards": [
     {
       "id": 1,
-      "theme": "Geography",
-      "question": "What are the most populous countries in the world in 2026?",
+      "theme": "Movies",
+      "question": "Which movies have the highest worldwide box office gross?",
       "answers": [
-        { "rank": 1, "label": "India", "note": "Worldometer 2026: 1,476,625,576" },
-        { "rank": 2, "label": "China", "note": "Worldometer 2026: 1,412,914,089" },
-        { "rank": 3, "label": "United States", "note": "Worldometer 2026: 349,035,494" },
-        { "rank": 4, "label": "Indonesia", "note": "Worldometer 2026: 287,886,782" },
-        { "rank": 5, "label": "Pakistan", "note": "Worldometer 2026: 259,299,791" },
-        { "rank": 6, "label": "Nigeria", "note": "Worldometer 2026: 242,431,832" },
-        { "rank": 7, "label": "Brazil", "note": "Worldometer 2026: 213,562,666" },
-        { "rank": 8, "label": "Bangladesh", "note": "Worldometer 2026: 177,818,044" },
-        { "rank": 9, "label": "Russia", "note": "Worldometer 2026: 143,394,458" },
-        { "rank": 10, "label": "Ethiopia", "note": "Worldometer 2026: 138,902,185" }
+        {
+          "rank": 1,
+          "label": "Avatar",
+          "note": "Worldwide nominal box office; Box Office Mojo, checked in 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Avengers: Endgame",
+          "note": "Worldwide nominal box office; Box Office Mojo, checked in 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Avatar: The Way of Water",
+          "note": "Worldwide nominal box office; Box Office Mojo, checked in 2026."
+        },
+        {
+          "rank": 4,
+          "label": "Ne Zha 2",
+          "note": "Worldwide nominal box office; Box Office Mojo, checked in 2026."
+        },
+        {
+          "rank": 5,
+          "label": "Titanic",
+          "note": "Worldwide nominal box office; Box Office Mojo, checked in 2026."
+        },
+        {
+          "rank": 6,
+          "label": "Star Wars: The Force Awakens",
+          "note": "Worldwide nominal box office; Box Office Mojo, checked in 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Avengers: Infinity War",
+          "note": "Worldwide nominal box office; Box Office Mojo, checked in 2026."
+        },
+        {
+          "rank": 8,
+          "label": "Spider-Man: No Way Home",
+          "note": "Worldwide nominal box office; Box Office Mojo, checked in 2026."
+        },
+        {
+          "rank": 9,
+          "label": "Inside Out 2",
+          "note": "Worldwide nominal box office; Box Office Mojo, checked in 2026."
+        },
+        {
+          "rank": 10,
+          "label": "Jurassic World",
+          "note": "Worldwide nominal box office; Box Office Mojo, checked in 2026."
+        }
       ]
     },
     {
       "id": 2,
       "theme": "Movies",
-      "question": "Which movies have the highest worldwide box office gross of all time?",
+      "question": "Which animated movies have the highest worldwide box office gross?",
       "answers": [
-        { "rank": 1, "label": "Avatar", "note": "The Numbers: $2.923B" },
-        { "rank": 2, "label": "Avengers: Endgame", "note": "The Numbers: $2.717B" },
-        { "rank": 3, "label": "Avatar: The Way of Water", "note": "The Numbers: $2.322B" },
-        { "rank": 4, "label": "Titanic", "note": "The Numbers: $2.223B" },
-        { "rank": 5, "label": "Star Wars: The Force Awakens", "note": "The Numbers: $2.056B" },
-        { "rank": 6, "label": "Avengers: Infinity War", "note": "The Numbers: $2.048B" },
-        { "rank": 7, "label": "Ne Zha 2", "note": "The Numbers: $2.001B" },
-        { "rank": 8, "label": "Spider-Man: No Way Home", "note": "The Numbers: $1.921B" },
-        { "rank": 9, "label": "Zootopia 2", "note": "The Numbers: $1.859B" },
-        { "rank": 10, "label": "Inside Out 2", "note": "The Numbers: $1.698B" }
+        {
+          "rank": 1,
+          "label": "Inside Out 2",
+          "note": "Worldwide nominal box office for animated films; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 2,
+          "label": "The Lion King",
+          "note": "Worldwide nominal box office for animated films; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 3,
+          "label": "Frozen II",
+          "note": "Worldwide nominal box office for animated films; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 4,
+          "label": "The Super Mario Bros. Movie",
+          "note": "Worldwide nominal box office for animated films; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 5,
+          "label": "Frozen",
+          "note": "Worldwide nominal box office for animated films; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 6,
+          "label": "Incredibles 2",
+          "note": "Worldwide nominal box office for animated films; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 7,
+          "label": "Minions",
+          "note": "Worldwide nominal box office for animated films; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 8,
+          "label": "Toy Story 4",
+          "note": "Worldwide nominal box office for animated films; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 9,
+          "label": "Toy Story 3",
+          "note": "Worldwide nominal box office for animated films; Box Office Mojo/The Numbers."
+        },
+        {
+          "rank": 10,
+          "label": "Despicable Me 3",
+          "note": "Worldwide nominal box office for animated films; Box Office Mojo/The Numbers."
+        }
       ]
     },
     {
       "id": 3,
-      "theme": "Sports",
-      "question": "Who are the top goalscorers in men's FIFA World Cup history?",
+      "theme": "Movies",
+      "question": "Which movies won the most Oscars?",
       "answers": [
-        { "rank": 1, "label": "Miroslav Klose", "note": "16 goals" },
-        { "rank": 2, "label": "Lionel Messi", "note": "16 goals on Jun 17, 2026" },
-        { "rank": 3, "label": "Ronaldo", "note": "15 goals" },
-        { "rank": 4, "label": "Gerd Muller", "note": "14 goals" },
-        { "rank": 5, "label": "Kylian Mbappe", "note": "14 goals on Jun 17, 2026" },
-        { "rank": 6, "label": "Just Fontaine", "note": "13 goals" },
-        { "rank": 7, "label": "Pele", "note": "12 goals" },
-        { "rank": 8, "label": "Sandor Kocsis", "note": "11 goals" },
-        { "rank": 9, "label": "Jurgen Klinsmann", "note": "11 goals" },
-        { "rank": 10, "label": "Helmut Rahn", "note": "10 goals" }
+        {
+          "rank": 1,
+          "label": "Ben-Hur",
+          "note": "Oscar wins; Academy records, ties ordered by award year."
+        },
+        {
+          "rank": 2,
+          "label": "Titanic",
+          "note": "Oscar wins; Academy records, ties ordered by award year."
+        },
+        {
+          "rank": 3,
+          "label": "The Lord of the Rings: The Return of the King",
+          "note": "Oscar wins; Academy records, ties ordered by award year."
+        },
+        {
+          "rank": 4,
+          "label": "West Side Story",
+          "note": "Oscar wins; Academy records, ties ordered by award year."
+        },
+        {
+          "rank": 5,
+          "label": "Gigi",
+          "note": "Oscar wins; Academy records, ties ordered by award year."
+        },
+        {
+          "rank": 6,
+          "label": "The Last Emperor",
+          "note": "Oscar wins; Academy records, ties ordered by award year."
+        },
+        {
+          "rank": 7,
+          "label": "The English Patient",
+          "note": "Oscar wins; Academy records, ties ordered by award year."
+        },
+        {
+          "rank": 8,
+          "label": "Gone with the Wind",
+          "note": "Oscar wins; Academy records, ties ordered by award year."
+        },
+        {
+          "rank": 9,
+          "label": "From Here to Eternity",
+          "note": "Oscar wins; Academy records, ties ordered by award year."
+        },
+        {
+          "rank": 10,
+          "label": "On the Waterfront",
+          "note": "Oscar wins; Academy records, ties ordered by award year."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "theme": "Series",
+      "question": "What are the most popular Netflix series of all time?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Wednesday S1",
+          "note": "Netflix official Tudum all-time list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Adolescence",
+          "note": "Netflix official Tudum all-time list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Stranger Things 4",
+          "note": "Netflix official Tudum all-time list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 4,
+          "label": "Stranger Things 5",
+          "note": "Netflix official Tudum all-time list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 5,
+          "label": "Wednesday S2",
+          "note": "Netflix official Tudum all-time list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 6,
+          "label": "DAHMER",
+          "note": "Netflix official Tudum all-time list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Bridgerton S1",
+          "note": "Netflix official Tudum all-time list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 8,
+          "label": "The Queen's Gambit",
+          "note": "Netflix official Tudum all-time list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 9,
+          "label": "Bridgerton S3",
+          "note": "Netflix official Tudum all-time list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 10,
+          "label": "His & Hers",
+          "note": "Netflix official Tudum all-time list; views in first 91 days, checked in 2026."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "theme": "Streaming",
+      "question": "What are the most popular Netflix movies of all time?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "KPop Demon Hunters",
+          "note": "Netflix official Tudum all-time movie list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Red Notice",
+          "note": "Netflix official Tudum all-time movie list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Carry-On",
+          "note": "Netflix official Tudum all-time movie list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 4,
+          "label": "Don't Look Up",
+          "note": "Netflix official Tudum all-time movie list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 5,
+          "label": "The Adam Project",
+          "note": "Netflix official Tudum all-time movie list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 6,
+          "label": "Bird Box",
+          "note": "Netflix official Tudum all-time movie list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Back in Action",
+          "note": "Netflix official Tudum all-time movie list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 8,
+          "label": "Leave the World Behind",
+          "note": "Netflix official Tudum all-time movie list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 9,
+          "label": "War Machine",
+          "note": "Netflix official Tudum all-time movie list; views in first 91 days, checked in 2026."
+        },
+        {
+          "rank": 10,
+          "label": "The Gray Man",
+          "note": "Netflix official Tudum all-time movie list; views in first 91 days, checked in 2026."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "theme": "Games",
+      "question": "What are the best-selling video games in history?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Minecraft",
+          "note": "Reported lifetime video game sales by publishers and public rankings, checked in 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Grand Theft Auto V",
+          "note": "Reported lifetime video game sales by publishers and public rankings, checked in 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Wii Sports",
+          "note": "Reported lifetime video game sales by publishers and public rankings, checked in 2026."
+        },
+        {
+          "rank": 4,
+          "label": "Red Dead Redemption 2",
+          "note": "Reported lifetime video game sales by publishers and public rankings, checked in 2026."
+        },
+        {
+          "rank": 5,
+          "label": "Mario Kart 8 / Deluxe",
+          "note": "Reported lifetime video game sales by publishers and public rankings, checked in 2026."
+        },
+        {
+          "rank": 6,
+          "label": "PUBG: Battlegrounds",
+          "note": "Reported lifetime video game sales by publishers and public rankings, checked in 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Terraria",
+          "note": "Reported lifetime video game sales by publishers and public rankings, checked in 2026."
+        },
+        {
+          "rank": 8,
+          "label": "Super Mario Bros.",
+          "note": "Reported lifetime video game sales by publishers and public rankings, checked in 2026."
+        },
+        {
+          "rank": 9,
+          "label": "Overwatch",
+          "note": "Reported lifetime video game sales by publishers and public rankings, checked in 2026."
+        },
+        {
+          "rank": 10,
+          "label": "The Witcher 3",
+          "note": "Reported lifetime video game sales by publishers and public rankings, checked in 2026."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "theme": "Games",
+      "question": "What are the best-selling consoles in history?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "PlayStation 2",
+          "note": "Official and consolidated lifetime hardware sales, checked in 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Nintendo Switch",
+          "note": "Official and consolidated lifetime hardware sales, checked in 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Nintendo DS",
+          "note": "Official and consolidated lifetime hardware sales, checked in 2026."
+        },
+        {
+          "rank": 4,
+          "label": "Game Boy / Color",
+          "note": "Official and consolidated lifetime hardware sales, checked in 2026."
+        },
+        {
+          "rank": 5,
+          "label": "PlayStation 4",
+          "note": "Official and consolidated lifetime hardware sales, checked in 2026."
+        },
+        {
+          "rank": 6,
+          "label": "PlayStation",
+          "note": "Official and consolidated lifetime hardware sales, checked in 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Nintendo Wii",
+          "note": "Official and consolidated lifetime hardware sales, checked in 2026."
+        },
+        {
+          "rank": 8,
+          "label": "PlayStation 3",
+          "note": "Official and consolidated lifetime hardware sales, checked in 2026."
+        },
+        {
+          "rank": 9,
+          "label": "Xbox 360",
+          "note": "Official and consolidated lifetime hardware sales, checked in 2026."
+        },
+        {
+          "rank": 10,
+          "label": "Game Boy Advance",
+          "note": "Official and consolidated lifetime hardware sales, checked in 2026."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "theme": "Games",
+      "question": "What are the best-selling video game franchises?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Mario",
+          "note": "Estimated software sales by video game franchise, checked in 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Tetris",
+          "note": "Estimated software sales by video game franchise, checked in 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Pokemon",
+          "note": "Estimated software sales by video game franchise, checked in 2026."
+        },
+        {
+          "rank": 4,
+          "label": "Call of Duty",
+          "note": "Estimated software sales by video game franchise, checked in 2026."
+        },
+        {
+          "rank": 5,
+          "label": "Grand Theft Auto",
+          "note": "Estimated software sales by video game franchise, checked in 2026."
+        },
+        {
+          "rank": 6,
+          "label": "FIFA / EA Sports FC",
+          "note": "Estimated software sales by video game franchise, checked in 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Minecraft",
+          "note": "Estimated software sales by video game franchise, checked in 2026."
+        },
+        {
+          "rank": 8,
+          "label": "Wii",
+          "note": "Estimated software sales by video game franchise, checked in 2026."
+        },
+        {
+          "rank": 9,
+          "label": "The Sims",
+          "note": "Estimated software sales by video game franchise, checked in 2026."
+        },
+        {
+          "rank": 10,
+          "label": "Final Fantasy",
+          "note": "Estimated software sales by video game franchise, checked in 2026."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "theme": "Music",
+      "question": "Who were the best-selling global artists of 2024?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Taylor Swift",
+          "note": "IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 2,
+          "label": "Drake",
+          "note": "IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 3,
+          "label": "SEVENTEEN",
+          "note": "IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 4,
+          "label": "Billie Eilish",
+          "note": "IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 5,
+          "label": "Stray Kids",
+          "note": "IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 6,
+          "label": "Zach Bryan",
+          "note": "IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 7,
+          "label": "The Weeknd",
+          "note": "IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 8,
+          "label": "Eminem",
+          "note": "IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 9,
+          "label": "Kendrick Lamar",
+          "note": "IFPI Global Recording Artist Chart 2024."
+        },
+        {
+          "rank": 10,
+          "label": "Sabrina Carpenter",
+          "note": "IFPI Global Recording Artist Chart 2024."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "theme": "Music",
+      "question": "Who are the best-selling artists in history?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "The Beatles",
+          "note": "Historical artist sales estimates; ChartMasters album-equivalent sales."
+        },
+        {
+          "rank": 2,
+          "label": "Michael Jackson",
+          "note": "Historical artist sales estimates; ChartMasters album-equivalent sales."
+        },
+        {
+          "rank": 3,
+          "label": "Elvis Presley",
+          "note": "Historical artist sales estimates; ChartMasters album-equivalent sales."
+        },
+        {
+          "rank": 4,
+          "label": "Queen",
+          "note": "Historical artist sales estimates; ChartMasters album-equivalent sales."
+        },
+        {
+          "rank": 5,
+          "label": "Taylor Swift",
+          "note": "Historical artist sales estimates; ChartMasters album-equivalent sales."
+        },
+        {
+          "rank": 6,
+          "label": "Madonna",
+          "note": "Historical artist sales estimates; ChartMasters album-equivalent sales."
+        },
+        {
+          "rank": 7,
+          "label": "Elton John",
+          "note": "Historical artist sales estimates; ChartMasters album-equivalent sales."
+        },
+        {
+          "rank": 8,
+          "label": "Led Zeppelin",
+          "note": "Historical artist sales estimates; ChartMasters album-equivalent sales."
+        },
+        {
+          "rank": 9,
+          "label": "Rihanna",
+          "note": "Historical artist sales estimates; ChartMasters album-equivalent sales."
+        },
+        {
+          "rank": 10,
+          "label": "Pink Floyd",
+          "note": "Historical artist sales estimates; ChartMasters album-equivalent sales."
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "theme": "Music",
+      "question": "What are the best-selling albums in history?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Thriller",
+          "note": "Historical estimated album sales; Guinness and consolidated music lists."
+        },
+        {
+          "rank": 2,
+          "label": "Back in Black",
+          "note": "Historical estimated album sales; Guinness and consolidated music lists."
+        },
+        {
+          "rank": 3,
+          "label": "The Dark Side of the Moon",
+          "note": "Historical estimated album sales; Guinness and consolidated music lists."
+        },
+        {
+          "rank": 4,
+          "label": "The Bodyguard",
+          "note": "Historical estimated album sales; Guinness and consolidated music lists."
+        },
+        {
+          "rank": 5,
+          "label": "Bat Out of Hell",
+          "note": "Historical estimated album sales; Guinness and consolidated music lists."
+        },
+        {
+          "rank": 6,
+          "label": "Their Greatest Hits",
+          "note": "Historical estimated album sales; Guinness and consolidated music lists."
+        },
+        {
+          "rank": 7,
+          "label": "Saturday Night Fever",
+          "note": "Historical estimated album sales; Guinness and consolidated music lists."
+        },
+        {
+          "rank": 8,
+          "label": "Rumours",
+          "note": "Historical estimated album sales; Guinness and consolidated music lists."
+        },
+        {
+          "rank": 9,
+          "label": "Come On Over",
+          "note": "Historical estimated album sales; Guinness and consolidated music lists."
+        },
+        {
+          "rank": 10,
+          "label": "Led Zeppelin IV",
+          "note": "Historical estimated album sales; Guinness and consolidated music lists."
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "theme": "Books",
+      "question": "What are the best-selling fiction books in history?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Don Quixote",
+          "note": "Historical fiction book sales estimates; excludes religious and political texts."
+        },
+        {
+          "rank": 2,
+          "label": "A Tale of Two Cities",
+          "note": "Historical fiction book sales estimates; excludes religious and political texts."
+        },
+        {
+          "rank": 3,
+          "label": "The Little Prince",
+          "note": "Historical fiction book sales estimates; excludes religious and political texts."
+        },
+        {
+          "rank": 4,
+          "label": "The Lord of the Rings",
+          "note": "Historical fiction book sales estimates; excludes religious and political texts."
+        },
+        {
+          "rank": 5,
+          "label": "The Alchemist",
+          "note": "Historical fiction book sales estimates; excludes religious and political texts."
+        },
+        {
+          "rank": 6,
+          "label": "Harry Potter and the Philosopher's Stone",
+          "note": "Historical fiction book sales estimates; excludes religious and political texts."
+        },
+        {
+          "rank": 7,
+          "label": "And Then There Were None",
+          "note": "Historical fiction book sales estimates; excludes religious and political texts."
+        },
+        {
+          "rank": 8,
+          "label": "Dream of the Red Chamber",
+          "note": "Historical fiction book sales estimates; excludes religious and political texts."
+        },
+        {
+          "rank": 9,
+          "label": "The Hobbit",
+          "note": "Historical fiction book sales estimates; excludes religious and political texts."
+        },
+        {
+          "rank": 10,
+          "label": "Alice's Adventures in Wonderland",
+          "note": "Historical fiction book sales estimates; excludes religious and political texts."
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "theme": "Brazil",
+      "question": "What are the most populous Brazilian states?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Sao Paulo",
+          "note": "Brazilian state population; IBGE 2022 Census."
+        },
+        {
+          "rank": 2,
+          "label": "Minas Gerais",
+          "note": "Brazilian state population; IBGE 2022 Census."
+        },
+        {
+          "rank": 3,
+          "label": "Rio de Janeiro",
+          "note": "Brazilian state population; IBGE 2022 Census."
+        },
+        {
+          "rank": 4,
+          "label": "Bahia",
+          "note": "Brazilian state population; IBGE 2022 Census."
+        },
+        {
+          "rank": 5,
+          "label": "Parana",
+          "note": "Brazilian state population; IBGE 2022 Census."
+        },
+        {
+          "rank": 6,
+          "label": "Rio Grande do Sul",
+          "note": "Brazilian state population; IBGE 2022 Census."
+        },
+        {
+          "rank": 7,
+          "label": "Pernambuco",
+          "note": "Brazilian state population; IBGE 2022 Census."
+        },
+        {
+          "rank": 8,
+          "label": "Ceara",
+          "note": "Brazilian state population; IBGE 2022 Census."
+        },
+        {
+          "rank": 9,
+          "label": "Para",
+          "note": "Brazilian state population; IBGE 2022 Census."
+        },
+        {
+          "rank": 10,
+          "label": "Santa Catarina",
+          "note": "Brazilian state population; IBGE 2022 Census."
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "theme": "Brazil",
+      "question": "What are the most populous cities in Brazil?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Sao Paulo",
+          "note": "Brazilian municipality population; IBGE 2022 Census."
+        },
+        {
+          "rank": 2,
+          "label": "Rio de Janeiro",
+          "note": "Brazilian municipality population; IBGE 2022 Census."
+        },
+        {
+          "rank": 3,
+          "label": "Brasilia",
+          "note": "Brazilian municipality population; IBGE 2022 Census."
+        },
+        {
+          "rank": 4,
+          "label": "Fortaleza",
+          "note": "Brazilian municipality population; IBGE 2022 Census."
+        },
+        {
+          "rank": 5,
+          "label": "Salvador",
+          "note": "Brazilian municipality population; IBGE 2022 Census."
+        },
+        {
+          "rank": 6,
+          "label": "Belo Horizonte",
+          "note": "Brazilian municipality population; IBGE 2022 Census."
+        },
+        {
+          "rank": 7,
+          "label": "Manaus",
+          "note": "Brazilian municipality population; IBGE 2022 Census."
+        },
+        {
+          "rank": 8,
+          "label": "Curitiba",
+          "note": "Brazilian municipality population; IBGE 2022 Census."
+        },
+        {
+          "rank": 9,
+          "label": "Recife",
+          "note": "Brazilian municipality population; IBGE 2022 Census."
+        },
+        {
+          "rank": 10,
+          "label": "Goiania",
+          "note": "Brazilian municipality population; IBGE 2022 Census."
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "theme": "Brazil",
+      "question": "What are the largest Brazilian states by area?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Amazon",
+          "note": "Brazilian state area; official IBGE territorial area."
+        },
+        {
+          "rank": 2,
+          "label": "Para",
+          "note": "Brazilian state area; official IBGE territorial area."
+        },
+        {
+          "rank": 3,
+          "label": "Mato Grosso",
+          "note": "Brazilian state area; official IBGE territorial area."
+        },
+        {
+          "rank": 4,
+          "label": "Minas Gerais",
+          "note": "Brazilian state area; official IBGE territorial area."
+        },
+        {
+          "rank": 5,
+          "label": "Bahia",
+          "note": "Brazilian state area; official IBGE territorial area."
+        },
+        {
+          "rank": 6,
+          "label": "Mato Grosso do Sul",
+          "note": "Brazilian state area; official IBGE territorial area."
+        },
+        {
+          "rank": 7,
+          "label": "Goias",
+          "note": "Brazilian state area; official IBGE territorial area."
+        },
+        {
+          "rank": 8,
+          "label": "Maranhao",
+          "note": "Brazilian state area; official IBGE territorial area."
+        },
+        {
+          "rank": 9,
+          "label": "Rio Grande do Sul",
+          "note": "Brazilian state area; official IBGE territorial area."
+        },
+        {
+          "rank": 10,
+          "label": "Tocantins",
+          "note": "Brazilian state area; official IBGE territorial area."
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "theme": "World",
+      "question": "What are the most populous countries in the world?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "India",
+          "note": "Country population estimates; World Bank/UN, 2024."
+        },
+        {
+          "rank": 2,
+          "label": "China",
+          "note": "Country population estimates; World Bank/UN, 2024."
+        },
+        {
+          "rank": 3,
+          "label": "United States",
+          "note": "Country population estimates; World Bank/UN, 2024."
+        },
+        {
+          "rank": 4,
+          "label": "Indonesia",
+          "note": "Country population estimates; World Bank/UN, 2024."
+        },
+        {
+          "rank": 5,
+          "label": "Pakistan",
+          "note": "Country population estimates; World Bank/UN, 2024."
+        },
+        {
+          "rank": 6,
+          "label": "Nigeria",
+          "note": "Country population estimates; World Bank/UN, 2024."
+        },
+        {
+          "rank": 7,
+          "label": "Brazil",
+          "note": "Country population estimates; World Bank/UN, 2024."
+        },
+        {
+          "rank": 8,
+          "label": "Bangladesh",
+          "note": "Country population estimates; World Bank/UN, 2024."
+        },
+        {
+          "rank": 9,
+          "label": "Russia",
+          "note": "Country population estimates; World Bank/UN, 2024."
+        },
+        {
+          "rank": 10,
+          "label": "Ethiopia",
+          "note": "Country population estimates; World Bank/UN, 2024."
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "theme": "World",
+      "question": "What are the largest countries in the world by area?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Russia",
+          "note": "Country total area; World Factbook/Worldometers."
+        },
+        {
+          "rank": 2,
+          "label": "Canada",
+          "note": "Country total area; World Factbook/Worldometers."
+        },
+        {
+          "rank": 3,
+          "label": "China",
+          "note": "Country total area; World Factbook/Worldometers."
+        },
+        {
+          "rank": 4,
+          "label": "United States",
+          "note": "Country total area; World Factbook/Worldometers."
+        },
+        {
+          "rank": 5,
+          "label": "Brazil",
+          "note": "Country total area; World Factbook/Worldometers."
+        },
+        {
+          "rank": 6,
+          "label": "Australia",
+          "note": "Country total area; World Factbook/Worldometers."
+        },
+        {
+          "rank": 7,
+          "label": "India",
+          "note": "Country total area; World Factbook/Worldometers."
+        },
+        {
+          "rank": 8,
+          "label": "Argentina",
+          "note": "Country total area; World Factbook/Worldometers."
+        },
+        {
+          "rank": 9,
+          "label": "Kazakhstan",
+          "note": "Country total area; World Factbook/Worldometers."
+        },
+        {
+          "rank": 10,
+          "label": "Algeria",
+          "note": "Country total area; World Factbook/Worldometers."
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "theme": "Economy",
+      "question": "What are the largest economies in the world by nominal GDP?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "United States",
+          "note": "Nominal GDP ranking; IMF World Economic Outlook 2024/2025."
+        },
+        {
+          "rank": 2,
+          "label": "China",
+          "note": "Nominal GDP ranking; IMF World Economic Outlook 2024/2025."
+        },
+        {
+          "rank": 3,
+          "label": "Germany",
+          "note": "Nominal GDP ranking; IMF World Economic Outlook 2024/2025."
+        },
+        {
+          "rank": 4,
+          "label": "Japan",
+          "note": "Nominal GDP ranking; IMF World Economic Outlook 2024/2025."
+        },
+        {
+          "rank": 5,
+          "label": "India",
+          "note": "Nominal GDP ranking; IMF World Economic Outlook 2024/2025."
+        },
+        {
+          "rank": 6,
+          "label": "United Kingdom",
+          "note": "Nominal GDP ranking; IMF World Economic Outlook 2024/2025."
+        },
+        {
+          "rank": 7,
+          "label": "France",
+          "note": "Nominal GDP ranking; IMF World Economic Outlook 2024/2025."
+        },
+        {
+          "rank": 8,
+          "label": "Italy",
+          "note": "Nominal GDP ranking; IMF World Economic Outlook 2024/2025."
+        },
+        {
+          "rank": 9,
+          "label": "Canada",
+          "note": "Nominal GDP ranking; IMF World Economic Outlook 2024/2025."
+        },
+        {
+          "rank": 10,
+          "label": "Brazil",
+          "note": "Nominal GDP ranking; IMF World Economic Outlook 2024/2025."
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "theme": "World",
+      "question": "What are the most spoken languages in the world, counting native and non-native speakers?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "English",
+          "note": "Total speakers, native plus non-native; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Mandarin",
+          "note": "Total speakers, native plus non-native; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Hindi",
+          "note": "Total speakers, native plus non-native; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 4,
+          "label": "Spanish",
+          "note": "Total speakers, native plus non-native; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 5,
+          "label": "Modern Standard Arabic",
+          "note": "Total speakers, native plus non-native; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 6,
+          "label": "French",
+          "note": "Total speakers, native plus non-native; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Bengali",
+          "note": "Total speakers, native plus non-native; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 8,
+          "label": "Portuguese",
+          "note": "Total speakers, native plus non-native; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 9,
+          "label": "Russian",
+          "note": "Total speakers, native plus non-native; Ethnologue/Babbel 2026."
+        },
+        {
+          "rank": 10,
+          "label": "Urdu",
+          "note": "Total speakers, native plus non-native; Ethnologue/Babbel 2026."
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "theme": "Travel",
+      "question": "What are the busiest airports in the world?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Atlanta ATL",
+          "note": "Passenger traffic in 2025; Airports Council International."
+        },
+        {
+          "rank": 2,
+          "label": "Dubai DXB",
+          "note": "Passenger traffic in 2025; Airports Council International."
+        },
+        {
+          "rank": 3,
+          "label": "Tokyo Haneda HND",
+          "note": "Passenger traffic in 2025; Airports Council International."
+        },
+        {
+          "rank": 4,
+          "label": "Dallas/Fort Worth DFW",
+          "note": "Passenger traffic in 2025; Airports Council International."
+        },
+        {
+          "rank": 5,
+          "label": "Shanghai Pudong PVG",
+          "note": "Passenger traffic in 2025; Airports Council International."
+        },
+        {
+          "rank": 6,
+          "label": "Chicago O'Hare ORD",
+          "note": "Passenger traffic in 2025; Airports Council International."
+        },
+        {
+          "rank": 7,
+          "label": "London Heathrow LHR",
+          "note": "Passenger traffic in 2025; Airports Council International."
+        },
+        {
+          "rank": 8,
+          "label": "Istanbul IST",
+          "note": "Passenger traffic in 2025; Airports Council International."
+        },
+        {
+          "rank": 9,
+          "label": "Guangzhou CAN",
+          "note": "Passenger traffic in 2025; Airports Council International."
+        },
+        {
+          "rank": 10,
+          "label": "Denver DEN",
+          "note": "Passenger traffic in 2025; Airports Council International."
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "theme": "Travel",
+      "question": "What are the most visited countries by international tourists?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "France",
+          "note": "International tourist arrivals in 2023; UN Tourism."
+        },
+        {
+          "rank": 2,
+          "label": "Espanha",
+          "note": "International tourist arrivals in 2023; UN Tourism."
+        },
+        {
+          "rank": 3,
+          "label": "United States",
+          "note": "International tourist arrivals in 2023; UN Tourism."
+        },
+        {
+          "rank": 4,
+          "label": "Italy",
+          "note": "International tourist arrivals in 2023; UN Tourism."
+        },
+        {
+          "rank": 5,
+          "label": "Turkey",
+          "note": "International tourist arrivals in 2023; UN Tourism."
+        },
+        {
+          "rank": 6,
+          "label": "Mexico",
+          "note": "International tourist arrivals in 2023; UN Tourism."
+        },
+        {
+          "rank": 7,
+          "label": "United Kingdom",
+          "note": "International tourist arrivals in 2023; UN Tourism."
+        },
+        {
+          "rank": 8,
+          "label": "Germany",
+          "note": "International tourist arrivals in 2023; UN Tourism."
+        },
+        {
+          "rank": 9,
+          "label": "Greece",
+          "note": "International tourist arrivals in 2023; UN Tourism."
+        },
+        {
+          "rank": 10,
+          "label": "Austria",
+          "note": "International tourist arrivals in 2023; UN Tourism."
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "theme": "Brands",
+      "question": "What are the most valuable brands in the world?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Google",
+          "note": "Brand value ranking; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Apple",
+          "note": "Brand value ranking; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Microsoft",
+          "note": "Brand value ranking; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 4,
+          "label": "Amazon",
+          "note": "Brand value ranking; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 5,
+          "label": "NVIDIA",
+          "note": "Brand value ranking; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 6,
+          "label": "Facebook",
+          "note": "Brand value ranking; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Instagram",
+          "note": "Brand value ranking; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 8,
+          "label": "Tencent",
+          "note": "Brand value ranking; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 9,
+          "label": "Oracle",
+          "note": "Brand value ranking; Kantar BrandZ Global 2026."
+        },
+        {
+          "rank": 10,
+          "label": "McDonald's",
+          "note": "Brand value ranking; Kantar BrandZ Global 2026."
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "theme": "Automotive",
+      "question": "What are the best-selling cars in history?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Toyota Corolla",
+          "note": "Lifetime automotive nameplate sales estimates."
+        },
+        {
+          "rank": 2,
+          "label": "Ford F-Series",
+          "note": "Lifetime automotive nameplate sales estimates."
+        },
+        {
+          "rank": 3,
+          "label": "Volkswagen Golf",
+          "note": "Lifetime automotive nameplate sales estimates."
+        },
+        {
+          "rank": 4,
+          "label": "Volkswagen Passat",
+          "note": "Lifetime automotive nameplate sales estimates."
+        },
+        {
+          "rank": 5,
+          "label": "Honda Civic",
+          "note": "Lifetime automotive nameplate sales estimates."
+        },
+        {
+          "rank": 6,
+          "label": "Toyota Camry",
+          "note": "Lifetime automotive nameplate sales estimates."
+        },
+        {
+          "rank": 7,
+          "label": "Ford Fiesta",
+          "note": "Lifetime automotive nameplate sales estimates."
+        },
+        {
+          "rank": 8,
+          "label": "Volkswagen Beetle",
+          "note": "Lifetime automotive nameplate sales estimates."
+        },
+        {
+          "rank": 9,
+          "label": "Toyota Hilux",
+          "note": "Lifetime automotive nameplate sales estimates."
+        },
+        {
+          "rank": 10,
+          "label": "Honda Accord",
+          "note": "Lifetime automotive nameplate sales estimates."
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "theme": "Technology",
+      "question": "What are the best-selling mobile phones in history?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Nokia 1100",
+          "note": "Historical mobile phone model sales estimates."
+        },
+        {
+          "rank": 2,
+          "label": "Nokia 1110",
+          "note": "Historical mobile phone model sales estimates."
+        },
+        {
+          "rank": 3,
+          "label": "iPhone 6 / 6 Plus",
+          "note": "Historical mobile phone model sales estimates."
+        },
+        {
+          "rank": 4,
+          "label": "Nokia 105",
+          "note": "Historical mobile phone model sales estimates."
+        },
+        {
+          "rank": 5,
+          "label": "iPhone 6S / 6S Plus",
+          "note": "Historical mobile phone model sales estimates."
+        },
+        {
+          "rank": 6,
+          "label": "iPhone 5S",
+          "note": "Historical mobile phone model sales estimates."
+        },
+        {
+          "rank": 7,
+          "label": "Nokia 3210",
+          "note": "Historical mobile phone model sales estimates."
+        },
+        {
+          "rank": 8,
+          "label": "iPhone 7 / 7 Plus",
+          "note": "Historical mobile phone model sales estimates."
+        },
+        {
+          "rank": 9,
+          "label": "iPhone 11",
+          "note": "Historical mobile phone model sales estimates."
+        },
+        {
+          "rank": 10,
+          "label": "iPhone XR",
+          "note": "Historical mobile phone model sales estimates."
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "theme": "Internet",
+      "question": "What are the most viewed YouTube videos in history?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Baby Shark Dance",
+          "note": "YouTube all-time views ranking; checked in 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Despacito",
+          "note": "YouTube all-time views ranking; checked in 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Johny Johny Yes Papa",
+          "note": "YouTube all-time views ranking; checked in 2026."
+        },
+        {
+          "rank": 4,
+          "label": "Bath Song",
+          "note": "YouTube all-time views ranking; checked in 2026."
+        },
+        {
+          "rank": 5,
+          "label": "Shape of You",
+          "note": "YouTube all-time views ranking; checked in 2026."
+        },
+        {
+          "rank": 6,
+          "label": "See You Again",
+          "note": "YouTube all-time views ranking; checked in 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Wheels on the Bus",
+          "note": "YouTube all-time views ranking; checked in 2026."
+        },
+        {
+          "rank": 8,
+          "label": "Phonics Song",
+          "note": "YouTube all-time views ranking; checked in 2026."
+        },
+        {
+          "rank": 9,
+          "label": "Uptown Funk",
+          "note": "YouTube all-time views ranking; checked in 2026."
+        },
+        {
+          "rank": 10,
+          "label": "Learning Colors",
+          "note": "YouTube all-time views ranking; checked in 2026."
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "theme": "Internet",
+      "question": "What are the YouTube channels with the most subscribers?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "MrBeast",
+          "note": "YouTube subscriber ranking; SocialBlade/Wikipedia, checked in 2026."
+        },
+        {
+          "rank": 2,
+          "label": "T-Series",
+          "note": "YouTube subscriber ranking; SocialBlade/Wikipedia, checked in 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Cocomelon",
+          "note": "YouTube subscriber ranking; SocialBlade/Wikipedia, checked in 2026."
+        },
+        {
+          "rank": 4,
+          "label": "SET India",
+          "note": "YouTube subscriber ranking; SocialBlade/Wikipedia, checked in 2026."
+        },
+        {
+          "rank": 5,
+          "label": "Vlad and Niki",
+          "note": "YouTube subscriber ranking; SocialBlade/Wikipedia, checked in 2026."
+        },
+        {
+          "rank": 6,
+          "label": "Kids Diana Show",
+          "note": "YouTube subscriber ranking; SocialBlade/Wikipedia, checked in 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Like Nastya",
+          "note": "YouTube subscriber ranking; SocialBlade/Wikipedia, checked in 2026."
+        },
+        {
+          "rank": 8,
+          "label": "Zee Music Company",
+          "note": "YouTube subscriber ranking; SocialBlade/Wikipedia, checked in 2026."
+        },
+        {
+          "rank": 9,
+          "label": "PewDiePie",
+          "note": "YouTube subscriber ranking; SocialBlade/Wikipedia, checked in 2026."
+        },
+        {
+          "rank": 10,
+          "label": "WWE",
+          "note": "YouTube subscriber ranking; SocialBlade/Wikipedia, checked in 2026."
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "theme": "Soccer",
+      "question": "Which national teams have the best record in men's World Cup finals?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Brazil",
+          "note": "Men's FIFA World Cup finals record; titles, then runner-up finishes."
+        },
+        {
+          "rank": 2,
+          "label": "Germany",
+          "note": "Men's FIFA World Cup finals record; titles, then runner-up finishes."
+        },
+        {
+          "rank": 3,
+          "label": "Italy",
+          "note": "Men's FIFA World Cup finals record; titles, then runner-up finishes."
+        },
+        {
+          "rank": 4,
+          "label": "Argentina",
+          "note": "Men's FIFA World Cup finals record; titles, then runner-up finishes."
+        },
+        {
+          "rank": 5,
+          "label": "France",
+          "note": "Men's FIFA World Cup finals record; titles, then runner-up finishes."
+        },
+        {
+          "rank": 6,
+          "label": "Uruguai",
+          "note": "Men's FIFA World Cup finals record; titles, then runner-up finishes."
+        },
+        {
+          "rank": 7,
+          "label": "Inglaterra",
+          "note": "Men's FIFA World Cup finals record; titles, then runner-up finishes."
+        },
+        {
+          "rank": 8,
+          "label": "Espanha",
+          "note": "Men's FIFA World Cup finals record; titles, then runner-up finishes."
+        },
+        {
+          "rank": 9,
+          "label": "Holanda",
+          "note": "Men's FIFA World Cup finals record; titles, then runner-up finishes."
+        },
+        {
+          "rank": 10,
+          "label": "Hungria",
+          "note": "Men's FIFA World Cup finals record; titles, then runner-up finishes."
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "theme": "Soccer",
+      "question": "Which clubs have won the most Copa Libertadores titles?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Independiente",
+          "note": "CONMEBOL Libertadores titles; ties ordered by historical criteria."
+        },
+        {
+          "rank": 2,
+          "label": "Boca Juniors",
+          "note": "CONMEBOL Libertadores titles; ties ordered by historical criteria."
+        },
+        {
+          "rank": 3,
+          "label": "Penarol",
+          "note": "CONMEBOL Libertadores titles; ties ordered by historical criteria."
+        },
+        {
+          "rank": 4,
+          "label": "River Plate",
+          "note": "CONMEBOL Libertadores titles; ties ordered by historical criteria."
+        },
+        {
+          "rank": 5,
+          "label": "Estudiantes",
+          "note": "CONMEBOL Libertadores titles; ties ordered by historical criteria."
+        },
+        {
+          "rank": 6,
+          "label": "Olimpia",
+          "note": "CONMEBOL Libertadores titles; ties ordered by historical criteria."
+        },
+        {
+          "rank": 7,
+          "label": "Nacional",
+          "note": "CONMEBOL Libertadores titles; ties ordered by historical criteria."
+        },
+        {
+          "rank": 8,
+          "label": "Sao Paulo",
+          "note": "CONMEBOL Libertadores titles; ties ordered by historical criteria."
+        },
+        {
+          "rank": 9,
+          "label": "Gremio",
+          "note": "CONMEBOL Libertadores titles; ties ordered by historical criteria."
+        },
+        {
+          "rank": 10,
+          "label": "Santos",
+          "note": "CONMEBOL Libertadores titles; ties ordered by historical criteria."
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "theme": "Soccer",
+      "question": "Which clubs have won the most men's Champions League titles?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Real Madrid",
+          "note": "UEFA Champions League/European Cup titles; checked through 2023-24."
+        },
+        {
+          "rank": 2,
+          "label": "Milan",
+          "note": "UEFA Champions League/European Cup titles; checked through 2023-24."
+        },
+        {
+          "rank": 3,
+          "label": "Bayern Munich",
+          "note": "UEFA Champions League/European Cup titles; checked through 2023-24."
+        },
+        {
+          "rank": 4,
+          "label": "Liverpool",
+          "note": "UEFA Champions League/European Cup titles; checked through 2023-24."
+        },
+        {
+          "rank": 5,
+          "label": "Barcelona",
+          "note": "UEFA Champions League/European Cup titles; checked through 2023-24."
+        },
+        {
+          "rank": 6,
+          "label": "Ajax",
+          "note": "UEFA Champions League/European Cup titles; checked through 2023-24."
+        },
+        {
+          "rank": 7,
+          "label": "Inter",
+          "note": "UEFA Champions League/European Cup titles; checked through 2023-24."
+        },
+        {
+          "rank": 8,
+          "label": "Manchester United",
+          "note": "UEFA Champions League/European Cup titles; checked through 2023-24."
+        },
+        {
+          "rank": 9,
+          "label": "Juventus",
+          "note": "UEFA Champions League/European Cup titles; checked through 2023-24."
+        },
+        {
+          "rank": 10,
+          "label": "Benfica",
+          "note": "UEFA Champions League/European Cup titles; checked through 2023-24."
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "theme": "Soccer",
+      "question": "Which clubs have won the most Brazilian Championship titles?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Palmeiras",
+          "note": "Brazilian national titles recognized by CBF through 2023."
+        },
+        {
+          "rank": 2,
+          "label": "Santos",
+          "note": "Brazilian national titles recognized by CBF through 2023."
+        },
+        {
+          "rank": 3,
+          "label": "Corinthians",
+          "note": "Brazilian national titles recognized by CBF through 2023."
+        },
+        {
+          "rank": 4,
+          "label": "Flamengo",
+          "note": "Brazilian national titles recognized by CBF through 2023."
+        },
+        {
+          "rank": 5,
+          "label": "Sao Paulo",
+          "note": "Brazilian national titles recognized by CBF through 2023."
+        },
+        {
+          "rank": 6,
+          "label": "Cruzeiro",
+          "note": "Brazilian national titles recognized by CBF through 2023."
+        },
+        {
+          "rank": 7,
+          "label": "Fluminense",
+          "note": "Brazilian national titles recognized by CBF through 2023."
+        },
+        {
+          "rank": 8,
+          "label": "Vasco",
+          "note": "Brazilian national titles recognized by CBF through 2023."
+        },
+        {
+          "rank": 9,
+          "label": "Internacional",
+          "note": "Brazilian national titles recognized by CBF through 2023."
+        },
+        {
+          "rank": 10,
+          "label": "Atletico-MG",
+          "note": "Brazilian national titles recognized by CBF through 2023."
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "theme": "Sports",
+      "question": "Which NBA teams have won the most titles?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Boston Celtics",
+          "note": "NBA titles through the 2023-24 season; NBA.com."
+        },
+        {
+          "rank": 2,
+          "label": "Los Angeles Lakers",
+          "note": "NBA titles through the 2023-24 season; NBA.com."
+        },
+        {
+          "rank": 3,
+          "label": "Golden State Warriors",
+          "note": "NBA titles through the 2023-24 season; NBA.com."
+        },
+        {
+          "rank": 4,
+          "label": "Chicago Bulls",
+          "note": "NBA titles through the 2023-24 season; NBA.com."
+        },
+        {
+          "rank": 5,
+          "label": "San Antonio Spurs",
+          "note": "NBA titles through the 2023-24 season; NBA.com."
+        },
+        {
+          "rank": 6,
+          "label": "Philadelphia 76ers",
+          "note": "NBA titles through the 2023-24 season; NBA.com."
+        },
+        {
+          "rank": 7,
+          "label": "Detroit Pistons",
+          "note": "NBA titles through the 2023-24 season; NBA.com."
+        },
+        {
+          "rank": 8,
+          "label": "Miami Heat",
+          "note": "NBA titles through the 2023-24 season; NBA.com."
+        },
+        {
+          "rank": 9,
+          "label": "Milwaukee Bucks",
+          "note": "NBA titles through the 2023-24 season; NBA.com."
+        },
+        {
+          "rank": 10,
+          "label": "New York Knicks",
+          "note": "NBA titles through the 2023-24 season; NBA.com."
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "theme": "Sports",
+      "question": "Which drivers have won the most Formula 1 world titles?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Lewis Hamilton",
+          "note": "Formula 1 drivers' world titles; FIA/F1, through 2024."
+        },
+        {
+          "rank": 2,
+          "label": "Michael Schumacher",
+          "note": "Formula 1 drivers' world titles; FIA/F1, through 2024."
+        },
+        {
+          "rank": 3,
+          "label": "Juan Manuel Fangio",
+          "note": "Formula 1 drivers' world titles; FIA/F1, through 2024."
+        },
+        {
+          "rank": 4,
+          "label": "Alain Prost",
+          "note": "Formula 1 drivers' world titles; FIA/F1, through 2024."
+        },
+        {
+          "rank": 5,
+          "label": "Sebastian Vettel",
+          "note": "Formula 1 drivers' world titles; FIA/F1, through 2024."
+        },
+        {
+          "rank": 6,
+          "label": "Max Verstappen",
+          "note": "Formula 1 drivers' world titles; FIA/F1, through 2024."
+        },
+        {
+          "rank": 7,
+          "label": "Jack Brabham",
+          "note": "Formula 1 drivers' world titles; FIA/F1, through 2024."
+        },
+        {
+          "rank": 8,
+          "label": "Jackie Stewart",
+          "note": "Formula 1 drivers' world titles; FIA/F1, through 2024."
+        },
+        {
+          "rank": 9,
+          "label": "Niki Lauda",
+          "note": "Formula 1 drivers' world titles; FIA/F1, through 2024."
+        },
+        {
+          "rank": 10,
+          "label": "Nelson Piquet",
+          "note": "Formula 1 drivers' world titles; FIA/F1, through 2024."
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "theme": "Sports",
+      "question": "Which men have won the most Grand Slam singles titles in tennis?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Novak Djokovic",
+          "note": "Men's Grand Slam singles titles; ATP/Grand Slam records, checked in 2026."
+        },
+        {
+          "rank": 2,
+          "label": "Rafael Nadal",
+          "note": "Men's Grand Slam singles titles; ATP/Grand Slam records, checked in 2026."
+        },
+        {
+          "rank": 3,
+          "label": "Roger Federer",
+          "note": "Men's Grand Slam singles titles; ATP/Grand Slam records, checked in 2026."
+        },
+        {
+          "rank": 4,
+          "label": "Pete Sampras",
+          "note": "Men's Grand Slam singles titles; ATP/Grand Slam records, checked in 2026."
+        },
+        {
+          "rank": 5,
+          "label": "Roy Emerson",
+          "note": "Men's Grand Slam singles titles; ATP/Grand Slam records, checked in 2026."
+        },
+        {
+          "rank": 6,
+          "label": "Bjorn Borg",
+          "note": "Men's Grand Slam singles titles; ATP/Grand Slam records, checked in 2026."
+        },
+        {
+          "rank": 7,
+          "label": "Rod Laver",
+          "note": "Men's Grand Slam singles titles; ATP/Grand Slam records, checked in 2026."
+        },
+        {
+          "rank": 8,
+          "label": "Bill Tilden",
+          "note": "Men's Grand Slam singles titles; ATP/Grand Slam records, checked in 2026."
+        },
+        {
+          "rank": 9,
+          "label": "Andre Agassi",
+          "note": "Men's Grand Slam singles titles; ATP/Grand Slam records, checked in 2026."
+        },
+        {
+          "rank": 10,
+          "label": "Jimmy Connors",
+          "note": "Men's Grand Slam singles titles; ATP/Grand Slam records, checked in 2026."
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "theme": "Sports",
+      "question": "Which countries have won the most Olympic gold medals in history?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "United States",
+          "note": "Historical Olympic gold medal table; Olympedia/IOC."
+        },
+        {
+          "rank": 2,
+          "label": "Soviet Union",
+          "note": "Historical Olympic gold medal table; Olympedia/IOC."
+        },
+        {
+          "rank": 3,
+          "label": "Germany",
+          "note": "Historical Olympic gold medal table; Olympedia/IOC."
+        },
+        {
+          "rank": 4,
+          "label": "China",
+          "note": "Historical Olympic gold medal table; Olympedia/IOC."
+        },
+        {
+          "rank": 5,
+          "label": "Great Britain",
+          "note": "Historical Olympic gold medal table; Olympedia/IOC."
+        },
+        {
+          "rank": 6,
+          "label": "France",
+          "note": "Historical Olympic gold medal table; Olympedia/IOC."
+        },
+        {
+          "rank": 7,
+          "label": "Italy",
+          "note": "Historical Olympic gold medal table; Olympedia/IOC."
+        },
+        {
+          "rank": 8,
+          "label": "Sweden",
+          "note": "Historical Olympic gold medal table; Olympedia/IOC."
+        },
+        {
+          "rank": 9,
+          "label": "Norway",
+          "note": "Historical Olympic gold medal table; Olympedia/IOC."
+        },
+        {
+          "rank": 10,
+          "label": "Russia",
+          "note": "Historical Olympic gold medal table; Olympedia/IOC."
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "theme": "Sports",
+      "question": "Who are the fastest men in the 100 meters?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Usain Bolt",
+          "note": "Men's 100 m best legal times; World Athletics."
+        },
+        {
+          "rank": 2,
+          "label": "Tyson Gay",
+          "note": "Men's 100 m best legal times; World Athletics."
+        },
+        {
+          "rank": 3,
+          "label": "Yohan Blake",
+          "note": "Men's 100 m best legal times; World Athletics."
+        },
+        {
+          "rank": 4,
+          "label": "Asafa Powell",
+          "note": "Men's 100 m best legal times; World Athletics."
+        },
+        {
+          "rank": 5,
+          "label": "Justin Gatlin",
+          "note": "Men's 100 m best legal times; World Athletics."
+        },
+        {
+          "rank": 6,
+          "label": "Christian Coleman",
+          "note": "Men's 100 m best legal times; World Athletics."
+        },
+        {
+          "rank": 7,
+          "label": "Trayvon Bromell",
+          "note": "Men's 100 m best legal times; World Athletics."
+        },
+        {
+          "rank": 8,
+          "label": "Fred Kerley",
+          "note": "Men's 100 m best legal times; World Athletics."
+        },
+        {
+          "rank": 9,
+          "label": "Ferdinand Omanyala",
+          "note": "Men's 100 m best legal times; World Athletics."
+        },
+        {
+          "rank": 10,
+          "label": "Nesta Carter",
+          "note": "Men's 100 m best legal times; World Athletics."
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "theme": "Animals",
+      "question": "What are the fastest animals in the world?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Peregrine falcon",
+          "note": "Animal speed records and zoological lists; maximum reported speeds."
+        },
+        {
+          "rank": 2,
+          "label": "Golden eagle",
+          "note": "Animal speed records and zoological lists; maximum reported speeds."
+        },
+        {
+          "rank": 3,
+          "label": "Gyrfalcon",
+          "note": "Animal speed records and zoological lists; maximum reported speeds."
+        },
+        {
+          "rank": 4,
+          "label": "White-throated needletail",
+          "note": "Animal speed records and zoological lists; maximum reported speeds."
+        },
+        {
+          "rank": 5,
+          "label": "Eurasian hobby",
+          "note": "Animal speed records and zoological lists; maximum reported speeds."
+        },
+        {
+          "rank": 6,
+          "label": "Mexican free-tailed bat",
+          "note": "Animal speed records and zoological lists; maximum reported speeds."
+        },
+        {
+          "rank": 7,
+          "label": "Frigatebird",
+          "note": "Animal speed records and zoological lists; maximum reported speeds."
+        },
+        {
+          "rank": 8,
+          "label": "Homing pigeon",
+          "note": "Animal speed records and zoological lists; maximum reported speeds."
+        },
+        {
+          "rank": 9,
+          "label": "Spur-winged goose",
+          "note": "Animal speed records and zoological lists; maximum reported speeds."
+        },
+        {
+          "rank": 10,
+          "label": "Black marlin",
+          "note": "Animal speed records and zoological lists; maximum reported speeds."
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "theme": "Animals",
+      "question": "What are the heaviest living animals?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Blue whale",
+          "note": "Largest living animals by estimated maximum mass."
+        },
+        {
+          "rank": 2,
+          "label": "North Pacific right whale",
+          "note": "Largest living animals by estimated maximum mass."
+        },
+        {
+          "rank": 3,
+          "label": "Fin whale",
+          "note": "Largest living animals by estimated maximum mass."
+        },
+        {
+          "rank": 4,
+          "label": "Sperm whale",
+          "note": "Largest living animals by estimated maximum mass."
+        },
+        {
+          "rank": 5,
+          "label": "Bowhead whale",
+          "note": "Largest living animals by estimated maximum mass."
+        },
+        {
+          "rank": 6,
+          "label": "Humpback whale",
+          "note": "Largest living animals by estimated maximum mass."
+        },
+        {
+          "rank": 7,
+          "label": "Whale shark",
+          "note": "Largest living animals by estimated maximum mass."
+        },
+        {
+          "rank": 8,
+          "label": "African elephant",
+          "note": "Largest living animals by estimated maximum mass."
+        },
+        {
+          "rank": 9,
+          "label": "Southern elephant seal",
+          "note": "Largest living animals by estimated maximum mass."
+        },
+        {
+          "rank": 10,
+          "label": "White rhinoceros",
+          "note": "Largest living animals by estimated maximum mass."
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "theme": "Animals",
+      "question": "What are the largest living cats?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Tiger",
+          "note": "Largest living cat species by average and maximum mass."
+        },
+        {
+          "rank": 2,
+          "label": "Lion",
+          "note": "Largest living cat species by average and maximum mass."
+        },
+        {
+          "rank": 3,
+          "label": "Jaguar",
+          "note": "Largest living cat species by average and maximum mass."
+        },
+        {
+          "rank": 4,
+          "label": "Cougar",
+          "note": "Largest living cat species by average and maximum mass."
+        },
+        {
+          "rank": 5,
+          "label": "Leopard",
+          "note": "Largest living cat species by average and maximum mass."
+        },
+        {
+          "rank": 6,
+          "label": "Snow leopard",
+          "note": "Largest living cat species by average and maximum mass."
+        },
+        {
+          "rank": 7,
+          "label": "Cheetah",
+          "note": "Largest living cat species by average and maximum mass."
+        },
+        {
+          "rank": 8,
+          "label": "Eurasian lynx",
+          "note": "Largest living cat species by average and maximum mass."
+        },
+        {
+          "rank": 9,
+          "label": "Clouded leopard",
+          "note": "Largest living cat species by average and maximum mass."
+        },
+        {
+          "rank": 10,
+          "label": "Caracal",
+          "note": "Largest living cat species by average and maximum mass."
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "theme": "Nature",
+      "question": "What are the highest mountains in the world?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Everest",
+          "note": "Mountain elevation above sea level; accepted Himalayan measurements."
+        },
+        {
+          "rank": 2,
+          "label": "K2",
+          "note": "Mountain elevation above sea level; accepted Himalayan measurements."
+        },
+        {
+          "rank": 3,
+          "label": "Kangchenjunga",
+          "note": "Mountain elevation above sea level; accepted Himalayan measurements."
+        },
+        {
+          "rank": 4,
+          "label": "Lhotse",
+          "note": "Mountain elevation above sea level; accepted Himalayan measurements."
+        },
+        {
+          "rank": 5,
+          "label": "Makalu",
+          "note": "Mountain elevation above sea level; accepted Himalayan measurements."
+        },
+        {
+          "rank": 6,
+          "label": "Cho Oyu",
+          "note": "Mountain elevation above sea level; accepted Himalayan measurements."
+        },
+        {
+          "rank": 7,
+          "label": "Dhaulagiri I",
+          "note": "Mountain elevation above sea level; accepted Himalayan measurements."
+        },
+        {
+          "rank": 8,
+          "label": "Manaslu",
+          "note": "Mountain elevation above sea level; accepted Himalayan measurements."
+        },
+        {
+          "rank": 9,
+          "label": "Nanga Parbat",
+          "note": "Mountain elevation above sea level; accepted Himalayan measurements."
+        },
+        {
+          "rank": 10,
+          "label": "Annapurna I",
+          "note": "Mountain elevation above sea level; accepted Himalayan measurements."
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "theme": "Nature",
+      "question": "What are the longest rivers in the world?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Nile",
+          "note": "Traditional longest-river rankings; source criteria can vary."
+        },
+        {
+          "rank": 2,
+          "label": "Amazon",
+          "note": "Traditional longest-river rankings; source criteria can vary."
+        },
+        {
+          "rank": 3,
+          "label": "Yangtze",
+          "note": "Traditional longest-river rankings; source criteria can vary."
+        },
+        {
+          "rank": 4,
+          "label": "Mississippi-Missouri",
+          "note": "Traditional longest-river rankings; source criteria can vary."
+        },
+        {
+          "rank": 5,
+          "label": "Yenisei",
+          "note": "Traditional longest-river rankings; source criteria can vary."
+        },
+        {
+          "rank": 6,
+          "label": "Yellow River",
+          "note": "Traditional longest-river rankings; source criteria can vary."
+        },
+        {
+          "rank": 7,
+          "label": "Ob-Irtysh",
+          "note": "Traditional longest-river rankings; source criteria can vary."
+        },
+        {
+          "rank": 8,
+          "label": "Parana",
+          "note": "Traditional longest-river rankings; source criteria can vary."
+        },
+        {
+          "rank": 9,
+          "label": "Congo",
+          "note": "Traditional longest-river rankings; source criteria can vary."
+        },
+        {
+          "rank": 10,
+          "label": "Amur",
+          "note": "Traditional longest-river rankings; source criteria can vary."
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "theme": "Space",
+      "question": "What are the largest moons in the Solar System?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Ganimedes",
+          "note": "Moon diameters in the Solar System; NASA/astronomy references."
+        },
+        {
+          "rank": 2,
+          "label": "Titan",
+          "note": "Moon diameters in the Solar System; NASA/astronomy references."
+        },
+        {
+          "rank": 3,
+          "label": "Calisto",
+          "note": "Moon diameters in the Solar System; NASA/astronomy references."
+        },
+        {
+          "rank": 4,
+          "label": "Io",
+          "note": "Moon diameters in the Solar System; NASA/astronomy references."
+        },
+        {
+          "rank": 5,
+          "label": "Moon",
+          "note": "Moon diameters in the Solar System; NASA/astronomy references."
+        },
+        {
+          "rank": 6,
+          "label": "Europa",
+          "note": "Moon diameters in the Solar System; NASA/astronomy references."
+        },
+        {
+          "rank": 7,
+          "label": "Triton",
+          "note": "Moon diameters in the Solar System; NASA/astronomy references."
+        },
+        {
+          "rank": 8,
+          "label": "Titania",
+          "note": "Moon diameters in the Solar System; NASA/astronomy references."
+        },
+        {
+          "rank": 9,
+          "label": "Rhea",
+          "note": "Moon diameters in the Solar System; NASA/astronomy references."
+        },
+        {
+          "rank": 10,
+          "label": "Oberon",
+          "note": "Moon diameters in the Solar System; NASA/astronomy references."
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "theme": "Space",
+      "question": "What are the largest planets and dwarf planets by diameter?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Jupiter",
+          "note": "Mean diameters of planets and dwarf planets; NASA/IAU."
+        },
+        {
+          "rank": 2,
+          "label": "Saturn",
+          "note": "Mean diameters of planets and dwarf planets; NASA/IAU."
+        },
+        {
+          "rank": 3,
+          "label": "Uranus",
+          "note": "Mean diameters of planets and dwarf planets; NASA/IAU."
+        },
+        {
+          "rank": 4,
+          "label": "Neptune",
+          "note": "Mean diameters of planets and dwarf planets; NASA/IAU."
+        },
+        {
+          "rank": 5,
+          "label": "Earth",
+          "note": "Mean diameters of planets and dwarf planets; NASA/IAU."
+        },
+        {
+          "rank": 6,
+          "label": "Venus",
+          "note": "Mean diameters of planets and dwarf planets; NASA/IAU."
+        },
+        {
+          "rank": 7,
+          "label": "Mars",
+          "note": "Mean diameters of planets and dwarf planets; NASA/IAU."
+        },
+        {
+          "rank": 8,
+          "label": "Mercury",
+          "note": "Mean diameters of planets and dwarf planets; NASA/IAU."
+        },
+        {
+          "rank": 9,
+          "label": "Pluto",
+          "note": "Mean diameters of planets and dwarf planets; NASA/IAU."
+        },
+        {
+          "rank": 10,
+          "label": "Eris",
+          "note": "Mean diameters of planets and dwarf planets; NASA/IAU."
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "theme": "Food",
+      "question": "What are the largest coffee-producing countries in the world?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Brazil",
+          "note": "Recent coffee production rankings; ICO/USDA/FAO."
+        },
+        {
+          "rank": 2,
+          "label": "Vietnam",
+          "note": "Recent coffee production rankings; ICO/USDA/FAO."
+        },
+        {
+          "rank": 3,
+          "label": "Colombia",
+          "note": "Recent coffee production rankings; ICO/USDA/FAO."
+        },
+        {
+          "rank": 4,
+          "label": "Indonesia",
+          "note": "Recent coffee production rankings; ICO/USDA/FAO."
+        },
+        {
+          "rank": 5,
+          "label": "Ethiopia",
+          "note": "Recent coffee production rankings; ICO/USDA/FAO."
+        },
+        {
+          "rank": 6,
+          "label": "Honduras",
+          "note": "Recent coffee production rankings; ICO/USDA/FAO."
+        },
+        {
+          "rank": 7,
+          "label": "Uganda",
+          "note": "Recent coffee production rankings; ICO/USDA/FAO."
+        },
+        {
+          "rank": 8,
+          "label": "India",
+          "note": "Recent coffee production rankings; ICO/USDA/FAO."
+        },
+        {
+          "rank": 9,
+          "label": "Peru",
+          "note": "Recent coffee production rankings; ICO/USDA/FAO."
+        },
+        {
+          "rank": 10,
+          "label": "Mexico",
+          "note": "Recent coffee production rankings; ICO/USDA/FAO."
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "theme": "Food",
+      "question": "What are the largest cocoa-producing countries in the world?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Ivory Coast",
+          "note": "Recent cocoa production rankings; FAO/ICCO."
+        },
+        {
+          "rank": 2,
+          "label": "Ghana",
+          "note": "Recent cocoa production rankings; FAO/ICCO."
+        },
+        {
+          "rank": 3,
+          "label": "Ecuador",
+          "note": "Recent cocoa production rankings; FAO/ICCO."
+        },
+        {
+          "rank": 4,
+          "label": "Cameroon",
+          "note": "Recent cocoa production rankings; FAO/ICCO."
+        },
+        {
+          "rank": 5,
+          "label": "Nigeria",
+          "note": "Recent cocoa production rankings; FAO/ICCO."
+        },
+        {
+          "rank": 6,
+          "label": "Brazil",
+          "note": "Recent cocoa production rankings; FAO/ICCO."
+        },
+        {
+          "rank": 7,
+          "label": "Indonesia",
+          "note": "Recent cocoa production rankings; FAO/ICCO."
+        },
+        {
+          "rank": 8,
+          "label": "Peru",
+          "note": "Recent cocoa production rankings; FAO/ICCO."
+        },
+        {
+          "rank": 9,
+          "label": "Dominican Republic",
+          "note": "Recent cocoa production rankings; FAO/ICCO."
+        },
+        {
+          "rank": 10,
+          "label": "Colombia",
+          "note": "Recent cocoa production rankings; FAO/ICCO."
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "theme": "Internet",
+      "question": "What were the most used emojis in the world?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Face with tears of joy",
+          "note": "Unicode Emoji Frequency ranking 2021."
+        },
+        {
+          "rank": 2,
+          "label": "Red heart",
+          "note": "Unicode Emoji Frequency ranking 2021."
+        },
+        {
+          "rank": 3,
+          "label": "Rolling on the floor laughing",
+          "note": "Unicode Emoji Frequency ranking 2021."
+        },
+        {
+          "rank": 4,
+          "label": "Thumbs up",
+          "note": "Unicode Emoji Frequency ranking 2021."
+        },
+        {
+          "rank": 5,
+          "label": "Crying face",
+          "note": "Unicode Emoji Frequency ranking 2021."
+        },
+        {
+          "rank": 6,
+          "label": "Folded hands",
+          "note": "Unicode Emoji Frequency ranking 2021."
+        },
+        {
+          "rank": 7,
+          "label": "Face blowing a kiss",
+          "note": "Unicode Emoji Frequency ranking 2021."
+        },
+        {
+          "rank": 8,
+          "label": "Smiling face with hearts",
+          "note": "Unicode Emoji Frequency ranking 2021."
+        },
+        {
+          "rank": 9,
+          "label": "Smiling face with heart-eyes",
+          "note": "Unicode Emoji Frequency ranking 2021."
+        },
+        {
+          "rank": 10,
+          "label": "Smiling face",
+          "note": "Unicode Emoji Frequency ranking 2021."
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "theme": "Nature",
+      "question": "Which countries have the largest forest area?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Russia",
+          "note": "Forest area by country; FAO Global Forest Resources Assessment 2025."
+        },
+        {
+          "rank": 2,
+          "label": "Brazil",
+          "note": "Forest area by country; FAO Global Forest Resources Assessment 2025."
+        },
+        {
+          "rank": 3,
+          "label": "Canada",
+          "note": "Forest area by country; FAO Global Forest Resources Assessment 2025."
+        },
+        {
+          "rank": 4,
+          "label": "United States",
+          "note": "Forest area by country; FAO Global Forest Resources Assessment 2025."
+        },
+        {
+          "rank": 5,
+          "label": "China",
+          "note": "Forest area by country; FAO Global Forest Resources Assessment 2025."
+        },
+        {
+          "rank": 6,
+          "label": "Australia",
+          "note": "Forest area by country; FAO Global Forest Resources Assessment 2025."
+        },
+        {
+          "rank": 7,
+          "label": "DR Congo",
+          "note": "Forest area by country; FAO Global Forest Resources Assessment 2025."
+        },
+        {
+          "rank": 8,
+          "label": "Indonesia",
+          "note": "Forest area by country; FAO Global Forest Resources Assessment 2025."
+        },
+        {
+          "rank": 9,
+          "label": "Peru",
+          "note": "Forest area by country; FAO Global Forest Resources Assessment 2025."
+        },
+        {
+          "rank": 10,
+          "label": "India",
+          "note": "Forest area by country; FAO Global Forest Resources Assessment 2025."
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "theme": "World",
+      "question": "What are the largest islands in the world?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Greenland",
+          "note": "Island area rankings; excludes continental landmasses."
+        },
+        {
+          "rank": 2,
+          "label": "New Guinea",
+          "note": "Island area rankings; excludes continental landmasses."
+        },
+        {
+          "rank": 3,
+          "label": "Borneo",
+          "note": "Island area rankings; excludes continental landmasses."
+        },
+        {
+          "rank": 4,
+          "label": "Madagascar",
+          "note": "Island area rankings; excludes continental landmasses."
+        },
+        {
+          "rank": 5,
+          "label": "Baffin Island",
+          "note": "Island area rankings; excludes continental landmasses."
+        },
+        {
+          "rank": 6,
+          "label": "Sumatra",
+          "note": "Island area rankings; excludes continental landmasses."
+        },
+        {
+          "rank": 7,
+          "label": "Honshu",
+          "note": "Island area rankings; excludes continental landmasses."
+        },
+        {
+          "rank": 8,
+          "label": "Victoria Island",
+          "note": "Island area rankings; excludes continental landmasses."
+        },
+        {
+          "rank": 9,
+          "label": "Great Britain",
+          "note": "Island area rankings; excludes continental landmasses."
+        },
+        {
+          "rank": 10,
+          "label": "Ellesmere Island",
+          "note": "Island area rankings; excludes continental landmasses."
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "theme": "Nature",
+      "question": "What are the largest deserts in the world?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Antarctic Desert",
+          "note": "Desert area rankings, including polar deserts."
+        },
+        {
+          "rank": 2,
+          "label": "Arctic Desert",
+          "note": "Desert area rankings, including polar deserts."
+        },
+        {
+          "rank": 3,
+          "label": "Sahara",
+          "note": "Desert area rankings, including polar deserts."
+        },
+        {
+          "rank": 4,
+          "label": "Arabian Desert",
+          "note": "Desert area rankings, including polar deserts."
+        },
+        {
+          "rank": 5,
+          "label": "Gobi",
+          "note": "Desert area rankings, including polar deserts."
+        },
+        {
+          "rank": 6,
+          "label": "Kalahari",
+          "note": "Desert area rankings, including polar deserts."
+        },
+        {
+          "rank": 7,
+          "label": "Great Victoria Desert",
+          "note": "Desert area rankings, including polar deserts."
+        },
+        {
+          "rank": 8,
+          "label": "Patagonian Desert",
+          "note": "Desert area rankings, including polar deserts."
+        },
+        {
+          "rank": 9,
+          "label": "Syrian Desert",
+          "note": "Desert area rankings, including polar deserts."
+        },
+        {
+          "rank": 10,
+          "label": "Great Basin",
+          "note": "Desert area rankings, including polar deserts."
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "theme": "Architecture",
+      "question": "What are the tallest buildings in the world?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Burj Khalifa",
+          "note": "Completed building heights; CTBUH."
+        },
+        {
+          "rank": 2,
+          "label": "Merdeka 118",
+          "note": "Completed building heights; CTBUH."
+        },
+        {
+          "rank": 3,
+          "label": "Shanghai Tower",
+          "note": "Completed building heights; CTBUH."
+        },
+        {
+          "rank": 4,
+          "label": "Makkah Clock Tower",
+          "note": "Completed building heights; CTBUH."
+        },
+        {
+          "rank": 5,
+          "label": "Ping An Finance Center",
+          "note": "Completed building heights; CTBUH."
+        },
+        {
+          "rank": 6,
+          "label": "Lotte World Tower",
+          "note": "Completed building heights; CTBUH."
+        },
+        {
+          "rank": 7,
+          "label": "One World Trade Center",
+          "note": "Completed building heights; CTBUH."
+        },
+        {
+          "rank": 8,
+          "label": "Guangzhou CTF",
+          "note": "Completed building heights; CTBUH."
+        },
+        {
+          "rank": 9,
+          "label": "Tianjin CTF",
+          "note": "Completed building heights; CTBUH."
+        },
+        {
+          "rank": 10,
+          "label": "CITIC Tower",
+          "note": "Completed building heights; CTBUH."
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "theme": "Sports",
+      "question": "What are the largest stadiums in the world by capacity?",
+      "answers": [
+        {
+          "rank": 1,
+          "label": "Narendra Modi Stadium",
+          "note": "Stadium capacity rankings; reported capacities can vary."
+        },
+        {
+          "rank": 2,
+          "label": "Rungrado 1st of May",
+          "note": "Stadium capacity rankings; reported capacities can vary."
+        },
+        {
+          "rank": 3,
+          "label": "Michigan Stadium",
+          "note": "Stadium capacity rankings; reported capacities can vary."
+        },
+        {
+          "rank": 4,
+          "label": "Beaver Stadium",
+          "note": "Stadium capacity rankings; reported capacities can vary."
+        },
+        {
+          "rank": 5,
+          "label": "Ohio Stadium",
+          "note": "Stadium capacity rankings; reported capacities can vary."
+        },
+        {
+          "rank": 6,
+          "label": "Kyle Field",
+          "note": "Stadium capacity rankings; reported capacities can vary."
+        },
+        {
+          "rank": 7,
+          "label": "Tiger Stadium",
+          "note": "Stadium capacity rankings; reported capacities can vary."
+        },
+        {
+          "rank": 8,
+          "label": "Neyland Stadium",
+          "note": "Stadium capacity rankings; reported capacities can vary."
+        },
+        {
+          "rank": 9,
+          "label": "Darrell K Royal-Texas",
+          "note": "Stadium capacity rankings; reported capacities can vary."
+        },
+        {
+          "rank": 10,
+          "label": "Bryant-Denny Stadium",
+          "note": "Stadium capacity rankings; reported capacities can vary."
+        }
       ]
     }
   ]

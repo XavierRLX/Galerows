@@ -6,7 +6,12 @@ import { GameCard } from './GameCard'
 import { HubHeader } from './HubHeader'
 import { HubNativeAdCard } from './HubNativeAdCard'
 
-const orderedGames = [...gamesRegistry].sort((a, b) => Number(b.status === 'available') - Number(a.status === 'available'))
+const featuredGameId = 'cidade-dorme'
+const orderedGames = [...gamesRegistry].sort((a, b) => {
+  if (a.id === featuredGameId) return -1
+  if (b.id === featuredGameId) return 1
+  return Number(b.status === 'available') - Number(a.status === 'available')
+})
 
 export function HubScreen() {
   const { t } = useTranslation('hub')
@@ -18,8 +23,8 @@ export function HubScreen() {
       <section className="px-5" aria-label={t('gamesTitle')}>
         <h2 className="mb-4 text-2xl font-black tracking-tight text-white">{t('gamesTitle')}</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          {orderedGames.map((game) => (
-            <GameCard game={game} key={game.id} />
+          {orderedGames.map((game, index) => (
+            <GameCard badgeLabel={game.id === featuredGameId ? t('featuredBadge') : undefined} game={game} key={game.id} revealIndex={index} />
           )).flatMap((card, index) => (
             canDisplayAds() && !isPremium && (index + 1) % 3 === 0 && index < orderedGames.length - 1
               ? [card, <HubNativeAdCard key={`hub-native-ad-${index}`} />]

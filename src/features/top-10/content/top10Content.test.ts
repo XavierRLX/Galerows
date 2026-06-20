@@ -8,7 +8,7 @@ describe('Top 10 content', () => {
     expect(decks).toHaveLength(3)
     expect(decks.every((deck) => validateTop10Deck(deck, deck.locale).valid)).toBe(true)
     expect(validateDeckParity(decks)).toEqual({ valid: true, errors: [] })
-    expect(decks[0].cards).toHaveLength(3)
+    expect(decks[0].cards).toHaveLength(50)
     expect(decks[0].cards.every((card) => card.answers.length === 10)).toBe(true)
   })
 
