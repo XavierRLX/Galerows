@@ -123,11 +123,13 @@ const defaultTheme = {
 
 type GameCardProps = {
   game: GameModule
+  badgeLabels?: string[]
   badgeLabel?: string
+  onOpenGame?: (gameId: string) => Promise<void> | void
   revealIndex?: number
 }
 
-export function GameCard({ game, badgeLabel, revealIndex = 0 }: GameCardProps) {
+export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLabel] : [], onOpenGame, revealIndex = 0 }: GameCardProps) {
   const { t } = useTranslation('hub')
   const navigate = useNavigate()
   const { showFakeAd } = useFakeAd()
@@ -155,7 +157,17 @@ export function GameCard({ game, badgeLabel, revealIndex = 0 }: GameCardProps) {
     boxShadow: depthShadow,
     transitionDelay: revealDelayActive ? `${revealDelay}ms` : '0ms',
   }
-  const openGame = async () => { if (!available) return; await AppHaptics.light(); await showFakeAd({ placement: 'hub-play' }); navigate(game.route) }
+  const openGame = async () => {
+    if (!available) return
+    await AppHaptics.light()
+    await showFakeAd({ placement: 'hub-play' })
+    try {
+      await onOpenGame?.(game.id)
+    } catch {
+      // Usage metrics should never block opening a game.
+    }
+    navigate(game.route)
+  }
 
   useEffect(() => {
     const node = cardRef.current
@@ -213,10 +225,12 @@ export function GameCard({ game, badgeLabel, revealIndex = 0 }: GameCardProps) {
               <div className={cn('rounded-2xl border p-3 shadow-lg backdrop-blur', available ? theme.icon : 'border-white/10 bg-white/10 text-slate-300')}>
                 <GameIcon name={game.iconName} />
               </div>
-              <div className="flex items-center gap-2">
-                {badgeLabel ? <span className="rounded-full border border-blue-200/25 bg-blue-200/12 px-3 py-1 text-[0.68rem] font-black uppercase tracking-[0.16em] text-blue-100 shadow-sm backdrop-blur">
-                  {badgeLabel}
-                </span> : null}
+              <div className="flex flex-wrap items-center justify-end gap-2">
+                {badgeLabels.map((label) => (
+                  <span className="rounded-full border border-blue-200/25 bg-blue-200/12 px-3 py-1 text-[0.68rem] font-black uppercase tracking-[0.16em] text-blue-100 shadow-sm backdrop-blur" key={label}>
+                    {label}
+                  </span>
+                ))}
                 {!available ? <GameStatusBadge status={game.status} /> : null}
                 <Button
                   aria-label={t('howToPlay', { name })}

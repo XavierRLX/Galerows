@@ -9,6 +9,7 @@ export const STORAGE_KEYS = {
   tabooOpeningHistory: 'galerows.games.taboo.opening-history',
   mimicaSession: 'galerows.games.mimica.session',
   mimicaOpeningHistory: 'galerows.games.mimica.opening-history',
+  gameUsage: 'galerows.games.usage',
   top10Session: 'galerows.games.top-10.session',
   quemSouEuSession: 'galerows.games.quem-sou-eu.session',
   adedonhaSession: 'galerows.games.adedonha.session',

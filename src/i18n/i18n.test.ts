@@ -12,6 +12,8 @@ describe('i18n', () => {
       expect(i18n.t('games.impostor-da-palavra.name', { ns: 'hub' })).toBeTruthy()
       expect(i18n.t('name', { ns: 'cidade-dorme' })).toBeTruthy()
       expect(i18n.t('roles.killer.name', { ns: 'cidade-dorme' })).toBeTruthy()
+      expect(i18n.t('name', { ns: 'adedonha' })).toBeTruthy()
+      expect(i18n.t('categories.defaults.0', { ns: 'adedonha' })).toBeTruthy()
       expect(i18n.t('name', { ns: 'impostor-da-palavra' })).toBeTruthy()
       expect(i18n.t('name', { ns: 'quem-sou-eu' })).toBeTruthy()
     }

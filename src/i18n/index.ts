@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next'
 import { LocalPreferences } from '../lib/capacitor/preferences'
 import { STORAGE_KEYS } from '../lib/storage/storage.keys'
 import enCommon from './locales/en-US/common.json'
+import enAdedonha from './locales/en-US/adedonha.json'
 import enHub from './locales/en-US/hub.json'
 import enCidadeDorme from './locales/en-US/cidade-dorme.json'
 import enImpostorDaPalavra from './locales/en-US/impostor-da-palavra.json'
@@ -12,6 +13,7 @@ import enQuemSouEu from './locales/en-US/quem-sou-eu.json'
 import enTaboo from './locales/en-US/taboo.json'
 import enTop10 from './locales/en-US/top-10.json'
 import esCommon from './locales/es-419/common.json'
+import esAdedonha from './locales/es-419/adedonha.json'
 import esHub from './locales/es-419/hub.json'
 import esCidadeDorme from './locales/es-419/cidade-dorme.json'
 import esImpostorDaPalavra from './locales/es-419/impostor-da-palavra.json'
@@ -21,6 +23,7 @@ import esQuemSouEu from './locales/es-419/quem-sou-eu.json'
 import esTaboo from './locales/es-419/taboo.json'
 import esTop10 from './locales/es-419/top-10.json'
 import ptCommon from './locales/pt-BR/common.json'
+import ptAdedonha from './locales/pt-BR/adedonha.json'
 import ptHub from './locales/pt-BR/hub.json'
 import ptCidadeDorme from './locales/pt-BR/cidade-dorme.json'
 import ptImpostorDaPalavra from './locales/pt-BR/impostor-da-palavra.json'
@@ -33,9 +36,9 @@ import ptTop10 from './locales/pt-BR/top-10.json'
 export const supportedLocales = ['pt-BR', 'en-US', 'es-419'] as const
 export type SupportedLocale = (typeof supportedLocales)[number]
 const resources = {
-  'pt-BR': { common: ptCommon, hub: ptHub, 'cidade-dorme': ptCidadeDorme, 'nem-ferrando': ptNemFerrando, 'impostor-da-palavra': ptImpostorDaPalavra, taboo: ptTaboo, mimica: ptMimica, 'quem-sou-eu': ptQuemSouEu, 'top-10': ptTop10 },
-  'en-US': { common: enCommon, hub: enHub, 'cidade-dorme': enCidadeDorme, 'nem-ferrando': enNemFerrando, 'impostor-da-palavra': enImpostorDaPalavra, taboo: enTaboo, mimica: enMimica, 'quem-sou-eu': enQuemSouEu, 'top-10': enTop10 },
-  'es-419': { common: esCommon, hub: esHub, 'cidade-dorme': esCidadeDorme, 'nem-ferrando': esNemFerrando, 'impostor-da-palavra': esImpostorDaPalavra, taboo: esTaboo, mimica: esMimica, 'quem-sou-eu': esQuemSouEu, 'top-10': esTop10 },
+  'pt-BR': { common: ptCommon, hub: ptHub, adedonha: ptAdedonha, 'cidade-dorme': ptCidadeDorme, 'nem-ferrando': ptNemFerrando, 'impostor-da-palavra': ptImpostorDaPalavra, taboo: ptTaboo, mimica: ptMimica, 'quem-sou-eu': ptQuemSouEu, 'top-10': ptTop10 },
+  'en-US': { common: enCommon, hub: enHub, adedonha: enAdedonha, 'cidade-dorme': enCidadeDorme, 'nem-ferrando': enNemFerrando, 'impostor-da-palavra': enImpostorDaPalavra, taboo: enTaboo, mimica: enMimica, 'quem-sou-eu': enQuemSouEu, 'top-10': enTop10 },
+  'es-419': { common: esCommon, hub: esHub, adedonha: esAdedonha, 'cidade-dorme': esCidadeDorme, 'nem-ferrando': esNemFerrando, 'impostor-da-palavra': esImpostorDaPalavra, taboo: esTaboo, mimica: esMimica, 'quem-sou-eu': esQuemSouEu, 'top-10': esTop10 },
 }
 function isSupportedLocale(value: unknown): value is SupportedLocale { return typeof value === 'string' && supportedLocales.includes(value as SupportedLocale) }
 
