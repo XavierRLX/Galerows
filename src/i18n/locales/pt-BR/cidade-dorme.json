@@ -64,7 +64,7 @@
       "Escolha os jogadores e configure os papéis especiais.",
       "Passe o celular para cada pessoa ver a própria função em segredo.",
       "Depois das revelações, o mediador guia a noite e mantém as ações secretas.",
-      "Durante o dia, registre a votação no app e avance até a condição de vitória."
+      "Durante o dia, conduza a votação presencialmente e marque no app quem saiu ou se houve empate."
     ]
   },
   "setup": {
@@ -95,23 +95,17 @@
     "rulesTitle": "Regras",
     "revealRoleOnDeath": "Revelar função ao morrer",
     "revealRoleOnDeathHint": "Ajuda grupos iniciantes a entenderem a partida.",
-    "allowSkipVote": "Permitir pular votação",
-    "allowSkipVoteHint": "Permite a cidade não eliminar ninguém.",
     "doctorCanSelfProtect": "Médico pode se proteger",
-    "doctorCanSelfProtectHint": "Se desligado, o Médico precisa escolher outra pessoa.",
+    "doctorCanSelfProtectHint": "Se ligado, defina quantas vezes o Médico pode se curar na partida.",
+    "doctorSelfProtectLimitTitle": "Quantidade de autocuras",
+    "doctorSelfProtectLimits": {
+      "1": "1 vez",
+      "2": "2 vezes",
+      "3": "3 vezes",
+      "unlimited": "Sem limites"
+    },
     "doctorCanRepeatProtection": "Médico pode repetir proteção",
     "doctorCanRepeatProtectionHint": "Se desligado, não pode proteger a mesma pessoa em noites seguidas.",
-    "tieRuleTitle": "Empate na votação",
-    "tieRules": {
-      "noElimination": "Sem eliminação",
-      "revoteTied": "Nova votação",
-      "mediatorDecision": "Mediador decide"
-    },
-    "jesterWinTitle": "Vitória do Coringa",
-    "jesterWin": {
-      "instant": "Encerra",
-      "parallel": "Paralela"
-    },
     "start": "Sortear papéis"
   },
   "play": {
@@ -140,32 +134,61 @@
   "killerTurn": {
     "title": "Assassinos acordam",
     "description": "Peça para os Assassinos abrirem os olhos em silêncio e apontarem uma vítima.",
+    "wakeScript": "Assassino, acorde e escolha alguém para matar.",
+    "sleepScript": "Depois da escolha, diga: Assassino, durma.",
+    "actorsTitle": "Assassinos vivos",
+    "actorTitle": "Quem está agindo?",
+    "singleActor": "Assassino: {{name}}",
     "targetTitle": "Vítima da noite",
-    "targetHint": "Escolha apenas pelo nome. A tela não revela funções secretas.",
+    "targetHint": "Escolha apenas pelo nome. O assassino que está agindo não aparece como alvo.",
     "confirm": "Confirmar vítima"
   },
   "doctorTurn": {
     "title": "Médico acorda",
     "description": "Peça para o Médico abrir os olhos em silêncio e escolher uma pessoa para proteger.",
+    "wakeScript": "Médico, acorde e escolha alguém para salvar.",
+    "sleepScript": "Depois da escolha, diga: Médico, durma.",
+    "actor": "Médico: {{name}}",
     "targetTitle": "Proteção da noite",
     "targetHint": "As opções respeitam as regras de autoproteção e repetição configuradas.",
     "empty": "Nenhum alvo válido para o Médico nesta rodada.",
-    "confirm": "Confirmar proteção"
+    "confirm": "Confirmar proteção",
+    "fakeTitle": "Turno de disfarce",
+    "fakeDescription": "Chame o Médico normalmente para não revelar que ele já saiu. Aguarde alguns segundos e avance.",
+    "fakeContinue": "Médico dormiu"
   },
   "detectiveTurn": {
     "title": "Detetive acorda",
     "description": "Peça para o Detetive abrir os olhos em silêncio e apontar uma pessoa para investigar.",
+    "wakeScript": "Detetive, acorde e escolha alguém para investigar.",
+    "sleepScript": "Depois de mostrar o resultado, diga: Detetive, durma.",
+    "actor": "Detetive: {{name}}",
     "targetTitle": "Investigação da noite",
-    "targetHint": "Escolha apenas pelo nome. O resultado aparece só para o mediador.",
-    "confirm": "Confirmar investigação"
+    "targetHint": "Escolha apenas pelo nome. O próprio Detetive não aparece como alvo.",
+    "confirm": "Ver resultado",
+    "resultTitle": "Resultado privado",
+    "resultHint": "Mostre discretamente ao Detetive o resultado da investigação em {{name}}.",
+    "resultContinue": "Resultado mostrado",
+    "results": {
+      "suspect": "É assassino",
+      "innocent": "Não é assassino"
+    },
+    "fakeTitle": "Turno de disfarce",
+    "fakeDescription": "Chame o Detetive normalmente para não revelar que ele já saiu. Aguarde alguns segundos e avance.",
+    "fakeContinue": "Detetive dormiu"
   },
   "nightResolution": {
     "title": "Resolver noite",
     "description": "Confira o resultado em privado antes de acordar a cidade.",
     "pending": "As ações já foram registradas. Toque para aplicar proteção, investigação e possível eliminação.",
     "resolve": "Resolver noite",
+    "announcement": "Anúncio para a cidade",
+    "announceKilled": "Cidade, acorde. {{name}} foi assassinado durante a noite.",
+    "announceKilledWithRole": "Cidade, acorde. {{name}} foi assassinado durante a noite. Função: {{role}}.",
+    "announceNoKill": "Cidade, acorde. Ninguém foi assassinado durante a noite.",
     "attack": "Ataque",
     "attackKilled": "{{name}} foi eliminado durante a noite.",
+    "attackKilledWithRole": "{{name}} foi eliminado durante a noite. Função: {{role}}.",
     "attackNone": "Ninguém morreu durante a noite.",
     "protection": "Proteção",
     "protected": "A proteção do Médico impediu a eliminação.",
@@ -184,54 +207,28 @@
   },
   "voting": {
     "title": "Votação",
-    "description": "Registre o voto de cada jogador vivo. Votos podem ser alterados antes da resolução.",
-    "revoteDescription": "Empate em andamento. Registre uma nova votação usando apenas os alvos empatados.",
-    "voterTitle": "Quem está votando?",
-    "voteTitle": "Voto",
-    "finish": "Resolver votação ({{voted}}/{{total}})"
-  },
-  "voteResolution": {
-    "title": "Resultado da votação",
-    "description": "Confirme a contagem e aplique a consequência da votação.",
-    "apply": "Aplicar resultado",
-    "revote": "Fazer desempate",
-    "mediatorTitle": "Decisão do mediador",
-    "eliminate": "Eliminar {{name}}",
-    "texts": {
-      "eliminated": "{{name}} será eliminado pela votação.",
-      "eliminatedFallback": "Um jogador será eliminado pela votação.",
-      "skipped": "A cidade escolheu pular a eliminação.",
-      "revote": "Houve empate. Aplique o resultado para abrir uma votação de desempate.",
-      "mediatorDecision": "Houve empate. O mediador precisa escolher explicitamente um dos alvos empatados.",
-      "tie": "Houve empate e ninguém será eliminado.",
-      "noVotes": "Nenhum voto válido foi registrado.",
-      "resolvedRevote": "Empate registrado. Faça uma nova votação apenas entre os alvos empatados.",
-      "resolvedMediator": "Empate registrado. O mediador precisa escolher um dos alvos empatados.",
-      "resolvedEliminated": "{{name}} foi eliminado pela votação.",
-      "resolvedNoElimination": "A votação foi aplicada sem eliminação."
-    }
+    "description": "Conduza os votos presencialmente. No app, marque apenas o resultado final para manter a partida rápida.",
+    "eliminatedTitle": "Quem saiu na votação?",
+    "eliminatedHint": "Selecione o jogador eliminado pelo grupo ou marque empate se ninguém saiu.",
+    "confirmElimination": "Eliminar {{name}}",
+    "confirmEliminationFallback": "Escolha quem saiu",
+    "markTie": "Empate / ninguém saiu"
   },
   "history": {
     "title": "Histórico privado do mediador",
     "round": "Rodada {{round}}",
+    "killerActor": "Assassino que agiu:",
     "killerTarget": "Alvo dos Assassinos:",
     "doctorProtection": "Proteção do Médico:",
     "investigation": "Investigação:",
     "night": "Noite:",
     "vote": "Votação:",
-    "tally": "Placar:",
     "attackProtected": "ataque protegido",
     "nightKilled": "{{name}} eliminado",
     "noNightKill": "sem eliminação",
     "notRegistered": "ainda não registrada",
     "voteKilled": "{{name}} eliminado",
-    "voteSkipped": "eliminação pulada",
-    "tie": "empate sem eliminação",
-    "revote": "empate para nova votação",
-    "mediatorDecision": "empate para decisão do mediador",
-    "noVotes": "sem votos válidos",
-    "votesCount": "{{count}} voto(s) registrado(s)",
-    "emptyTally": "sem votos"
+    "tie": "empate sem eliminação"
   },
   "result": {
     "title": "Fim de jogo",
@@ -244,9 +241,6 @@
     "killersDescription": "Os assassinos igualaram ou superaram o número de inocentes vivos.",
     "jesterDescription": "O Coringa foi eliminado pela votação da cidade.",
     "fallbackDescription": "A partida terminou.",
-    "parallelWins": "Vitórias paralelas",
-    "parallelJester": "{{name}} venceu como Coringa.",
-    "parallelJesterFallback": "Coringa",
     "survivors": "Sobreviventes",
     "eliminated": "Eliminados",
     "revealedRoles": "Papéis revelados",

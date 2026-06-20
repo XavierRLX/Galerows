@@ -1,6 +1,6 @@
 # Roadmap do Cidade Dorme
 
-Atualizado em: 19 de junho de 2026
+Atualizado em: 20 de junho de 2026
 
 ## Objetivo
 
@@ -10,7 +10,7 @@ O app deve ajudar o mediador a configurar a partida, sortear personagens, revela
 
 ## Estado Atual
 
-**Status:** FASE 10 concluída. Cidade Dorme está liberado no hub como jogo disponível.
+**Status:** FASE 12 concluída. Cidade Dorme está liberado no hub como jogo disponível.
 
 Já existe uma base pura e testável em `src/features/cidade-dorme/`, com rotas, telas, resultado final, i18n, asset visual e exposição jogável no hub.
 
@@ -61,7 +61,6 @@ Arquivos criados nas FASES 5D, 5E, 6A e 7A:
 - `components/NightResolutionPhase.tsx`
 - `components/DayDiscussionPhase.tsx`
 - `components/VotingPhase.tsx`
-- `components/VoteResolutionPhase.tsx`
 
 Arquivos criados nas FASES 8 e 9:
 
@@ -74,7 +73,6 @@ Arquivos refinados na FASE 10A:
 - `cidadeDorme.session.ts`
 - `cidadeDorme.store.ts`
 - `components/VotingPhase.tsx`
-- `components/VoteResolutionPhase.tsx`
 - `CidadeDormePlayScreen.tsx`
 
 Arquivos criados ou refinados na FASE 10B:
@@ -88,6 +86,41 @@ Arquivos criados ou refinados na FASE 10B:
 - `src/features/games/games.registry.ts`
 - `src/features/hub/GameCard.tsx`
 - `src/app/routes.test.tsx`
+
+Arquivos refinados na FASE 11:
+
+- `cidadeDorme.types.ts`
+- `cidadeDorme.rules.ts`
+- `cidadeDorme.setup.ts`
+- `cidadeDorme.session.ts`
+- `cidadeDorme.store.ts`
+- `components/DoctorTurnPhase.tsx`
+- `components/NightResolutionPhase.tsx`
+- `components/VotingPhase.tsx`
+- `components/MediatorHistoryPanel.tsx`
+- `CidadeDormeSetupScreen.tsx`
+- `CidadeDormePlayScreen.tsx`
+- `CidadeDormeResultScreen.tsx`
+- `src/i18n/locales/pt-BR/cidade-dorme.json`
+- `src/i18n/locales/en-US/cidade-dorme.json`
+- `src/i18n/locales/es-419/cidade-dorme.json`
+- `src/features/hub/GameCard.tsx`
+
+Arquivos refinados na FASE 12:
+
+- `cidadeDorme.types.ts`
+- `cidadeDorme.session.ts`
+- `cidadeDorme.store.ts`
+- `cidadeDorme.stateMachine.ts`
+- `components/KillerTurnPhase.tsx`
+- `components/DoctorTurnPhase.tsx`
+- `components/DetectiveTurnPhase.tsx`
+- `components/NightResolutionPhase.tsx`
+- `components/MediatorHistoryPanel.tsx`
+- `CidadeDormePlayScreen.tsx`
+- `src/i18n/locales/pt-BR/cidade-dorme.json`
+- `src/i18n/locales/en-US/cidade-dorme.json`
+- `src/i18n/locales/es-419/cidade-dorme.json`
 
 Verificações da FASE 1:
 
@@ -114,8 +147,8 @@ Verificações da FASE 4:
 
 - Transições válidas foram centralizadas em state machine pura.
 - Revelação individual só avança para noite depois do último jogador.
-- Turnos noturnos pulam Médico ou Detetive quando desativados ou eliminados.
-- Avanço de nova rodada reinicia ação noturna e votos temporários.
+- Turnos noturnos pulam Médico ou Detetive apenas quando desativados; se estiverem eliminados, o mediador recebe um turno de disfarce.
+- Avanço de nova rodada reinicia ação noturna.
 - Condição de vitória já leva a `gameOver` quando detectada pela state machine.
 - Testes focados da state machine, sessão e store passaram.
 
@@ -131,7 +164,7 @@ Verificações da FASE 5B:
 
 - Turno dos Assassinos foi separado em componente próprio.
 - Mediador escolhe uma vítima entre jogadores vivos.
-- A escolha salva `killerTargetId` em `currentNightAction`.
+- A escolha salva `killerActorId` e `killerTargetId` em `currentNightAction`.
 - Após confirmar a vítima, o app avança pela state machine para Médico, Detetive ou resolução.
 - A tela lista nomes sem revelar funções secretas.
 - Testes do Cidade Dorme, typecheck e ESLint focado passaram.
@@ -150,28 +183,26 @@ Verificações da FASE 5C:
 Verificações das FASES 5D, 5E, 6A e 7A:
 
 - Turno do Detetive registra `detectiveTargetId` em `currentNightAction`.
+- Turno do Detetive mostra o resultado em uma etapa privada antes de avançar.
 - Resultado da investigação é calculado por `resolveNight()` como `suspect` ou `innocent`.
 - Resolução da noite aplica morte, proteção e investigação sem revelar papéis ao grupo.
 - Histórico interno da rodada recebe o resultado da noite para suportar repetição do Médico.
 - Discussão do dia avança para votação.
-- Votação registra um voto por jogador vivo e permite alterar voto antes da resolução.
-- Skip só aparece quando permitido pela configuração.
-- Resolução da votação usa `resolveVoting()` e aplica eliminação quando houver maioria.
+- Votação agora é presencial e o mediador registra apenas quem saiu ou se houve empate.
+- Empate registrado pelo mediador não elimina ninguém.
 - Vitória é checada ao avançar depois da noite e depois da votação.
-- Cidade, Assassinos e Coringa em modo `instant` levam a `gameOver`.
-- Coringa em modo `parallel` é registrado em `parallelWinners` sem encerrar sozinho a partida.
+- Cidade, Assassinos e Coringa levam a `gameOver`.
 - Testes focados do Cidade Dorme, typecheck e ESLint focado passaram.
-- Observação atualizada na FASE 10A: empate com `revoteTied` e `mediatorDecision` agora tem fluxo dedicado.
 
 Verificações das FASES 8 e 9:
 
 - Histórico privado do mediador foi criado como painel recolhido.
-- Histórico mostra alvo dos Assassinos, proteção do Médico, investigação do Detetive, morte/proteção da noite, votos e placar da votação.
+- Histórico mostra alvo dos Assassinos, proteção do Médico, investigação do Detetive, morte/proteção da noite e resultado manual da votação.
 - Resultado da votação agora fica registrado em `history.votingResult`.
 - A tela de resultado final foi criada em `CidadeDormeResultScreen.tsx`.
 - Rota `/games/cidade-dorme/result` foi adicionada.
 - `CidadeDormePlayScreen` redireciona para o resultado quando a fase chega em `gameOver`.
-- Resultado final mostra vencedor, vitórias paralelas, sobreviventes, eliminados, papéis revelados e histórico privado.
+- Resultado final mostra vencedor, sobreviventes, eliminados, papéis revelados e histórico privado.
 - Ação de jogar novamente preserva jogadores e configurações, sorteando nova partida.
 - Ação de voltar ao hub descarta a partida encerrada.
 - Testes focados do Cidade Dorme, testes de rotas, typecheck e ESLint focado passaram.
@@ -198,6 +229,25 @@ Verificações da FASE 10B:
 - Blockers globais de lint em Mímica e Top 10 foram corrigidos com mudanças mínimas.
 - `npm run typecheck`, `npm run lint`, `npm run test` e `npm run build` passaram.
 - Observação: validação em aparelho Android físico não foi executada neste ambiente e deve ser feita antes de submissão à Play Store.
+
+Verificações da FASE 11:
+
+- Coringa ficou desligado por padrão, mas segue configurável.
+- Vitória do Coringa por votação encerra a partida.
+- Revelar função ao morrer ficou desligado por padrão e só altera anúncios públicos durante a partida.
+- Configuração de autoproteção do Médico ganhou limite de 1, 2, 3 ou sem limites por partida.
+- Votação deixou de registrar voto por voto; o mediador marca apenas eliminado ou empate/ninguém saiu.
+- Sessões antigas com fluxo de votação anterior são migradas para discussão do dia.
+- Card do jogo no hub reforçado sem borda externa.
+
+Verificações da FASE 12:
+
+- Turno dos Assassinos mostra assassinos vivos, permite escolher quem age e remove apenas esse ator da lista de vítimas.
+- Outros assassinos continuam podendo ser escolhidos como vítima.
+- Médico e Detetive habilitados mas eliminados aparecem como turnos de disfarce para não revelar que saíram.
+- Detetive vivo recebe uma etapa privada com resultado antes de o app avançar.
+- Resolução da noite ganhou frase pronta para o mediador anunciar se houve assassinato ou não.
+- Histórico privado registra o assassino que agiu.
 
 ## Princípios de Arquitetura
 
@@ -242,16 +292,16 @@ Condições de vitória:
 - Cidade vence se todos os assassinos forem eliminados.
 - Assassinos vencem se assassinos vivos forem maiores ou iguais aos inocentes vivos.
 - Coringa vence se for eliminado por votação.
-- No modo `instant`, a vitória do Coringa encerra a partida.
-- No modo `parallel`, o Coringa vence em paralelo e a partida pode continuar.
+- A vitória do Coringa encerra a partida.
 
 Configurações necessárias:
 
 - Médico pode ou não proteger a si mesmo.
+- Quando puder se proteger, Médico tem limite de autocura por partida: 1, 2, 3 ou sem limites.
 - Médico pode ou não repetir proteção na mesma pessoa.
 - Função ao morrer pode ser revelada ou ocultada.
-- Votação pode permitir skip.
-- Empate pode gerar nenhuma eliminação, nova votação ou decisão do mediador.
+- Votação é conduzida presencialmente e o mediador registra eliminado ou empate/ninguém saiu.
+- Empate não elimina ninguém.
 
 ## Roadmap de Desenvolvimento
 
@@ -273,9 +323,9 @@ Entregas:
   - `getAliveInnocents`
   - `canStartGame`
   - `resolveNight`
-  - `resolveVoting`
+  - `resolveVotingOutcome`
   - `checkWinCondition`
-- Criar testes unitários cobrindo sorteio, noite, votação, empate, skip, médico e vitória.
+- Criar testes unitários cobrindo sorteio, noite, votação manual, empate, médico e vitória.
 
 Critérios de aceite:
 
@@ -319,11 +369,10 @@ Entregas:
 - Ativar ou desativar Médico, Detetive e Coringa.
 - Configurar regras:
   - revelar função ao morrer;
-  - permitir skip;
-  - regra de empate;
   - médico pode proteger a si mesmo;
+  - limite de autocura do Médico;
   - médico pode repetir proteção;
-  - modo de vitória do Coringa.
+  - Coringa opcional.
 - Adicionar rotas iniciais, mas manter o jogo como `coming-soon` até haver fluxo jogável.
 
 Critérios de aceite:
@@ -512,21 +561,15 @@ Entregas:
 - Criar fase de resultado da noite — concluído na FASE 5E.
 - Criar fase de discussão — concluído na FASE 6A.
 - Criar votação — concluído na FASE 6A.
-- Permitir voto em jogador vivo — concluído na FASE 6A.
-- Permitir skip se configurado — concluído na FASE 6A.
-- Resolver votação com `resolveVoting` — concluído na FASE 6A.
-- Tratar empate conforme regra:
-  - nenhuma eliminação — fluxo mínimo concluído;
-  - nova votação — concluído na FASE 10A;
-  - decisão do mediador — concluído na FASE 10A.
-- Eliminar jogador mais votado quando aplicável — concluído na FASE 6A.
+- Registrar resultado manual da votação pelo mediador — concluído na FASE 11.
+- Tratar empate como nenhuma eliminação — concluído na FASE 11.
+- Eliminar jogador escolhido pelo mediador quando aplicável — concluído na FASE 11.
 
 Critérios de aceite:
 
-- Votos inválidos são ignorados ou bloqueados pela UI.
-- Skip só aparece quando permitido.
-- Empate respeita configuração escolhida.
-- Votação registra resultado de forma compatível com histórico.
+- Votação não registra voto por voto.
+- Empate não elimina ninguém.
+- Votação registra resultado de forma compatível com histórico privado.
 
 ### FASE 7 — Condições de vitória
 
@@ -537,8 +580,7 @@ Entregas:
 - Integrar `checkWinCondition` após noite e votação — concluído na FASE 7A.
 - Encerrar partida quando cidade vencer — concluído na FASE 7A.
 - Encerrar partida quando assassinos vencerem — concluído na FASE 7A.
-- Encerrar partida quando Coringa vencer em modo `instant` — concluído na FASE 7A.
-- Registrar vitória paralela do Coringa em modo `parallel` — concluído na FASE 7A.
+- Encerrar partida quando Coringa vencer — concluído na FASE 11.
 
 Critérios de aceite:
 
@@ -609,6 +651,7 @@ Entregas:
 - Adicionar traduções quando o fluxo estiver estável — concluído na FASE 10B.
 - Atualizar `games.registry.ts` de `coming-soon` para `available` — concluído na FASE 10B.
 - Validar fluxo completo em aparelho real — pendente apenas para checklist físico de release Android.
+- Observação: regras de revotação, skip e vitória paralela do Coringa foram substituídas pela simplificação da FASE 11.
 
 Critérios de aceite:
 
@@ -632,8 +675,7 @@ Entregas:
 
 Critérios de aceite:
 
-- `revoteTied` não vira mais “ninguém eliminado” provisório.
-- `mediatorDecision` não fica mais adiado para uma etapa futura.
+- Fluxos de desempate foram entregues na FASE 10A, mas removidos na FASE 11 para acelerar a partida presencial.
 - Histórico da rodada mantém o resultado aplicado.
 - Jogo continua indisponível no hub até a revisão visual e validação final.
 
@@ -695,7 +737,6 @@ Arquivos já criados:
 - `src/features/cidade-dorme/components/NightResolutionPhase.tsx`
 - `src/features/cidade-dorme/components/DayDiscussionPhase.tsx`
 - `src/features/cidade-dorme/components/VotingPhase.tsx`
-- `src/features/cidade-dorme/components/VoteResolutionPhase.tsx`
 - `src/features/cidade-dorme/components/MediatorHistoryPanel.tsx`
 - `src/features/cidade-dorme/CidadeDormeResultScreen.tsx`
 - `src/i18n/locales/pt-BR/cidade-dorme.json`

@@ -64,7 +64,7 @@
       "Choose the players and configure special roles.",
       "Pass the phone so each person sees their own role in secret.",
       "After the reveals, the moderator runs the night and keeps actions secret.",
-      "During the day, record the vote in the app and continue until a win condition is met."
+      "During the day, run the vote in person and mark who left or whether there was a tie."
     ]
   },
   "setup": {
@@ -95,23 +95,17 @@
     "rulesTitle": "Rules",
     "revealRoleOnDeath": "Reveal role on death",
     "revealRoleOnDeathHint": "Helps beginner groups understand the match.",
-    "allowSkipVote": "Allow vote skip",
-    "allowSkipVoteHint": "Lets the town avoid eliminating anyone.",
     "doctorCanSelfProtect": "Doctor can self-protect",
-    "doctorCanSelfProtectHint": "If off, the Doctor must choose someone else.",
+    "doctorCanSelfProtectHint": "If on, choose how many times the Doctor can self-heal during the match.",
+    "doctorSelfProtectLimitTitle": "Self-heal amount",
+    "doctorSelfProtectLimits": {
+      "1": "1 time",
+      "2": "2 times",
+      "3": "3 times",
+      "unlimited": "No limit"
+    },
     "doctorCanRepeatProtection": "Doctor can repeat protection",
     "doctorCanRepeatProtectionHint": "If off, the same person cannot be protected on consecutive nights.",
-    "tieRuleTitle": "Voting tie",
-    "tieRules": {
-      "noElimination": "No elimination",
-      "revoteTied": "New vote",
-      "mediatorDecision": "Moderator decides"
-    },
-    "jesterWinTitle": "Jester win",
-    "jesterWin": {
-      "instant": "Ends game",
-      "parallel": "Parallel"
-    },
     "start": "Draw roles"
   },
   "play": {
@@ -140,32 +134,61 @@
   "killerTurn": {
     "title": "Killers wake up",
     "description": "Ask the Killers to open their eyes silently and point to a victim.",
+    "wakeScript": "Killer, wake up and choose someone to kill.",
+    "sleepScript": "After the choice, say: Killer, go back to sleep.",
+    "actorsTitle": "Living killers",
+    "actorTitle": "Who is acting?",
+    "singleActor": "Killer: {{name}}",
     "targetTitle": "Night victim",
-    "targetHint": "Choose by name only. The screen does not reveal secret roles.",
+    "targetHint": "Choose by name only. The killer who is acting is not shown as a target.",
     "confirm": "Confirm victim"
   },
   "doctorTurn": {
     "title": "Doctor wakes up",
     "description": "Ask the Doctor to open their eyes silently and choose one person to protect.",
+    "wakeScript": "Doctor, wake up and choose someone to save.",
+    "sleepScript": "After the choice, say: Doctor, go back to sleep.",
+    "actor": "Doctor: {{name}}",
     "targetTitle": "Night protection",
     "targetHint": "Options follow the configured self-protection and repeat-protection rules.",
     "empty": "No valid Doctor target this round.",
-    "confirm": "Confirm protection"
+    "confirm": "Confirm protection",
+    "fakeTitle": "Cover turn",
+    "fakeDescription": "Call the Doctor normally so the group cannot tell the role is gone. Wait a few seconds, then continue.",
+    "fakeContinue": "Doctor slept"
   },
   "detectiveTurn": {
     "title": "Detective wakes up",
     "description": "Ask the Detective to open their eyes silently and point to one person to investigate.",
+    "wakeScript": "Detective, wake up and choose someone to investigate.",
+    "sleepScript": "After showing the result, say: Detective, go back to sleep.",
+    "actor": "Detective: {{name}}",
     "targetTitle": "Night investigation",
-    "targetHint": "Choose by name only. The result is shown only to the moderator.",
-    "confirm": "Confirm investigation"
+    "targetHint": "Choose by name only. The Detective is not shown as a target.",
+    "confirm": "Show result",
+    "resultTitle": "Private result",
+    "resultHint": "Discreetly show the Detective the result for {{name}}.",
+    "resultContinue": "Result shown",
+    "results": {
+      "suspect": "Is a killer",
+      "innocent": "Is not a killer"
+    },
+    "fakeTitle": "Cover turn",
+    "fakeDescription": "Call the Detective normally so the group cannot tell the role is gone. Wait a few seconds, then continue.",
+    "fakeContinue": "Detective slept"
   },
   "nightResolution": {
     "title": "Resolve night",
     "description": "Check the result privately before waking the town.",
     "pending": "The actions have been recorded. Tap to apply protection, investigation, and possible elimination.",
     "resolve": "Resolve night",
+    "announcement": "Town announcement",
+    "announceKilled": "Town, wake up. {{name}} was killed during the night.",
+    "announceKilledWithRole": "Town, wake up. {{name}} was killed during the night. Role: {{role}}.",
+    "announceNoKill": "Town, wake up. No one was killed during the night.",
     "attack": "Attack",
     "attackKilled": "{{name}} was eliminated during the night.",
+    "attackKilledWithRole": "{{name}} was eliminated during the night. Role: {{role}}.",
     "attackNone": "No one died during the night.",
     "protection": "Protection",
     "protected": "The Doctor's protection prevented the elimination.",
@@ -184,54 +207,28 @@
   },
   "voting": {
     "title": "Voting",
-    "description": "Record each living player's vote. Votes can be changed before resolution.",
-    "revoteDescription": "Tie in progress. Record a new vote using only the tied targets.",
-    "voterTitle": "Who is voting?",
-    "voteTitle": "Vote",
-    "finish": "Resolve vote ({{voted}}/{{total}})"
-  },
-  "voteResolution": {
-    "title": "Voting result",
-    "description": "Confirm the count and apply the voting consequence.",
-    "apply": "Apply result",
-    "revote": "Run tiebreaker",
-    "mediatorTitle": "Moderator decision",
-    "eliminate": "Eliminate {{name}}",
-    "texts": {
-      "eliminated": "{{name}} will be eliminated by vote.",
-      "eliminatedFallback": "One player will be eliminated by vote.",
-      "skipped": "The town chose to skip the elimination.",
-      "revote": "There was a tie. Apply the result to open a tiebreaker vote.",
-      "mediatorDecision": "There was a tie. The moderator must explicitly choose one tied target.",
-      "tie": "There was a tie and no one will be eliminated.",
-      "noVotes": "No valid vote was recorded.",
-      "resolvedRevote": "Tie recorded. Run a new vote only between the tied targets.",
-      "resolvedMediator": "Tie recorded. The moderator must choose one tied target.",
-      "resolvedEliminated": "{{name}} was eliminated by vote.",
-      "resolvedNoElimination": "The vote was applied with no elimination."
-    }
+    "description": "Run the vote in person. In the app, mark only the final result to keep the match moving.",
+    "eliminatedTitle": "Who left by vote?",
+    "eliminatedHint": "Select the player eliminated by the group or mark a tie if no one left.",
+    "confirmElimination": "Eliminate {{name}}",
+    "confirmEliminationFallback": "Choose who left",
+    "markTie": "Tie / no one left"
   },
   "history": {
     "title": "Moderator private history",
     "round": "Round {{round}}",
+    "killerActor": "Killer who acted:",
     "killerTarget": "Killers' target:",
     "doctorProtection": "Doctor protection:",
     "investigation": "Investigation:",
     "night": "Night:",
     "vote": "Vote:",
-    "tally": "Tally:",
     "attackProtected": "attack protected",
     "nightKilled": "{{name}} eliminated",
     "noNightKill": "no elimination",
     "notRegistered": "not recorded yet",
     "voteKilled": "{{name}} eliminated",
-    "voteSkipped": "elimination skipped",
-    "tie": "tie with no elimination",
-    "revote": "tie for new vote",
-    "mediatorDecision": "tie for moderator decision",
-    "noVotes": "no valid votes",
-    "votesCount": "{{count}} vote(s) recorded",
-    "emptyTally": "no votes"
+    "tie": "tie with no elimination"
   },
   "result": {
     "title": "Game over",
@@ -244,9 +241,6 @@
     "killersDescription": "The killers matched or outnumbered the living innocents.",
     "jesterDescription": "The Jester was eliminated by the town's vote.",
     "fallbackDescription": "The match has ended.",
-    "parallelWins": "Parallel wins",
-    "parallelJester": "{{name}} won as Jester.",
-    "parallelJesterFallback": "Jester",
     "survivors": "Survivors",
     "eliminated": "Eliminated",
     "revealedRoles": "Revealed roles",

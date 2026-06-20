@@ -1,6 +1,6 @@
 import { shuffle } from '../../lib/utils/shuffle'
 import { CIDADE_DORME_MAX_PLAYERS, CIDADE_DORME_MIN_PLAYERS } from './cidadeDorme.setup'
-import type { CidadeDormePlayerInput, GameSettings, NightAction, NightResolution, Player, RoleKey, Vote, VoteTargetId, VotingResolution, WinConditionResult } from './cidadeDorme.types'
+import type { CidadeDormePlayerInput, GameSettings, ManualVotingOutcome, NightAction, NightResolution, Player, RoleKey, VotingResolution, WinConditionResult } from './cidadeDorme.types'
 
 export function createRoleDeck(settings: GameSettings): RoleKey[] {
   assertSettings(settings)
@@ -53,8 +53,9 @@ export function getAliveInnocents(players: readonly Player[]) {
   return getAlivePlayers(players).filter((player) => player.roleKey !== 'killer')
 }
 
-export function canDoctorProtect(doctorId: string, protectedPlayerId: string, settings: GameSettings, previousProtectedPlayerId?: string) {
+export function canDoctorProtect(doctorId: string, protectedPlayerId: string, settings: GameSettings, previousProtectedPlayerId?: string, selfProtectCount = 0) {
   if (!settings.doctorCanSelfProtect && doctorId === protectedPlayerId) return false
+  if (doctorId === protectedPlayerId && settings.doctorSelfProtectLimit !== 'unlimited' && selfProtectCount >= settings.doctorSelfProtectLimit) return false
   if (!settings.doctorCanRepeatProtection && previousProtectedPlayerId === protectedPlayerId) return false
   return true
 }
@@ -77,68 +78,35 @@ export function resolveNight(players: readonly Player[], action: NightAction): N
   }
 }
 
-export function resolveVoting(players: readonly Player[], votes: readonly Vote[], settings: GameSettings, round: number): VotingResolution {
-  const alivePlayerIds = new Set(getAlivePlayers(players).map((player) => player.id))
-  const validVotes = votes.filter((vote) => alivePlayerIds.has(vote.voterId) && isValidVoteTarget(vote.targetId, alivePlayerIds, settings.allowSkipVote))
-  const tally = tallyVotes(validVotes)
-  const entries = Object.entries(tally) as [VoteTargetId, number][]
-  if (!entries.length) return { kind: 'noVotes', round, votes: validVotes, tally, players: players.map((player) => ({ ...player })) }
-
-  const highestVotes = Math.max(...entries.map(([, count]) => count))
-  const topTargets = entries.filter(([, count]) => count === highestVotes).map(([targetId]) => targetId)
-  if (topTargets.length > 1) {
-    if (settings.tieRule === 'revoteTied') return { kind: 'revote', round, votes: validVotes, tally, players: players.map((player) => ({ ...player })), tiedTargetIds: topTargets }
-    if (settings.tieRule === 'mediatorDecision') return { kind: 'mediatorDecision', round, votes: validVotes, tally, players: players.map((player) => ({ ...player })), tiedTargetIds: topTargets }
-    return { kind: 'tie', round, votes: validVotes, tally, players: players.map((player) => ({ ...player })), tiedTargetIds: topTargets }
+export function resolveVotingOutcome(players: readonly Player[], outcome: ManualVotingOutcome, round: number): VotingResolution {
+  if (outcome.kind === 'tie') {
+    return { kind: 'tie', round, players: players.map((player) => ({ ...player })) }
   }
 
-  const [targetId] = topTargets
-  if (!targetId || targetId === 'skip') return { kind: 'skipped', round, votes: validVotes, tally, players: players.map((player) => ({ ...player })) }
-
-  const eliminated = players.find((player) => player.id === targetId && player.status === 'alive')
-  if (!eliminated) return { kind: 'noVotes', round, votes: validVotes, tally, players: players.map((player) => ({ ...player })) }
+  const eliminated = players.find((player) => player.id === outcome.playerId && player.status === 'alive')
+  if (!eliminated) return { kind: 'tie', round, players: players.map((player) => ({ ...player })) }
 
   return {
     kind: 'eliminated',
     round,
-    votes: validVotes,
-    tally,
-    players: players.map((player) => player.id === targetId ? eliminatePlayer(player, round, 'vote') : { ...player }),
-    eliminatedPlayerId: targetId,
-    jesterWinnerPlayerId: eliminated.roleKey === 'jester' ? targetId : undefined,
+    players: players.map((player) => player.id === outcome.playerId ? eliminatePlayer(player, round, 'vote') : { ...player }),
+    eliminatedPlayerId: outcome.playerId,
+    jesterWinnerPlayerId: eliminated.roleKey === 'jester' ? outcome.playerId : undefined,
   }
 }
 
-export function resolveMediatorDecisionVoting(players: readonly Player[], votes: readonly Vote[], settings: GameSettings, round: number, chosenTargetId: VoteTargetId): VotingResolution {
-  const preview = resolveVoting(players, votes, settings, round)
-  if (preview.kind !== 'mediatorDecision') return preview
-  if (!preview.tiedTargetIds?.includes(chosenTargetId)) return preview
-  if (chosenTargetId === 'skip') return { ...preview, kind: 'skipped' }
-
-  const eliminated = preview.players.find((player) => player.id === chosenTargetId && player.status === 'alive')
-  if (!eliminated) return preview
-
-  return {
-    ...preview,
-    kind: 'eliminated',
-    players: preview.players.map((player) => player.id === chosenTargetId ? eliminatePlayer(player, round, 'vote') : { ...player }),
-    eliminatedPlayerId: chosenTargetId,
-    jesterWinnerPlayerId: eliminated.roleKey === 'jester' ? chosenTargetId : undefined,
-  }
-}
-
-export function checkWinCondition(players: readonly Player[], settings: GameSettings): WinConditionResult {
+export function checkWinCondition(players: readonly Player[], _settings: GameSettings): WinConditionResult {
+  void _settings
   const votedOutJesters = players.filter((player) => player.roleKey === 'jester' && player.status === 'eliminated' && player.eliminationReason === 'vote')
-  const parallelWinners = settings.jesterWinMode === 'parallel' ? votedOutJesters.map((player) => ({ winner: 'jester' as const, playerId: player.id })) : []
-  if (settings.jesterWinMode === 'instant' && votedOutJesters[0]) {
-    return { isGameOver: true, winner: 'jester', winnerPlayerId: votedOutJesters[0].id, parallelWinners: [], reason: 'jester-voted-out' }
+  if (votedOutJesters[0]) {
+    return { isGameOver: true, winner: 'jester', winnerPlayerId: votedOutJesters[0].id, reason: 'jester-voted-out' }
   }
 
   const aliveKillers = getAliveKillers(players)
   const aliveInnocents = getAliveInnocents(players)
-  if (aliveKillers.length === 0) return { isGameOver: true, winner: 'city', parallelWinners, reason: 'city-eliminated-killers' }
-  if (aliveKillers.length >= aliveInnocents.length) return { isGameOver: true, winner: 'killers', parallelWinners, reason: 'killers-parity' }
-  return { isGameOver: false, winner: null, parallelWinners, reason: 'none' }
+  if (aliveKillers.length === 0) return { isGameOver: true, winner: 'city', reason: 'city-eliminated-killers' }
+  if (aliveKillers.length >= aliveInnocents.length) return { isGameOver: true, winner: 'killers', reason: 'killers-parity' }
+  return { isGameOver: false, winner: null, reason: 'none' }
 }
 
 function assertSettings(settings: GameSettings) {
@@ -154,18 +122,6 @@ function findAlivePlayer(players: readonly Player[], playerId: string | undefine
 
 function eliminatePlayer(player: Player, round: number, eliminationReason: Player['eliminationReason']): Player {
   return { ...player, status: 'eliminated', eliminatedAtRound: round, eliminationReason }
-}
-
-function isValidVoteTarget(targetId: VoteTargetId, alivePlayerIds: Set<string>, allowSkipVote: boolean) {
-  if (targetId === 'skip') return allowSkipVote
-  return alivePlayerIds.has(targetId)
-}
-
-function tallyVotes(votes: readonly Vote[]) {
-  return votes.reduce<Record<VoteTargetId, number>>((tally, vote) => {
-    tally[vote.targetId] = (tally[vote.targetId] ?? 0) + 1
-    return tally
-  }, {})
 }
 
 function comparableName(value: string) {

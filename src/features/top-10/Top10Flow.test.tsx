@@ -35,7 +35,7 @@ describe('Top 10 complete flow', () => {
     expect(await screen.findByText(/Mediador: Ana/i)).toBeInTheDocument()
     expect(screen.getAllByRole('button', { name: /resposta oculta/i })[0]).toBeDisabled()
     await user.click(screen.getByRole('button', { name: /ver gabarito/i }))
-    expect(await screen.findByText(/Avatar|India|Miroslav/i)).toBeInTheDocument()
+    expect((await screen.findAllByText(/Avatar|India|Miroslav/i)).length).toBeGreaterThan(0)
     await user.click(screen.getAllByRole('button', { name: /10 pontos/i })[0])
     expect(screen.queryByRole('button', { name: /Ana \+10/i })).not.toBeInTheDocument()
     await user.click(await screen.findByRole('button', { name: /Bia/i }))

@@ -194,7 +194,7 @@ export function GameCard({ game, badgeLabel, revealIndex = 0 }: GameCardProps) {
       <div ref={cardRef}>
         <Card
           className={cn(
-            'relative min-h-36 overflow-hidden !border-0 p-0 transition-[filter,opacity,transform] duration-500 ease-out',
+            'relative min-h-36 overflow-hidden !border-0 !border-none p-0 transition-[filter,opacity,transform] duration-500 ease-out',
             isRevealed
               ? cn(available ? 'opacity-100' : 'opacity-80 grayscale-[0.15]', '[transform:perspective(900px)_rotateX(1.3deg)_translateY(0)_scale(1)]')
               : 'opacity-0 blur-[1px] [transform:perspective(900px)_rotateX(7deg)_translateY(18px)_scale(0.985)]',

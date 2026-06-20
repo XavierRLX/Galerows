@@ -35,12 +35,16 @@ describe('Cidade Dorme setup presets', () => {
       enableDoctor: false,
       enableDetective: true,
       enableJester: false,
+      revealRoleOnDeath: false,
+      doctorSelfProtectLimit: 1,
     })
     expect(createDefaultCidadeDormeSettings(6)).toMatchObject({
       killersCount: 1,
       enableDoctor: true,
       enableDetective: true,
-      enableJester: true,
+      enableJester: false,
+      revealRoleOnDeath: false,
+      doctorSelfProtectLimit: 1,
     })
   })
 

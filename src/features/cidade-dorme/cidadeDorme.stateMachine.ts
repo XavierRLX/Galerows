@@ -1,4 +1,4 @@
-import { checkWinCondition, getAlivePlayers } from './cidadeDorme.rules'
+import { checkWinCondition } from './cidadeDorme.rules'
 import type { GamePhase, GameState, RoleKey } from './cidadeDorme.types'
 
 export const CIDADE_DORME_PHASES: GamePhase[] = [
@@ -11,7 +11,6 @@ export const CIDADE_DORME_PHASES: GamePhase[] = [
   'nightResolution',
   'dayDiscussion',
   'voting',
-  'voteResolution',
   'gameOver',
 ]
 
@@ -39,9 +38,7 @@ export function getNextPhase(session: GameState): GamePhase | null {
     case 'dayDiscussion':
       return 'voting'
     case 'voting':
-      return 'voteResolution'
-    case 'voteResolution':
-      return 'nightIntro'
+      return null
   }
 }
 
@@ -63,30 +60,19 @@ export function advancePhase(session: GameState): GameState {
     })
   }
 
-  if (session.phase === 'voteResolution' && phase === 'nightIntro') {
-    const round = session.round + 1
-    return touch({
-      ...session,
-      phase,
-      round,
-      currentNightAction: { round },
-      currentVotes: [],
-    })
-  }
-
   return touch({ ...session, phase })
 }
 
 function getNextSpecialNightPhase(session: GameState, roleKey: RoleKey): GamePhase {
-  if (roleKey === 'doctor' && hasLivingEnabledRole(session, 'doctor')) return 'doctorTurn'
-  if (roleKey === 'detective' && hasLivingEnabledRole(session, 'detective')) return 'detectiveTurn'
+  if (roleKey === 'doctor' && isRoleEnabled(session, 'doctor')) return 'doctorTurn'
+  if (roleKey === 'detective' && isRoleEnabled(session, 'detective')) return 'detectiveTurn'
   return roleKey === 'doctor' ? getNextSpecialNightPhase(session, 'detective') : 'nightResolution'
 }
 
-function hasLivingEnabledRole(session: GameState, roleKey: RoleKey) {
+function isRoleEnabled(session: GameState, roleKey: RoleKey) {
   if (roleKey === 'doctor' && !session.settings.enableDoctor) return false
   if (roleKey === 'detective' && !session.settings.enableDetective) return false
-  return getAlivePlayers(session.players).some((player) => player.roleKey === roleKey)
+  return true
 }
 
 function isLastReveal(session: GameState) {

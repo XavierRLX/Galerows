@@ -14,7 +14,7 @@ describe('app navigation', () => {
 
     cleanup()
     render(<MemoryRouter initialEntries={['/premium']}><AppRoutes /></MemoryRouter>)
-    expect(await screen.findByRole('heading', { name: /jogos da galera/i })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: /galerows/i })).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: /jogue sem anúncios/i })).not.toBeInTheDocument()
   })
 
@@ -24,7 +24,7 @@ describe('app navigation', () => {
     await user.click(screen.getByRole('button', { name: /jogar agora nem ferrando/i }))
     expect(await screen.findByRole('heading', { name: 'Nem Ferrando', level: 1 })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /voltar/i }))
-    expect(screen.getByRole('heading', { name: /jogos da galera/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /galerows/i })).toBeInTheDocument()
   })
 
   it('opens Impostor da Palavra internally', async () => {

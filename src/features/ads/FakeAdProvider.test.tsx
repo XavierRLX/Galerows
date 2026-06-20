@@ -52,7 +52,7 @@ describe('FakeAdProvider', () => {
     vi.useRealTimers()
     renderAppAt('/')
 
-    fireEvent.click(screen.getAllByRole('button', { name: /jogar agora/i })[0])
+    fireEvent.click(screen.getByRole('button', { name: /jogar agora nem ferrando/i }))
     await flushAsyncWork()
 
     expect(screen.queryByRole('dialog', { name: /espaço reservado para anúncio/i })).not.toBeInTheDocument()
@@ -82,7 +82,7 @@ describe('FakeAdProvider', () => {
     usePremiumStore.setState({ isPremium: true })
     renderAppAt('/')
 
-    fireEvent.click(screen.getAllByRole('button', { name: /jogar agora/i })[0])
+    fireEvent.click(screen.getByRole('button', { name: /jogar agora nem ferrando/i }))
     await flushAsyncWork()
 
     expect(screen.queryByRole('dialog', { name: /espaço reservado para anúncio/i })).not.toBeInTheDocument()

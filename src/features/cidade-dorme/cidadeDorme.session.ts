@@ -1,8 +1,8 @@
 import { createId } from '../../lib/utils/createId'
-import { assignRolesToPlayers, canDoctorProtect, checkWinCondition, getAlivePlayers, resolveMediatorDecisionVoting, resolveNight, resolveVoting } from './cidadeDorme.rules'
+import { assignRolesToPlayers, canDoctorProtect, checkWinCondition, getAlivePlayers, resolveNight, resolveVotingOutcome } from './cidadeDorme.rules'
 import { isSupportedCidadeDormePlayerCount } from './cidadeDorme.setup'
 import { advancePhase, CIDADE_DORME_PHASES } from './cidadeDorme.stateMachine'
-import type { CidadeDormePlayerInput, GamePhase, GameSettings, GameState, NightAction, Player, VoteTargetId, VotingResolution } from './cidadeDorme.types'
+import type { CidadeDormePlayerInput, DoctorSelfProtectLimit, GamePhase, GameSettings, GameState, ManualVotingOutcome, NightAction, Player, RoundHistory, VotingHistoryResult, VotingResolution } from './cidadeDorme.types'
 
 export function createCidadeDormeSession(players: CidadeDormePlayerInput[], settings: GameSettings, random: () => number = Math.random): GameState {
   const assignedPlayers = assignRolesToPlayers(players, settings, random)
@@ -17,9 +17,7 @@ export function createCidadeDormeSession(players: CidadeDormePlayerInput[], sett
     settings: { ...settings },
     currentRevealIndex: 0,
     currentNightAction: createEmptyNightAction(1),
-    currentVotes: [],
     history: [],
-    parallelWinners: [],
     createdAt: now,
     updatedAt: now,
   }
@@ -31,14 +29,18 @@ export function advanceRoleReveal(session: GameState): GameState {
   return advancePhase({ ...session, currentRevealIndex: session.players.length - 1 })
 }
 
-export function recordKillerTarget(session: GameState, targetId: string): GameState {
+export function recordKillerTarget(session: GameState, actorId: string, targetId: string): GameState {
   if (session.phase !== 'killerTurn') return session
-  if (!getAlivePlayers(session.players).some((player) => player.id === targetId)) return session
+  const alivePlayers = getAlivePlayers(session.players)
+  if (!alivePlayers.some((player) => player.id === actorId && player.roleKey === 'killer')) return session
+  if (actorId === targetId) return session
+  if (!alivePlayers.some((player) => player.id === targetId)) return session
   return touch({
     ...session,
     currentNightAction: {
       ...session.currentNightAction,
       round: session.round,
+      killerActorId: actorId,
       killerTargetId: targetId,
     },
   })
@@ -49,7 +51,7 @@ export function recordDoctorProtection(session: GameState, protectedPlayerId: st
   const alivePlayers = getAlivePlayers(session.players)
   const doctor = alivePlayers.find((player) => player.roleKey === 'doctor')
   if (!doctor || !alivePlayers.some((player) => player.id === protectedPlayerId)) return session
-  if (!canDoctorProtect(doctor.id, protectedPlayerId, session.settings, getPreviousProtectedPlayerId(session))) return session
+  if (!canDoctorProtect(doctor.id, protectedPlayerId, session.settings, getPreviousProtectedPlayerId(session), getDoctorSelfProtectCount(session, doctor.id))) return session
   return touch({
     ...session,
     currentNightAction: {
@@ -62,7 +64,10 @@ export function recordDoctorProtection(session: GameState, protectedPlayerId: st
 
 export function recordDetectiveInvestigation(session: GameState, detectiveTargetId: string): GameState {
   if (session.phase !== 'detectiveTurn') return session
-  if (!getAlivePlayers(session.players).some((player) => player.id === detectiveTargetId)) return session
+  const alivePlayers = getAlivePlayers(session.players)
+  const detective = alivePlayers.find((player) => player.roleKey === 'detective')
+  if (!detective || detective.id === detectiveTargetId) return session
+  if (!alivePlayers.some((player) => player.id === detectiveTargetId)) return session
   return touch({
     ...session,
     currentNightAction: {
@@ -88,49 +93,9 @@ export function resolveCurrentNight(session: GameState): GameState {
   })
 }
 
-export function recordVote(session: GameState, voterId: string, targetId: VoteTargetId): GameState {
+export function resolveCurrentVoting(session: GameState, outcome: ManualVotingOutcome): GameState {
   if (session.phase !== 'voting') return session
-  const alivePlayerIds = new Set(getAlivePlayers(session.players).map((player) => player.id))
-  const revoteTargetIds = getCurrentRevoteTargetIds(session)
-  if (!alivePlayerIds.has(voterId)) return session
-  if (revoteTargetIds && !revoteTargetIds.includes(targetId)) return session
-  if (targetId === 'skip' && !session.settings.allowSkipVote) return session
-  if (targetId !== 'skip' && !alivePlayerIds.has(targetId)) return session
-  return touch({
-    ...session,
-    currentVotes: [
-      ...session.currentVotes.filter((vote) => vote.voterId !== voterId),
-      { voterId, targetId },
-    ],
-  })
-}
-
-export function resolveCurrentVoting(session: GameState): GameState {
-  if (session.phase !== 'voteResolution') return session
-  const existing = session.history.find((round) => round.round === session.round)
-  if (existing?.votingResult && areVotesEqual(existing.votes, session.currentVotes)) return session
-  const resolution = resolveVoting(session.players, session.currentVotes, session.settings, session.round)
-  return applyVotingResolution(session, resolution)
-}
-
-export function startTiedRevote(session: GameState): GameState {
-  if (session.phase !== 'voteResolution') return session
-  const existing = session.history.find((round) => round.round === session.round)
-  if (existing?.votingResult?.kind !== 'revote' || !existing.votingResult.tiedTargetIds?.length) return session
-  return touch({
-    ...session,
-    phase: 'voting',
-    currentVotes: [],
-  })
-}
-
-export function resolveCurrentVotingByMediator(session: GameState, chosenTargetId: VoteTargetId): GameState {
-  if (session.phase !== 'voteResolution') return session
-  const existing = session.history.find((round) => round.round === session.round)
-  const tiedTargetIds = existing?.votingResult?.kind === 'mediatorDecision' ? existing.votingResult.tiedTargetIds : undefined
-  if (tiedTargetIds && !tiedTargetIds.includes(chosenTargetId)) return session
-  const resolution = resolveMediatorDecisionVoting(session.players, session.currentVotes, session.settings, session.round, chosenTargetId)
-  if (resolution.kind === 'mediatorDecision') return session
+  const resolution = resolveVotingOutcome(session.players, outcome, session.round)
   return applyVotingResolution(session, resolution)
 }
 
@@ -138,43 +103,78 @@ function applyVotingResolution(session: GameState, resolution: VotingResolution)
   const resolvedSession = {
     ...session,
     players: resolution.players,
-    currentVotes: resolution.votes,
   }
   const winCondition = checkWinCondition(resolvedSession.players, resolvedSession.settings)
+  if (winCondition.isGameOver) {
+    return touch({
+      ...resolvedSession,
+      phase: 'gameOver',
+      winner: winCondition.winner ?? resolvedSession.winner,
+      winnerPlayerId: winCondition.winnerPlayerId ?? resolvedSession.winnerPlayerId,
+      history: upsertRoundHistory(resolvedSession, resolution),
+    })
+  }
+
+  const nextRound = resolvedSession.round + 1
   return touch({
     ...resolvedSession,
-    parallelWinners: mergeParallelWinners(resolvedSession.parallelWinners ?? [], winCondition.parallelWinners),
+    phase: 'nightIntro',
+    round: nextRound,
+    currentNightAction: createEmptyNightAction(nextRound),
     history: upsertRoundHistory(resolvedSession, resolution),
   })
 }
 
-export function isCidadeDormeSessionCompatible(value: unknown): value is GameState {
-  if (!isRecord(value)) return false
-  const session = value as Partial<GameState>
-  if (session.schemaVersion !== 1 || session.gameId !== 'cidade-dorme') return false
-  if (typeof session.id !== 'string' || typeof session.createdAt !== 'string' || typeof session.updatedAt !== 'string') return false
-  if (typeof session.phase !== 'string' || !CIDADE_DORME_PHASES.includes(session.phase as GamePhase)) return false
-  if (!Number.isInteger(session.round) || session.round! < 1) return false
-  if (!isSettings(session.settings)) return false
-  if (!Array.isArray(session.players) || session.players.length !== session.settings.playerCount) return false
-  if (!session.players.every(isPlayer)) return false
+export function migrateCidadeDormeSession(value: unknown): GameState | null {
+  if (!isRecord(value)) return null
+  const session = value as Partial<GameState> & Record<string, unknown>
+  const settings = normalizeSettings(session.settings)
+  if (!settings) return null
+  if (session.schemaVersion !== 1 || session.gameId !== 'cidade-dorme') return null
+  if (typeof session.id !== 'string' || typeof session.createdAt !== 'string' || typeof session.updatedAt !== 'string') return null
+  const rawPhase = value.phase
+  if (typeof rawPhase !== 'string' || (!CIDADE_DORME_PHASES.includes(rawPhase as GamePhase) && rawPhase !== 'voteResolution')) return null
+  if (!Number.isInteger(session.round) || session.round! < 1) return null
+  if (!Array.isArray(session.players) || session.players.length !== settings.playerCount) return null
+  if (!session.players.every(isPlayer)) return null
   const ids = session.players.map((player) => player.id)
-  if (new Set(ids).size !== ids.length) return false
-  if (!Number.isInteger(session.currentRevealIndex) || session.currentRevealIndex! < 0 || session.currentRevealIndex! >= session.players.length) return false
-  if (!isNightAction(session.currentNightAction, session.round!)) return false
-  if (!Array.isArray(session.currentVotes)) return false
-  if (!Array.isArray(session.history)) return false
-  if (session.parallelWinners !== undefined && !Array.isArray(session.parallelWinners)) return false
-  return true
+  if (new Set(ids).size !== ids.length) return null
+  if (!Number.isInteger(session.currentRevealIndex) || session.currentRevealIndex! < 0 || session.currentRevealIndex! >= session.players.length) return null
+  if (!isNightAction(session.currentNightAction, session.round!)) return null
+  if (!Array.isArray(session.history)) return null
+
+  const round = session.round as number
+  const currentRevealIndex = session.currentRevealIndex as number
+  const currentNightAction = session.currentNightAction as NightAction
+  const phase = rawPhase === 'voteResolution' || (rawPhase === 'voting' && Array.isArray(session.currentVotes)) ? 'dayDiscussion' : rawPhase as GamePhase
+  return {
+    schemaVersion: 1,
+    id: session.id,
+    gameId: 'cidade-dorme',
+    phase,
+    round,
+    players: session.players,
+    settings,
+    currentRevealIndex,
+    currentNightAction,
+    history: session.history.map(normalizeRoundHistory).filter((round): round is RoundHistory => Boolean(round)),
+    winner: typeof session.winner === 'string' && ['city', 'killers', 'jester'].includes(session.winner) ? session.winner : undefined,
+    winnerPlayerId: typeof session.winnerPlayerId === 'string' ? session.winnerPlayerId : undefined,
+    createdAt: session.createdAt,
+    updatedAt: session.updatedAt,
+  }
+}
+
+export function isCidadeDormeSessionCompatible(value: unknown): value is GameState {
+  return migrateCidadeDormeSession(value) !== null
 }
 
 function getPreviousProtectedPlayerId(session: GameState) {
   return [...session.history].reverse().find((round) => round.nightAction.protectedPlayerId)?.nightAction.protectedPlayerId
 }
 
-function getCurrentRevoteTargetIds(session: GameState) {
-  const votingResult = session.history.find((round) => round.round === session.round)?.votingResult
-  return votingResult?.kind === 'revote' && votingResult.tiedTargetIds?.length ? votingResult.tiedTargetIds : null
+function getDoctorSelfProtectCount(session: GameState, doctorId: string) {
+  return session.history.filter((round) => round.nightAction.protectedPlayerId === doctorId).length
 }
 
 function createEmptyNightAction(round: number): NightAction {
@@ -186,12 +186,9 @@ function upsertRoundHistory(session: GameState, votingResolution?: VotingResolut
   const entry = {
     round: session.round,
     nightAction: session.currentNightAction,
-    votes: session.currentVotes,
     votingResult: votingResolution ? {
       kind: votingResolution.kind,
-      tally: votingResolution.tally,
       eliminatedPlayerId: votingResolution.eliminatedPlayerId,
-      tiedTargetIds: votingResolution.tiedTargetIds,
       jesterWinnerPlayerId: votingResolution.jesterWinnerPlayerId,
     } : existing?.votingResult,
     eliminatedByVoteId: votingResolution?.eliminatedPlayerId ?? existing?.eliminatedByVoteId,
@@ -200,33 +197,14 @@ function upsertRoundHistory(session: GameState, votingResolution?: VotingResolut
   return [...session.history.filter((round) => round.round !== session.round), entry].sort((a, b) => a.round - b.round)
 }
 
-function mergeParallelWinners(current: NonNullable<GameState['parallelWinners']>, next: NonNullable<GameState['parallelWinners']>) {
-  const seen = new Set(current.map((winner) => `${winner.winner}:${winner.playerId}`))
-  return [
-    ...current,
-    ...next.filter((winner) => {
-      const key = `${winner.winner}:${winner.playerId}`
-      if (seen.has(key)) return false
-      seen.add(key)
-      return true
-    }),
-  ]
-}
-
-function areVotesEqual(left: readonly { voterId: string; targetId: VoteTargetId }[], right: readonly { voterId: string; targetId: VoteTargetId }[]) {
-  if (left.length !== right.length) return false
-  const rightByVoter = new Map(right.map((vote) => [vote.voterId, vote.targetId]))
-  return left.every((vote) => rightByVoter.get(vote.voterId) === vote.targetId)
-}
-
 function touch(session: GameState): GameState {
   return { ...session, updatedAt: new Date().toISOString() }
 }
 
-function isSettings(value: unknown): value is GameSettings {
-  if (!isRecord(value)) return false
+function normalizeSettings(value: unknown): GameSettings | null {
+  if (!isRecord(value)) return null
   const { playerCount, killersCount } = value
-  return typeof playerCount === 'number'
+  if (!(typeof playerCount === 'number'
     && typeof killersCount === 'number'
     && isSupportedCidadeDormePlayerCount(playerCount)
     && Number.isInteger(killersCount)
@@ -236,12 +214,50 @@ function isSettings(value: unknown): value is GameSettings {
     && typeof value.enableDetective === 'boolean'
     && typeof value.enableJester === 'boolean'
     && typeof value.revealRoleOnDeath === 'boolean'
-    && typeof value.allowSkipVote === 'boolean'
-    && ['noElimination', 'revoteTied', 'mediatorDecision'].includes(String(value.tieRule))
     && typeof value.doctorCanSelfProtect === 'boolean'
     && typeof value.doctorCanRepeatProtection === 'boolean'
-    && ['instant', 'parallel'].includes(String(value.jesterWinMode))
-    && typeof value.themeId === 'string'
+    && typeof value.themeId === 'string')) return null
+  return {
+    playerCount,
+    killersCount,
+    enableDoctor: value.enableDoctor,
+    enableDetective: value.enableDetective,
+    enableJester: value.enableJester,
+    revealRoleOnDeath: value.revealRoleOnDeath,
+    doctorCanSelfProtect: value.doctorCanSelfProtect,
+    doctorSelfProtectLimit: normalizeDoctorSelfProtectLimit(value.doctorSelfProtectLimit),
+    doctorCanRepeatProtection: value.doctorCanRepeatProtection,
+    themeId: value.themeId,
+  }
+}
+
+function normalizeDoctorSelfProtectLimit(value: unknown): DoctorSelfProtectLimit {
+  return value === 1 || value === 2 || value === 3 || value === 'unlimited' ? value : 1
+}
+
+function normalizeRoundHistory(value: unknown): RoundHistory | null {
+  if (!isRecord(value) || typeof value.round !== 'number' || !Number.isInteger(value.round) || value.round < 1 || !isRoundNightAction(value.nightAction)) return null
+  const votingResult = normalizeVotingHistoryResult(value.votingResult)
+  return {
+    round: value.round,
+    nightAction: value.nightAction,
+    votingResult,
+    eliminatedByVoteId: typeof value.eliminatedByVoteId === 'string' ? value.eliminatedByVoteId : votingResult?.eliminatedPlayerId,
+    notes: Array.isArray(value.notes) ? value.notes.filter((note): note is string => typeof note === 'string') : undefined,
+  }
+}
+
+function normalizeVotingHistoryResult(value: unknown): VotingHistoryResult | undefined {
+  if (!isRecord(value)) return undefined
+  if (value.kind === 'eliminated') {
+    return {
+      kind: 'eliminated',
+      eliminatedPlayerId: typeof value.eliminatedPlayerId === 'string' ? value.eliminatedPlayerId : undefined,
+      jesterWinnerPlayerId: typeof value.jesterWinnerPlayerId === 'string' ? value.jesterWinnerPlayerId : undefined,
+    }
+  }
+  if (typeof value.kind === 'string') return { kind: 'tie' }
+  return undefined
 }
 
 function isPlayer(value: unknown): value is Player {
@@ -256,6 +272,10 @@ function isPlayer(value: unknown): value is Player {
 
 function isNightAction(value: unknown, round: number) {
   return isRecord(value) && value.round === round
+}
+
+function isRoundNightAction(value: unknown): value is NightAction {
+  return isRecord(value) && typeof value.round === 'number' && Number.isInteger(value.round) && value.round >= 1
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

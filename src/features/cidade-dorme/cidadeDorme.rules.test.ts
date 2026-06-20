@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import type { CidadeDormePlayerInput, GameSettings, Player, Vote } from './cidadeDorme.types'
-import { assignRolesToPlayers, canDoctorProtect, canStartGame, checkWinCondition, createRoleDeck, getAliveInnocents, getAliveKillers, getAlivePlayers, resolveMediatorDecisionVoting, resolveNight, resolveVoting } from './cidadeDorme.rules'
+import type { CidadeDormePlayerInput, GameSettings, Player } from './cidadeDorme.types'
+import { assignRolesToPlayers, canDoctorProtect, canStartGame, checkWinCondition, createRoleDeck, getAliveInnocents, getAliveKillers, getAlivePlayers, resolveNight, resolveVotingOutcome } from './cidadeDorme.rules'
 
 const players: CidadeDormePlayerInput[] = [
   { id: 'ana', name: 'Ana' },
@@ -18,11 +18,9 @@ const defaultSettings: GameSettings = {
   enableDetective: true,
   enableJester: true,
   revealRoleOnDeath: false,
-  allowSkipVote: true,
-  tieRule: 'noElimination',
   doctorCanSelfProtect: false,
+  doctorSelfProtectLimit: 1,
   doctorCanRepeatProtection: false,
-  jesterWinMode: 'instant',
   themeId: 'classic',
 }
 
@@ -69,54 +67,25 @@ describe('Cidade Dorme rules', () => {
     expect(canDoctorProtect('bia', 'caio', defaultSettings, 'caio')).toBe(false)
     expect(canDoctorProtect('bia', 'bia', { ...defaultSettings, doctorCanSelfProtect: true })).toBe(true)
     expect(canDoctorProtect('bia', 'caio', { ...defaultSettings, doctorCanRepeatProtection: true }, 'caio')).toBe(true)
+    expect(canDoctorProtect('bia', 'bia', { ...defaultSettings, doctorCanSelfProtect: true, doctorSelfProtectLimit: 1 }, undefined, 1)).toBe(false)
+    expect(canDoctorProtect('bia', 'bia', { ...defaultSettings, doctorCanSelfProtect: true, doctorSelfProtectLimit: 2 }, undefined, 1)).toBe(true)
+    expect(canDoctorProtect('bia', 'bia', { ...defaultSettings, doctorCanSelfProtect: true, doctorSelfProtectLimit: 3 }, undefined, 3)).toBe(false)
+    expect(canDoctorProtect('bia', 'bia', { ...defaultSettings, doctorCanSelfProtect: true, doctorSelfProtectLimit: 'unlimited' }, undefined, 99)).toBe(true)
   })
 
-  it('eliminates the most voted alive player and ignores invalid votes', () => {
+  it('applies a manual eliminated voting result', () => {
     const assigned = assignRolesToPlayers(players, defaultSettings, noShuffle)
-    const votes: Vote[] = [
-      { voterId: 'ana', targetId: 'eli' },
-      { voterId: 'bia', targetId: 'eli' },
-      { voterId: 'missing-voter', targetId: 'eli' },
-      { voterId: 'caio', targetId: 'missing-target' },
-      { voterId: 'dani', targetId: 'skip' },
-    ]
-    const resolution = resolveVoting(assigned, votes, defaultSettings, 1)
+    const resolution = resolveVotingOutcome(assigned, { kind: 'eliminated', playerId: 'eli' }, 1)
     expect(resolution.kind).toBe('eliminated')
     expect(resolution.eliminatedPlayerId).toBe('eli')
-    expect(resolution.tally).toEqual({ eli: 2, skip: 1 })
     expect(resolution.players.find((player) => player.id === 'eli')).toMatchObject({ status: 'eliminated', eliminationReason: 'vote' })
   })
 
-  it('supports skip votes and tie rules', () => {
+  it('applies a manual tie result without individual votes', () => {
     const assigned = assignRolesToPlayers(players, defaultSettings, noShuffle)
-    expect(resolveVoting(assigned, [
-      { voterId: 'ana', targetId: 'skip' },
-      { voterId: 'bia', targetId: 'skip' },
-      { voterId: 'caio', targetId: 'eli' },
-    ], defaultSettings, 1).kind).toBe('skipped')
-
-    const tieVotes: Vote[] = [
-      { voterId: 'ana', targetId: 'eli' },
-      { voterId: 'bia', targetId: 'fefa' },
-    ]
-    expect(resolveVoting(assigned, tieVotes, defaultSettings, 1)).toMatchObject({ kind: 'tie', tiedTargetIds: ['eli', 'fefa'] })
-    expect(resolveVoting(assigned, tieVotes, { ...defaultSettings, tieRule: 'revoteTied' }, 1).kind).toBe('revote')
-    expect(resolveVoting(assigned, tieVotes, { ...defaultSettings, tieRule: 'mediatorDecision' }, 1).kind).toBe('mediatorDecision')
-  })
-
-  it('applies a mediator decision only to tied targets', () => {
-    const assigned = assignRolesToPlayers(players, defaultSettings, noShuffle)
-    const votes: Vote[] = [
-      { voterId: 'ana', targetId: 'eli' },
-      { voterId: 'bia', targetId: 'fefa' },
-    ]
-    const settings = { ...defaultSettings, tieRule: 'mediatorDecision' as const }
-
-    expect(resolveMediatorDecisionVoting(assigned, votes, settings, 1, 'caio')).toMatchObject({ kind: 'mediatorDecision' })
-
-    const resolution = resolveMediatorDecisionVoting(assigned, votes, settings, 1, 'eli')
-    expect(resolution).toMatchObject({ kind: 'eliminated', eliminatedPlayerId: 'eli' })
-    expect(resolution.players.find((player) => player.id === 'eli')).toMatchObject({ status: 'eliminated', eliminationReason: 'vote' })
+    const resolution = resolveVotingOutcome(assigned, { kind: 'tie' }, 1)
+    expect(resolution).toMatchObject({ kind: 'tie', round: 1 })
+    expect(resolution.players.map((player) => player.status)).toEqual(assigned.map((player) => player.status))
   })
 
   it('detects city, killer and instant jester wins', () => {
@@ -138,14 +107,14 @@ describe('Cidade Dorme rules', () => {
     ]), defaultSettings)).toMatchObject({ isGameOver: true, winner: 'jester', winnerPlayerId: 'bia', reason: 'jester-voted-out' })
   })
 
-  it('keeps the game running for parallel jester wins when no team has won yet', () => {
+  it('always ends the game for jester wins', () => {
     const result = checkWinCondition(withRoles([
       ['ana', 'killer', 'alive'],
       ['bia', 'jester', 'eliminated', 'vote'],
       ['caio', 'citizen', 'alive'],
       ['dani', 'doctor', 'alive'],
-    ]), { ...defaultSettings, jesterWinMode: 'parallel' })
-    expect(result).toMatchObject({ isGameOver: false, winner: null, reason: 'none', parallelWinners: [{ winner: 'jester', playerId: 'bia' }] })
+    ]), defaultSettings)
+    expect(result).toMatchObject({ isGameOver: true, winner: 'jester', winnerPlayerId: 'bia', reason: 'jester-voted-out' })
   })
 })
 

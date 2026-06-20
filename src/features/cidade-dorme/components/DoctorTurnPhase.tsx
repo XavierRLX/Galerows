@@ -10,14 +10,16 @@ import type { GameState } from '../cidadeDorme.types'
 type DoctorTurnPhaseProps = {
   session: GameState
   onConfirmProtection: (protectedPlayerId: string) => void | Promise<void>
+  onSkipTurn: () => void | Promise<void>
 }
 
-export function DoctorTurnPhase({ session, onConfirmProtection }: DoctorTurnPhaseProps) {
+export function DoctorTurnPhase({ session, onConfirmProtection, onSkipTurn }: DoctorTurnPhaseProps) {
   const { t } = useTranslation('cidade-dorme')
   const alivePlayers = getAlivePlayers(session.players)
   const doctor = alivePlayers.find((player) => player.roleKey === 'doctor')
   const previousProtectedPlayerId = [...session.history].reverse().find((round) => round.nightAction.protectedPlayerId)?.nightAction.protectedPlayerId
-  const validTargets = alivePlayers.filter((player) => doctor && canDoctorProtect(doctor.id, player.id, session.settings, previousProtectedPlayerId))
+  const selfProtectCount = doctor ? session.history.filter((round) => round.nightAction.protectedPlayerId === doctor.id).length : 0
+  const validTargets = alivePlayers.filter((player) => doctor && canDoctorProtect(doctor.id, player.id, session.settings, previousProtectedPlayerId, selfProtectCount))
   const [selectedTargetId, setSelectedTargetId] = useState(validTargets.some((player) => player.id === session.currentNightAction.protectedPlayerId) ? session.currentNightAction.protectedPlayerId ?? '' : '')
   const selectedPlayer = validTargets.find((player) => player.id === selectedTargetId)
 
@@ -28,11 +30,13 @@ export function DoctorTurnPhase({ session, onConfirmProtection }: DoctorTurnPhas
       </div>
       <h1 className="mt-5 text-3xl font-black">{t('doctorTurn.title')}</h1>
       <p className="mx-auto mt-3 max-w-md leading-7 text-slate-400">
-        {t('doctorTurn.description')}
+        {t('doctorTurn.wakeScript')}
       </p>
     </div>
 
     <Card className="mx-auto mt-8 max-w-lg p-5">
+      {!doctor ? <FakeDoctorTurn onSkipTurn={onSkipTurn} /> : <>
+      <p className="mb-5 rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-4 text-sm leading-6 text-slate-200">{t('doctorTurn.actor', { name: doctor.name })}</p>
       <div className="flex items-start gap-3">
         <ShieldAlert className="mt-0.5 shrink-0 text-emerald-200" size={22} />
         <div>
@@ -58,13 +62,29 @@ export function DoctorTurnPhase({ session, onConfirmProtection }: DoctorTurnPhas
         })}
       </div>
       {!validTargets.length ? <p className="mt-5 rounded-2xl border border-amber-300/30 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">{t('doctorTurn.empty')}</p> : null}
+      </>}
     </Card>
 
-    <div className="mx-auto mt-6 grid max-w-lg">
+    {doctor ? <div className="mx-auto mt-6 grid max-w-lg">
       <Button className="bg-emerald-300 text-slate-950 hover:bg-emerald-200" disabled={!selectedPlayer} size="lg" onClick={() => selectedPlayer && void onConfirmProtection(selectedPlayer.id)}>
         <Check size={19} />
         {t('doctorTurn.confirm')}
       </Button>
-    </div>
+      <p className="mt-3 text-center text-sm font-bold text-emerald-100">{t('doctorTurn.sleepScript')}</p>
+    </div> : null}
   </>
+}
+
+function FakeDoctorTurn({ onSkipTurn }: { onSkipTurn: () => void | Promise<void> }) {
+  const { t } = useTranslation('cidade-dorme')
+  return <div className="text-center">
+    <ShieldAlert className="mx-auto text-emerald-200" size={36} />
+    <p className="mt-4 text-sm font-black uppercase tracking-wider text-emerald-200">{t('doctorTurn.fakeTitle')}</p>
+    <p className="mt-3 text-sm leading-6 text-slate-300">{t('doctorTurn.fakeDescription')}</p>
+    <Button className="mt-5 bg-emerald-300 text-slate-950 hover:bg-emerald-200" size="lg" onClick={() => void onSkipTurn()}>
+      <Check size={19} />
+      {t('doctorTurn.fakeContinue')}
+    </Button>
+    <p className="mt-3 text-sm font-bold text-emerald-100">{t('doctorTurn.sleepScript')}</p>
+  </div>
 }

@@ -14,7 +14,6 @@ import { KillerTurnPhase } from './components/KillerTurnPhase'
 import { MediatorHistoryPanel } from './components/MediatorHistoryPanel'
 import { NightIntroPhase } from './components/NightIntroPhase'
 import { NightResolutionPhase } from './components/NightResolutionPhase'
-import { VoteResolutionPhase } from './components/VoteResolutionPhase'
 import { VotingPhase } from './components/VotingPhase'
 import { getTranslatedRole } from './cidadeDorme.copy'
 import { getClassicRoleTheme } from './cidadeDorme.theme'
@@ -25,7 +24,7 @@ import { useCidadeDormeInitialization } from './useCidadeDormeInitialization'
 export function CidadeDormePlayScreen() {
   const { t } = useTranslation('cidade-dorme')
   const navigate = useNavigate()
-  const { session, initialized, advanceReveal, advancePhase, chooseKillerTarget, chooseDoctorProtection, chooseDetectiveTarget, resolveNight, castVote, resolveVoting, startRevote, resolveMediatorDecision } = useCidadeDormeStore()
+  const { session, initialized, advanceReveal, advancePhase, chooseKillerTarget, chooseDoctorProtection, chooseDetectiveTarget, resolveNight, resolveVoting } = useCidadeDormeStore()
   const [showSecret, setShowSecret] = useState(false)
   useCidadeDormeInitialization()
   useEffect(() => {
@@ -56,15 +55,15 @@ export function CidadeDormePlayScreen() {
   </Shell>
 
   if (session.phase === 'killerTurn') return <Shell historySession={session} title={t('play.nightTitle', { round: session.round })}>
-    <KillerTurnPhase session={session} onConfirmTarget={async (targetId) => { await chooseKillerTarget(targetId); await AppHaptics.medium() }} />
+    <KillerTurnPhase session={session} onConfirmTarget={async (actorId, targetId) => { await chooseKillerTarget(actorId, targetId); await AppHaptics.medium() }} />
   </Shell>
 
   if (session.phase === 'doctorTurn') return <Shell historySession={session} title={t('play.nightTitle', { round: session.round })}>
-    <DoctorTurnPhase session={session} onConfirmProtection={async (protectedPlayerId) => { await chooseDoctorProtection(protectedPlayerId); await AppHaptics.medium() }} />
+    <DoctorTurnPhase session={session} onConfirmProtection={async (protectedPlayerId) => { await chooseDoctorProtection(protectedPlayerId); await AppHaptics.medium() }} onSkipTurn={async () => { await advancePhase(); await AppHaptics.light() }} />
   </Shell>
 
   if (session.phase === 'detectiveTurn') return <Shell historySession={session} title={t('play.nightTitle', { round: session.round })}>
-    <DetectiveTurnPhase session={session} onConfirmInvestigation={async (detectiveTargetId) => { await chooseDetectiveTarget(detectiveTargetId); await AppHaptics.medium() }} />
+    <DetectiveTurnPhase session={session} onConfirmInvestigation={async (detectiveTargetId) => { await chooseDetectiveTarget(detectiveTargetId); await AppHaptics.medium() }} onSkipTurn={async () => { await advancePhase(); await AppHaptics.light() }} />
   </Shell>
 
   if (session.phase === 'nightResolution') return <Shell historySession={session} title={t('play.nightTitle', { round: session.round })}>
@@ -76,11 +75,7 @@ export function CidadeDormePlayScreen() {
   </Shell>
 
   if (session.phase === 'voting') return <Shell historySession={session} title={t('play.dayTitle', { round: session.round })}>
-    <VotingPhase session={session} onCastVote={async (voterId, targetId) => { await castVote(voterId, targetId); await AppHaptics.light() }} onFinishVoting={async () => { await advancePhase(); await AppHaptics.medium() }} />
-  </Shell>
-
-  if (session.phase === 'voteResolution') return <Shell historySession={session} title={t('play.dayTitle', { round: session.round })}>
-    <VoteResolutionPhase session={session} onResolveVoting={async () => { await resolveVoting(); await AppHaptics.medium() }} onStartRevote={async () => { await startRevote(); await AppHaptics.medium() }} onMediatorDecision={async (targetId) => { await resolveMediatorDecision(targetId); await AppHaptics.medium() }} onContinue={async () => { await advancePhase(); await AppHaptics.light() }} />
+    <VotingPhase session={session} onResolveVoting={async (outcome) => { await resolveVoting(outcome); await AppHaptics.medium() }} />
   </Shell>
 
   return <Shell title={t('name')}><p className="text-center text-slate-400">{t('play.fallback')}</p></Shell>

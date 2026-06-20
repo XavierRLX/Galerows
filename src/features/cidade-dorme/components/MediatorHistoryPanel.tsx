@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Card } from '../../../components/ui/Card'
 import { getTranslatedRole } from '../cidadeDorme.copy'
-import type { GameState, RoundHistory, VoteTargetId } from '../cidadeDorme.types'
+import type { GameState, RoundHistory } from '../cidadeDorme.types'
 
 type MediatorHistoryPanelProps = {
   session: GameState
@@ -27,6 +27,7 @@ export function MediatorHistoryPanel({ session }: MediatorHistoryPanelProps) {
 function RoundHistoryCard({ round, session }: { round: RoundHistory; session: GameState }) {
   const { t } = useTranslation('cidade-dorme')
   const action = round.nightAction
+  const killerActor = getPlayerName(t, session, action.killerActorId)
   const killerTarget = getPlayerName(t, session, action.killerTargetId)
   const protectedPlayer = getPlayerName(t, session, action.protectedPlayerId)
   const detectiveTarget = getPlayerName(t, session, action.detectiveTargetId)
@@ -39,6 +40,7 @@ function RoundHistoryCard({ round, session }: { round: RoundHistory; session: Ga
       <div className="flex items-start gap-3">
         <Moon className="mt-0.5 shrink-0 text-indigo-200" size={18} />
         <div>
+          <p><strong className="text-slate-100">{t('history.killerActor')}</strong> {killerActor}</p>
           <p><strong className="text-slate-100">{t('history.killerTarget')}</strong> {killerTarget}</p>
           <p><strong className="text-slate-100">{t('history.doctorProtection')}</strong> {protectedPlayer}</p>
           <p><strong className="text-slate-100">{t('history.investigation')}</strong> {detectiveTarget}{action.detectiveResult ? ` (${t(`nightResolution.${action.detectiveResult}`)})` : ''}</p>
@@ -49,7 +51,6 @@ function RoundHistoryCard({ round, session }: { round: RoundHistory; session: Ga
         <Vote className="mt-0.5 shrink-0 text-fuchsia-200" size={18} />
         <div>
           <p><strong className="text-slate-100">{t('history.vote')}</strong> {getVotingSummary(t, round, eliminatedByVote)}</p>
-          {round.votingResult ? <p><strong className="text-slate-100">{t('history.tally')}</strong> {formatTally(t, round.votingResult.tally, session)}</p> : null}
         </div>
       </div>
     </div>
@@ -58,20 +59,10 @@ function RoundHistoryCard({ round, session }: { round: RoundHistory; session: Ga
 
 function getVotingSummary(t: TFunction<'cidade-dorme'>, round: RoundHistory, eliminatedByVote: string) {
   const kind = round.votingResult?.kind
-  if (!kind && !round.votes.length) return t('history.notRegistered')
+  if (!kind) return t('history.notRegistered')
   if (kind === 'eliminated') return t('history.voteKilled', { name: eliminatedByVote })
-  if (kind === 'skipped') return t('history.voteSkipped')
   if (kind === 'tie') return t('history.tie')
-  if (kind === 'revote') return t('history.revote')
-  if (kind === 'mediatorDecision') return t('history.mediatorDecision')
-  if (kind === 'noVotes') return t('history.noVotes')
-  return t('history.votesCount', { count: round.votes.length })
-}
-
-function formatTally(t: TFunction<'cidade-dorme'>, tally: Record<VoteTargetId, number>, session: GameState) {
-  const entries = Object.entries(tally)
-  if (!entries.length) return t('history.emptyTally')
-  return entries.map(([targetId, count]) => `${getPlayerName(t, session, targetId)} ${count}`).join(' · ')
+  return t('history.notRegistered')
 }
 
 function getPlayerName(t: TFunction<'cidade-dorme'>, session: GameState, playerId: string | undefined) {

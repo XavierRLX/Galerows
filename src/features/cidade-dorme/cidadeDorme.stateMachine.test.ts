@@ -23,10 +23,23 @@ describe('Cidade Dorme state machine', () => {
     expect(canTransitionToPhase(finalReveal, 'nightIntro')).toBe(true)
   })
 
-  it('skips disabled or eliminated night roles', () => {
+  it('keeps enabled night roles even when they are eliminated', () => {
     const session = withPhase(createCidadeDormeSession(players, createDefaultCidadeDormeSettings(players.length), () => 0.999999), 'killerTurn')
-    expect(getNextPhase(session)).toBe('doctorTurn')
+    const withEliminatedDoctor: GameState = {
+      ...session,
+      players: session.players.map((player) => player.roleKey === 'doctor' ? { ...player, status: 'eliminated', eliminatedAtRound: 1, eliminationReason: 'night' } : player),
+    }
+    expect(getNextPhase(withEliminatedDoctor)).toBe('doctorTurn')
 
+    const withEliminatedDetective = withPhase({
+      ...withEliminatedDoctor,
+      players: withEliminatedDoctor.players.map((player) => player.roleKey === 'detective' ? { ...player, status: 'eliminated', eliminatedAtRound: 1, eliminationReason: 'night' } : player),
+    }, 'doctorTurn')
+    expect(getNextPhase(withEliminatedDetective)).toBe('detectiveTurn')
+  })
+
+  it('skips disabled night roles', () => {
+    const session = withPhase(createCidadeDormeSession(players, createDefaultCidadeDormeSettings(players.length), () => 0.999999), 'killerTurn')
     const withoutDoctor = { ...session, settings: { ...session.settings, enableDoctor: false } }
     expect(getNextPhase(withoutDoctor)).toBe('detectiveTurn')
 
@@ -39,15 +52,10 @@ describe('Cidade Dorme state machine', () => {
     expect(advancePhase(session)).toMatchObject({ phase: 'killerTurn', round: 1 })
   })
 
-  it('advances from vote resolution into the next round', () => {
-    const session = withPhase(createCidadeDormeSession(players, createDefaultCidadeDormeSettings(players.length), () => 0.999999), 'voteResolution')
-    const next = advancePhase(session)
-    expect(next).toMatchObject({
-      phase: 'nightIntro',
-      round: 2,
-      currentNightAction: { round: 2 },
-      currentVotes: [],
-    })
+  it('keeps voting waiting for the mediator result', () => {
+    const session = withPhase(createCidadeDormeSession(players, createDefaultCidadeDormeSettings(players.length), () => 0.999999), 'voting')
+    expect(getNextPhase(session)).toBeNull()
+    expect(advancePhase(session)).toBe(session)
   })
 
   it('moves to game over when a team has already won', () => {

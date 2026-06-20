@@ -13,10 +13,10 @@ import type { GameParticipant } from '../players/players.types'
 import { getStartGameErrors } from './cidadeDorme.rules'
 import { CIDADE_DORME_MAX_PLAYERS, CIDADE_DORME_MIN_PLAYERS, createDefaultCidadeDormeSettings, getCidadeDormeRoleCounts, getCidadeDormeSetupWarnings, isSupportedCidadeDormePlayerCount } from './cidadeDorme.setup'
 import { useCidadeDormeStore } from './cidadeDorme.store'
-import type { GameSettings, JesterWinMode, TieRule } from './cidadeDorme.types'
+import type { DoctorSelfProtectLimit, GameSettings } from './cidadeDorme.types'
 import { useCidadeDormeInitialization } from './useCidadeDormeInitialization'
 
-const tieRules: TieRule[] = ['noElimination', 'revoteTied', 'mediatorDecision']
+const doctorSelfProtectLimits: DoctorSelfProtectLimit[] = [1, 2, 3, 'unlimited']
 
 export function CidadeDormeSetupScreen() {
   const { t } = useTranslation('cidade-dorme')
@@ -82,9 +82,7 @@ export function CidadeDormeSetupScreen() {
       <div className="mt-3 grid gap-3"><ToggleRow active={settings.enableDoctor} description={t('setup.doctorHint')} icon={<Stethoscope size={20} />} label={t('setup.doctor')} onToggle={() => updateSettings({ enableDoctor: !settings.enableDoctor })} /><ToggleRow active={settings.enableDetective} description={t('setup.detectiveHint')} icon={<ShieldCheck size={20} />} label={t('setup.detective')} onToggle={() => updateSettings({ enableDetective: !settings.enableDetective })} /><ToggleRow active={settings.enableJester} description={t('setup.jesterHint')} icon={<Moon size={20} />} label={t('setup.jester')} onToggle={() => updateSettings({ enableJester: !settings.enableJester })} /></div>
       <p className="mt-3 rounded-2xl bg-blue-300/10 p-4 text-sm leading-6 text-blue-100">{t('setup.composition', roleCounts)}</p></section>
 
-    <section className="mt-7"><h2 className="text-sm font-bold uppercase tracking-wider text-slate-400">{t('setup.rulesTitle')}</h2><div className="mt-3 grid gap-3"><ToggleRow active={settings.revealRoleOnDeath} description={t('setup.revealRoleOnDeathHint')} label={t('setup.revealRoleOnDeath')} onToggle={() => updateSettings({ revealRoleOnDeath: !settings.revealRoleOnDeath })} /><ToggleRow active={settings.allowSkipVote} description={t('setup.allowSkipVoteHint')} label={t('setup.allowSkipVote')} onToggle={() => updateSettings({ allowSkipVote: !settings.allowSkipVote })} /><ToggleRow active={settings.doctorCanSelfProtect} description={t('setup.doctorCanSelfProtectHint')} label={t('setup.doctorCanSelfProtect')} onToggle={() => updateSettings({ doctorCanSelfProtect: !settings.doctorCanSelfProtect })} /><ToggleRow active={settings.doctorCanRepeatProtection} description={t('setup.doctorCanRepeatProtectionHint')} label={t('setup.doctorCanRepeatProtection')} onToggle={() => updateSettings({ doctorCanRepeatProtection: !settings.doctorCanRepeatProtection })} /></div>
-      <h3 className="mt-5 text-sm font-bold text-slate-300">{t('setup.tieRuleTitle')}</h3><div className="mt-2 grid gap-2 sm:grid-cols-3">{tieRules.map((rule) => <Button className={cn(settings.tieRule === rule && 'bg-blue-300 text-slate-950 hover:bg-blue-200')} key={rule} variant={settings.tieRule === rule ? 'primary' : 'secondary'} onClick={() => updateSettings({ tieRule: rule })}>{t(`setup.tieRules.${rule}`)}</Button>)}</div>
-      <h3 className="mt-5 text-sm font-bold text-slate-300">{t('setup.jesterWinTitle')}</h3><div className="mt-2 grid grid-cols-2 gap-2">{(['instant', 'parallel'] as JesterWinMode[]).map((mode) => <Button className={cn(settings.jesterWinMode === mode && 'bg-blue-300 text-slate-950 hover:bg-blue-200')} disabled={!settings.enableJester} key={mode} variant={settings.jesterWinMode === mode ? 'primary' : 'secondary'} onClick={() => updateSettings({ jesterWinMode: mode })}>{t(`setup.jesterWin.${mode}`)}</Button>)}</div></section>
+    <section className="mt-7"><h2 className="text-sm font-bold uppercase tracking-wider text-slate-400">{t('setup.rulesTitle')}</h2><div className="mt-3 grid gap-3"><ToggleRow active={settings.revealRoleOnDeath} description={t('setup.revealRoleOnDeathHint')} label={t('setup.revealRoleOnDeath')} onToggle={() => updateSettings({ revealRoleOnDeath: !settings.revealRoleOnDeath })} /><ToggleRow active={settings.doctorCanSelfProtect} description={t('setup.doctorCanSelfProtectHint')} label={t('setup.doctorCanSelfProtect')} onToggle={() => updateSettings({ doctorCanSelfProtect: !settings.doctorCanSelfProtect })} />{settings.doctorCanSelfProtect ? <div className="rounded-2xl border border-white/10 bg-white/[0.05] p-4"><h3 className="text-sm font-bold text-slate-300">{t('setup.doctorSelfProtectLimitTitle')}</h3><div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">{doctorSelfProtectLimits.map((limit) => <Button className={cn(settings.doctorSelfProtectLimit === limit && 'bg-blue-300 text-slate-950 hover:bg-blue-200')} key={limit} variant={settings.doctorSelfProtectLimit === limit ? 'primary' : 'secondary'} onClick={() => updateSettings({ doctorSelfProtectLimit: limit })}>{t(`setup.doctorSelfProtectLimits.${limit}`)}</Button>)}</div></div> : null}<ToggleRow active={settings.doctorCanRepeatProtection} description={t('setup.doctorCanRepeatProtectionHint')} label={t('setup.doctorCanRepeatProtection')} onToggle={() => updateSettings({ doctorCanRepeatProtection: !settings.doctorCanRepeatProtection })} /></div></section>
 
     {warnings.map((warning) => <p className="mt-3 rounded-2xl bg-amber-300/10 p-4 text-sm text-amber-100" key={warning}>{warning}</p>)}
     {error || startErrors[0] ? <p className="mt-4 text-sm font-bold text-rose-300" role="alert">{error || startErrors[0]}</p> : null}
@@ -102,10 +100,8 @@ function settingsForPlayerCount(playerCount: number, current: GameSettings): Gam
   return {
     ...preset,
     revealRoleOnDeath: current.revealRoleOnDeath,
-    allowSkipVote: current.allowSkipVote,
-    tieRule: current.tieRule,
     doctorCanSelfProtect: current.doctorCanSelfProtect,
+    doctorSelfProtectLimit: current.doctorSelfProtectLimit,
     doctorCanRepeatProtection: current.doctorCanRepeatProtection,
-    jesterWinMode: current.jesterWinMode,
   }
 }

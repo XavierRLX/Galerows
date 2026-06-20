@@ -1,1 +1,47 @@
-{"settings":{"title":"Configuración","language":"Idioma","offlineNote":"Tu idioma queda guardado en este dispositivo y la app sigue funcionando sin conexión.","privacyOptions":"Opciones de privacidad"},"premium":{"title":"Premium","badge":"Galerows Premium","heroTitle":"Juega sin anuncios","heroDescription":"Suscríbete por {{price}}/mes y elimina los anuncios de Galerows.","activeTitle":"Premium activo","activeDescription":"Tu suscripción está activa. Los anuncios permanecen ocultos mientras premium sea válido.","includesTitle":"Incluye","benefits":{"noAds":"Sin banners, tarjetas ni pantallas de anuncio.","allGames":"Todos los juegos actuales siguen disponibles.","cancelAnytime":"Renovación mensual con cancelación desde la tienda."},"actions":{"subscribe":"Suscribirse por {{price}}/mes","purchasing":"Abriendo tienda...","restore":"Restaurar compras","restoring":"Restaurando...","refresh":"Actualizar estado","updating":"Actualizando...","manage":"Gestionar suscripción"},"unavailable":"Las suscripciones están disponibles en la app instalada desde Google Play o App Store después de configurar RevenueCat.","legal":"Premium cuesta {{price}} por mes, se renueva automáticamente mediante la tienda y puede cancelarse en la configuración de tu cuenta de Google Play o Apple ID. La compra elimina anuncios; no agrega contenido extra en esta versión.","errors":{"generic":"No se pudo completar la operación. Inténtalo de nuevo.","unavailable":"La suscripción aún no está disponible en este entorno."}}}
+{
+  "settings": {
+    "title": "Configuración",
+    "language": "Idioma",
+    "offlineNote": "Tu idioma queda guardado en este dispositivo y la app sigue funcionando sin conexión.",
+    "privacyOptions": "Opciones de privacidad",
+    "rateApp": "Calificar en Play Store"
+  },
+  "updates": {
+    "availableTitle": "Actualización disponible",
+    "availableDescription": "Hay una versión más reciente de Galerows en Play Store.",
+    "downloadedTitle": "Actualización lista",
+    "downloadedDescription": "Reinicia la app para instalar la nueva versión.",
+    "update": "Actualizar",
+    "restart": "Reiniciar",
+    "later": "Ahora no"
+  },
+  "premium": {
+    "title": "Premium",
+    "badge": "Galerows Premium",
+    "heroTitle": "Juega sin anuncios",
+    "heroDescription": "Suscríbete por {{price}}/mes y elimina los anuncios de Galerows.",
+    "activeTitle": "Premium activo",
+    "activeDescription": "Tu suscripción está activa. Los anuncios permanecen ocultos mientras premium sea válido.",
+    "includesTitle": "Incluye",
+    "benefits": {
+      "noAds": "Sin banners, tarjetas ni pantallas de anuncio.",
+      "allGames": "Todos los juegos actuales siguen disponibles.",
+      "cancelAnytime": "Renovación mensual con cancelación desde la tienda."
+    },
+    "actions": {
+      "subscribe": "Suscribirse por {{price}}/mes",
+      "purchasing": "Abriendo tienda...",
+      "restore": "Restaurar compras",
+      "restoring": "Restaurando...",
+      "refresh": "Actualizar estado",
+      "updating": "Actualizando...",
+      "manage": "Gestionar suscripción"
+    },
+    "unavailable": "Las suscripciones están disponibles en la app instalada desde Google Play o App Store después de configurar RevenueCat.",
+    "legal": "Premium cuesta {{price}} por mes, se renueva automáticamente mediante la tienda y puede cancelarse en la configuración de tu cuenta de Google Play o Apple ID. La compra elimina anuncios; no agrega contenido extra en esta versión.",
+    "errors": {
+      "generic": "No se pudo completar la operación. Inténtalo de nuevo.",
+      "unavailable": "La suscripción aún no está disponible en este entorno."
+    }
+  }
+}

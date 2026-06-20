@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, recordDetectiveInvestigation, recordDoctorProtection, recordKillerTarget, recordVote, resolveCurrentNight, resolveCurrentVoting, resolveCurrentVotingByMediator, startTiedRevote } from './cidadeDorme.session'
+import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, migrateCidadeDormeSession, recordDetectiveInvestigation, recordDoctorProtection, recordKillerTarget, resolveCurrentNight, resolveCurrentVoting } from './cidadeDorme.session'
 import { createDefaultCidadeDormeSettings } from './cidadeDorme.setup'
 import type { CidadeDormePlayerInput } from './cidadeDorme.types'
 
@@ -25,7 +25,6 @@ describe('Cidade Dorme session', () => {
       round: 1,
       currentRevealIndex: 0,
       currentNightAction: { round: 1 },
-      currentVotes: [],
       history: [],
     })
     expect(session.players.map((player) => player.roleKey)).toEqual(['killer', 'detective', 'citizen', 'citizen'])
@@ -46,11 +45,22 @@ describe('Cidade Dorme session', () => {
   it('records the killer target only during the killer turn', () => {
     const session = createCidadeDormeSession(players, createDefaultCidadeDormeSettings(players.length), () => 0.999999)
     const killerTurn = { ...session, phase: 'killerTurn' as const }
-    expect(recordKillerTarget(session, 'bia')).toBe(session)
-    expect(recordKillerTarget(killerTurn, 'missing')).toBe(killerTurn)
-    expect(recordKillerTarget(killerTurn, 'bia')).toMatchObject({
+    expect(recordKillerTarget(session, 'ana', 'bia')).toBe(session)
+    expect(recordKillerTarget(killerTurn, 'missing', 'bia')).toBe(killerTurn)
+    expect(recordKillerTarget(killerTurn, 'ana', 'ana')).toBe(killerTurn)
+    expect(recordKillerTarget(killerTurn, 'ana', 'bia')).toMatchObject({
       phase: 'killerTurn',
-      currentNightAction: { round: 1, killerTargetId: 'bia' },
+      currentNightAction: { round: 1, killerActorId: 'ana', killerTargetId: 'bia' },
+    })
+  })
+
+  it('allows one killer to target another killer when they are not the actor', () => {
+    const settings = { ...createDefaultCidadeDormeSettings(playersWithDoctor.length), killersCount: 2 }
+    const session = createCidadeDormeSession(playersWithDoctor, settings, () => 0.999999)
+    const killerTurn = { ...session, phase: 'killerTurn' as const }
+
+    expect(recordKillerTarget(killerTurn, 'ana', 'bia')).toMatchObject({
+      currentNightAction: { killerActorId: 'ana', killerTargetId: 'bia' },
     })
   })
 
@@ -71,7 +81,7 @@ describe('Cidade Dorme session', () => {
     const doctorTurn = {
       ...session,
       phase: 'doctorTurn' as const,
-      history: [{ round: 1, nightAction: { round: 1, protectedPlayerId: 'caio' }, votes: [] }],
+      history: [{ round: 1, nightAction: { round: 1, protectedPlayerId: 'caio' } }],
     }
     expect(recordDoctorProtection(doctorTurn, 'caio')).toBe(doctorTurn)
     expect(recordDoctorProtection({ ...doctorTurn, settings: { ...doctorTurn.settings, doctorCanRepeatProtection: true } }, 'caio')).toMatchObject({
@@ -84,6 +94,7 @@ describe('Cidade Dorme session', () => {
     const detectiveTurn = { ...session, phase: 'detectiveTurn' as const }
     expect(recordDetectiveInvestigation(session, 'ana')).toBe(session)
     expect(recordDetectiveInvestigation(detectiveTurn, 'missing')).toBe(detectiveTurn)
+    expect(recordDetectiveInvestigation(detectiveTurn, 'bia')).toBe(detectiveTurn)
     expect(recordDetectiveInvestigation(detectiveTurn, 'ana')).toMatchObject({
       phase: 'detectiveTurn',
       currentNightAction: { round: 1, detectiveTargetId: 'ana' },
@@ -104,56 +115,33 @@ describe('Cidade Dorme session', () => {
     expect(resolved.history[0]?.nightAction).toMatchObject({ eliminatedPlayerId: 'dani' })
   })
 
-  it('records votes and resolves the current voting', () => {
+  it('applies a manual voting elimination and stores the round history', () => {
     const session = createCidadeDormeSession(players, createDefaultCidadeDormeSettings(players.length), () => 0.999999)
-    const voting = { ...session, phase: 'voting' as const }
-    const withVote = recordVote(voting, 'bia', 'ana')
-    const changedVote = recordVote(withVote, 'bia', 'skip')
-    const finalVote = recordVote(changedVote, 'caio', 'ana')
-    const decisiveVote = recordVote(finalVote, 'dani', 'ana')
-    expect(decisiveVote.currentVotes).toEqual([{ voterId: 'bia', targetId: 'skip' }, { voterId: 'caio', targetId: 'ana' }, { voterId: 'dani', targetId: 'ana' }])
-
-    const resolved = resolveCurrentVoting({ ...decisiveVote, phase: 'voteResolution' as const })
+    const voting = {
+      ...session,
+      phase: 'voting' as const,
+      players: session.players.map((player) => player.id === 'ana' ? { ...player, roleKey: 'killer' as const } : player),
+    }
+    const resolved = resolveCurrentVoting(voting, { kind: 'eliminated', playerId: 'ana' })
     expect(resolved.players.find((player) => player.id === 'ana')).toMatchObject({ status: 'eliminated', eliminationReason: 'vote' })
     expect(resolved.history[0]).toMatchObject({
       eliminatedByVoteId: 'ana',
       votingResult: {
         kind: 'eliminated',
         eliminatedPlayerId: 'ana',
-        tally: { skip: 1, ana: 2 },
       },
     })
+    expect(resolved).toMatchObject({ phase: 'gameOver', winner: 'city' })
   })
 
-  it('starts a tied revote and restricts votes to tied targets', () => {
-    const settings = { ...createDefaultCidadeDormeSettings(players.length), tieRule: 'revoteTied' as const }
-    const session = createCidadeDormeSession(players, settings, () => 0.999999)
+  it('applies a manual tie without eliminating anyone and advances to the next night', () => {
+    const session = createCidadeDormeSession(players, createDefaultCidadeDormeSettings(players.length), () => 0.999999)
     const voting = { ...session, phase: 'voting' as const }
-    const tiedVote = recordVote(recordVote(voting, 'ana', 'caio'), 'bia', 'dani')
-    const tiedResolution = resolveCurrentVoting({ ...tiedVote, phase: 'voteResolution' as const })
-    expect(tiedResolution.history[0]?.votingResult).toMatchObject({ kind: 'revote', tiedTargetIds: ['caio', 'dani'] })
+    const resolved = resolveCurrentVoting(voting, { kind: 'tie' })
 
-    const revote = startTiedRevote(tiedResolution)
-    expect(revote).toMatchObject({ phase: 'voting', currentVotes: [] })
-    expect(recordVote(revote, 'ana', 'bia')).toBe(revote)
-
-    const resolvedRevote = resolveCurrentVoting({
-      ...recordVote(recordVote(revote, 'ana', 'caio'), 'bia', 'caio'),
-      phase: 'voteResolution' as const,
-    })
-    expect(resolvedRevote.players.find((player) => player.id === 'caio')).toMatchObject({ status: 'eliminated', eliminationReason: 'vote' })
-    expect(resolvedRevote.history[0]?.votingResult).toMatchObject({ kind: 'eliminated', eliminatedPlayerId: 'caio' })
-  })
-
-  it('resolves a mediator decision by eliminating a tied target', () => {
-    const settings = { ...createDefaultCidadeDormeSettings(players.length), tieRule: 'mediatorDecision' as const }
-    const session = createCidadeDormeSession(players, settings, () => 0.999999)
-    const voting = { ...session, phase: 'voting' as const }
-    const tiedVote = recordVote(recordVote(voting, 'ana', 'caio'), 'bia', 'dani')
-    const resolved = resolveCurrentVotingByMediator({ ...tiedVote, phase: 'voteResolution' as const }, 'dani')
-
-    expect(resolved.players.find((player) => player.id === 'dani')).toMatchObject({ status: 'eliminated', eliminationReason: 'vote' })
-    expect(resolved.history[0]?.votingResult).toMatchObject({ kind: 'eliminated', eliminatedPlayerId: 'dani', tiedTargetIds: ['caio', 'dani'] })
+    expect(resolved.players.every((player) => player.status === 'alive')).toBe(true)
+    expect(resolved).toMatchObject({ phase: 'nightIntro', round: 2, currentNightAction: { round: 2 } })
+    expect(resolved.history[0]?.votingResult).toEqual({ kind: 'tie', eliminatedPlayerId: undefined, jesterWinnerPlayerId: undefined })
   })
 
   it('validates compatible saved sessions', () => {
@@ -161,5 +149,33 @@ describe('Cidade Dorme session', () => {
     expect(isCidadeDormeSessionCompatible(session)).toBe(true)
     expect(isCidadeDormeSessionCompatible({ ...session, gameId: 'other' })).toBe(false)
     expect(isCidadeDormeSessionCompatible({ ...session, currentRevealIndex: 99 })).toBe(false)
+  })
+
+  it('migrates legacy voting sessions to day discussion with new settings', () => {
+    const session = createCidadeDormeSession(players, createDefaultCidadeDormeSettings(players.length), () => 0.999999)
+    const legacy = {
+      ...session,
+      phase: 'voteResolution',
+      currentVotes: [{ voterId: 'ana', targetId: 'bia' }],
+      settings: {
+        ...session.settings,
+        allowSkipVote: true,
+        tieRule: 'revoteTied',
+        jesterWinMode: 'parallel',
+      },
+      history: [{
+        round: 1,
+        nightAction: { round: 1 },
+        votes: [{ voterId: 'ana', targetId: 'bia' }],
+        votingResult: { kind: 'revote', tally: { bia: 1, caio: 1 }, tiedTargetIds: ['bia', 'caio'] },
+      }],
+    }
+    const migrated = migrateCidadeDormeSession(legacy)
+    expect(migrated).toMatchObject({
+      phase: 'dayDiscussion',
+      settings: { doctorSelfProtectLimit: 1 },
+      history: [{ votingResult: { kind: 'tie' } }],
+    })
+    expect(migrated).not.toHaveProperty('currentVotes')
   })
 })

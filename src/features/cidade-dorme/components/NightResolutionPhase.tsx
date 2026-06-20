@@ -2,6 +2,7 @@ import { Check, Moon, ShieldCheck, Skull } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../../../components/ui/Button'
 import { Card } from '../../../components/ui/Card'
+import { getTranslatedRole } from '../cidadeDorme.copy'
 import type { GameState } from '../cidadeDorme.types'
 
 type NightResolutionPhaseProps = {
@@ -16,6 +17,7 @@ export function NightResolutionPhase({ session, onResolveNight, onContinue }: Ni
   const resolved = typeof action.wasProtected === 'boolean'
   const eliminated = session.players.find((player) => player.id === action.eliminatedPlayerId)
   const detectiveTarget = session.players.find((player) => player.id === action.detectiveTargetId)
+  const eliminatedRole = eliminated?.roleKey ? getTranslatedRole(t, eliminated.roleKey).name : ''
 
   return <>
     <div className="text-center">
@@ -37,9 +39,14 @@ export function NightResolutionPhase({ session, onResolveNight, onContinue }: Ni
         </Button>
       </div> : <div className="grid gap-4">
         <ResultLine
+          icon={<Moon size={21} />}
+          label={t('nightResolution.announcement')}
+          text={eliminated ? t(session.settings.revealRoleOnDeath ? 'nightResolution.announceKilledWithRole' : 'nightResolution.announceKilled', { name: eliminated.name, role: eliminatedRole }) : t('nightResolution.announceNoKill')}
+        />
+        <ResultLine
           icon={<Skull size={21} />}
           label={t('nightResolution.attack')}
-          text={eliminated ? t('nightResolution.attackKilled', { name: eliminated.name }) : t('nightResolution.attackNone')}
+          text={eliminated ? t(session.settings.revealRoleOnDeath ? 'nightResolution.attackKilledWithRole' : 'nightResolution.attackKilled', { name: eliminated.name, role: eliminatedRole }) : t('nightResolution.attackNone')}
         />
         <ResultLine
           icon={<ShieldCheck size={21} />}

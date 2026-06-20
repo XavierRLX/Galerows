@@ -16,13 +16,11 @@ export function createDefaultCidadeDormeSettings(playerCount: number): GameSetti
     killersCount: getRecommendedKillersCount(playerCount),
     enableDoctor: playerCount >= 5,
     enableDetective: true,
-    enableJester: playerCount >= 6,
-    revealRoleOnDeath: true,
-    allowSkipVote: true,
-    tieRule: 'noElimination',
+    enableJester: false,
+    revealRoleOnDeath: false,
     doctorCanSelfProtect: false,
+    doctorSelfProtectLimit: 1,
     doctorCanRepeatProtection: false,
-    jesterWinMode: 'instant',
     themeId: 'classic',
   }
 }

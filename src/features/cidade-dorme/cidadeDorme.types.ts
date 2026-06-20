@@ -10,16 +10,13 @@ export type GamePhase =
   | 'nightResolution'
   | 'dayDiscussion'
   | 'voting'
-  | 'voteResolution'
   | 'gameOver'
 
 export type PlayerStatus = 'alive' | 'eliminated'
 export type RoleTeam = 'city' | 'killers' | 'neutral'
 export type EliminationReason = 'night' | 'vote' | 'jester' | 'none'
-export type TieRule = 'noElimination' | 'revoteTied' | 'mediatorDecision'
-export type JesterWinMode = 'instant' | 'parallel'
+export type DoctorSelfProtectLimit = 1 | 2 | 3 | 'unlimited'
 export type DetectiveResult = 'suspect' | 'innocent'
-export type VoteTargetId = string | 'skip'
 export type GameWinner = 'city' | 'killers' | 'jester'
 export type WinReason = 'city-eliminated-killers' | 'killers-parity' | 'jester-voted-out' | 'none'
 
@@ -54,11 +51,9 @@ export type GameSettings = {
   enableDetective: boolean
   enableJester: boolean
   revealRoleOnDeath: boolean
-  allowSkipVote: boolean
-  tieRule: TieRule
   doctorCanSelfProtect: boolean
+  doctorSelfProtectLimit: DoctorSelfProtectLimit
   doctorCanRepeatProtection: boolean
-  jesterWinMode: JesterWinMode
   discussionTimerSeconds?: number
   votingTimerSeconds?: number
   themeId: string
@@ -66,6 +61,7 @@ export type GameSettings = {
 
 export type NightAction = {
   round: number
+  killerActorId?: string
   killerTargetId?: string
   protectedPlayerId?: string
   detectiveTargetId?: string
@@ -74,29 +70,23 @@ export type NightAction = {
   wasProtected?: boolean
 }
 
-export type Vote = {
-  voterId: string
-  targetId: VoteTargetId
-}
+export type ManualVotingOutcome =
+  | { kind: 'eliminated'; playerId: string }
+  | { kind: 'tie' }
 
-export type VotingResolutionKind = 'eliminated' | 'skipped' | 'tie' | 'revote' | 'mediatorDecision' | 'noVotes'
+export type VotingResolutionKind = ManualVotingOutcome['kind']
 
 export type VotingResolution = {
   kind: VotingResolutionKind
   round: number
-  votes: Vote[]
-  tally: Record<VoteTargetId, number>
   players: Player[]
   eliminatedPlayerId?: string
-  tiedTargetIds?: VoteTargetId[]
   jesterWinnerPlayerId?: string
 }
 
 export type VotingHistoryResult = {
   kind: VotingResolutionKind
-  tally: Record<VoteTargetId, number>
   eliminatedPlayerId?: string
-  tiedTargetIds?: VoteTargetId[]
   jesterWinnerPlayerId?: string
 }
 
@@ -105,23 +95,16 @@ export type NightResolution = {
   action: NightAction
 }
 
-export type ParallelWinner = {
-  winner: 'jester'
-  playerId: string
-}
-
 export type WinConditionResult = {
   isGameOver: boolean
   winner: GameWinner | null
   winnerPlayerId?: string
-  parallelWinners: ParallelWinner[]
   reason: WinReason
 }
 
 export type RoundHistory = {
   round: number
   nightAction: NightAction
-  votes: Vote[]
   votingResult?: VotingHistoryResult
   eliminatedByVoteId?: string
   notes?: string[]
@@ -137,9 +120,7 @@ export type GameState = {
   settings: GameSettings
   currentRevealIndex: number
   currentNightAction: NightAction
-  currentVotes: Vote[]
   history: RoundHistory[]
-  parallelWinners?: ParallelWinner[]
   winner?: GameWinner
   winnerPlayerId?: string
   createdAt: string

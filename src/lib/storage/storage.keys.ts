@@ -14,6 +14,9 @@ export const STORAGE_KEYS = {
   adedonhaSession: 'galerows.games.adedonha.session',
   cidadeDormeSession: 'galerows.games.cidade-dorme.session',
   premiumSnapshot: 'galerows.premium.snapshot',
+  appFirstOpenedAt: 'galerows.app.first-opened-at',
+  appReviewPrompt: 'galerows.app.review-prompt',
+  appUpdatePrompt: 'galerows.app.update-prompt',
 } as const
 
 export function contentOverrideKey(gameId: string, locale: string) {

@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 import { LocalPreferences } from '../../lib/capacitor/preferences'
 import { STORAGE_KEYS } from '../../lib/storage/storage.keys'
-import { advanceRoleReveal, createCidadeDormeSession, isCidadeDormeSessionCompatible, recordDetectiveInvestigation, recordDoctorProtection, recordKillerTarget, recordVote, resolveCurrentNight, resolveCurrentVoting, resolveCurrentVotingByMediator, startTiedRevote } from './cidadeDorme.session'
+import { advanceRoleReveal, createCidadeDormeSession, migrateCidadeDormeSession, recordDetectiveInvestigation, recordDoctorProtection, recordKillerTarget, resolveCurrentNight, resolveCurrentVoting } from './cidadeDorme.session'
 import { advancePhase as advanceCidadeDormePhase } from './cidadeDorme.stateMachine'
-import type { CidadeDormePlayerInput, GameSettings, GameState, VoteTargetId } from './cidadeDorme.types'
+import type { CidadeDormePlayerInput, GameSettings, GameState, ManualVotingOutcome } from './cidadeDorme.types'
 
 type CidadeDormeState = {
   session: GameState | null
@@ -14,14 +14,11 @@ type CidadeDormeState = {
   start: (players: CidadeDormePlayerInput[], settings: GameSettings) => Promise<void>
   advanceReveal: () => Promise<void>
   advancePhase: () => Promise<void>
-  chooseKillerTarget: (targetId: string) => Promise<void>
+  chooseKillerTarget: (actorId: string, targetId: string) => Promise<void>
   chooseDoctorProtection: (protectedPlayerId: string) => Promise<void>
   chooseDetectiveTarget: (detectiveTargetId: string) => Promise<void>
   resolveNight: () => Promise<void>
-  castVote: (voterId: string, targetId: VoteTargetId) => Promise<void>
-  resolveVoting: () => Promise<void>
-  startRevote: () => Promise<void>
-  resolveMediatorDecision: (targetId: VoteTargetId) => Promise<void>
+  resolveVoting: (outcome: ManualVotingOutcome) => Promise<void>
   discard: () => Promise<void>
 }
 
@@ -38,11 +35,13 @@ export const useCidadeDormeStore = create<CidadeDormeState>((set, get) => ({
       set({ session: null, initialized: true, loading: false, resumeError: null })
       return
     }
-    if (!isCidadeDormeSessionCompatible(saved)) {
+    const session = migrateCidadeDormeSession(saved)
+    if (!session) {
       set({ session: null, initialized: true, loading: false, resumeError: 'A partida salva de Cidade Dorme não pôde ser retomada e precisa ser reiniciada.' })
       return
     }
-    set({ session: saved, initialized: true, loading: false, resumeError: null })
+    if (session !== saved) await persistSession(session)
+    set({ session, initialized: true, loading: false, resumeError: null })
   },
   start: async (players, settings) => {
     const session = createCidadeDormeSession(players, settings)
@@ -65,10 +64,10 @@ export const useCidadeDormeStore = create<CidadeDormeState>((set, get) => ({
     await persistSession(session)
     set({ session })
   },
-  chooseKillerTarget: async (targetId) => {
+  chooseKillerTarget: async (actorId, targetId) => {
     const current = get().session
     if (!current) return
-    const withTarget = recordKillerTarget(current, targetId)
+    const withTarget = recordKillerTarget(current, actorId, targetId)
     if (withTarget === current) return
     const session = advanceCidadeDormePhase(withTarget)
     await persistSession(session)
@@ -100,34 +99,10 @@ export const useCidadeDormeStore = create<CidadeDormeState>((set, get) => ({
     await persistSession(session)
     set({ session })
   },
-  castVote: async (voterId, targetId) => {
+  resolveVoting: async (outcome) => {
     const current = get().session
     if (!current) return
-    const session = recordVote(current, voterId, targetId)
-    if (session === current) return
-    await persistSession(session)
-    set({ session })
-  },
-  resolveVoting: async () => {
-    const current = get().session
-    if (!current) return
-    const session = resolveCurrentVoting(current)
-    if (session === current) return
-    await persistSession(session)
-    set({ session })
-  },
-  startRevote: async () => {
-    const current = get().session
-    if (!current) return
-    const session = startTiedRevote(current)
-    if (session === current) return
-    await persistSession(session)
-    set({ session })
-  },
-  resolveMediatorDecision: async (targetId) => {
-    const current = get().session
-    if (!current) return
-    const session = resolveCurrentVotingByMediator(current, targetId)
+    const session = resolveCurrentVoting(current, outcome)
     if (session === current) return
     await persistSession(session)
     set({ session })

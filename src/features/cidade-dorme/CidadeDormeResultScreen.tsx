@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { Header } from '../../components/layout/Header'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
+import { AppReviewCheckpoint } from '../play-store/AppReviewCheckpoint'
 import { getTranslatedRole } from './cidadeDorme.copy'
 import { getClassicRoleTheme } from './cidadeDorme.theme'
 import { useCidadeDormeStore } from './cidadeDorme.store'
@@ -32,20 +33,12 @@ export function CidadeDormeResultScreen() {
   const winnerPlayer = session.players.find((player) => player.id === session.winnerPlayerId)
 
   return <div className="min-h-dvh pb-10">
+    <AppReviewCheckpoint matchId={session.id} />
     <Header title={t('result.title')} />
     <section className="px-5 py-8 text-center">
       <Trophy className="mx-auto text-lime-300" size={64} />
       <h1 className="mt-4 text-3xl font-black">{getWinnerTitle(t, session, winnerPlayer?.name)}</h1>
       <p className="mx-auto mt-3 max-w-lg leading-7 text-slate-400">{getWinnerDescription(t, session)}</p>
-
-      {session.parallelWinners?.length ? <Card className="mx-auto mt-6 max-w-lg p-5 text-left">
-        <p className="text-sm font-black uppercase tracking-wider text-fuchsia-300">{t('result.parallelWins')}</p>
-        <div className="mt-3 grid gap-2">
-          {session.parallelWinners.map((winner) => <p className="text-sm leading-6 text-slate-300" key={`${winner.winner}-${winner.playerId}`}>
-            {t('result.parallelJester', { name: session.players.find((player) => player.id === winner.playerId)?.name ?? t('result.parallelJesterFallback') })}
-          </p>)}
-        </div>
-      </Card> : null}
 
       <div className="mx-auto mt-7 grid max-w-lg grid-cols-2 gap-3">
         <SummaryCard icon={<Users size={20} />} label={t('result.survivors')} value={String(alivePlayers.length)} />
