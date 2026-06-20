@@ -43,10 +43,8 @@ export function MimicaSetupScreen() {
   const selectedPlayers = useMemo(() => group?.players.filter((player) => selectedIds.includes(player.id)) ?? [], [group, selectedIds])
   const count = selectedPlayers.length + guests.length
   const preparationSteps = teams.length >= 2 ? teams.map((team, teamIndex) => ({ author: teams[(teamIndex + teams.length - 1) % teams.length]!, target: team, key: team.id })) : []
-  useEffect(() => {
-    if (preparationStepIndex >= preparationSteps.length) setPreparationStepIndex(Math.max(0, preparationSteps.length - 1))
-  }, [preparationStepIndex, preparationSteps.length])
-  const currentPreparationStep = preparationSteps[preparationStepIndex] ?? preparationSteps[0] ?? null
+  const effectivePreparationStepIndex = Math.min(preparationStepIndex, Math.max(0, preparationSteps.length - 1))
+  const currentPreparationStep = preparationSteps[effectivePreparationStepIndex] ?? preparationSteps[0] ?? null
   const preparedChallengeDrafts = preparationSteps.flatMap((step) => {
     return Array.from({ length: rounds }).map((_, roundIndex) => ({
       author: step.author,
@@ -73,7 +71,7 @@ export function MimicaSetupScreen() {
     if (!currentPreparationStep) return
     if (!isPreparationStepComplete(currentPreparationStep)) { setError(`Preencha todas as mímicas com até ${maxChallengeLength} caracteres.`); return }
     setSavedPreparationKeys((current) => current.includes(currentPreparationStep.key) ? current : [...current, currentPreparationStep.key])
-    const nextIndex = Math.min(preparationStepIndex + 1, Math.max(preparationSteps.length - 1, 0))
+    const nextIndex = Math.min(effectivePreparationStepIndex + 1, Math.max(preparationSteps.length - 1, 0))
     setPreparationStepIndex(nextIndex)
     setPreparationMode('handoff')
     setError('')

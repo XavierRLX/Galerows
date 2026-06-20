@@ -1,5 +1,6 @@
 import { Check, Skull, Target } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '../../../components/ui/Button'
 import { Card } from '../../../components/ui/Card'
 import { cn } from '../../../lib/utils/cn'
@@ -12,6 +13,7 @@ type KillerTurnPhaseProps = {
 }
 
 export function KillerTurnPhase({ session, onConfirmTarget }: KillerTurnPhaseProps) {
+  const { t } = useTranslation('cidade-dorme')
   const alivePlayers = getAlivePlayers(session.players)
   const [selectedTargetId, setSelectedTargetId] = useState(session.currentNightAction.killerTargetId ?? '')
   const selectedPlayer = alivePlayers.find((player) => player.id === selectedTargetId)
@@ -21,9 +23,9 @@ export function KillerTurnPhase({ session, onConfirmTarget }: KillerTurnPhasePro
       <div className="mx-auto flex size-20 items-center justify-center rounded-[2rem] bg-rose-300 text-slate-950 shadow-xl shadow-rose-500/20">
         <Skull size={40} />
       </div>
-      <h1 className="mt-5 text-3xl font-black">Assassinos acordam</h1>
+      <h1 className="mt-5 text-3xl font-black">{t('killerTurn.title')}</h1>
       <p className="mx-auto mt-3 max-w-md leading-7 text-slate-400">
-        Peça para os Assassinos abrirem os olhos em silêncio e apontarem uma vítima.
+        {t('killerTurn.description')}
       </p>
     </div>
 
@@ -31,8 +33,8 @@ export function KillerTurnPhase({ session, onConfirmTarget }: KillerTurnPhasePro
       <div className="flex items-start gap-3">
         <Target className="mt-0.5 shrink-0 text-rose-200" size={22} />
         <div>
-          <p className="text-sm font-black uppercase tracking-wider text-rose-200">Vítima da noite</p>
-          <p className="mt-2 text-sm leading-6 text-slate-300">Escolha apenas pelo nome. A tela não revela funções secretas.</p>
+          <p className="text-sm font-black uppercase tracking-wider text-rose-200">{t('killerTurn.targetTitle')}</p>
+          <p className="mt-2 text-sm leading-6 text-slate-300">{t('killerTurn.targetHint')}</p>
         </div>
       </div>
       <div className="mt-5 grid gap-2">
@@ -57,7 +59,7 @@ export function KillerTurnPhase({ session, onConfirmTarget }: KillerTurnPhasePro
     <div className="mx-auto mt-6 grid max-w-lg">
       <Button className="bg-rose-300 text-slate-950 hover:bg-rose-200" disabled={!selectedPlayer} size="lg" onClick={() => selectedPlayer && void onConfirmTarget(selectedPlayer.id)}>
         <Check size={19} />
-        Confirmar vítima
+        {t('killerTurn.confirm')}
       </Button>
     </div>
   </>

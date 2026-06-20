@@ -56,6 +56,11 @@ const cardThemes: Record<string, { icon: string; title: string; action: string }
     title: 'text-red-300',
     action: 'border-red-700 text-red-300 hover:border-transparent hover:bg-red-800 hover:text-white',
   },
+  'cidade-dorme': {
+    icon: 'border-blue-300/45 bg-slate-950/55 text-blue-200 shadow-blue-950/35',
+    title: 'text-blue-200',
+    action: 'border-blue-300 text-blue-200 hover:border-transparent hover:bg-blue-300 hover:text-slate-950',
+  },
 }
 
 const defaultTheme = {

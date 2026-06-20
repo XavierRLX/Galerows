@@ -17,15 +17,21 @@ const ranks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as Top10Rank[]
 export function Top10PlayScreen() {
   const navigate = useNavigate()
   const { deck, session, initialized, reveal, endCard, continueSummary } = useTop10Store()
-  const [selectedRank, setSelectedRank] = useState<Top10Rank | null>(null)
-  const [answerKeyVisible, setAnswerKeyVisible] = useState(false)
+  const [selectedRankState, setSelectedRankState] = useState<{ cardIndex: number; rank: Top10Rank | null }>({ cardIndex: -1, rank: null })
+  const [answerKeyState, setAnswerKeyState] = useState<{ cardIndex: number; visible: boolean }>({ cardIndex: -1, visible: false })
   useTop10Initialization()
   useEffect(() => {
     if (initialized && !session) navigate('/games/top-10', { replace: true })
     if (session?.phase === 'finished') navigate('/games/top-10/result', { replace: true })
   }, [initialized, navigate, session])
-  useEffect(() => { setAnswerKeyVisible(false); setSelectedRank(null) }, [session?.currentCardIndex])
   if (!deck || !session) return <div className="p-6 text-slate-400">Carregando partida...</div>
+  const selectedRank = selectedRankState.cardIndex === session.currentCardIndex ? selectedRankState.rank : null
+  const answerKeyVisible = answerKeyState.cardIndex === session.currentCardIndex && answerKeyState.visible
+  const setSelectedRank = (rank: Top10Rank | null) => setSelectedRankState({ cardIndex: session.currentCardIndex, rank })
+  const toggleAnswerKey = () => setAnswerKeyState((current) => ({
+    cardIndex: session.currentCardIndex,
+    visible: current.cardIndex === session.currentCardIndex ? !current.visible : true,
+  }))
   const card = getCurrentTop10Card(session, deck)
   if (!card && session.phase !== 'finished') return <div className="p-6 text-slate-400">Não foi possível localizar a carta atual.</div>
   const entities = getTop10Entities(session)
@@ -49,7 +55,7 @@ export function Top10PlayScreen() {
   return <div className="min-h-dvh pb-10"><Header backTo="/games/top-10" title={`Rodada ${session.currentCardIndex + 1}/${session.cardQueue.length}`} action={<span className="text-sm font-black text-red-300">Top 10</span>} />
     <div className="border-b border-white/10 px-4 py-3"><div className="flex gap-2 overflow-x-auto pb-1">{entities.map((entity) => <span className={cn('shrink-0 rounded-xl border px-3 py-2 text-xs font-bold', entity.id === session.currentMediatorId ? 'border-red-400 bg-red-900/40 text-red-100' : 'border-red-900/50 bg-red-950/20 text-red-100')} key={entity.id}>{entity.id === session.currentMediatorId ? 'Mediador · ' : ''}{entity.name} · {session.scores[entity.id] ?? 0}</span>)}</div></div>
     <section className="px-5 py-6"><div className="mx-auto max-w-lg text-center"><p className="text-sm font-black uppercase tracking-[0.18em] text-red-300">{card?.theme}</p><h1 className="mt-2 text-3xl font-black leading-tight">{card?.question}</h1><p className="mt-3 inline-flex items-center gap-2 rounded-full bg-red-950/40 px-4 py-2 text-sm font-black text-red-200"><Crown size={16} />Mediador: {mediator?.name}</p><p className="mt-3 text-sm leading-6 text-slate-400">A lista começa escondida. O mediador revela o gabarito para conferir os chutes e registrar pontos.</p></div>
-      <Button className="mx-auto mt-5 flex w-full max-w-lg" variant={answerKeyVisible ? 'danger' : 'secondary'} onClick={() => setAnswerKeyVisible((current) => !current)}>{answerKeyVisible ? <EyeOff size={18} /> : <Eye size={18} />}{answerKeyVisible ? 'Ocultar gabarito' : 'Ver gabarito'}</Button>
+      <Button className="mx-auto mt-5 flex w-full max-w-lg" variant={answerKeyVisible ? 'danger' : 'secondary'} onClick={toggleAnswerKey}>{answerKeyVisible ? <EyeOff size={18} /> : <Eye size={18} />}{answerKeyVisible ? 'Ocultar gabarito' : 'Ver gabarito'}</Button>
       <Card className="mx-auto mt-6 max-w-lg overflow-hidden border-red-900/50 bg-red-950/15">{ranks.map((rank) => {
         const answer = card?.answers.find((item) => item.rank === rank)
         const revealed = session.revealedAnswers[String(rank)]

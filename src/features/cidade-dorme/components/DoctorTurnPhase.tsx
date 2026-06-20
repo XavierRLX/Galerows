@@ -1,5 +1,6 @@
 import { Check, Shield, ShieldAlert } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '../../../components/ui/Button'
 import { Card } from '../../../components/ui/Card'
 import { cn } from '../../../lib/utils/cn'
@@ -12,6 +13,7 @@ type DoctorTurnPhaseProps = {
 }
 
 export function DoctorTurnPhase({ session, onConfirmProtection }: DoctorTurnPhaseProps) {
+  const { t } = useTranslation('cidade-dorme')
   const alivePlayers = getAlivePlayers(session.players)
   const doctor = alivePlayers.find((player) => player.roleKey === 'doctor')
   const previousProtectedPlayerId = [...session.history].reverse().find((round) => round.nightAction.protectedPlayerId)?.nightAction.protectedPlayerId
@@ -24,9 +26,9 @@ export function DoctorTurnPhase({ session, onConfirmProtection }: DoctorTurnPhas
       <div className="mx-auto flex size-20 items-center justify-center rounded-[2rem] bg-emerald-300 text-slate-950 shadow-xl shadow-emerald-500/20">
         <Shield size={40} />
       </div>
-      <h1 className="mt-5 text-3xl font-black">Médico acorda</h1>
+      <h1 className="mt-5 text-3xl font-black">{t('doctorTurn.title')}</h1>
       <p className="mx-auto mt-3 max-w-md leading-7 text-slate-400">
-        Peça para o Médico abrir os olhos em silêncio e escolher uma pessoa para proteger.
+        {t('doctorTurn.description')}
       </p>
     </div>
 
@@ -34,8 +36,8 @@ export function DoctorTurnPhase({ session, onConfirmProtection }: DoctorTurnPhas
       <div className="flex items-start gap-3">
         <ShieldAlert className="mt-0.5 shrink-0 text-emerald-200" size={22} />
         <div>
-          <p className="text-sm font-black uppercase tracking-wider text-emerald-200">Proteção da noite</p>
-          <p className="mt-2 text-sm leading-6 text-slate-300">As opções respeitam as regras de autoproteção e repetição configuradas.</p>
+          <p className="text-sm font-black uppercase tracking-wider text-emerald-200">{t('doctorTurn.targetTitle')}</p>
+          <p className="mt-2 text-sm leading-6 text-slate-300">{t('doctorTurn.targetHint')}</p>
         </div>
       </div>
       <div className="mt-5 grid gap-2">
@@ -55,13 +57,13 @@ export function DoctorTurnPhase({ session, onConfirmProtection }: DoctorTurnPhas
           </button>
         })}
       </div>
-      {!validTargets.length ? <p className="mt-5 rounded-2xl border border-amber-300/30 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">Nenhum alvo válido para o Médico nesta rodada.</p> : null}
+      {!validTargets.length ? <p className="mt-5 rounded-2xl border border-amber-300/30 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">{t('doctorTurn.empty')}</p> : null}
     </Card>
 
     <div className="mx-auto mt-6 grid max-w-lg">
       <Button className="bg-emerald-300 text-slate-950 hover:bg-emerald-200" disabled={!selectedPlayer} size="lg" onClick={() => selectedPlayer && void onConfirmProtection(selectedPlayer.id)}>
         <Check size={19} />
-        Confirmar proteção
+        {t('doctorTurn.confirm')}
       </Button>
     </div>
   </>

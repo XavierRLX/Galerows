@@ -118,7 +118,7 @@ export function buildReusableCardQueue(deck: Top10Deck, totalRounds: number, ran
   const queue: number[] = []
   let previousCardId: number | null = null
   while (queue.length < totalRounds) {
-    let pass = shuffle(ids, random)
+    const pass = shuffle(ids, random)
     if (previousCardId !== null && pass.length > 1 && pass[0] === previousCardId) {
       const replacementIndex = pass.findIndex((id) => id !== previousCardId)
       if (replacementIndex > 0) [pass[0], pass[replacementIndex]] = [pass[replacementIndex], pass[0]]

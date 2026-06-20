@@ -55,8 +55,10 @@ describe('app navigation', () => {
     expect(await screen.findByRole('heading', { name: 'Mímica', level: 1 })).toBeInTheDocument()
   })
 
-  it('opens Cidade Dorme by direct route while it remains hidden as coming soon in the hub', async () => {
-    render(<MemoryRouter initialEntries={['/games/cidade-dorme']}><AppRoutes /></MemoryRouter>)
+  it('opens Cidade Dorme from the Hub', async () => {
+    const user = userEvent.setup()
+    render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
+    await user.click(screen.getAllByRole('button', { name: /jogar agora/i })[7])
     expect(await screen.findByRole('heading', { name: 'Cidade Dorme', level: 1 })).toBeInTheDocument()
   })
 })

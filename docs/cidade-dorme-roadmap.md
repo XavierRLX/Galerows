@@ -10,9 +10,9 @@ O app deve ajudar o mediador a configurar a partida, sortear personagens, revela
 
 ## Estado Atual
 
-**Status:** FASE 10A concluída. FASE 10 segue em andamento antes de liberar no hub.
+**Status:** FASE 10 concluída. Cidade Dorme está liberado no hub como jogo disponível.
 
-Já existe uma base pura e testável em `src/features/cidade-dorme/`, sem rotas, telas ou exposição jogável no hub.
+Já existe uma base pura e testável em `src/features/cidade-dorme/`, com rotas, telas, resultado final, i18n, asset visual e exposição jogável no hub.
 
 Arquivos criados na FASE 1:
 
@@ -76,6 +76,18 @@ Arquivos refinados na FASE 10A:
 - `components/VotingPhase.tsx`
 - `components/VoteResolutionPhase.tsx`
 - `CidadeDormePlayScreen.tsx`
+
+Arquivos criados ou refinados na FASE 10B:
+
+- `cidadeDorme.copy.ts`
+- `public/assets/games/cidade-dorme.webp`
+- `src/i18n/locales/pt-BR/cidade-dorme.json`
+- `src/i18n/locales/en-US/cidade-dorme.json`
+- `src/i18n/locales/es-419/cidade-dorme.json`
+- `src/i18n/index.ts`
+- `src/features/games/games.registry.ts`
+- `src/features/hub/GameCard.tsx`
+- `src/app/routes.test.tsx`
 
 Verificações da FASE 1:
 
@@ -171,8 +183,21 @@ Verificações da FASE 10A:
 - A segunda votação pode eliminar normalmente e substituir o resultado provisório no histórico da rodada.
 - Empate com regra `mediatorDecision` agora exige escolha explícita do mediador entre os alvos empatados.
 - Escolha do mediador aplica eliminação ou skip quando skip estiver entre os empatados.
-- O fluxo não libera o jogo no hub ainda; publicação fica para depois de responsividade, asset, traduções e validação em aparelho.
+- O fluxo ainda não liberava o jogo no hub; publicação ficou para a FASE 10B.
 - Testes focados do Cidade Dorme, typecheck e ESLint focado passaram.
+
+Verificações da FASE 10B:
+
+- Cidade Dorme foi alterado de `coming-soon` para `available` no hub.
+- Cover visual próprio foi criado em `public/assets/games/cidade-dorme.webp`.
+- Textos das telas do Cidade Dorme foram internacionalizados em `pt-BR`, `en-US` e `es-419`.
+- Nomes, descrições e objetivos dos papéis são exibidos traduzidos na UI sem alterar `RoleKey` nem schema persistido.
+- Textos do mediador foram revisados para instruções presenciais mais claras.
+- Layouts de setup receberam pequenos ajustes mobile para reduzir risco de quebra em telas estreitas.
+- Testes de hub, rotas e i18n foram atualizados.
+- Blockers globais de lint em Mímica e Top 10 foram corrigidos com mudanças mínimas.
+- `npm run typecheck`, `npm run lint`, `npm run test` e `npm run build` passaram.
+- Observação: validação em aparelho Android físico não foi executada neste ambiente e deve ser feita antes de submissão à Play Store.
 
 ## Princípios de Arquitetura
 
@@ -370,7 +395,7 @@ Observações:
 
 ### FASE 5 — Fluxo da noite
 
-**Status:** concluída em fluxo mínimo.
+**Status:** concluída.
 
 Entregas:
 
@@ -492,8 +517,8 @@ Entregas:
 - Resolver votação com `resolveVoting` — concluído na FASE 6A.
 - Tratar empate conforme regra:
   - nenhuma eliminação — fluxo mínimo concluído;
-  - nova votação — pendente UI dedicada;
-  - decisão do mediador — pendente UI dedicada.
+  - nova votação — concluído na FASE 10A;
+  - decisão do mediador — concluído na FASE 10A.
 - Eliminar jogador mais votado quando aplicável — concluído na FASE 6A.
 
 Critérios de aceite:
@@ -570,20 +595,20 @@ Critérios de aceite:
 
 ### FASE 10 — Polimento e lançamento no hub
 
-**Status:** em andamento.
+**Status:** concluída.
 
 Entregas:
 
 - Refinar empate `revoteTied` com uma votação de desempate real — concluído na FASE 10A.
 - Refinar empate `mediatorDecision` com escolha explícita do mediador — concluído na FASE 10A.
-- Revisar responsividade mobile — pendente.
-- Revisar contraste e tamanhos de toque — pendente.
-- Melhorar textos do mediador — iniciado parcialmente na FASE 10A; revisão geral pendente.
-- Adicionar microinterações e haptics — parcialmente existente; revisão geral pendente.
-- Criar ou escolher asset visual do jogo — pendente.
-- Adicionar traduções quando o fluxo estiver estável — pendente.
-- Atualizar `games.registry.ts` de `coming-soon` para `available` — pendente.
-- Validar fluxo completo em aparelho real — pendente.
+- Revisar responsividade mobile — concluído em revisão de UI web/mobile.
+- Revisar contraste e tamanhos de toque — concluído em revisão de UI.
+- Melhorar textos do mediador — concluído.
+- Adicionar microinterações e haptics — já existente nos pontos principais do fluxo.
+- Criar ou escolher asset visual do jogo — concluído na FASE 10B.
+- Adicionar traduções quando o fluxo estiver estável — concluído na FASE 10B.
+- Atualizar `games.registry.ts` de `coming-soon` para `available` — concluído na FASE 10B.
+- Validar fluxo completo em aparelho real — pendente apenas para checklist físico de release Android.
 
 Critérios de aceite:
 
@@ -612,13 +637,35 @@ Critérios de aceite:
 - Histórico da rodada mantém o resultado aplicado.
 - Jogo continua indisponível no hub até a revisão visual e validação final.
 
+#### FASE 10B — I18n, asset e liberação no hub
+
+**Status:** concluída.
+
+Entregas:
+
+- Criar cover WebP horizontal para o card do hub.
+- Registrar namespace `cidade-dorme` no i18n.
+- Criar traduções `pt-BR`, `en-US` e `es-419`.
+- Trocar textos hardcoded das telas de Cidade Dorme por `useTranslation('cidade-dorme')`.
+- Exibir papéis traduzidos sem mudar tipos ou regras internas.
+- Atualizar hub/registry/testes para Cidade Dorme disponível.
+- Corrigir blockers globais de lint fora de Cidade Dorme.
+
+Critérios de aceite:
+
+- Cidade Dorme aparece no hub como jogo disponível.
+- Card do hub usa asset visual real.
+- Telas principais funcionam com os três idiomas suportados.
+- Testes, typecheck, lint e build passam.
+- Validação em aparelho físico fica registrada como etapa externa do checklist Android.
+
 ## Ordem Recomendada
 
 1. Refinar empate `revoteTied` com uma votação de desempate real — concluído na FASE 10A.
 2. Refinar empate `mediatorDecision` com escolha explícita do mediador — concluído na FASE 10A.
-3. Revisar responsividade/textos do fluxo completo.
-4. Criar ou escolher asset visual do jogo.
-5. Validar em aparelho real e só então publicar no hub.
+3. Revisar responsividade/textos do fluxo completo — concluído na FASE 10B.
+4. Criar ou escolher asset visual do jogo — concluído na FASE 10B.
+5. Validar em aparelho real antes de submissão à Play Store — pendente no checklist Android.
 
 ## Arquivos Planejados
 
@@ -651,20 +698,15 @@ Arquivos já criados:
 - `src/features/cidade-dorme/components/VoteResolutionPhase.tsx`
 - `src/features/cidade-dorme/components/MediatorHistoryPanel.tsx`
 - `src/features/cidade-dorme/CidadeDormeResultScreen.tsx`
-
-Arquivos prováveis nas próximas fases:
-
-- `src/features/cidade-dorme/components/*`
 - `src/i18n/locales/pt-BR/cidade-dorme.json`
 - `src/i18n/locales/en-US/cidade-dorme.json`
 - `src/i18n/locales/es-419/cidade-dorme.json`
-
-Arquivos globais a alterar futuramente:
-
-- `src/app/routes.tsx`
+- `src/features/cidade-dorme/cidadeDorme.copy.ts`
+- `public/assets/games/cidade-dorme.webp`
+- `src/app/routes.test.tsx`
 - `src/features/games/games.registry.ts`
-- `src/lib/storage/storage.keys.ts`
 - `src/i18n/index.ts`
+- `src/features/hub/GameCard.tsx`
 
 ## Riscos Técnicos
 
@@ -673,11 +715,11 @@ Arquivos globais a alterar futuramente:
 - A revelação individual precisa evitar persistir a função aberta.
 - Regras do Coringa precisam ser claras para não conflitar com vitória da cidade ou dos assassinos.
 - Configurações de Médico precisam ser aplicadas tanto na UI quanto na regra pura.
-- O jogo só deve virar `available` quando uma partida completa puder terminar.
+- O jogo já virou `available`; qualquer mudança futura precisa preservar o fluxo completo e o estado salvo compatível.
 
 ## Critério de Pronto do Jogo
 
-O jogo estará pronto para aparecer no hub quando:
+O jogo está pronto para aparecer no hub porque:
 
 - O mediador conseguir configurar uma partida.
 - O app conseguir sortear funções válidas.

@@ -1,0 +1,256 @@
+{
+  "name": "Sleeping Town",
+  "loadingGame": "Loading game...",
+  "loadingResult": "Loading result...",
+  "resumeError": "The saved Sleeping Town game could not be resumed and needs to be restarted.",
+  "common": {
+    "continue": "Continue",
+    "offline": "Fully offline",
+    "none": "No one",
+    "skip": "Skip",
+    "skipElimination": "Skip elimination",
+    "round": "Round {{round}}",
+    "guest": "guest",
+    "remove": "Remove {{name}}",
+    "alive": "alive",
+    "eliminated": "eliminated",
+    "noRole": "No role"
+  },
+  "roles": {
+    "citizen": {
+      "name": "Citizen",
+      "shortDescription": "Votes during the day and tries to find the killers.",
+      "objective": "Eliminate every killer before they control the town."
+    },
+    "killer": {
+      "name": "Killer",
+      "shortDescription": "Chooses a victim during the night.",
+      "objective": "Match or outnumber the living innocents."
+    },
+    "doctor": {
+      "name": "Doctor",
+      "shortDescription": "Protects one person during the night.",
+      "objective": "Help the town by preventing night eliminations."
+    },
+    "detective": {
+      "name": "Detective",
+      "shortDescription": "Investigates one person during the night.",
+      "objective": "Find suspicious players and guide the town."
+    },
+    "jester": {
+      "name": "Jester",
+      "shortDescription": "Tries to be voted out by the town.",
+      "objective": "Win by being eliminated by vote."
+    }
+  },
+  "home": {
+    "eyebrow": "Social deduction",
+    "summary": "An offline assistant for the moderator to draw secret roles and run an in-person match.",
+    "objectiveTitle": "Objective",
+    "objective": "The town tries to find the killers. The killers win when they control the vote. Special roles help, confuse, and create bluffs.",
+    "players": "4 to 12 players",
+    "flowTitle": "Flow",
+    "flow": {
+      "reveal": "The app draws and reveals one role per person.",
+      "night": "The moderator runs the night in secret turns.",
+      "vote": "The town discusses, votes, and eliminates suspects.",
+      "win": "The app checks when the town, killers, or Jester win."
+    },
+    "discardGame": "Discard game",
+    "howToPlay": "How to play",
+    "continueGame": "Continue game",
+    "startGame": "Set up game",
+    "rules": [
+      "Choose the players and configure special roles.",
+      "Pass the phone so each person sees their own role in secret.",
+      "After the reveals, the moderator runs the night and keeps actions secret.",
+      "During the day, record the vote in the app and continue until a win condition is met."
+    ]
+  },
+  "setup": {
+    "title": "Set up game",
+    "playersHeading": "Who is in town?",
+    "selected": "{{count}}/{{max}} selected",
+    "myGroup": "My Group",
+    "emptyGroup": "Your group is still empty. You can add guests below.",
+    "guestNameLabel": "Guest name",
+    "guestPlaceholder": "Temporary guest",
+    "add": "Add",
+    "errors": {
+      "guestName": "Enter the guest name.",
+      "duplicate": "Players must have different names.",
+      "limit": "The limit is 12 players.",
+      "review": "Review the game setup."
+    },
+    "rolesTitle": "Roles",
+    "killers": "Killers",
+    "killersHint": "Recommended automatically based on group size.",
+    "doctor": "Doctor",
+    "doctorHint": "Protects one person during the night.",
+    "detective": "Detective",
+    "detectiveHint": "Investigates whether someone is suspicious.",
+    "jester": "Jester",
+    "jesterHint": "Wins if eliminated by vote.",
+    "composition": "Composition: {{killer}} killer(s), {{doctor}} doctor, {{detective}} detective, {{jester}} jester, and {{citizen}} citizen(s).",
+    "rulesTitle": "Rules",
+    "revealRoleOnDeath": "Reveal role on death",
+    "revealRoleOnDeathHint": "Helps beginner groups understand the match.",
+    "allowSkipVote": "Allow vote skip",
+    "allowSkipVoteHint": "Lets the town avoid eliminating anyone.",
+    "doctorCanSelfProtect": "Doctor can self-protect",
+    "doctorCanSelfProtectHint": "If off, the Doctor must choose someone else.",
+    "doctorCanRepeatProtection": "Doctor can repeat protection",
+    "doctorCanRepeatProtectionHint": "If off, the same person cannot be protected on consecutive nights.",
+    "tieRuleTitle": "Voting tie",
+    "tieRules": {
+      "noElimination": "No elimination",
+      "revoteTied": "New vote",
+      "mediatorDecision": "Moderator decides"
+    },
+    "jesterWinTitle": "Jester win",
+    "jesterWin": {
+      "instant": "Ends game",
+      "parallel": "Parallel"
+    },
+    "start": "Draw roles"
+  },
+  "play": {
+    "revealTitle": "Reveal roles",
+    "passTo": "Pass to {{name}}",
+    "onlyPlayer": "Only this person should see the next screen.",
+    "hiddenRole": "Role hidden",
+    "youAre": "You are {{role}}",
+    "objective": "Objective:",
+    "hideAndAdvance": "Hide and advance",
+    "showRole": "Show role",
+    "nightTitle": "Night {{round}}",
+    "dayTitle": "Day {{round}}",
+    "exitHome": "Exit to start",
+    "fallback": "This phase will be implemented in the next step."
+  },
+  "nightIntro": {
+    "title": "The town sleeps",
+    "description": "Round {{round}}. The phone now stays only with the moderator for secret actions.",
+    "scriptTitle": "Moderator script",
+    "stepOne": "Ask everyone to close their eyes and stay quiet.",
+    "stepTwo": "Tell them the Killers will be called first. Doctor and Detective come next if they are in the match.",
+    "privacy": "Make sure nobody can see the screen before the night choices begin.",
+    "start": "Start night actions"
+  },
+  "killerTurn": {
+    "title": "Killers wake up",
+    "description": "Ask the Killers to open their eyes silently and point to a victim.",
+    "targetTitle": "Night victim",
+    "targetHint": "Choose by name only. The screen does not reveal secret roles.",
+    "confirm": "Confirm victim"
+  },
+  "doctorTurn": {
+    "title": "Doctor wakes up",
+    "description": "Ask the Doctor to open their eyes silently and choose one person to protect.",
+    "targetTitle": "Night protection",
+    "targetHint": "Options follow the configured self-protection and repeat-protection rules.",
+    "empty": "No valid Doctor target this round.",
+    "confirm": "Confirm protection"
+  },
+  "detectiveTurn": {
+    "title": "Detective wakes up",
+    "description": "Ask the Detective to open their eyes silently and point to one person to investigate.",
+    "targetTitle": "Night investigation",
+    "targetHint": "Choose by name only. The result is shown only to the moderator.",
+    "confirm": "Confirm investigation"
+  },
+  "nightResolution": {
+    "title": "Resolve night",
+    "description": "Check the result privately before waking the town.",
+    "pending": "The actions have been recorded. Tap to apply protection, investigation, and possible elimination.",
+    "resolve": "Resolve night",
+    "attack": "Attack",
+    "attackKilled": "{{name}} was eliminated during the night.",
+    "attackNone": "No one died during the night.",
+    "protection": "Protection",
+    "protected": "The Doctor's protection prevented the elimination.",
+    "notProtected": "The victim was not protected.",
+    "detective": "Detective",
+    "detectiveResult": "{{name}} looks {{result}}.",
+    "suspect": "suspicious",
+    "innocent": "innocent"
+  },
+  "dayDiscussion": {
+    "title": "The town wakes",
+    "description": "Round {{round}}. The group may discuss before voting for an elimination.",
+    "discussion": "Discussion",
+    "hint": "Run the conversation in person. When the group is ready, move to voting.",
+    "startVoting": "Start voting"
+  },
+  "voting": {
+    "title": "Voting",
+    "description": "Record each living player's vote. Votes can be changed before resolution.",
+    "revoteDescription": "Tie in progress. Record a new vote using only the tied targets.",
+    "voterTitle": "Who is voting?",
+    "voteTitle": "Vote",
+    "finish": "Resolve vote ({{voted}}/{{total}})"
+  },
+  "voteResolution": {
+    "title": "Voting result",
+    "description": "Confirm the count and apply the voting consequence.",
+    "apply": "Apply result",
+    "revote": "Run tiebreaker",
+    "mediatorTitle": "Moderator decision",
+    "eliminate": "Eliminate {{name}}",
+    "texts": {
+      "eliminated": "{{name}} will be eliminated by vote.",
+      "eliminatedFallback": "One player will be eliminated by vote.",
+      "skipped": "The town chose to skip the elimination.",
+      "revote": "There was a tie. Apply the result to open a tiebreaker vote.",
+      "mediatorDecision": "There was a tie. The moderator must explicitly choose one tied target.",
+      "tie": "There was a tie and no one will be eliminated.",
+      "noVotes": "No valid vote was recorded.",
+      "resolvedRevote": "Tie recorded. Run a new vote only between the tied targets.",
+      "resolvedMediator": "Tie recorded. The moderator must choose one tied target.",
+      "resolvedEliminated": "{{name}} was eliminated by vote.",
+      "resolvedNoElimination": "The vote was applied with no elimination."
+    }
+  },
+  "history": {
+    "title": "Moderator private history",
+    "round": "Round {{round}}",
+    "killerTarget": "Killers' target:",
+    "doctorProtection": "Doctor protection:",
+    "investigation": "Investigation:",
+    "night": "Night:",
+    "vote": "Vote:",
+    "tally": "Tally:",
+    "attackProtected": "attack protected",
+    "nightKilled": "{{name}} eliminated",
+    "noNightKill": "no elimination",
+    "notRegistered": "not recorded yet",
+    "voteKilled": "{{name}} eliminated",
+    "voteSkipped": "elimination skipped",
+    "tie": "tie with no elimination",
+    "revote": "tie for new vote",
+    "mediatorDecision": "tie for moderator decision",
+    "noVotes": "no valid votes",
+    "votesCount": "{{count}} vote(s) recorded",
+    "emptyTally": "no votes"
+  },
+  "result": {
+    "title": "Game over",
+    "cityTitle": "The Town won",
+    "killersTitle": "The Killers won",
+    "jesterTitle": "{{name}} won as Jester",
+    "jesterFallback": "The Jester won",
+    "fallbackTitle": "Game over",
+    "cityDescription": "All killers were eliminated.",
+    "killersDescription": "The killers matched or outnumbered the living innocents.",
+    "jesterDescription": "The Jester was eliminated by the town's vote.",
+    "fallbackDescription": "The match has ended.",
+    "parallelWins": "Parallel wins",
+    "parallelJester": "{{name}} won as Jester.",
+    "parallelJesterFallback": "Jester",
+    "survivors": "Survivors",
+    "eliminated": "Eliminated",
+    "revealedRoles": "Revealed roles",
+    "playAgain": "Play again",
+    "backHub": "Back to Hub"
+  }
+}

@@ -1,5 +1,6 @@
 import { Check, Vote } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '../../../components/ui/Button'
 import { Card } from '../../../components/ui/Card'
 import { cn } from '../../../lib/utils/cn'
@@ -13,6 +14,7 @@ type VotingPhaseProps = {
 }
 
 export function VotingPhase({ session, onCastVote, onFinishVoting }: VotingPhaseProps) {
+  const { t } = useTranslation('cidade-dorme')
   const alivePlayers = getAlivePlayers(session.players)
   const currentVotingResult = session.history.find((round) => round.round === session.round)?.votingResult
   const revoteTargetIds = currentVotingResult?.kind === 'revote' ? currentVotingResult.tiedTargetIds : undefined
@@ -21,22 +23,22 @@ export function VotingPhase({ session, onCastVote, onFinishVoting }: VotingPhase
   const votedCount = new Set(session.currentVotes.map((vote) => vote.voterId)).size
   const targets = useMemo(() => [
     ...alivePlayers.map((player) => ({ id: player.id as VoteTargetId, label: player.name })),
-    ...(session.settings.allowSkipVote ? [{ id: 'skip' as const, label: 'Pular eliminação' }] : []),
-  ].filter((target) => !revoteTargetIds?.length || revoteTargetIds.includes(target.id)), [alivePlayers, revoteTargetIds, session.settings.allowSkipVote])
+    ...(session.settings.allowSkipVote ? [{ id: 'skip' as const, label: t('common.skipElimination') }] : []),
+  ].filter((target) => !revoteTargetIds?.length || revoteTargetIds.includes(target.id)), [alivePlayers, revoteTargetIds, session.settings.allowSkipVote, t])
 
   return <>
     <div className="text-center">
       <div className="mx-auto flex size-20 items-center justify-center rounded-[2rem] bg-fuchsia-300 text-slate-950 shadow-xl shadow-fuchsia-500/20">
         <Vote size={40} />
       </div>
-      <h1 className="mt-5 text-3xl font-black">Votação</h1>
+      <h1 className="mt-5 text-3xl font-black">{t('voting.title')}</h1>
       <p className="mx-auto mt-3 max-w-md leading-7 text-slate-400">
-        {revoteTargetIds?.length ? 'Empate em andamento. Registre uma nova votação usando apenas os alvos empatados.' : 'Registre o voto de cada jogador vivo. Votos podem ser alterados antes da resolução.'}
+        {revoteTargetIds?.length ? t('voting.revoteDescription') : t('voting.description')}
       </p>
     </div>
 
     <Card className="mx-auto mt-8 max-w-lg p-5">
-      <p className="text-sm font-black uppercase tracking-wider text-fuchsia-200">Quem está votando?</p>
+      <p className="text-sm font-black uppercase tracking-wider text-fuchsia-200">{t('voting.voterTitle')}</p>
       <div className="mt-4 grid grid-cols-2 gap-2">
         {alivePlayers.map((player) => {
           const selected = activeVoterId === player.id
@@ -52,7 +54,7 @@ export function VotingPhase({ session, onCastVote, onFinishVoting }: VotingPhase
         })}
       </div>
 
-      <p className="mt-6 text-sm font-black uppercase tracking-wider text-fuchsia-200">Voto</p>
+      <p className="mt-6 text-sm font-black uppercase tracking-wider text-fuchsia-200">{t('voting.voteTitle')}</p>
       <div className="mt-4 grid gap-2">
         {targets.map((target) => {
           const selected = activeVote?.targetId === target.id
@@ -75,7 +77,7 @@ export function VotingPhase({ session, onCastVote, onFinishVoting }: VotingPhase
     <div className="mx-auto mt-6 grid max-w-lg">
       <Button className="bg-fuchsia-300 text-slate-950 hover:bg-fuchsia-200" disabled={votedCount === 0} size="lg" onClick={() => void onFinishVoting()}>
         <Check size={19} />
-        Resolver votação ({votedCount}/{alivePlayers.length})
+        {t('voting.finish', { voted: votedCount, total: alivePlayers.length })}
       </Button>
     </div>
   </>

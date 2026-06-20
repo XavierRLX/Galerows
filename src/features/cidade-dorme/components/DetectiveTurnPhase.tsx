@@ -1,5 +1,6 @@
 import { Check, Search, UserSearch } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '../../../components/ui/Button'
 import { Card } from '../../../components/ui/Card'
 import { cn } from '../../../lib/utils/cn'
@@ -12,6 +13,7 @@ type DetectiveTurnPhaseProps = {
 }
 
 export function DetectiveTurnPhase({ session, onConfirmInvestigation }: DetectiveTurnPhaseProps) {
+  const { t } = useTranslation('cidade-dorme')
   const alivePlayers = getAlivePlayers(session.players)
   const [selectedTargetId, setSelectedTargetId] = useState(session.currentNightAction.detectiveTargetId ?? '')
   const selectedPlayer = alivePlayers.find((player) => player.id === selectedTargetId)
@@ -21,9 +23,9 @@ export function DetectiveTurnPhase({ session, onConfirmInvestigation }: Detectiv
       <div className="mx-auto flex size-20 items-center justify-center rounded-[2rem] bg-cyan-300 text-slate-950 shadow-xl shadow-cyan-500/20">
         <UserSearch size={40} />
       </div>
-      <h1 className="mt-5 text-3xl font-black">Detetive acorda</h1>
+      <h1 className="mt-5 text-3xl font-black">{t('detectiveTurn.title')}</h1>
       <p className="mx-auto mt-3 max-w-md leading-7 text-slate-400">
-        Peça para o Detetive abrir os olhos em silêncio e apontar uma pessoa para investigar.
+        {t('detectiveTurn.description')}
       </p>
     </div>
 
@@ -31,8 +33,8 @@ export function DetectiveTurnPhase({ session, onConfirmInvestigation }: Detectiv
       <div className="flex items-start gap-3">
         <Search className="mt-0.5 shrink-0 text-cyan-200" size={22} />
         <div>
-          <p className="text-sm font-black uppercase tracking-wider text-cyan-200">Investigação da noite</p>
-          <p className="mt-2 text-sm leading-6 text-slate-300">Escolha apenas pelo nome. O resultado aparece só para o mediador.</p>
+          <p className="text-sm font-black uppercase tracking-wider text-cyan-200">{t('detectiveTurn.targetTitle')}</p>
+          <p className="mt-2 text-sm leading-6 text-slate-300">{t('detectiveTurn.targetHint')}</p>
         </div>
       </div>
       <div className="mt-5 grid gap-2">
@@ -57,7 +59,7 @@ export function DetectiveTurnPhase({ session, onConfirmInvestigation }: Detectiv
     <div className="mx-auto mt-6 grid max-w-lg">
       <Button className="bg-cyan-300 text-slate-950 hover:bg-cyan-200" disabled={!selectedPlayer} size="lg" onClick={() => selectedPlayer && void onConfirmInvestigation(selectedPlayer.id)}>
         <Check size={19} />
-        Confirmar investigação
+        {t('detectiveTurn.confirm')}
       </Button>
     </div>
   </>

@@ -1,0 +1,256 @@
+{
+  "name": "La Ciudad Duerme",
+  "loadingGame": "Cargando partida...",
+  "loadingResult": "Cargando resultado...",
+  "resumeError": "La partida guardada de La Ciudad Duerme no se pudo retomar y debe reiniciarse.",
+  "common": {
+    "continue": "Continuar",
+    "offline": "Totalmente sin conexión",
+    "none": "Nadie",
+    "skip": "Saltar",
+    "skipElimination": "Saltar eliminación",
+    "round": "Ronda {{round}}",
+    "guest": "invitado",
+    "remove": "Eliminar {{name}}",
+    "alive": "vivo",
+    "eliminated": "eliminado",
+    "noRole": "Sin rol"
+  },
+  "roles": {
+    "citizen": {
+      "name": "Ciudadano",
+      "shortDescription": "Vota durante el día e intenta encontrar a los asesinos.",
+      "objective": "Eliminar a todos los asesinos antes de que controlen la ciudad."
+    },
+    "killer": {
+      "name": "Asesino",
+      "shortDescription": "Elige una víctima durante la noche.",
+      "objective": "Igualar o superar el número de inocentes vivos."
+    },
+    "doctor": {
+      "name": "Médico",
+      "shortDescription": "Protege a una persona durante la noche.",
+      "objective": "Ayudar a la ciudad evitando muertes durante la noche."
+    },
+    "detective": {
+      "name": "Detective",
+      "shortDescription": "Investiga a una persona durante la noche.",
+      "objective": "Descubrir quién es sospechoso y orientar a la ciudad."
+    },
+    "jester": {
+      "name": "Bufón",
+      "shortDescription": "Intenta ser eliminado por la votación de la ciudad.",
+      "objective": "Ganar si es eliminado por votación."
+    }
+  },
+  "home": {
+    "eyebrow": "Deducción social",
+    "summary": "Un asistente sin conexión para que el moderador sortee roles secretos y dirija una partida presencial.",
+    "objectiveTitle": "Objetivo",
+    "objective": "La ciudad intenta descubrir a los asesinos. Los asesinos ganan cuando controlan la votación. Los roles especiales ayudan, confunden y crean engaños.",
+    "players": "4 a 12 jugadores",
+    "flowTitle": "Flujo",
+    "flow": {
+      "reveal": "La app sortea y revela un rol por persona.",
+      "night": "El moderador conduce la noche en turnos secretos.",
+      "vote": "La ciudad discute, vota y elimina sospechosos.",
+      "win": "La app verifica cuándo ganan la ciudad, los asesinos o el Bufón."
+    },
+    "discardGame": "Descartar partida",
+    "howToPlay": "Cómo jugar",
+    "continueGame": "Continuar partida",
+    "startGame": "Configurar partida",
+    "rules": [
+      "Elige los jugadores y configura los roles especiales.",
+      "Pasa el celular para que cada persona vea su propio rol en secreto.",
+      "Después de las revelaciones, el moderador guía la noche y mantiene las acciones en secreto.",
+      "Durante el día, registra la votación en la app y avanza hasta una condición de victoria."
+    ]
+  },
+  "setup": {
+    "title": "Configurar partida",
+    "playersHeading": "¿Quién está en la ciudad?",
+    "selected": "{{count}}/{{max}} seleccionados",
+    "myGroup": "Mi Grupo",
+    "emptyGroup": "Tu grupo aún está vacío. Puedes agregar invitados abajo.",
+    "guestNameLabel": "Nombre del invitado",
+    "guestPlaceholder": "Invitado temporal",
+    "add": "Agregar",
+    "errors": {
+      "guestName": "Ingresa el nombre del invitado.",
+      "duplicate": "Los jugadores deben tener nombres diferentes.",
+      "limit": "El límite es de 12 jugadores.",
+      "review": "Revisa la configuración de la partida."
+    },
+    "rolesTitle": "Roles",
+    "killers": "Asesinos",
+    "killersHint": "Recomendado automáticamente según el tamaño del grupo.",
+    "doctor": "Médico",
+    "doctorHint": "Protege a una persona durante la noche.",
+    "detective": "Detective",
+    "detectiveHint": "Investiga si alguien es sospechoso.",
+    "jester": "Bufón",
+    "jesterHint": "Gana si es eliminado por votación.",
+    "composition": "Composición: {{killer}} asesino(s), {{doctor}} médico, {{detective}} detective, {{jester}} bufón y {{citizen}} ciudadano(s).",
+    "rulesTitle": "Reglas",
+    "revealRoleOnDeath": "Revelar rol al morir",
+    "revealRoleOnDeathHint": "Ayuda a grupos principiantes a entender la partida.",
+    "allowSkipVote": "Permitir saltar votación",
+    "allowSkipVoteHint": "Permite que la ciudad no elimine a nadie.",
+    "doctorCanSelfProtect": "El Médico puede protegerse",
+    "doctorCanSelfProtectHint": "Si está desactivado, el Médico debe elegir a otra persona.",
+    "doctorCanRepeatProtection": "El Médico puede repetir protección",
+    "doctorCanRepeatProtectionHint": "Si está desactivado, no puede proteger a la misma persona en noches seguidas.",
+    "tieRuleTitle": "Empate en la votación",
+    "tieRules": {
+      "noElimination": "Sin eliminación",
+      "revoteTied": "Nueva votación",
+      "mediatorDecision": "Moderador decide"
+    },
+    "jesterWinTitle": "Victoria del Bufón",
+    "jesterWin": {
+      "instant": "Termina",
+      "parallel": "Paralela"
+    },
+    "start": "Sortear roles"
+  },
+  "play": {
+    "revealTitle": "Revelar roles",
+    "passTo": "Pasa a {{name}}",
+    "onlyPlayer": "Solo esta persona debe ver la próxima pantalla.",
+    "hiddenRole": "Rol oculto",
+    "youAre": "Eres {{role}}",
+    "objective": "Objetivo:",
+    "hideAndAdvance": "Ocultar y avanzar",
+    "showRole": "Mostrar rol",
+    "nightTitle": "Noche {{round}}",
+    "dayTitle": "Día {{round}}",
+    "exitHome": "Salir al inicio",
+    "fallback": "Esta fase se implementará en la próxima etapa."
+  },
+  "nightIntro": {
+    "title": "La ciudad duerme",
+    "description": "Ronda {{round}}. Ahora el celular queda solo con el moderador para conducir las acciones secretas.",
+    "scriptTitle": "Guion del moderador",
+    "stepOne": "Pide que todos cierren los ojos y guarden silencio.",
+    "stepTwo": "Avisa que los Asesinos serán llamados primero. Luego vendrán Médico y Detective, si están en la partida.",
+    "privacy": "Comprueba que nadie pueda ver la pantalla antes de empezar las elecciones nocturnas.",
+    "start": "Iniciar acciones de la noche"
+  },
+  "killerTurn": {
+    "title": "Asesinos despiertan",
+    "description": "Pide a los Asesinos que abran los ojos en silencio y señalen una víctima.",
+    "targetTitle": "Víctima de la noche",
+    "targetHint": "Elige solo por nombre. La pantalla no revela roles secretos.",
+    "confirm": "Confirmar víctima"
+  },
+  "doctorTurn": {
+    "title": "Médico despierta",
+    "description": "Pide al Médico que abra los ojos en silencio y elija una persona para proteger.",
+    "targetTitle": "Protección de la noche",
+    "targetHint": "Las opciones respetan las reglas configuradas de autoprotección y repetición.",
+    "empty": "No hay objetivo válido para el Médico en esta ronda.",
+    "confirm": "Confirmar protección"
+  },
+  "detectiveTurn": {
+    "title": "Detective despierta",
+    "description": "Pide al Detective que abra los ojos en silencio y señale una persona para investigar.",
+    "targetTitle": "Investigación de la noche",
+    "targetHint": "Elige solo por nombre. El resultado aparece solo para el moderador.",
+    "confirm": "Confirmar investigación"
+  },
+  "nightResolution": {
+    "title": "Resolver noche",
+    "description": "Revisa el resultado en privado antes de despertar a la ciudad.",
+    "pending": "Las acciones ya fueron registradas. Toca para aplicar protección, investigación y posible eliminación.",
+    "resolve": "Resolver noche",
+    "attack": "Ataque",
+    "attackKilled": "{{name}} fue eliminado durante la noche.",
+    "attackNone": "Nadie murió durante la noche.",
+    "protection": "Protección",
+    "protected": "La protección del Médico impidió la eliminación.",
+    "notProtected": "La víctima no estaba protegida.",
+    "detective": "Detective",
+    "detectiveResult": "{{name}} parece {{result}}.",
+    "suspect": "sospechoso",
+    "innocent": "inocente"
+  },
+  "dayDiscussion": {
+    "title": "La ciudad despierta",
+    "description": "Ronda {{round}}. El grupo puede discutir antes de votar una eliminación.",
+    "discussion": "Discusión",
+    "hint": "Conduce la conversación presencialmente. Cuando el grupo esté listo, avanza a la votación.",
+    "startVoting": "Iniciar votación"
+  },
+  "voting": {
+    "title": "Votación",
+    "description": "Registra el voto de cada jugador vivo. Los votos pueden cambiarse antes de resolver.",
+    "revoteDescription": "Empate en curso. Registra una nueva votación usando solo los objetivos empatados.",
+    "voterTitle": "¿Quién está votando?",
+    "voteTitle": "Voto",
+    "finish": "Resolver votación ({{voted}}/{{total}})"
+  },
+  "voteResolution": {
+    "title": "Resultado de la votación",
+    "description": "Confirma el conteo y aplica la consecuencia de la votación.",
+    "apply": "Aplicar resultado",
+    "revote": "Hacer desempate",
+    "mediatorTitle": "Decisión del moderador",
+    "eliminate": "Eliminar a {{name}}",
+    "texts": {
+      "eliminated": "{{name}} será eliminado por la votación.",
+      "eliminatedFallback": "Un jugador será eliminado por la votación.",
+      "skipped": "La ciudad eligió saltar la eliminación.",
+      "revote": "Hubo empate. Aplica el resultado para abrir una votación de desempate.",
+      "mediatorDecision": "Hubo empate. El moderador debe elegir explícitamente uno de los objetivos empatados.",
+      "tie": "Hubo empate y nadie será eliminado.",
+      "noVotes": "No se registró ningún voto válido.",
+      "resolvedRevote": "Empate registrado. Haz una nueva votación solo entre los objetivos empatados.",
+      "resolvedMediator": "Empate registrado. El moderador debe elegir uno de los objetivos empatados.",
+      "resolvedEliminated": "{{name}} fue eliminado por la votación.",
+      "resolvedNoElimination": "La votación se aplicó sin eliminación."
+    }
+  },
+  "history": {
+    "title": "Historial privado del moderador",
+    "round": "Ronda {{round}}",
+    "killerTarget": "Objetivo de los Asesinos:",
+    "doctorProtection": "Protección del Médico:",
+    "investigation": "Investigación:",
+    "night": "Noche:",
+    "vote": "Votación:",
+    "tally": "Conteo:",
+    "attackProtected": "ataque protegido",
+    "nightKilled": "{{name}} eliminado",
+    "noNightKill": "sin eliminación",
+    "notRegistered": "aún no registrada",
+    "voteKilled": "{{name}} eliminado",
+    "voteSkipped": "eliminación saltada",
+    "tie": "empate sin eliminación",
+    "revote": "empate para nueva votación",
+    "mediatorDecision": "empate para decisión del moderador",
+    "noVotes": "sin votos válidos",
+    "votesCount": "{{count}} voto(s) registrado(s)",
+    "emptyTally": "sin votos"
+  },
+  "result": {
+    "title": "Fin del juego",
+    "cityTitle": "La Ciudad ganó",
+    "killersTitle": "Los Asesinos ganaron",
+    "jesterTitle": "{{name}} ganó como Bufón",
+    "jesterFallback": "El Bufón ganó",
+    "fallbackTitle": "Fin de la partida",
+    "cityDescription": "Todos los asesinos fueron eliminados.",
+    "killersDescription": "Los asesinos igualaron o superaron el número de inocentes vivos.",
+    "jesterDescription": "El Bufón fue eliminado por la votación de la ciudad.",
+    "fallbackDescription": "La partida terminó.",
+    "parallelWins": "Victorias paralelas",
+    "parallelJester": "{{name}} ganó como Bufón.",
+    "parallelJesterFallback": "Bufón",
+    "survivors": "Sobrevivientes",
+    "eliminated": "Eliminados",
+    "revealedRoles": "Roles revelados",
+    "playAgain": "Jugar de nuevo",
+    "backHub": "Volver al Hub"
+  }
+}
