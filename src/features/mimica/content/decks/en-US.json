@@ -3,7 +3,7 @@
   "gameId": "mimica",
   "deckId": "mimicas-iniciais",
   "locale": "en-US",
-  "version": 1,
+  "version": 2,
   "title": "Starter charades",
   "cards": [
     {
@@ -11,49 +11,219 @@
       "theme": "Everyday Life",
       "difficulty": "easy",
       "actions": [
-        { "id": "escovar-dentes", "label": "Brushing your teeth", "points": 1 },
-        { "id": "pegar-onibus", "label": "Catching a crowded bus", "points": 2 },
-        { "id": "procurar-chave", "label": "Looking for keys while late", "points": 3 }
+        {
+          "id": "escovar-dentes",
+          "label": "Brushing your teeth",
+          "points": 1
+        },
+        {
+          "id": "pegar-onibus-lotado",
+          "label": "Catching a crowded bus",
+          "points": 2
+        },
+        {
+          "id": "procurar-chave-atrasado",
+          "label": "Looking for keys while late",
+          "points": 2
+        }
       ]
     },
     {
-      "id": "esportes",
+      "id": "casa",
+      "theme": "Home",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "varrer-a-sala",
+          "label": "Sweeping the living room",
+          "points": 1
+        },
+        {
+          "id": "trocar-lampada",
+          "label": "Changing a light bulb",
+          "points": 2
+        },
+        {
+          "id": "fugir-de-barata",
+          "label": "Running from a cockroach",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "higiene",
+      "theme": "Hygiene",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "tomar-banho",
+          "label": "Taking a shower",
+          "points": 1
+        },
+        {
+          "id": "passar-desodorante",
+          "label": "Putting on deodorant",
+          "points": 2
+        },
+        {
+          "id": "secar-cabelo-com-pressa",
+          "label": "Drying your hair in a hurry",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "cozinha",
+      "theme": "Kitchen",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "mexer-panela",
+          "label": "Stirring a pot",
+          "points": 1
+        },
+        {
+          "id": "quebrar-ovo",
+          "label": "Cracking an egg",
+          "points": 2
+        },
+        {
+          "id": "provar-comida-quente",
+          "label": "Tasting hot food",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "animais-faceis",
+      "theme": "Animals",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "andar-como-pinguim",
+          "label": "Walking like a penguin",
+          "points": 1
+        },
+        {
+          "id": "gato-se-espreguicando",
+          "label": "A cat stretching",
+          "points": 2
+        },
+        {
+          "id": "cachorro-pedindo-petisco",
+          "label": "A dog begging for a treat",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "escola",
+      "theme": "School",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "levantar-a-mao",
+          "label": "Raising your hand in class",
+          "points": 1
+        },
+        {
+          "id": "apagar-o-quadro",
+          "label": "Erasing the board",
+          "points": 2
+        },
+        {
+          "id": "colar-na-prova-discretamente",
+          "label": "Sneakily cheating on a test",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "transporte",
+      "theme": "Transportation",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "dirigir-carro",
+          "label": "Driving a car",
+          "points": 1
+        },
+        {
+          "id": "andar-de-bicicleta",
+          "label": "Riding a bicycle",
+          "points": 2
+        },
+        {
+          "id": "segurar-no-metro-lotado",
+          "label": "Holding on in a packed subway",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "parque",
+      "theme": "Park",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "passear-com-cachorro",
+          "label": "Walking a dog",
+          "points": 1
+        },
+        {
+          "id": "brincar-no-balanco",
+          "label": "Playing on a swing",
+          "points": 2
+        },
+        {
+          "id": "pombo-roubando-lanche",
+          "label": "A pigeon stealing a snack",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "praia",
+      "theme": "Beach",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "passar-protetor-solar",
+          "label": "Putting on sunscreen",
+          "points": 1
+        },
+        {
+          "id": "pegar-onda",
+          "label": "Catching a wave",
+          "points": 2
+        },
+        {
+          "id": "pisar-na-areia-quente",
+          "label": "Stepping on hot sand",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "esportes-faceis",
       "theme": "Sports",
       "difficulty": "easy",
       "actions": [
-        { "id": "cobrar-penalti", "label": "Taking a penalty kick", "points": 1 },
-        { "id": "surfar-onda", "label": "Surfing a wave", "points": 2 },
-        { "id": "levantar-trofeu", "label": "Lifting a trophy", "points": 3 }
-      ]
-    },
-    {
-      "id": "cinema",
-      "theme": "Movies",
-      "difficulty": "medium",
-      "actions": [
-        { "id": "fugir-explosao", "label": "Escaping an explosion in slow motion", "points": 2 },
-        { "id": "detetive-lupa", "label": "Investigating with a magnifying glass", "points": 2 },
-        { "id": "robo-dancando", "label": "A robot learning to dance", "points": 4 }
-      ]
-    },
-    {
-      "id": "animais",
-      "theme": "Animals",
-      "difficulty": "medium",
-      "actions": [
-        { "id": "pinguim-andando", "label": "Walking like a penguin", "points": 1 },
-        { "id": "canguru-boxe", "label": "A kangaroo boxing", "points": 3 },
-        { "id": "camaleao-escondido", "label": "A chameleon trying to hide", "points": 4 }
-      ]
-    },
-    {
-      "id": "profissoes",
-      "theme": "Jobs",
-      "difficulty": "hard",
-      "actions": [
-        { "id": "chef-apressado", "label": "A chef cooking in a hurry", "points": 2 },
-        { "id": "astronauta-gravidade", "label": "An astronaut without gravity", "points": 4 },
-        { "id": "maestro-orquestra", "label": "A conductor leading an orchestra", "points": 5 }
+        {
+          "id": "chutar-bola",
+          "label": "Kicking a ball",
+          "points": 1
+        },
+        {
+          "id": "arremessar-basquete",
+          "label": "Shooting a basketball",
+          "points": 2
+        },
+        {
+          "id": "comemorar-gol-exagerado",
+          "label": "Celebrating a goal dramatically",
+          "points": 2
+        }
       ]
     },
     {
@@ -61,9 +231,879 @@
       "theme": "Party",
       "difficulty": "easy",
       "actions": [
-        { "id": "abrir-presente", "label": "Opening a surprise gift", "points": 1 },
-        { "id": "dancar-forro", "label": "Dancing forro without a partner", "points": 2 },
-        { "id": "apagar-velas", "label": "Blowing out candles that will not go out", "points": 3 }
+        {
+          "id": "estourar-balao",
+          "label": "Popping a balloon",
+          "points": 1
+        },
+        {
+          "id": "cortar-bolo",
+          "label": "Cutting the cake",
+          "points": 2
+        },
+        {
+          "id": "dancar-sem-ritmo",
+          "label": "Dancing with no rhythm",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "musica-danca",
+      "theme": "Music and Dance",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "tocar-violao",
+          "label": "Playing guitar",
+          "points": 1
+        },
+        {
+          "id": "bater-palmas-no-ritmo",
+          "label": "Clapping to the beat",
+          "points": 2
+        },
+        {
+          "id": "fazer-solo-de-bateria",
+          "label": "Doing a drum solo",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "familia",
+      "theme": "Family",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "embalar-bebe",
+          "label": "Rocking a baby",
+          "points": 1
+        },
+        {
+          "id": "tirar-foto-em-grupo",
+          "label": "Taking a group photo",
+          "points": 2
+        },
+        {
+          "id": "tio-contando-historia",
+          "label": "An uncle telling a story",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "supermercado",
+      "theme": "Supermarket",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "empurrar-carrinho",
+          "label": "Pushing a cart",
+          "points": 1
+        },
+        {
+          "id": "comparar-precos",
+          "label": "Comparing prices",
+          "points": 2
+        },
+        {
+          "id": "derrubar-pilha-de-latas",
+          "label": "Knocking over a stack of cans",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "tecnologia-basica",
+      "theme": "Technology",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "tirar-selfie",
+          "label": "Taking a selfie",
+          "points": 1
+        },
+        {
+          "id": "digitar-no-celular",
+          "label": "Typing on a phone",
+          "points": 2
+        },
+        {
+          "id": "procurar-sinal-de-wifi",
+          "label": "Looking for Wi-Fi signal",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "profissoes-faceis",
+      "theme": "Jobs",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "pintar-parede",
+          "label": "Painting a wall",
+          "points": 1
+        },
+        {
+          "id": "cortar-cabelo",
+          "label": "Cutting hair",
+          "points": 2
+        },
+        {
+          "id": "garcom-equilibrando-bandeja",
+          "label": "A waiter balancing a tray",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "natureza",
+      "theme": "Nature",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "plantar-flor",
+          "label": "Planting a flower",
+          "points": 1
+        },
+        {
+          "id": "regar-jardim",
+          "label": "Watering the garden",
+          "points": 2
+        },
+        {
+          "id": "espantar-abelha",
+          "label": "Shooing away a bee",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "sono",
+      "theme": "Sleep",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "bocejar",
+          "label": "Yawning",
+          "points": 1
+        },
+        {
+          "id": "dormir-no-sofa",
+          "label": "Sleeping on the sofa",
+          "points": 2
+        },
+        {
+          "id": "acordar-assustado",
+          "label": "Waking up startled",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "viagem",
+      "theme": "Travel",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "arrumar-mala",
+          "label": "Packing a suitcase",
+          "points": 2
+        },
+        {
+          "id": "passar-pela-seguranca",
+          "label": "Going through security",
+          "points": 3
+        },
+        {
+          "id": "perder-o-aviao",
+          "label": "Missing the plane",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "academia",
+      "theme": "Gym",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "levantar-peso",
+          "label": "Lifting weights",
+          "points": 2
+        },
+        {
+          "id": "correr-na-esteira",
+          "label": "Running on a treadmill",
+          "points": 3
+        },
+        {
+          "id": "fingir-que-nao-cansou",
+          "label": "Pretending you are not tired",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "restaurante",
+      "theme": "Restaurant",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "chamar-garcom",
+          "label": "Calling the waiter",
+          "points": 2
+        },
+        {
+          "id": "comer-macarrao",
+          "label": "Eating spaghetti",
+          "points": 3
+        },
+        {
+          "id": "receber-conta-cara",
+          "label": "Getting an expensive bill",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "hospital-leve",
+      "theme": "Hospital",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "medir-temperatura",
+          "label": "Taking a temperature",
+          "points": 2
+        },
+        {
+          "id": "tomar-injecao-com-medo",
+          "label": "Getting a shot while scared",
+          "points": 3
+        },
+        {
+          "id": "andar-de-muleta-dramatico",
+          "label": "Walking dramatically with crutches",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "escritorio",
+      "theme": "Office",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "tomar-cafe-trabalhando",
+          "label": "Drinking coffee while working",
+          "points": 2
+        },
+        {
+          "id": "reuniao-sem-entender",
+          "label": "Being lost in a meeting",
+          "points": 3
+        },
+        {
+          "id": "impressora-travando",
+          "label": "A printer jamming",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "shopping",
+      "theme": "Mall",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "experimentar-roupa",
+          "label": "Trying on clothes",
+          "points": 2
+        },
+        {
+          "id": "subir-escada-rolante",
+          "label": "Riding an escalator",
+          "points": 3
+        },
+        {
+          "id": "se-perder-no-estacionamento",
+          "label": "Getting lost in the parking lot",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "casamento",
+      "theme": "Wedding",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "jogar-buque",
+          "label": "Throwing the bouquet",
+          "points": 2
+        },
+        {
+          "id": "entrar-na-igreja",
+          "label": "Entering the ceremony",
+          "points": 3
+        },
+        {
+          "id": "dancar-com-sapato-apertado",
+          "label": "Dancing in tight shoes",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "circo",
+      "theme": "Circus",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "andar-na-corda-bamba",
+          "label": "Walking a tightrope",
+          "points": 2
+        },
+        {
+          "id": "fazer-malabarismo",
+          "label": "Juggling",
+          "points": 3
+        },
+        {
+          "id": "palhaco-escorregando",
+          "label": "A clown slipping",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "fantasia",
+      "theme": "Fantasy",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "lancar-feitico",
+          "label": "Casting a spell",
+          "points": 2
+        },
+        {
+          "id": "montar-dragao-imaginario",
+          "label": "Riding an imaginary dragon",
+          "points": 3
+        },
+        {
+          "id": "fugir-de-monstro-invisivel",
+          "label": "Running from an invisible monster",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "detetive",
+      "theme": "Detective",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "seguir-pegadas",
+          "label": "Following footprints",
+          "points": 2
+        },
+        {
+          "id": "olhar-com-lupa",
+          "label": "Looking with a magnifying glass",
+          "points": 3
+        },
+        {
+          "id": "interrogar-suspeito-mudo",
+          "label": "Questioning a silent suspect",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "cinema-generico",
+      "theme": "Movies",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "fugir-de-explosao",
+          "label": "Running from an explosion",
+          "points": 2
+        },
+        {
+          "id": "cena-em-camera-lenta",
+          "label": "A slow-motion scene",
+          "points": 3
+        },
+        {
+          "id": "monstro-acordando",
+          "label": "A monster waking up",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "animais-engracados",
+      "theme": "Funny Animals",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "girafa-bebendo-agua",
+          "label": "A giraffe drinking water",
+          "points": 2
+        },
+        {
+          "id": "caranguejo-andando-de-lado",
+          "label": "A crab walking sideways",
+          "points": 3
+        },
+        {
+          "id": "macaco-roubando-banana",
+          "label": "A monkey stealing a banana",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "clima",
+      "theme": "Weather",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "andar-contra-vento",
+          "label": "Walking against the wind",
+          "points": 2
+        },
+        {
+          "id": "fugir-da-chuva",
+          "label": "Running from the rain",
+          "points": 3
+        },
+        {
+          "id": "derreter-no-calor",
+          "label": "Melting in the heat",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "obra",
+      "theme": "Construction",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "martelar-prego",
+          "label": "Hammering a nail",
+          "points": 2
+        },
+        {
+          "id": "carregar-saco-de-cimento",
+          "label": "Carrying a bag of cement",
+          "points": 3
+        },
+        {
+          "id": "furadeira-fora-de-controle",
+          "label": "An out-of-control drill",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "cozinha-caotica",
+      "theme": "Chaotic Kitchen",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "abrir-panela-de-pressao",
+          "label": "Opening a pressure cooker",
+          "points": 2
+        },
+        {
+          "id": "flambar-sem-querer",
+          "label": "Accidentally flambéing",
+          "points": 3
+        },
+        {
+          "id": "bolo-murchando",
+          "label": "A cake collapsing",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "escola-confusao",
+      "theme": "School Trouble",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "apresentar-trabalho",
+          "label": "Giving a presentation",
+          "points": 2
+        },
+        {
+          "id": "chegar-atrasado-na-aula",
+          "label": "Arriving late to class",
+          "points": 3
+        },
+        {
+          "id": "mochila-rasgando",
+          "label": "A backpack ripping open",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "transito",
+      "theme": "Traffic",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "dar-seta",
+          "label": "Using the turn signal",
+          "points": 2
+        },
+        {
+          "id": "estacionar-em-vaga-apertada",
+          "label": "Parking in a tight spot",
+          "points": 3
+        },
+        {
+          "id": "motoboy-desviando-buraco",
+          "label": "A delivery rider dodging a pothole",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "camping",
+      "theme": "Camping",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "montar-barraca",
+          "label": "Pitching a tent",
+          "points": 2
+        },
+        {
+          "id": "acender-fogueira",
+          "label": "Lighting a campfire",
+          "points": 3
+        },
+        {
+          "id": "ouvir-barulho-na-floresta",
+          "label": "Hearing a noise in the forest",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "aeroporto",
+      "theme": "Airport",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "puxar-mala-pesada",
+          "label": "Pulling a heavy suitcase",
+          "points": 3
+        },
+        {
+          "id": "despachar-bagagem",
+          "label": "Checking luggage",
+          "points": 4
+        },
+        {
+          "id": "correr-para-o-portao",
+          "label": "Running to the gate",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "desastre-domestico",
+      "theme": "Home Disaster",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "maquina-de-lavar-pulando",
+          "label": "A washing machine jumping around",
+          "points": 3
+        },
+        {
+          "id": "cano-estourando",
+          "label": "A pipe bursting",
+          "points": 4
+        },
+        {
+          "id": "tentar-apagar-fumaca",
+          "label": "Trying to clear smoke",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "esportes-radicais",
+      "theme": "Extreme Sports",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "saltar-de-paraquedas",
+          "label": "Skydiving",
+          "points": 3
+        },
+        {
+          "id": "escalar-montanha",
+          "label": "Climbing a mountain",
+          "points": 4
+        },
+        {
+          "id": "descer-cachoeira-de-caiaque",
+          "label": "Kayaking down a waterfall",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "laboratorio",
+      "theme": "Laboratory",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "misturar-pocoes",
+          "label": "Mixing potions",
+          "points": 3
+        },
+        {
+          "id": "anotar-descoberta",
+          "label": "Writing down a discovery",
+          "points": 4
+        },
+        {
+          "id": "experimento-explodindo",
+          "label": "An experiment exploding",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "robo-futuro",
+      "theme": "Robots and the Future",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "andar-como-robo",
+          "label": "Walking like a robot",
+          "points": 3
+        },
+        {
+          "id": "carregar-bateria-fraca",
+          "label": "Charging a low battery",
+          "points": 4
+        },
+        {
+          "id": "robo-bugando-na-danca",
+          "label": "A robot glitching while dancing",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "pirata",
+      "theme": "Pirate",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "olhar-no-telescopio",
+          "label": "Looking through a telescope",
+          "points": 3
+        },
+        {
+          "id": "cavar-tesouro",
+          "label": "Digging for treasure",
+          "points": 4
+        },
+        {
+          "id": "equilibrar-no-navio",
+          "label": "Balancing on a ship",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "show-palco",
+      "theme": "Stage Show",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "entrar-no-palco",
+          "label": "Walking onto the stage",
+          "points": 3
+        },
+        {
+          "id": "cantar-sem-microfone",
+          "label": "Performing without a microphone",
+          "points": 4
+        },
+        {
+          "id": "fazer-show-com-queda",
+          "label": "Putting on a show and falling",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "sobrevivencia",
+      "theme": "Survival",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "procurar-agua",
+          "label": "Searching for water",
+          "points": 3
+        },
+        {
+          "id": "construir-abrigo",
+          "label": "Building a shelter",
+          "points": 4
+        },
+        {
+          "id": "fugir-de-enxame",
+          "label": "Running from a swarm",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "mudanca-casa",
+      "theme": "Moving House",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "carregar-sofa",
+          "label": "Carrying a sofa",
+          "points": 3
+        },
+        {
+          "id": "encaixar-movel-na-porta",
+          "label": "Fitting furniture through a door",
+          "points": 4
+        },
+        {
+          "id": "derrubar-caixa-fragil",
+          "label": "Dropping a fragile box",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "entrevista-emprego",
+      "theme": "Job Interview",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "apertar-mao-nervoso",
+          "label": "Shaking hands nervously",
+          "points": 3
+        },
+        {
+          "id": "mostrar-curriculo",
+          "label": "Showing a resume",
+          "points": 4
+        },
+        {
+          "id": "cadeira-fazendo-barulho",
+          "label": "A chair making noise",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "mercado-caotico",
+      "theme": "Chaotic Market",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "carrinho-com-roda-travada",
+          "label": "A cart with a stuck wheel",
+          "points": 3
+        },
+        {
+          "id": "alcancar-produto-alto",
+          "label": "Reaching a high shelf",
+          "points": 4
+        },
+        {
+          "id": "sacola-rasgando-na-saida",
+          "label": "A bag ripping on the way out",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "espionagem",
+      "theme": "Espionage",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "desviar-de-lasers",
+          "label": "Dodging lasers",
+          "points": 3
+        },
+        {
+          "id": "abrir-cofre-imaginario",
+          "label": "Opening an imaginary safe",
+          "points": 4
+        },
+        {
+          "id": "trocar-disfarce-rapido",
+          "label": "Changing disguise quickly",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "misterio-sobrenatural",
+      "theme": "Supernatural Mystery",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "sentir-arrepios",
+          "label": "Getting chills",
+          "points": 3
+        },
+        {
+          "id": "ser-puxado-por-fantasma",
+          "label": "Being pulled by a ghost",
+          "points": 4
+        },
+        {
+          "id": "possuir-um-objeto",
+          "label": "Possessing an object",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "parque-diversoes",
+      "theme": "Amusement Park",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "andar-na-montanha-russa",
+          "label": "Riding a roller coaster",
+          "points": 3
+        },
+        {
+          "id": "ficar-tonto-no-brinquedo",
+          "label": "Getting dizzy on a ride",
+          "points": 4
+        },
+        {
+          "id": "perder-chinelo-no-giro",
+          "label": "Losing a flip-flop on a spinning ride",
+          "points": 5
+        }
       ]
     }
   ]

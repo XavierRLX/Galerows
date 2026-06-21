@@ -3,7 +3,7 @@
   "gameId": "mimica",
   "deckId": "mimicas-iniciais",
   "locale": "es-419",
-  "version": 1,
+  "version": 2,
   "title": "Mímicas iniciales",
   "cards": [
     {
@@ -11,49 +11,219 @@
       "theme": "Vida diaria",
       "difficulty": "easy",
       "actions": [
-        { "id": "escovar-dentes", "label": "Cepillarse los dientes", "points": 1 },
-        { "id": "pegar-onibus", "label": "Tomar un bus lleno", "points": 2 },
-        { "id": "procurar-chave", "label": "Buscar las llaves con prisa", "points": 3 }
+        {
+          "id": "escovar-dentes",
+          "label": "Cepillarse los dientes",
+          "points": 1
+        },
+        {
+          "id": "pegar-onibus-lotado",
+          "label": "Tomar un bus lleno",
+          "points": 2
+        },
+        {
+          "id": "procurar-chave-atrasado",
+          "label": "Buscar las llaves con prisa",
+          "points": 2
+        }
       ]
     },
     {
-      "id": "esportes",
+      "id": "casa",
+      "theme": "Casa",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "varrer-a-sala",
+          "label": "Barrer la sala",
+          "points": 1
+        },
+        {
+          "id": "trocar-lampada",
+          "label": "Cambiar una bombilla",
+          "points": 2
+        },
+        {
+          "id": "fugir-de-barata",
+          "label": "Huir de una cucaracha",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "higiene",
+      "theme": "Higiene",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "tomar-banho",
+          "label": "Ducharse",
+          "points": 1
+        },
+        {
+          "id": "passar-desodorante",
+          "label": "Ponerse desodorante",
+          "points": 2
+        },
+        {
+          "id": "secar-cabelo-com-pressa",
+          "label": "Secarse el pelo con prisa",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "cozinha",
+      "theme": "Cocina",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "mexer-panela",
+          "label": "Revolver una olla",
+          "points": 1
+        },
+        {
+          "id": "quebrar-ovo",
+          "label": "Romper un huevo",
+          "points": 2
+        },
+        {
+          "id": "provar-comida-quente",
+          "label": "Probar comida caliente",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "animais-faceis",
+      "theme": "Animales",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "andar-como-pinguim",
+          "label": "Caminar como pingüino",
+          "points": 1
+        },
+        {
+          "id": "gato-se-espreguicando",
+          "label": "Un gato estirándose",
+          "points": 2
+        },
+        {
+          "id": "cachorro-pedindo-petisco",
+          "label": "Un perro pidiendo premio",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "escola",
+      "theme": "Escuela",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "levantar-a-mao",
+          "label": "Levantar la mano en clase",
+          "points": 1
+        },
+        {
+          "id": "apagar-o-quadro",
+          "label": "Borrar el pizarrón",
+          "points": 2
+        },
+        {
+          "id": "colar-na-prova-discretamente",
+          "label": "Copiar discretamente en un examen",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "transporte",
+      "theme": "Transporte",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "dirigir-carro",
+          "label": "Manejar un auto",
+          "points": 1
+        },
+        {
+          "id": "andar-de-bicicleta",
+          "label": "Andar en bicicleta",
+          "points": 2
+        },
+        {
+          "id": "segurar-no-metro-lotado",
+          "label": "Sujetarse en un metro lleno",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "parque",
+      "theme": "Parque",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "passear-com-cachorro",
+          "label": "Pasear a un perro",
+          "points": 1
+        },
+        {
+          "id": "brincar-no-balanco",
+          "label": "Jugar en el columpio",
+          "points": 2
+        },
+        {
+          "id": "pombo-roubando-lanche",
+          "label": "Una paloma robando un snack",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "praia",
+      "theme": "Playa",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "passar-protetor-solar",
+          "label": "Ponerse protector solar",
+          "points": 1
+        },
+        {
+          "id": "pegar-onda",
+          "label": "Tomar una ola",
+          "points": 2
+        },
+        {
+          "id": "pisar-na-areia-quente",
+          "label": "Pisar arena caliente",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "esportes-faceis",
       "theme": "Deportes",
       "difficulty": "easy",
       "actions": [
-        { "id": "cobrar-penalti", "label": "Patear un penal", "points": 1 },
-        { "id": "surfar-onda", "label": "Surfear una ola", "points": 2 },
-        { "id": "levantar-trofeu", "label": "Levantar un trofeo", "points": 3 }
-      ]
-    },
-    {
-      "id": "cinema",
-      "theme": "Cine",
-      "difficulty": "medium",
-      "actions": [
-        { "id": "fugir-explosao", "label": "Escapar de una explosión en cámara lenta", "points": 2 },
-        { "id": "detetive-lupa", "label": "Investigar con una lupa", "points": 2 },
-        { "id": "robo-dancando", "label": "Un robot aprendiendo a bailar", "points": 4 }
-      ]
-    },
-    {
-      "id": "animais",
-      "theme": "Animales",
-      "difficulty": "medium",
-      "actions": [
-        { "id": "pinguim-andando", "label": "Caminar como pingüino", "points": 1 },
-        { "id": "canguru-boxe", "label": "Un canguro boxeando", "points": 3 },
-        { "id": "camaleao-escondido", "label": "Un camaleón intentando esconderse", "points": 4 }
-      ]
-    },
-    {
-      "id": "profissoes",
-      "theme": "Profesiones",
-      "difficulty": "hard",
-      "actions": [
-        { "id": "chef-apressado", "label": "Chef cocinando con prisa", "points": 2 },
-        { "id": "astronauta-gravidade", "label": "Astronauta sin gravedad", "points": 4 },
-        { "id": "maestro-orquestra", "label": "Director dirigiendo una orquesta", "points": 5 }
+        {
+          "id": "chutar-bola",
+          "label": "Patear una pelota",
+          "points": 1
+        },
+        {
+          "id": "arremessar-basquete",
+          "label": "Lanzar al aro de básquet",
+          "points": 2
+        },
+        {
+          "id": "comemorar-gol-exagerado",
+          "label": "Celebrar un gol exageradamente",
+          "points": 2
+        }
       ]
     },
     {
@@ -61,9 +231,879 @@
       "theme": "Fiesta",
       "difficulty": "easy",
       "actions": [
-        { "id": "abrir-presente", "label": "Abrir un regalo sorpresa", "points": 1 },
-        { "id": "dancar-forro", "label": "Bailar forró sin pareja", "points": 2 },
-        { "id": "apagar-velas", "label": "Soplar velas que no se apagan", "points": 3 }
+        {
+          "id": "estourar-balao",
+          "label": "Reventar un globo",
+          "points": 1
+        },
+        {
+          "id": "cortar-bolo",
+          "label": "Cortar el pastel",
+          "points": 2
+        },
+        {
+          "id": "dancar-sem-ritmo",
+          "label": "Bailar sin ritmo",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "musica-danca",
+      "theme": "Música y Baile",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "tocar-violao",
+          "label": "Tocar guitarra",
+          "points": 1
+        },
+        {
+          "id": "bater-palmas-no-ritmo",
+          "label": "Aplaudir al ritmo",
+          "points": 2
+        },
+        {
+          "id": "fazer-solo-de-bateria",
+          "label": "Hacer un solo de batería",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "familia",
+      "theme": "Familia",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "embalar-bebe",
+          "label": "Arrullar a un bebé",
+          "points": 1
+        },
+        {
+          "id": "tirar-foto-em-grupo",
+          "label": "Tomar una foto grupal",
+          "points": 2
+        },
+        {
+          "id": "tio-contando-historia",
+          "label": "Un tío contando una historia",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "supermercado",
+      "theme": "Supermercado",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "empurrar-carrinho",
+          "label": "Empujar un carrito",
+          "points": 1
+        },
+        {
+          "id": "comparar-precos",
+          "label": "Comparar precios",
+          "points": 2
+        },
+        {
+          "id": "derrubar-pilha-de-latas",
+          "label": "Derribar una pila de latas",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "tecnologia-basica",
+      "theme": "Tecnología",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "tirar-selfie",
+          "label": "Tomarse una selfie",
+          "points": 1
+        },
+        {
+          "id": "digitar-no-celular",
+          "label": "Escribir en el celular",
+          "points": 2
+        },
+        {
+          "id": "procurar-sinal-de-wifi",
+          "label": "Buscar señal de Wi-Fi",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "profissoes-faceis",
+      "theme": "Profesiones",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "pintar-parede",
+          "label": "Pintar una pared",
+          "points": 1
+        },
+        {
+          "id": "cortar-cabelo",
+          "label": "Cortar el pelo",
+          "points": 2
+        },
+        {
+          "id": "garcom-equilibrando-bandeja",
+          "label": "Mesero equilibrando una bandeja",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "natureza",
+      "theme": "Naturaleza",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "plantar-flor",
+          "label": "Plantar una flor",
+          "points": 1
+        },
+        {
+          "id": "regar-jardim",
+          "label": "Regar el jardín",
+          "points": 2
+        },
+        {
+          "id": "espantar-abelha",
+          "label": "Espantar una abeja",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "sono",
+      "theme": "Sueño",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "bocejar",
+          "label": "Bostezar",
+          "points": 1
+        },
+        {
+          "id": "dormir-no-sofa",
+          "label": "Dormir en el sofá",
+          "points": 2
+        },
+        {
+          "id": "acordar-assustado",
+          "label": "Despertar asustado",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "viagem",
+      "theme": "Viaje",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "arrumar-mala",
+          "label": "Preparar una maleta",
+          "points": 2
+        },
+        {
+          "id": "passar-pela-seguranca",
+          "label": "Pasar por seguridad",
+          "points": 3
+        },
+        {
+          "id": "perder-o-aviao",
+          "label": "Perder el avión",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "academia",
+      "theme": "Gimnasio",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "levantar-peso",
+          "label": "Levantar pesas",
+          "points": 2
+        },
+        {
+          "id": "correr-na-esteira",
+          "label": "Correr en la cinta",
+          "points": 3
+        },
+        {
+          "id": "fingir-que-nao-cansou",
+          "label": "Fingir que no estás cansado",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "restaurante",
+      "theme": "Restaurante",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "chamar-garcom",
+          "label": "Llamar al mesero",
+          "points": 2
+        },
+        {
+          "id": "comer-macarrao",
+          "label": "Comer espagueti",
+          "points": 3
+        },
+        {
+          "id": "receber-conta-cara",
+          "label": "Recibir una cuenta carísima",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "hospital-leve",
+      "theme": "Hospital",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "medir-temperatura",
+          "label": "Tomar la temperatura",
+          "points": 2
+        },
+        {
+          "id": "tomar-injecao-com-medo",
+          "label": "Recibir una inyección con miedo",
+          "points": 3
+        },
+        {
+          "id": "andar-de-muleta-dramatico",
+          "label": "Caminar con muletas dramáticamente",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "escritorio",
+      "theme": "Oficina",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "tomar-cafe-trabalhando",
+          "label": "Tomar café mientras trabajas",
+          "points": 2
+        },
+        {
+          "id": "reuniao-sem-entender",
+          "label": "No entender nada en una reunión",
+          "points": 3
+        },
+        {
+          "id": "impressora-travando",
+          "label": "Una impresora atascándose",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "shopping",
+      "theme": "Centro Comercial",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "experimentar-roupa",
+          "label": "Probarse ropa",
+          "points": 2
+        },
+        {
+          "id": "subir-escada-rolante",
+          "label": "Subir una escalera eléctrica",
+          "points": 3
+        },
+        {
+          "id": "se-perder-no-estacionamento",
+          "label": "Perderse en el estacionamiento",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "casamento",
+      "theme": "Boda",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "jogar-buque",
+          "label": "Lanzar el ramo",
+          "points": 2
+        },
+        {
+          "id": "entrar-na-igreja",
+          "label": "Entrar a la ceremonia",
+          "points": 3
+        },
+        {
+          "id": "dancar-com-sapato-apertado",
+          "label": "Bailar con zapatos apretados",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "circo",
+      "theme": "Circo",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "andar-na-corda-bamba",
+          "label": "Caminar por la cuerda floja",
+          "points": 2
+        },
+        {
+          "id": "fazer-malabarismo",
+          "label": "Hacer malabares",
+          "points": 3
+        },
+        {
+          "id": "palhaco-escorregando",
+          "label": "Un payaso resbalando",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "fantasia",
+      "theme": "Fantasía",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "lancar-feitico",
+          "label": "Lanzar un hechizo",
+          "points": 2
+        },
+        {
+          "id": "montar-dragao-imaginario",
+          "label": "Montar un dragón imaginario",
+          "points": 3
+        },
+        {
+          "id": "fugir-de-monstro-invisivel",
+          "label": "Huir de un monstruo invisible",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "detetive",
+      "theme": "Detective",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "seguir-pegadas",
+          "label": "Seguir huellas",
+          "points": 2
+        },
+        {
+          "id": "olhar-com-lupa",
+          "label": "Mirar con una lupa",
+          "points": 3
+        },
+        {
+          "id": "interrogar-suspeito-mudo",
+          "label": "Interrogar a un sospechoso mudo",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "cinema-generico",
+      "theme": "Cine",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "fugir-de-explosao",
+          "label": "Huir de una explosión",
+          "points": 2
+        },
+        {
+          "id": "cena-em-camera-lenta",
+          "label": "Una escena en cámara lenta",
+          "points": 3
+        },
+        {
+          "id": "monstro-acordando",
+          "label": "Un monstruo despertando",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "animais-engracados",
+      "theme": "Animales Divertidos",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "girafa-bebendo-agua",
+          "label": "Una jirafa bebiendo agua",
+          "points": 2
+        },
+        {
+          "id": "caranguejo-andando-de-lado",
+          "label": "Un cangrejo caminando de lado",
+          "points": 3
+        },
+        {
+          "id": "macaco-roubando-banana",
+          "label": "Un mono robando una banana",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "clima",
+      "theme": "Clima",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "andar-contra-vento",
+          "label": "Caminar contra el viento",
+          "points": 2
+        },
+        {
+          "id": "fugir-da-chuva",
+          "label": "Huir de la lluvia",
+          "points": 3
+        },
+        {
+          "id": "derreter-no-calor",
+          "label": "Derretirse por el calor",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "obra",
+      "theme": "Construcción",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "martelar-prego",
+          "label": "Martillar un clavo",
+          "points": 2
+        },
+        {
+          "id": "carregar-saco-de-cimento",
+          "label": "Cargar una bolsa de cemento",
+          "points": 3
+        },
+        {
+          "id": "furadeira-fora-de-controle",
+          "label": "Un taladro fuera de control",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "cozinha-caotica",
+      "theme": "Cocina Caótica",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "abrir-panela-de-pressao",
+          "label": "Abrir una olla de presión",
+          "points": 2
+        },
+        {
+          "id": "flambar-sem-querer",
+          "label": "Flambear sin querer",
+          "points": 3
+        },
+        {
+          "id": "bolo-murchando",
+          "label": "Un pastel desinflándose",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "escola-confusao",
+      "theme": "Confusión Escolar",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "apresentar-trabalho",
+          "label": "Presentar un trabajo",
+          "points": 2
+        },
+        {
+          "id": "chegar-atrasado-na-aula",
+          "label": "Llegar tarde a clase",
+          "points": 3
+        },
+        {
+          "id": "mochila-rasgando",
+          "label": "Una mochila rompiéndose",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "transito",
+      "theme": "Tráfico",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "dar-seta",
+          "label": "Poner la direccional",
+          "points": 2
+        },
+        {
+          "id": "estacionar-em-vaga-apertada",
+          "label": "Estacionar en un espacio estrecho",
+          "points": 3
+        },
+        {
+          "id": "motoboy-desviando-buraco",
+          "label": "Repartidor esquivando un bache",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "camping",
+      "theme": "Campamento",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "montar-barraca",
+          "label": "Armar una carpa",
+          "points": 2
+        },
+        {
+          "id": "acender-fogueira",
+          "label": "Encender una fogata",
+          "points": 3
+        },
+        {
+          "id": "ouvir-barulho-na-floresta",
+          "label": "Oír un ruido en el bosque",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "aeroporto",
+      "theme": "Aeropuerto",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "puxar-mala-pesada",
+          "label": "Jalar una maleta pesada",
+          "points": 3
+        },
+        {
+          "id": "despachar-bagagem",
+          "label": "Facturar equipaje",
+          "points": 4
+        },
+        {
+          "id": "correr-para-o-portao",
+          "label": "Correr hacia la puerta",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "desastre-domestico",
+      "theme": "Desastre Doméstico",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "maquina-de-lavar-pulando",
+          "label": "Una lavadora saltando",
+          "points": 3
+        },
+        {
+          "id": "cano-estourando",
+          "label": "Una tubería reventando",
+          "points": 4
+        },
+        {
+          "id": "tentar-apagar-fumaca",
+          "label": "Intentar despejar humo",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "esportes-radicais",
+      "theme": "Deportes Extremos",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "saltar-de-paraquedas",
+          "label": "Saltar en paracaídas",
+          "points": 3
+        },
+        {
+          "id": "escalar-montanha",
+          "label": "Escalar una montaña",
+          "points": 4
+        },
+        {
+          "id": "descer-cachoeira-de-caiaque",
+          "label": "Bajar una cascada en kayak",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "laboratorio",
+      "theme": "Laboratorio",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "misturar-pocoes",
+          "label": "Mezclar pociones",
+          "points": 3
+        },
+        {
+          "id": "anotar-descoberta",
+          "label": "Anotar un descubrimiento",
+          "points": 4
+        },
+        {
+          "id": "experimento-explodindo",
+          "label": "Un experimento explotando",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "robo-futuro",
+      "theme": "Robot y Futuro",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "andar-como-robo",
+          "label": "Caminar como robot",
+          "points": 3
+        },
+        {
+          "id": "carregar-bateria-fraca",
+          "label": "Cargar batería baja",
+          "points": 4
+        },
+        {
+          "id": "robo-bugando-na-danca",
+          "label": "Robot fallando mientras baila",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "pirata",
+      "theme": "Pirata",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "olhar-no-telescopio",
+          "label": "Mirar por un telescopio",
+          "points": 3
+        },
+        {
+          "id": "cavar-tesouro",
+          "label": "Cavar un tesoro",
+          "points": 4
+        },
+        {
+          "id": "equilibrar-no-navio",
+          "label": "Equilibrarse en un barco",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "show-palco",
+      "theme": "Show en el Escenario",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "entrar-no-palco",
+          "label": "Entrar al escenario",
+          "points": 3
+        },
+        {
+          "id": "cantar-sem-microfone",
+          "label": "Actuar sin micrófono",
+          "points": 4
+        },
+        {
+          "id": "fazer-show-com-queda",
+          "label": "Dar un show y caerse",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "sobrevivencia",
+      "theme": "Supervivencia",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "procurar-agua",
+          "label": "Buscar agua",
+          "points": 3
+        },
+        {
+          "id": "construir-abrigo",
+          "label": "Construir un refugio",
+          "points": 4
+        },
+        {
+          "id": "fugir-de-enxame",
+          "label": "Huir de un enjambre",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "mudanca-casa",
+      "theme": "Mudanza",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "carregar-sofa",
+          "label": "Cargar un sofá",
+          "points": 3
+        },
+        {
+          "id": "encaixar-movel-na-porta",
+          "label": "Meter un mueble por la puerta",
+          "points": 4
+        },
+        {
+          "id": "derrubar-caixa-fragil",
+          "label": "Dejar caer una caja frágil",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "entrevista-emprego",
+      "theme": "Entrevista de Trabajo",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "apertar-mao-nervoso",
+          "label": "Dar la mano con nervios",
+          "points": 3
+        },
+        {
+          "id": "mostrar-curriculo",
+          "label": "Mostrar un currículum",
+          "points": 4
+        },
+        {
+          "id": "cadeira-fazendo-barulho",
+          "label": "Una silla haciendo ruido",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "mercado-caotico",
+      "theme": "Mercado Caótico",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "carrinho-com-roda-travada",
+          "label": "Carrito con una rueda trabada",
+          "points": 3
+        },
+        {
+          "id": "alcancar-produto-alto",
+          "label": "Alcanzar un producto alto",
+          "points": 4
+        },
+        {
+          "id": "sacola-rasgando-na-saida",
+          "label": "Bolsa rompiéndose al salir",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "espionagem",
+      "theme": "Espionaje",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "desviar-de-lasers",
+          "label": "Esquivar láseres",
+          "points": 3
+        },
+        {
+          "id": "abrir-cofre-imaginario",
+          "label": "Abrir una caja fuerte imaginaria",
+          "points": 4
+        },
+        {
+          "id": "trocar-disfarce-rapido",
+          "label": "Cambiar de disfraz rápidamente",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "misterio-sobrenatural",
+      "theme": "Misterio Sobrenatural",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "sentir-arrepios",
+          "label": "Sentir escalofríos",
+          "points": 3
+        },
+        {
+          "id": "ser-puxado-por-fantasma",
+          "label": "Ser jalado por un fantasma",
+          "points": 4
+        },
+        {
+          "id": "possuir-um-objeto",
+          "label": "Poseer un objeto",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "parque-diversoes",
+      "theme": "Parque de Diversiones",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "andar-na-montanha-russa",
+          "label": "Subirse a una montaña rusa",
+          "points": 3
+        },
+        {
+          "id": "ficar-tonto-no-brinquedo",
+          "label": "Marearse en una atracción",
+          "points": 4
+        },
+        {
+          "id": "perder-chinelo-no-giro",
+          "label": "Perder una chancla en un giro",
+          "points": 5
+        }
       ]
     }
   ]

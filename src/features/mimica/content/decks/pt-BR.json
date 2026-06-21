@@ -3,7 +3,7 @@
   "gameId": "mimica",
   "deckId": "mimicas-iniciais",
   "locale": "pt-BR",
-  "version": 1,
+  "version": 2,
   "title": "Mímicas iniciais",
   "cards": [
     {
@@ -11,49 +11,219 @@
       "theme": "Cotidiano",
       "difficulty": "easy",
       "actions": [
-        { "id": "escovar-dentes", "label": "Escovar os dentes", "points": 1 },
-        { "id": "pegar-onibus", "label": "Pegar ônibus lotado", "points": 2 },
-        { "id": "procurar-chave", "label": "Procurar a chave atrasado", "points": 3 }
+        {
+          "id": "escovar-dentes",
+          "label": "Escovar os dentes",
+          "points": 1
+        },
+        {
+          "id": "pegar-onibus-lotado",
+          "label": "Pegar ônibus lotado",
+          "points": 2
+        },
+        {
+          "id": "procurar-chave-atrasado",
+          "label": "Procurar a chave atrasado",
+          "points": 2
+        }
       ]
     },
     {
-      "id": "esportes",
+      "id": "casa",
+      "theme": "Casa",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "varrer-a-sala",
+          "label": "Varrer a sala",
+          "points": 1
+        },
+        {
+          "id": "trocar-lampada",
+          "label": "Trocar lâmpada",
+          "points": 2
+        },
+        {
+          "id": "fugir-de-barata",
+          "label": "Fugir de uma barata",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "higiene",
+      "theme": "Higiene",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "tomar-banho",
+          "label": "Tomar banho",
+          "points": 1
+        },
+        {
+          "id": "passar-desodorante",
+          "label": "Passar desodorante",
+          "points": 2
+        },
+        {
+          "id": "secar-cabelo-com-pressa",
+          "label": "Secar o cabelo com pressa",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "cozinha",
+      "theme": "Cozinha",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "mexer-panela",
+          "label": "Mexer a panela",
+          "points": 1
+        },
+        {
+          "id": "quebrar-ovo",
+          "label": "Quebrar um ovo",
+          "points": 2
+        },
+        {
+          "id": "provar-comida-quente",
+          "label": "Provar comida quente",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "animais-faceis",
+      "theme": "Animais",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "andar-como-pinguim",
+          "label": "Andar como pinguim",
+          "points": 1
+        },
+        {
+          "id": "gato-se-espreguicando",
+          "label": "Gato se espreguiçando",
+          "points": 2
+        },
+        {
+          "id": "cachorro-pedindo-petisco",
+          "label": "Cachorro pedindo petisco",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "escola",
+      "theme": "Escola",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "levantar-a-mao",
+          "label": "Levantar a mão na aula",
+          "points": 1
+        },
+        {
+          "id": "apagar-o-quadro",
+          "label": "Apagar o quadro",
+          "points": 2
+        },
+        {
+          "id": "colar-na-prova-discretamente",
+          "label": "Colar na prova discretamente",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "transporte",
+      "theme": "Transporte",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "dirigir-carro",
+          "label": "Dirigir um carro",
+          "points": 1
+        },
+        {
+          "id": "andar-de-bicicleta",
+          "label": "Andar de bicicleta",
+          "points": 2
+        },
+        {
+          "id": "segurar-no-metro-lotado",
+          "label": "Segurar no metrô lotado",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "parque",
+      "theme": "Parque",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "passear-com-cachorro",
+          "label": "Passear com cachorro",
+          "points": 1
+        },
+        {
+          "id": "brincar-no-balanco",
+          "label": "Brincar no balanço",
+          "points": 2
+        },
+        {
+          "id": "pombo-roubando-lanche",
+          "label": "Pombo roubando lanche",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "praia",
+      "theme": "Praia",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "passar-protetor-solar",
+          "label": "Passar protetor solar",
+          "points": 1
+        },
+        {
+          "id": "pegar-onda",
+          "label": "Pegar onda",
+          "points": 2
+        },
+        {
+          "id": "pisar-na-areia-quente",
+          "label": "Pisar na areia quente",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "esportes-faceis",
       "theme": "Esportes",
       "difficulty": "easy",
       "actions": [
-        { "id": "cobrar-penalti", "label": "Cobrar um pênalti", "points": 1 },
-        { "id": "surfar-onda", "label": "Surfar uma onda", "points": 2 },
-        { "id": "levantar-trofeu", "label": "Levantar um troféu", "points": 3 }
-      ]
-    },
-    {
-      "id": "cinema",
-      "theme": "Cinema",
-      "difficulty": "medium",
-      "actions": [
-        { "id": "fugir-explosao", "label": "Fugir de uma explosão em câmera lenta", "points": 2 },
-        { "id": "detetive-lupa", "label": "Investigar com uma lupa", "points": 2 },
-        { "id": "robo-dancando", "label": "Robô aprendendo a dançar", "points": 4 }
-      ]
-    },
-    {
-      "id": "animais",
-      "theme": "Animais",
-      "difficulty": "medium",
-      "actions": [
-        { "id": "pinguim-andando", "label": "Andar como pinguim", "points": 1 },
-        { "id": "canguru-boxe", "label": "Canguru lutando boxe", "points": 3 },
-        { "id": "camaleao-escondido", "label": "Camaleão tentando se esconder", "points": 4 }
-      ]
-    },
-    {
-      "id": "profissoes",
-      "theme": "Profissões",
-      "difficulty": "hard",
-      "actions": [
-        { "id": "chef-apressado", "label": "Chef cozinhando atrasado", "points": 2 },
-        { "id": "astronauta-gravidade", "label": "Astronauta sem gravidade", "points": 4 },
-        { "id": "maestro-orquestra", "label": "Maestro regendo uma orquestra", "points": 5 }
+        {
+          "id": "chutar-bola",
+          "label": "Chutar uma bola",
+          "points": 1
+        },
+        {
+          "id": "arremessar-basquete",
+          "label": "Arremessar no basquete",
+          "points": 2
+        },
+        {
+          "id": "comemorar-gol-exagerado",
+          "label": "Comemorar gol exagerado",
+          "points": 2
+        }
       ]
     },
     {
@@ -61,9 +231,879 @@
       "theme": "Festa",
       "difficulty": "easy",
       "actions": [
-        { "id": "abrir-presente", "label": "Abrir um presente surpresa", "points": 1 },
-        { "id": "dancar-forro", "label": "Dançar forró sem par", "points": 2 },
-        { "id": "apagar-velas", "label": "Apagar velas que não apagam", "points": 3 }
+        {
+          "id": "estourar-balao",
+          "label": "Estourar balão",
+          "points": 1
+        },
+        {
+          "id": "cortar-bolo",
+          "label": "Cortar o bolo",
+          "points": 2
+        },
+        {
+          "id": "dancar-sem-ritmo",
+          "label": "Dançar sem ritmo",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "musica-danca",
+      "theme": "Música e Dança",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "tocar-violao",
+          "label": "Tocar violão",
+          "points": 1
+        },
+        {
+          "id": "bater-palmas-no-ritmo",
+          "label": "Bater palmas no ritmo",
+          "points": 2
+        },
+        {
+          "id": "fazer-solo-de-bateria",
+          "label": "Fazer solo de bateria",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "familia",
+      "theme": "Família",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "embalar-bebe",
+          "label": "Embalar um bebê",
+          "points": 1
+        },
+        {
+          "id": "tirar-foto-em-grupo",
+          "label": "Tirar foto em grupo",
+          "points": 2
+        },
+        {
+          "id": "tio-contando-historia",
+          "label": "Tio contando história",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "supermercado",
+      "theme": "Supermercado",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "empurrar-carrinho",
+          "label": "Empurrar carrinho",
+          "points": 1
+        },
+        {
+          "id": "comparar-precos",
+          "label": "Comparar preços",
+          "points": 2
+        },
+        {
+          "id": "derrubar-pilha-de-latas",
+          "label": "Derrubar pilha de latas",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "tecnologia-basica",
+      "theme": "Tecnologia",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "tirar-selfie",
+          "label": "Tirar selfie",
+          "points": 1
+        },
+        {
+          "id": "digitar-no-celular",
+          "label": "Digitar no celular",
+          "points": 2
+        },
+        {
+          "id": "procurar-sinal-de-wifi",
+          "label": "Procurar sinal de Wi-Fi",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "profissoes-faceis",
+      "theme": "Profissões",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "pintar-parede",
+          "label": "Pintar parede",
+          "points": 1
+        },
+        {
+          "id": "cortar-cabelo",
+          "label": "Cortar cabelo",
+          "points": 2
+        },
+        {
+          "id": "garcom-equilibrando-bandeja",
+          "label": "Garçom equilibrando bandeja",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "natureza",
+      "theme": "Natureza",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "plantar-flor",
+          "label": "Plantar uma flor",
+          "points": 1
+        },
+        {
+          "id": "regar-jardim",
+          "label": "Regar o jardim",
+          "points": 2
+        },
+        {
+          "id": "espantar-abelha",
+          "label": "Espantar uma abelha",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "sono",
+      "theme": "Sono",
+      "difficulty": "easy",
+      "actions": [
+        {
+          "id": "bocejar",
+          "label": "Bocejar",
+          "points": 1
+        },
+        {
+          "id": "dormir-no-sofa",
+          "label": "Dormir no sofá",
+          "points": 2
+        },
+        {
+          "id": "acordar-assustado",
+          "label": "Acordar assustado",
+          "points": 2
+        }
+      ]
+    },
+    {
+      "id": "viagem",
+      "theme": "Viagem",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "arrumar-mala",
+          "label": "Arrumar mala",
+          "points": 2
+        },
+        {
+          "id": "passar-pela-seguranca",
+          "label": "Passar pela segurança",
+          "points": 3
+        },
+        {
+          "id": "perder-o-aviao",
+          "label": "Perder o avião",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "academia",
+      "theme": "Academia",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "levantar-peso",
+          "label": "Levantar peso",
+          "points": 2
+        },
+        {
+          "id": "correr-na-esteira",
+          "label": "Correr na esteira",
+          "points": 3
+        },
+        {
+          "id": "fingir-que-nao-cansou",
+          "label": "Fingir que não cansou",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "restaurante",
+      "theme": "Restaurante",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "chamar-garcom",
+          "label": "Chamar garçom",
+          "points": 2
+        },
+        {
+          "id": "comer-macarrao",
+          "label": "Comer macarrão",
+          "points": 3
+        },
+        {
+          "id": "receber-conta-cara",
+          "label": "Receber conta cara",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "hospital-leve",
+      "theme": "Hospital",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "medir-temperatura",
+          "label": "Medir temperatura",
+          "points": 2
+        },
+        {
+          "id": "tomar-injecao-com-medo",
+          "label": "Tomar injeção com medo",
+          "points": 3
+        },
+        {
+          "id": "andar-de-muleta-dramatico",
+          "label": "Andar de muleta dramático",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "escritorio",
+      "theme": "Escritório",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "tomar-cafe-trabalhando",
+          "label": "Tomar café trabalhando",
+          "points": 2
+        },
+        {
+          "id": "reuniao-sem-entender",
+          "label": "Reunião sem entender",
+          "points": 3
+        },
+        {
+          "id": "impressora-travando",
+          "label": "Impressora travando",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "shopping",
+      "theme": "Shopping",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "experimentar-roupa",
+          "label": "Experimentar roupa",
+          "points": 2
+        },
+        {
+          "id": "subir-escada-rolante",
+          "label": "Subir escada rolante",
+          "points": 3
+        },
+        {
+          "id": "se-perder-no-estacionamento",
+          "label": "Se perder no estacionamento",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "casamento",
+      "theme": "Casamento",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "jogar-buque",
+          "label": "Jogar buquê",
+          "points": 2
+        },
+        {
+          "id": "entrar-na-igreja",
+          "label": "Entrar na cerimônia",
+          "points": 3
+        },
+        {
+          "id": "dancar-com-sapato-apertado",
+          "label": "Dançar com sapato apertado",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "circo",
+      "theme": "Circo",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "andar-na-corda-bamba",
+          "label": "Andar na corda bamba",
+          "points": 2
+        },
+        {
+          "id": "fazer-malabarismo",
+          "label": "Fazer malabarismo",
+          "points": 3
+        },
+        {
+          "id": "palhaco-escorregando",
+          "label": "Palhaço escorregando",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "fantasia",
+      "theme": "Fantasia",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "lancar-feitico",
+          "label": "Lançar feitiço",
+          "points": 2
+        },
+        {
+          "id": "montar-dragao-imaginario",
+          "label": "Montar dragão imaginário",
+          "points": 3
+        },
+        {
+          "id": "fugir-de-monstro-invisivel",
+          "label": "Fugir de monstro invisível",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "detetive",
+      "theme": "Detetive",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "seguir-pegadas",
+          "label": "Seguir pegadas",
+          "points": 2
+        },
+        {
+          "id": "olhar-com-lupa",
+          "label": "Olhar com lupa",
+          "points": 3
+        },
+        {
+          "id": "interrogar-suspeito-mudo",
+          "label": "Interrogar suspeito mudo",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "cinema-generico",
+      "theme": "Cinema",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "fugir-de-explosao",
+          "label": "Fugir de explosão",
+          "points": 2
+        },
+        {
+          "id": "cena-em-camera-lenta",
+          "label": "Cena em câmera lenta",
+          "points": 3
+        },
+        {
+          "id": "monstro-acordando",
+          "label": "Monstro acordando",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "animais-engracados",
+      "theme": "Animais Engraçados",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "girafa-bebendo-agua",
+          "label": "Girafa bebendo água",
+          "points": 2
+        },
+        {
+          "id": "caranguejo-andando-de-lado",
+          "label": "Caranguejo andando de lado",
+          "points": 3
+        },
+        {
+          "id": "macaco-roubando-banana",
+          "label": "Macaco roubando banana",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "clima",
+      "theme": "Clima",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "andar-contra-vento",
+          "label": "Andar contra o vento",
+          "points": 2
+        },
+        {
+          "id": "fugir-da-chuva",
+          "label": "Fugir da chuva",
+          "points": 3
+        },
+        {
+          "id": "derreter-no-calor",
+          "label": "Derreter no calor",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "obra",
+      "theme": "Obra",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "martelar-prego",
+          "label": "Martelar prego",
+          "points": 2
+        },
+        {
+          "id": "carregar-saco-de-cimento",
+          "label": "Carregar saco de cimento",
+          "points": 3
+        },
+        {
+          "id": "furadeira-fora-de-controle",
+          "label": "Furadeira fora de controle",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "cozinha-caotica",
+      "theme": "Cozinha Caótica",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "abrir-panela-de-pressao",
+          "label": "Abrir panela de pressão",
+          "points": 2
+        },
+        {
+          "id": "flambar-sem-querer",
+          "label": "Flambar sem querer",
+          "points": 3
+        },
+        {
+          "id": "bolo-murchando",
+          "label": "Bolo murchando",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "escola-confusao",
+      "theme": "Escola Confusão",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "apresentar-trabalho",
+          "label": "Apresentar trabalho",
+          "points": 2
+        },
+        {
+          "id": "chegar-atrasado-na-aula",
+          "label": "Chegar atrasado na aula",
+          "points": 3
+        },
+        {
+          "id": "mochila-rasgando",
+          "label": "Mochila rasgando",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "transito",
+      "theme": "Trânsito",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "dar-seta",
+          "label": "Dar seta",
+          "points": 2
+        },
+        {
+          "id": "estacionar-em-vaga-apertada",
+          "label": "Estacionar em vaga apertada",
+          "points": 3
+        },
+        {
+          "id": "motoboy-desviando-buraco",
+          "label": "Motoboy desviando buraco",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "camping",
+      "theme": "Camping",
+      "difficulty": "medium",
+      "actions": [
+        {
+          "id": "montar-barraca",
+          "label": "Montar barraca",
+          "points": 2
+        },
+        {
+          "id": "acender-fogueira",
+          "label": "Acender fogueira",
+          "points": 3
+        },
+        {
+          "id": "ouvir-barulho-na-floresta",
+          "label": "Ouvir barulho na floresta",
+          "points": 3
+        }
+      ]
+    },
+    {
+      "id": "aeroporto",
+      "theme": "Aeroporto",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "puxar-mala-pesada",
+          "label": "Puxar mala pesada",
+          "points": 3
+        },
+        {
+          "id": "despachar-bagagem",
+          "label": "Despachar bagagem",
+          "points": 4
+        },
+        {
+          "id": "correr-para-o-portao",
+          "label": "Correr para o portão",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "desastre-domestico",
+      "theme": "Desastre Doméstico",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "maquina-de-lavar-pulando",
+          "label": "Máquina de lavar pulando",
+          "points": 3
+        },
+        {
+          "id": "cano-estourando",
+          "label": "Cano estourando",
+          "points": 4
+        },
+        {
+          "id": "tentar-apagar-fumaca",
+          "label": "Tentar apagar fumaça",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "esportes-radicais",
+      "theme": "Esportes Radicais",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "saltar-de-paraquedas",
+          "label": "Saltar de paraquedas",
+          "points": 3
+        },
+        {
+          "id": "escalar-montanha",
+          "label": "Escalar montanha",
+          "points": 4
+        },
+        {
+          "id": "descer-cachoeira-de-caiaque",
+          "label": "Descer cachoeira de caiaque",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "laboratorio",
+      "theme": "Laboratório",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "misturar-pocoes",
+          "label": "Misturar poções",
+          "points": 3
+        },
+        {
+          "id": "anotar-descoberta",
+          "label": "Anotar descoberta",
+          "points": 4
+        },
+        {
+          "id": "experimento-explodindo",
+          "label": "Experimento explodindo",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "robo-futuro",
+      "theme": "Robô e Futuro",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "andar-como-robo",
+          "label": "Andar como robô",
+          "points": 3
+        },
+        {
+          "id": "carregar-bateria-fraca",
+          "label": "Carregar bateria fraca",
+          "points": 4
+        },
+        {
+          "id": "robo-bugando-na-danca",
+          "label": "Robô bugando na dança",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "pirata",
+      "theme": "Pirata",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "olhar-no-telescopio",
+          "label": "Olhar no telescópio",
+          "points": 3
+        },
+        {
+          "id": "cavar-tesouro",
+          "label": "Cavar tesouro",
+          "points": 4
+        },
+        {
+          "id": "equilibrar-no-navio",
+          "label": "Equilibrar no navio",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "show-palco",
+      "theme": "Show no Palco",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "entrar-no-palco",
+          "label": "Entrar no palco",
+          "points": 3
+        },
+        {
+          "id": "cantar-sem-microfone",
+          "label": "Cantar sem microfone",
+          "points": 4
+        },
+        {
+          "id": "fazer-show-com-queda",
+          "label": "Fazer show com queda",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "sobrevivencia",
+      "theme": "Sobrevivência",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "procurar-agua",
+          "label": "Procurar água",
+          "points": 3
+        },
+        {
+          "id": "construir-abrigo",
+          "label": "Construir abrigo",
+          "points": 4
+        },
+        {
+          "id": "fugir-de-enxame",
+          "label": "Fugir de enxame",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "mudanca-casa",
+      "theme": "Mudança",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "carregar-sofa",
+          "label": "Carregar sofá",
+          "points": 3
+        },
+        {
+          "id": "encaixar-movel-na-porta",
+          "label": "Encaixar móvel na porta",
+          "points": 4
+        },
+        {
+          "id": "derrubar-caixa-fragil",
+          "label": "Derrubar caixa frágil",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "entrevista-emprego",
+      "theme": "Entrevista de Emprego",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "apertar-mao-nervoso",
+          "label": "Apertar mão nervoso",
+          "points": 3
+        },
+        {
+          "id": "mostrar-curriculo",
+          "label": "Mostrar currículo",
+          "points": 4
+        },
+        {
+          "id": "cadeira-fazendo-barulho",
+          "label": "Cadeira fazendo barulho",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "mercado-caotico",
+      "theme": "Mercado Caótico",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "carrinho-com-roda-travada",
+          "label": "Carrinho com roda travada",
+          "points": 3
+        },
+        {
+          "id": "alcancar-produto-alto",
+          "label": "Alcançar produto alto",
+          "points": 4
+        },
+        {
+          "id": "sacola-rasgando-na-saida",
+          "label": "Sacola rasgando na saída",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "espionagem",
+      "theme": "Espionagem",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "desviar-de-lasers",
+          "label": "Desviar de lasers",
+          "points": 3
+        },
+        {
+          "id": "abrir-cofre-imaginario",
+          "label": "Abrir cofre imaginário",
+          "points": 4
+        },
+        {
+          "id": "trocar-disfarce-rapido",
+          "label": "Trocar disfarce rápido",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "misterio-sobrenatural",
+      "theme": "Mistério Sobrenatural",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "sentir-arrepios",
+          "label": "Sentir arrepios",
+          "points": 3
+        },
+        {
+          "id": "ser-puxado-por-fantasma",
+          "label": "Ser puxado por fantasma",
+          "points": 4
+        },
+        {
+          "id": "possuir-um-objeto",
+          "label": "Possuir um objeto",
+          "points": 5
+        }
+      ]
+    },
+    {
+      "id": "parque-diversoes",
+      "theme": "Parque de Diversões",
+      "difficulty": "hard",
+      "actions": [
+        {
+          "id": "andar-na-montanha-russa",
+          "label": "Andar na montanha-russa",
+          "points": 3
+        },
+        {
+          "id": "ficar-tonto-no-brinquedo",
+          "label": "Ficar tonto no brinquedo",
+          "points": 4
+        },
+        {
+          "id": "perder-chinelo-no-giro",
+          "label": "Perder chinelo no giro",
+          "points": 5
+        }
       ]
     }
   ]
