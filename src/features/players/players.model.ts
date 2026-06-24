@@ -55,6 +55,17 @@ export function movePlayer(group: PlayerGroup, playerId: string, direction: -1 |
   return touch(group, players)
 }
 
+export function movePlayerToPosition(group: PlayerGroup, playerId: string, targetIndex: number): PlayerGroup {
+  const currentIndex = group.players.findIndex((player) => player.id === playerId)
+  const boundedTargetIndex = Math.max(0, Math.min(group.players.length - 1, targetIndex))
+  if (currentIndex < 0 || currentIndex === boundedTargetIndex) return group
+  const players = [...group.players]
+  const [player] = players.splice(currentIndex, 1)
+  if (!player) return group
+  players.splice(boundedTargetIndex, 0, player)
+  return touch(group, players)
+}
+
 export function renameGroup(group: PlayerGroup, rawName: string): PlayerGroup {
   const name = normalizePlayerName(rawName)
   if (!name) throw new Error('Informe o nome da galera.')

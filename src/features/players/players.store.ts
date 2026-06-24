@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { LocalPreferences } from '../../lib/capacitor/preferences'
 import { STORAGE_KEYS } from '../../lib/storage/storage.keys'
-import { addPlayer, createPlayerGroup, isPlayerGroup, movePlayer, removePlayer, renameGroup, renamePlayer } from './players.model'
+import { addPlayer, createPlayerGroup, isPlayerGroup, movePlayer, movePlayerToPosition, removePlayer, renameGroup, renamePlayer } from './players.model'
 import type { PlayerGroup } from './players.types'
 
 type PlayersState = {
@@ -14,6 +14,7 @@ type PlayersState = {
   rename: (playerId: string, name: string) => Promise<boolean>
   remove: (playerId: string) => Promise<void>
   move: (playerId: string, direction: -1 | 1) => Promise<void>
+  moveTo: (playerId: string, targetIndex: number) => Promise<void>
 }
 
 async function persist(group: PlayerGroup) {
@@ -35,6 +36,7 @@ export const usePlayersStore = create<PlayersState>((set, get) => ({
   rename: async (playerId, name) => update(set, get, (group) => renamePlayer(group, playerId, name)),
   remove: async (playerId) => { await update(set, get, (group) => removePlayer(group, playerId)) },
   move: async (playerId, direction) => { await update(set, get, (group) => movePlayer(group, playerId, direction)) },
+  moveTo: async (playerId, targetIndex) => { await update(set, get, (group) => movePlayerToPosition(group, playerId, targetIndex)) },
 }))
 
 async function update(
