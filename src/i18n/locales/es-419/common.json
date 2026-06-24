@@ -4,7 +4,8 @@
     "language": "Idioma",
     "offlineNote": "Tu idioma queda guardado en este dispositivo y la app sigue funcionando sin conexión.",
     "privacyOptions": "Opciones de privacidad",
-    "rateApp": "Calificar en Play Store"
+    "rateApp": "Calificar en Play Store",
+    "version": "Versión {{version}}"
   },
   "updates": {
     "availableTitle": "Actualización disponible",

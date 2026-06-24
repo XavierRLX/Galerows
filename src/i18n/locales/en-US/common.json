@@ -4,7 +4,8 @@
     "language": "Language",
     "offlineNote": "Your language choice is saved on this device and the app continues to work offline.",
     "privacyOptions": "Privacy options",
-    "rateApp": "Rate on Play Store"
+    "rateApp": "Rate on Play Store",
+    "version": "Version {{version}}"
   },
   "updates": {
     "availableTitle": "Update available",
