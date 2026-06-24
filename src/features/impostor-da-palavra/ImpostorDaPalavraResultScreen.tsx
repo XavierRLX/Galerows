@@ -6,6 +6,8 @@ import { Header } from '../../components/layout/Header'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { AppReviewCheckpoint } from '../play-store/AppReviewCheckpoint'
+import { createIndividualGaleraMatchResult } from '../ranking/ranking.model'
+import { recordGaleraMatchResult } from '../ranking/ranking.service'
 import { getWinners, rankParticipants } from './impostorDaPalavra.session'
 import { useImpostorDaPalavraStore } from './impostorDaPalavra.store'
 import { useImpostorDaPalavraInitialization } from './useImpostorDaPalavraInitialization'
@@ -16,6 +18,7 @@ export function ImpostorDaPalavraResultScreen() {
   const { session, initialized, discard, restart } = useImpostorDaPalavraStore()
   useImpostorDaPalavraInitialization()
   useEffect(() => { if (initialized && (!session || session.phase !== 'finished')) navigate('/games/impostor-da-palavra', { replace: true }) }, [initialized, navigate, session])
+  useEffect(() => { if (session?.phase === 'finished') void recordGaleraMatchResult(createIndividualGaleraMatchResult({ matchId: session.id, gameId: 'impostor-da-palavra', gameName: 'Impostor da Palavra', finishedAt: session.updatedAt, entities: session.participants, scores: session.scores })) }, [session])
   if (!session) return <div className="p-6 text-slate-400">Carregando resultado...</div>
   const ranking = rankParticipants(session)
   const winners = getWinners(session)

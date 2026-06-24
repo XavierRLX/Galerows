@@ -17,6 +17,7 @@ export type TabooConfig = {
 export type TabooTeam = {
   id: string
   name: string
+  memberIds: string[]
 }
 
 export type TabooTurnResult = {

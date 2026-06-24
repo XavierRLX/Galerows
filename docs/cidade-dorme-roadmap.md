@@ -760,7 +760,7 @@ Arquivos já criados:
 
 ## Critério de Pronto do Jogo
 
-O jogo está pronto para aparecer no hub porque:
+O jogo está pronto para aparecer no hub -
 
 - O mediador conseguir configurar uma partida.
 - O app conseguir sortear funções válidas.

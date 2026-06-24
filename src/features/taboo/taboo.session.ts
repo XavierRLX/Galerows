@@ -251,6 +251,7 @@ function assertSetup(participants: GameParticipant[], teams: TabooTeam[], config
   if (!isConfig(config)) throw new Error('A configuração do jogo é inválida.')
   if (config.mode === 'individual' && (participants.length < 2 || participants.length > 12)) throw new Error('Selecione entre 2 e 12 jogadores.')
   if (config.mode === 'teams' && teams.length < 2) throw new Error('Crie pelo menos 2 times.')
+  if (config.mode === 'teams') assertTeamRosters(participants, teams)
   if (config.mode === 'teams' && new Set(teams.map((team) => normalizePlayerName(team.name).toLocaleLowerCase('pt-BR'))).size !== teams.length) throw new Error('Os times precisam ter nomes diferentes.')
   if (deck.cards.length < Math.max(1, participants.length, teams.length)) throw new Error('O baralho não possui cartas suficientes.')
 }
@@ -280,6 +281,17 @@ function isParticipant(value: unknown): value is GameParticipant {
 function isTeam(value: unknown): value is TabooTeam {
   if (!isRecord(value)) return false
   return typeof value.id === 'string' && typeof value.name === 'string'
+    && Array.isArray(value.memberIds) && value.memberIds.every((id) => typeof id === 'string')
+}
+
+function assertTeamRosters(participants: GameParticipant[], teams: TabooTeam[]) {
+  if (participants.length < 2 || participants.length > 12) throw new Error('Selecione entre 2 e 12 jogadores.')
+  const participantIds = new Set(participants.map((participant) => participant.id))
+  const assignedIds = teams.flatMap((team) => team.memberIds)
+  if (teams.some((team) => team.memberIds.length === 0)) throw new Error('Todo time precisa ter pelo menos 1 jogador.')
+  if (assignedIds.length !== participantIds.size || new Set(assignedIds).size !== assignedIds.length || assignedIds.some((id) => !participantIds.has(id))) {
+    throw new Error('Cada jogador precisa estar em exatamente um time.')
+  }
 }
 
 function isScoreRecord(value: unknown, entityIds: Set<unknown>) {

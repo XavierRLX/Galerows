@@ -28,7 +28,7 @@ describe('Mimica complete flow', () => {
     const guestInput = await screen.findByRole('textbox', { name: /nome do convidado/i })
     for (const name of ['Ana', 'Bia']) {
       await user.type(guestInput, name)
-      await user.click(screen.getByRole('button', { name: /adicionar/i }))
+      await user.click(screen.getAllByRole('button', { name: /adicionar/i })[0])
     }
     await user.click(screen.getAllByRole('button', { name: '1' })[0])
     await user.click(screen.getByRole('button', { name: /iniciar jogo/i }))
@@ -38,14 +38,14 @@ describe('Mimica complete flow', () => {
     await user.click(await screen.findByRole('button', { name: /Bia/i }))
     await user.click(await screen.findByRole('button', { name: /próximo turno/i }))
     await user.click(await screen.findByRole('button', { name: /ver carta/i }))
-    await user.click(await screen.findByRole('button', { name: /levantar um troféu/i }))
+    await user.click(await screen.findByRole('button', { name: /fugir de uma barata/i }))
     await user.click(await screen.findByRole('button', { name: /registrar resultado/i }))
     await user.click(await screen.findByRole('button', { name: /Ana/i }))
     await user.click(await screen.findByRole('button', { name: /ver resumo da rodada/i }))
     await user.click(await screen.findByRole('button', { name: /ver resultado/i }))
 
     expect(await screen.findByRole('heading', { name: /Bia venceu/i })).toBeInTheDocument()
-    expect(screen.getByText('7 pontos')).toBeInTheDocument()
+    expect(screen.getByText('5 pontos')).toBeInTheDocument()
   })
 
   it('plays teams with opponent-prepared challenges', async () => {
@@ -53,11 +53,18 @@ describe('Mimica complete flow', () => {
     render(<MemoryRouter initialEntries={['/games/mimica']}><AppRoutes /></MemoryRouter>)
     await user.click(await screen.findByRole('button', { name: /configurar partida/i }))
     await user.click(await screen.findByRole('button', { name: /equipes/i }))
+    const guestInput = await screen.findByRole('textbox', { name: /nome do convidado/i })
+    for (const name of ['Ana', 'Bia']) {
+      await user.type(guestInput, name)
+      await user.click(screen.getAllByRole('button', { name: /adicionar/i })[0])
+    }
     const teamInput = await screen.findByRole('textbox', { name: /nome do time/i })
     for (const name of ['Time A', 'Time B']) {
       await user.type(teamInput, name)
-      await user.click(screen.getByRole('button', { name: /adicionar/i }))
+      await user.click(screen.getAllByRole('button', { name: /adicionar/i })[1])
     }
+    await user.click(screen.getAllByRole('button', { name: 'Ana' })[0])
+    await user.click(screen.getAllByRole('button', { name: 'Bia' })[1])
     await user.click(screen.getAllByRole('button', { name: '1' })[0])
     await user.click(screen.getByRole('button', { name: /criadas pela adversária/i }))
     expect(screen.getByText('0/2 equipes prepararam.')).toBeInTheDocument()

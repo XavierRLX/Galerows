@@ -174,6 +174,7 @@ function assertSetup(participants: GameParticipant[], teams: Top10Team[], config
   if (!isConfig(config)) throw new Error('A configuração do jogo é inválida.')
   if (config.mode === 'individual' && (participants.length < 2 || participants.length > 12)) throw new Error('Selecione entre 2 e 12 jogadores.')
   if (config.mode === 'teams' && teams.length < 2) throw new Error('Crie pelo menos 2 equipes.')
+  if (config.mode === 'teams') assertTeamRosters(participants, teams)
   if (config.mode === 'teams' && new Set(teams.map((team) => normalizePlayerName(team.name).toLocaleLowerCase('pt-BR'))).size !== teams.length) throw new Error('As equipes precisam ter nomes diferentes.')
   const entities = config.mode === 'individual' ? participants : teams
   if (!entities.some((entity) => entity.id === config.firstMediatorId)) throw new Error('Selecione quem começa mediando.')
@@ -197,6 +198,17 @@ function isParticipant(value: unknown): value is GameParticipant {
 
 function isTeam(value: unknown): value is Top10Team {
   return isRecord(value) && typeof value.id === 'string' && typeof value.name === 'string'
+    && Array.isArray(value.memberIds) && value.memberIds.every((id) => typeof id === 'string')
+}
+
+function assertTeamRosters(participants: GameParticipant[], teams: Top10Team[]) {
+  if (participants.length < 2 || participants.length > 12) throw new Error('Selecione entre 2 e 12 jogadores.')
+  const participantIds = new Set(participants.map((participant) => participant.id))
+  const assignedIds = teams.flatMap((team) => team.memberIds)
+  if (teams.some((team) => team.memberIds.length === 0)) throw new Error('Toda equipe precisa ter pelo menos 1 jogador.')
+  if (assignedIds.length !== participantIds.size || new Set(assignedIds).size !== assignedIds.length || assignedIds.some((id) => !participantIds.has(id))) {
+    throw new Error('Cada jogador precisa estar em exatamente uma equipe.')
+  }
 }
 
 function isScoreRecord(value: unknown, entityIds: Set<string | undefined>) {

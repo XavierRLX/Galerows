@@ -11,7 +11,10 @@ const participants: GameParticipant[] = [
   { id: 'bia-session', name: 'Bia', sourcePlayerId: 'bia', isGuest: false },
   { id: 'caio-session', name: 'Caio', sourcePlayerId: 'caio', isGuest: false },
 ]
-const teams: MimicaTeam[] = [{ id: 'team-a', name: 'Time A' }, { id: 'team-b', name: 'Time B' }]
+const teams: MimicaTeam[] = [
+  { id: 'team-a', name: 'Time A', memberIds: ['ana-session', 'bia-session'] },
+  { id: 'team-b', name: 'Time B', memberIds: ['caio-session'] },
+]
 const individualConfig: MimicaConfig = { mode: 'individual', useTimer: false, turnDurationSeconds: 60, roundsPerEntity: 1 }
 const teamConfig: MimicaConfig = { mode: 'teams', useTimer: true, turnDurationSeconds: 30, roundsPerEntity: 1 }
 const preparedChallenges: MimicaPreparedChallenge[] = [
@@ -23,7 +26,7 @@ const noShuffle = () => 0.999999
 describe('Mimica session', () => {
   it('creates individual and team sessions with fixed turns', () => {
     const individual = createMimicaSession(participants, [], { ...individualConfig, roundsPerEntity: 3 }, deck, noShuffle)
-    const teamSession = createMimicaSession([], teams, teamConfig, deck, noShuffle)
+    const teamSession = createMimicaSession(participants, teams, teamConfig, deck, noShuffle)
 
     expect(individual.phase).toBe('turn-intro')
     expect(individual.turnQueue).toHaveLength(participants.length * 3)
@@ -33,7 +36,7 @@ describe('Mimica session', () => {
   })
 
   it('creates team sessions with opponent-prepared challenges in team order', () => {
-    const session = createMimicaSession([], teams, teamConfig, deck, noShuffle, null, 'opponent-prepared', preparedChallenges)
+    const session = createMimicaSession(participants, teams, teamConfig, deck, noShuffle, null, 'opponent-prepared', preparedChallenges)
 
     expect(session.challengeSource).toBe('opponent-prepared')
     expect(session.turnQueue).toEqual(teams.map((team) => team.id))
@@ -43,12 +46,12 @@ describe('Mimica session', () => {
   })
 
   it('rejects opponent-prepared sessions without every planned challenge', () => {
-    expect(() => createMimicaSession([], teams, teamConfig, deck, noShuffle, null, 'opponent-prepared', preparedChallenges.slice(0, 1))).toThrow('Preencha todas as mímicas')
+    expect(() => createMimicaSession(participants, teams, teamConfig, deck, noShuffle, null, 'opponent-prepared', preparedChallenges.slice(0, 1))).toThrow('Preencha todas as mímicas')
   })
 
   it('starts opponent-prepared turns directly into acting', () => {
     const startedAt = new Date('2026-06-13T12:00:00.000Z')
-    const session = beginMimicaTurn(createMimicaSession([], teams, teamConfig, deck, noShuffle, null, 'opponent-prepared', preparedChallenges), startedAt)
+    const session = beginMimicaTurn(createMimicaSession(participants, teams, teamConfig, deck, noShuffle, null, 'opponent-prepared', preparedChallenges), startedAt)
 
     expect(session.phase).toBe('acting')
     expect(session.currentPreparedChallengeId).toBe('challenge-a-1')
@@ -85,7 +88,7 @@ describe('Mimica session', () => {
   })
 
   it('scores team points directly for the current team', () => {
-    let session = beginMimicaTurn(createMimicaSession([], teams, teamConfig, deck, noShuffle))
+    let session = beginMimicaTurn(createMimicaSession(participants, teams, teamConfig, deck, noShuffle))
     const teamId = session.turnQueue[session.currentTurnIndex]
     const card = deck.cards.find((item) => item.id === session.currentCardId)!
     const action = card.actions[1]
@@ -98,7 +101,7 @@ describe('Mimica session', () => {
   })
 
   it('scores one point for opponent-prepared team challenges', () => {
-    let session = beginMimicaTurn(createMimicaSession([], teams, teamConfig, deck, noShuffle, null, 'opponent-prepared', preparedChallenges))
+    let session = beginMimicaTurn(createMimicaSession(participants, teams, teamConfig, deck, noShuffle, null, 'opponent-prepared', preparedChallenges))
     const teamId = session.turnQueue[session.currentTurnIndex]
 
     session = recordMimicaSuccess(session, null, deck)
@@ -118,7 +121,7 @@ describe('Mimica session', () => {
     expect(noTimer.turnStartedAt).toBeNull()
     expect(getRemainingSeconds(noTimer, new Date('2026-06-13T12:30:00.000Z'))).toBe(60)
 
-    let timed = beginMimicaTurn(createMimicaSession([], teams, teamConfig, deck, noShuffle))
+    let timed = beginMimicaTurn(createMimicaSession(participants, teams, teamConfig, deck, noShuffle))
     const timedCard = deck.cards.find((item) => item.id === timed.currentCardId)!
     timed = chooseMimicaAction(timed, timedCard.actions[0].id, deck, startedAt)
     expect(getRemainingSeconds(timed, new Date('2026-06-13T12:00:10.000Z'))).toBe(20)
@@ -127,7 +130,7 @@ describe('Mimica session', () => {
   })
 
   it('advances rounds and finishes after planned turns', () => {
-    let session = createMimicaSession([], teams, teamConfig, deck, noShuffle)
+    let session = createMimicaSession(participants, teams, teamConfig, deck, noShuffle)
     for (let index = 0; index < teams.length; index += 1) {
       session = beginMimicaTurn(session)
       const card = deck.cards.find((item) => item.id === session.currentCardId)!
@@ -162,7 +165,7 @@ describe('Mimica session', () => {
 
   it('finishes opponent-prepared sessions by planned turns even without deck cards', () => {
     const emptyDeck = { ...deck, cards: [] }
-    let session = createMimicaSession([], teams, teamConfig, emptyDeck, noShuffle, null, 'opponent-prepared', preparedChallenges)
+    let session = createMimicaSession(participants, teams, teamConfig, emptyDeck, noShuffle, null, 'opponent-prepared', preparedChallenges)
     for (let index = 0; index < teams.length; index += 1) {
       session = beginMimicaTurn(session)
       session = recordMimicaSuccess(session, null, emptyDeck)

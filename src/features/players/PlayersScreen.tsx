@@ -1,11 +1,13 @@
-import { ArrowDown, ArrowUp, Pencil, Plus, Trash2, Users } from 'lucide-react'
+import { ArrowDown, ArrowUp, Pencil, Plus, Trash2, Trophy, Users } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Header } from '../../components/layout/Header'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { usePlayersStore } from './players.store'
 
 export function PlayersScreen() {
+  const navigate = useNavigate()
   const { group, hydrated, error, load, setGroupName, add, rename, remove, move } = usePlayersStore()
   const [newName, setNewName] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -25,7 +27,7 @@ export function PlayersScreen() {
 
   return (
     <div className="min-h-dvh pb-10">
-      <Header backTo="/" title="Minha Galera" />
+      <Header action={<Button aria-label="Abrir ranking" size="icon" variant="secondary" onClick={() => navigate('/players/ranking')}><Trophy size={18} /></Button>} backTo="/" title="Minha Galera" />
       <section className="px-5 py-7">
         <div className="flex items-center gap-3"><div className="rounded-2xl bg-violet-400 p-3 text-slate-950"><Users /></div><div><h1 className="text-2xl font-black">Seu grupo de jogadores</h1><p className="text-sm text-slate-400">Salve uma vez e reutilize em qualquer jogo.</p></div></div>
 

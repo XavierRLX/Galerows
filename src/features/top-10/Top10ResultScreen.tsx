@@ -5,6 +5,8 @@ import { Header } from '../../components/layout/Header'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { AppReviewCheckpoint } from '../play-store/AppReviewCheckpoint'
+import { createIndividualGaleraMatchResult, createTeamGaleraMatchResult } from '../ranking/ranking.model'
+import { recordGaleraMatchResult } from '../ranking/ranking.service'
 import { getTop10Entities, getTop10Winners, rankTop10Entities } from './top10.session'
 import { useTop10Store } from './top10.store'
 import { useTop10Initialization } from './useTop10Initialization'
@@ -14,6 +16,13 @@ export function Top10ResultScreen() {
   const { session, initialized, discard } = useTop10Store()
   useTop10Initialization()
   useEffect(() => { if (initialized && (!session || session.phase !== 'finished')) navigate('/games/top-10', { replace: true }) }, [initialized, navigate, session])
+  useEffect(() => {
+    if (session?.phase !== 'finished') return
+    const match = session.config.mode === 'teams'
+      ? createTeamGaleraMatchResult({ matchId: session.id, gameId: 'top-10', gameName: 'Top 10', finishedAt: session.updatedAt, participants: session.participants, teams: session.teams, scores: session.scores })
+      : createIndividualGaleraMatchResult({ matchId: session.id, gameId: 'top-10', gameName: 'Top 10', finishedAt: session.updatedAt, entities: session.participants, scores: session.scores })
+    void recordGaleraMatchResult(match)
+  }, [session])
   if (!session) return <div className="p-6 text-slate-400">Carregando resultado...</div>
   const ranking = rankTop10Entities(session)
   const entities = getTop10Entities(session)

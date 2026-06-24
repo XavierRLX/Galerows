@@ -10,8 +10,8 @@ const participants: GameParticipant[] = [
   { id: 'caio-session', name: 'Caio', sourcePlayerId: 'caio', isGuest: false },
 ]
 const teams: Top10Team[] = [
-  { id: 'team-a', name: 'Time A' },
-  { id: 'team-b', name: 'Time B' },
+  { id: 'team-a', name: 'Time A', memberIds: ['ana-session', 'bia-session'] },
+  { id: 'team-b', name: 'Time B', memberIds: ['caio-session'] },
 ]
 const deck: Top10Deck = {
   schemaVersion: 1,
@@ -37,7 +37,7 @@ describe('Top 10 session', () => {
     expect(Object.keys(individual.scores)).toEqual(participants.map((participant) => participant.id))
     expect(individual.mediatorQueue).toEqual(participants.map((participant) => participant.id))
 
-    const teamSession = createTop10Session([], teams, { mode: 'teams', roundsPerEntity: 1, firstMediatorId: teams[1].id }, deck, noShuffle)
+    const teamSession = createTop10Session(participants, teams, { mode: 'teams', roundsPerEntity: 1, firstMediatorId: teams[1].id }, deck, noShuffle)
     expect(Object.keys(teamSession.scores)).toEqual(teams.map((team) => team.id))
     expect(teamSession.mediatorQueue).toEqual([teams[1].id, teams[0].id])
     expect(teamSession.cardQueue).toHaveLength(2)

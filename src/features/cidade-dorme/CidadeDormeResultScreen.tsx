@@ -7,6 +7,8 @@ import { Header } from '../../components/layout/Header'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { AppReviewCheckpoint } from '../play-store/AppReviewCheckpoint'
+import { createCidadeDormeGaleraMatchResult } from '../ranking/ranking.model'
+import { recordGaleraMatchResult } from '../ranking/ranking.service'
 import { getTranslatedRole } from './cidadeDorme.copy'
 import { getClassicRoleTheme } from './cidadeDorme.theme'
 import { useCidadeDormeStore } from './cidadeDorme.store'
@@ -25,6 +27,7 @@ export function CidadeDormeResultScreen() {
     if (!session) navigate('/games/cidade-dorme', { replace: true })
     else if (session.phase !== 'gameOver') navigate('/games/cidade-dorme/play', { replace: true })
   }, [initialized, navigate, session])
+  useEffect(() => { if (session?.phase === 'gameOver') void recordGaleraMatchResult(createCidadeDormeGaleraMatchResult({ matchId: session.id, finishedAt: session.updatedAt, players: session.players, winner: session.winner, winnerPlayerId: session.winnerPlayerId })) }, [session])
 
   if (!session) return <div className="p-6 text-slate-400">{t('loadingResult')}</div>
 

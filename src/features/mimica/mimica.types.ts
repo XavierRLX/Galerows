@@ -17,6 +17,7 @@ export type MimicaConfig = {
 export type MimicaTeam = {
   id: string
   name: string
+  memberIds: string[]
 }
 
 export type MimicaPreparedChallenge = {

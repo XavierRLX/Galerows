@@ -1,4 +1,4 @@
-import { Settings, Sparkles, Users } from 'lucide-react'
+import { Settings, Sparkles, Trophy, Users } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
@@ -45,6 +45,15 @@ export function HubHeader() {
               onClick={() => navigate('/players')}
             >
               <Users size={19} />
+            </Button>
+            <Button
+              aria-label="Ranking da Galera"
+              className="rounded-full border-yellow-300/20 bg-yellow-300/15 text-yellow-200 shadow-lg shadow-violet-950/30 backdrop-blur hover:bg-yellow-300/25"
+              size="icon"
+              variant="secondary"
+              onClick={() => navigate('/players/ranking')}
+            >
+              <Trophy size={19} />
             </Button>
             <Button
               aria-label={t('settings')}

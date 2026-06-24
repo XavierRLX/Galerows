@@ -10,6 +10,7 @@ export const STORAGE_KEYS = {
   mimicaSession: 'galerows.games.mimica.session',
   mimicaOpeningHistory: 'galerows.games.mimica.opening-history',
   gameUsage: 'galerows.games.usage',
+  galeraResults: 'galerows.galera.results',
   top10Session: 'galerows.games.top-10.session',
   quemSouEuSession: 'galerows.games.quem-sou-eu.session',
   adedonhaSession: 'galerows.games.adedonha.session',

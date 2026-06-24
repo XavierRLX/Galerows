@@ -15,6 +15,7 @@ export type Top10Config = {
 export type Top10Team = {
   id: string
   name: string
+  memberIds: string[]
 }
 
 export type Top10RevealedAnswer = {

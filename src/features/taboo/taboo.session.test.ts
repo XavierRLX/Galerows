@@ -11,7 +11,10 @@ const participants: GameParticipant[] = [
   { id: 'bia-session', name: 'Bia', sourcePlayerId: 'bia', isGuest: false },
   { id: 'caio-session', name: 'Caio', sourcePlayerId: 'caio', isGuest: false },
 ]
-const teams: TabooTeam[] = [{ id: 'team-a', name: 'Time A' }, { id: 'team-b', name: 'Time B' }]
+const teams: TabooTeam[] = [
+  { id: 'team-a', name: 'Time A', memberIds: ['ana-session', 'bia-session'] },
+  { id: 'team-b', name: 'Time B', memberIds: ['caio-session'] },
+]
 const individualConfig: TabooConfig = { mode: 'individual', turnDurationSeconds: 60, allowSkips: true, skipLimit: 1, roundsPerEntity: 1 }
 const teamConfig: TabooConfig = { mode: 'teams', turnDurationSeconds: 30, allowSkips: true, skipLimit: 3, roundsPerEntity: 1 }
 const noShuffle = () => 0.999999
@@ -19,7 +22,7 @@ const noShuffle = () => 0.999999
 describe('Taboo session', () => {
   it('creates individual and team sessions with equal fixed turns', () => {
     const individual = createTabooSession(participants, [], { ...individualConfig, roundsPerEntity: 3 }, deck, noShuffle)
-    const teamSession = createTabooSession([], teams, teamConfig, deck, noShuffle)
+    const teamSession = createTabooSession(participants, teams, teamConfig, deck, noShuffle)
 
     expect(individual.phase).toBe('turn-intro')
     expect(individual.turnQueue).toHaveLength(participants.length * 3)
@@ -42,7 +45,7 @@ describe('Taboo session', () => {
   })
 
   it('scores team points directly for the current team', () => {
-    let session = beginTabooTurn(createTabooSession([], teams, teamConfig, deck, noShuffle))
+    let session = beginTabooTurn(createTabooSession(participants, teams, teamConfig, deck, noShuffle))
     const teamId = session.turnQueue[session.currentTurnIndex]
 
     session = recordCorrectGuess(session)
@@ -74,7 +77,7 @@ describe('Taboo session', () => {
   })
 
   it('finishes after every entity has one turn and preserves ties', () => {
-    let session = beginTabooTurn(createTabooSession([], teams, teamConfig, deck, noShuffle))
+    let session = beginTabooTurn(createTabooSession(participants, teams, teamConfig, deck, noShuffle))
     session = recordCorrectGuess(session)
     session = endTabooTurn(session)
     session = continueAfterTabooSummary(session)

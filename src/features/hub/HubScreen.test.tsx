@@ -20,7 +20,7 @@ describe('HubScreen usage badges', () => {
     render(<MemoryRouter><HubScreen /></MemoryRouter>)
 
     expect(screen.getByText('Destaque')).toBeInTheDocument()
-    expect(await screen.findByText('Conhecer')).toBeInTheDocument()
+    expect(await screen.findByText('Recomendado')).toBeInTheDocument()
   })
 
   it('shows the most played badge when there is local usage history', async () => {
@@ -34,7 +34,7 @@ describe('HubScreen usage badges', () => {
 
     render(<MemoryRouter><HubScreen /></MemoryRouter>)
 
-    expect(await screen.findByText('Mais jogado')).toBeInTheDocument()
+    expect(await screen.findByText('Recente')).toBeInTheDocument()
   })
 
   it('does not show a discovery badge when every available game has been opened', async () => {
@@ -48,6 +48,6 @@ describe('HubScreen usage badges', () => {
 
     render(<MemoryRouter><HubScreen /></MemoryRouter>)
 
-    await waitFor(() => expect(screen.queryByText('Conhecer')).not.toBeInTheDocument())
+    await waitFor(() => expect(screen.queryByText('Recomendado')).not.toBeInTheDocument())
   })
 })

@@ -31,6 +31,7 @@ const NemFerrandoSetupScreen = lazy(() => import('../features/nem-ferrando/NemFe
 const PremiumScreen = lazy(() => import('../features/premium/PremiumScreen').then((module) => ({ default: module.PremiumScreen })))
 const PlayersScreen = lazy(() => import('../features/players/PlayersScreen').then((module) => ({ default: module.PlayersScreen })))
 const QuemSouEuHomeScreen = lazy(() => import('../features/quem-sou-eu/QuemSouEuHomeScreen').then((module) => ({ default: module.QuemSouEuHomeScreen })))
+const RankingScreen = lazy(() => import('../features/ranking/RankingScreen').then((module) => ({ default: module.RankingScreen })))
 const SettingsScreen = lazy(() => import('../features/settings/SettingsScreen').then((module) => ({ default: module.SettingsScreen })))
 const TabooHomeScreen = lazy(() => import('../features/taboo/TabooHomeScreen').then((module) => ({ default: module.TabooHomeScreen })))
 const TabooPlayScreen = lazy(() => import('../features/taboo/TabooPlayScreen').then((module) => ({ default: module.TabooPlayScreen })))
@@ -54,6 +55,7 @@ export function AppRoutes() {
           <Route path="settings" element={<SettingsScreen />} />
           {canDisplayAds() ? <Route path="premium" element={<PremiumScreen />} /> : null}
           <Route path="players" element={<PlayersScreen />} />
+          <Route path="players/ranking" element={<RankingScreen />} />
           {contentAdminEnabled ? <Route path="admin/content" element={<ContentAdminScreen />} /> : null}
           <Route path="games/top-10" element={<Top10HomeScreen />} />
           <Route path="games/top-10/setup" element={<Top10SetupScreen />} />
