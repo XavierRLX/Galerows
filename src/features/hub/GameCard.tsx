@@ -8,7 +8,6 @@ import { Card } from '../../components/ui/Card'
 import { cn } from '../../lib/utils/cn'
 import { AppHaptics } from '../../lib/capacitor/haptics'
 import { useFakeAd } from '../ads/useFakeAd'
-import { GameIcon } from '../games/GameIcon'
 import { GameStatusBadge } from '../games/GameStatusBadge'
 import type { GameModule } from '../games/games.types'
 
@@ -96,56 +95,46 @@ const cardDepthShadows: Record<string, string> = {
   ].join(', '),
 }
 
-const cardThemes: Record<string, { icon: string; title: string; action: string }> = {
+const cardThemes: Record<string, { title: string; action: string }> = {
   'pista-unica': {
-    icon: 'border-teal-300/45 bg-teal-950/55 text-teal-100 shadow-teal-950/35',
     title: 'text-teal-200',
     action: 'border-teal-400 text-teal-200 hover:border-transparent hover:bg-teal-400 hover:text-teal-950',
   },
   'ultima-pista': {
-    icon: 'border-[#a78bfa]/50 bg-[#160b2d]/70 text-[#ddd6fe] shadow-[#2e1065]/45',
     title: 'text-[#ddd6fe]',
     action: 'border-[#8b5cf6] text-[#ddd6fe] hover:border-transparent hover:bg-[#6d28d9] hover:text-white',
   },
   'impostor-da-palavra': {
-    icon: 'border-[#7f1d1d]/50 bg-slate-950/55 text-[#ef4444] shadow-[#450a0a]/35',
     title: 'text-[#ef4444]',
     action: 'border-[#7f1d1d] text-[#ef4444] hover:border-transparent hover:bg-[#7f1d1d] hover:text-white',
   },
   'nem-ferrando': {
-    icon: 'border-[#8a5a32]/40 bg-slate-950/55 text-[#b88754] shadow-[#3b2415]/30',
     title: 'text-[#b88754]',
     action: 'border-[#8a5a32] text-[#b88754] hover:border-transparent hover:bg-[#8a5a32] hover:text-white',
   },
   taboo: {
-    icon: 'border-[#7f1d1d]/50 bg-slate-950/55 text-red-300 shadow-[#450a0a]/35',
     title: 'text-red-300',
     action: 'border-[#7f1d1d] text-red-300 hover:border-transparent hover:bg-[#7f1d1d] hover:text-white',
   },
   'quem-sou-eu': {
-    icon: 'border-sky-400/45 bg-slate-950/55 text-sky-300 shadow-sky-950/35',
     title: 'text-sky-300',
     action: 'border-sky-400 text-sky-300 hover:border-transparent hover:bg-sky-400 hover:text-slate-950',
   },
   adedonha: {
-    icon: 'border-yellow-300/45 bg-slate-950/55 text-yellow-300 shadow-yellow-950/35',
     title: 'text-yellow-300',
     action: 'border-yellow-300 text-yellow-300 hover:border-transparent hover:bg-yellow-300 hover:text-slate-950',
   },
   'top-10': {
-    icon: 'border-lime-400/50 bg-lime-950/55 text-lime-200 shadow-lime-950/35',
     title: 'text-lime-300',
     action: 'border-lime-400 text-lime-300 hover:border-transparent hover:bg-lime-400 hover:text-lime-950',
   },
   'cidade-dorme': {
-    icon: 'border-blue-300/45 bg-slate-950/55 text-blue-200 shadow-blue-950/35',
     title: 'text-blue-200',
     action: 'border-blue-300 text-blue-200 hover:border-transparent hover:bg-blue-300 hover:text-slate-950',
   },
 }
 
 const defaultTheme = {
-  icon: 'border-violet-400/35 bg-slate-950/55 text-violet-300 shadow-violet-950/30',
   title: 'text-violet-300',
   action: 'border-violet-400 text-violet-300 hover:border-transparent hover:bg-violet-500 hover:text-white',
 }
@@ -248,9 +237,9 @@ export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLa
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/38 to-transparent" />
           <div className="relative flex min-h-36 flex-col justify-between gap-4 p-4">
             <div className="flex items-start justify-between gap-3">
-              <div className={cn('rounded-2xl border p-3 shadow-lg backdrop-blur', available ? theme.icon : 'border-white/10 bg-white/10 text-slate-300')}>
-                <GameIcon name={game.iconName} />
-              </div>
+              <h2 className={cn('min-w-0 text-2xl font-black uppercase leading-none tracking-tight', available ? theme.title : 'text-slate-300')}>
+                {name}
+              </h2>
               <div className="flex flex-wrap items-center justify-end gap-2">
                 {isFavorite ? (
                   <span aria-label={t('favoriteBadge')} className="inline-flex size-7 items-center justify-center rounded-full border border-rose-300/30 bg-rose-400/15 text-rose-300 shadow-sm backdrop-blur" title={t('favoriteBadge')}>
@@ -268,10 +257,7 @@ export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLa
 
             <div className="flex items-end justify-between gap-4">
               <div className="min-w-0">
-                <h2 className={cn('text-2xl font-black uppercase leading-none tracking-tight', theme.title)}>
-                  {name}
-                </h2>
-                <p className="mt-2 line-clamp-2 max-w-sm text-sm leading-5 text-slate-200">
+                <p className="line-clamp-2 max-w-sm text-sm leading-5 text-slate-200">
                   {description}
                 </p>
               </div>
