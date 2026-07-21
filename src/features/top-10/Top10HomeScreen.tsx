@@ -5,15 +5,18 @@ import { Header } from '../../components/layout/Header'
 import { BottomSheet } from '../../components/ui/BottomSheet'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
+import { FavoriteGameButton } from '../games/FavoriteGameButton'
 import { useTop10Store } from './top10.store'
 import { useTop10Initialization } from './useTop10Initialization'
+import { useTop10Theme } from './useTop10Theme'
 
 export function Top10HomeScreen() {
   const navigate = useNavigate()
   const [rulesOpen, setRulesOpen] = useState(false)
   const { deck, session, initialized, resumeError, discard } = useTop10Store()
   useTop10Initialization()
-  return <div className="min-h-dvh pb-32"><Header backTo="/" title="Top 10" /><section className="px-5 pt-8">
+  useTop10Theme()
+  return <div className="min-h-dvh pb-32"><Header action={<FavoriteGameButton gameId="top-10" />} backTo="/" title="Top 10" /><section className="px-5 pt-8">
     <div className="mx-auto flex size-24 items-center justify-center rounded-[2rem] bg-[#7f1d1d] text-white shadow-2xl shadow-red-950/30"><ListOrdered size={44} /></div>
     <div className="mx-auto mt-7 max-w-lg text-center"><p className="text-sm font-bold uppercase tracking-[0.18em] text-red-300">listas secretas</p><h1 className="mt-2 text-4xl font-black tracking-tight">Top 10</h1><p className="mt-4 leading-7 text-slate-300">Descubra as respostas de um ranking oculto. Quanto mais alta a posição, mais pontos vale.</p></div>
     <Card className="mx-auto mt-8 max-w-lg border-red-900/60 bg-red-950/25 p-5"><h2 className="text-lg font-black">Objetivo</h2><p className="mt-2 text-sm leading-6 text-slate-300">O mediador mostra o tema e marca quem acertou cada item da lista. O primeiro lugar vale 10 pontos e o décimo vale 1.</p><div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-bold text-red-300"><span className="inline-flex items-center gap-2"><Users size={18} />2+ jogadores · offline</span>{deck ? <span>{deck.cards.length} cartas</span> : null}</div></Card>

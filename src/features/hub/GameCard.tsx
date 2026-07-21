@@ -1,4 +1,4 @@
-import { Play } from 'lucide-react'
+import { Heart, Play } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,13 +13,14 @@ import { GameStatusBadge } from '../games/GameStatusBadge'
 import type { GameModule } from '../games/games.types'
 
 const coverFallbacks: Record<string, string> = {
+  'pista-unica': 'radial-gradient(circle at 82% 20%, rgba(45,212,191,0.3), transparent 24%), linear-gradient(135deg, rgba(4,47,46,0.98), rgba(15,23,42,0.94) 58%, rgba(15,118,110,0.72))',
   'ultima-pista': 'radial-gradient(circle at 82% 22%, rgba(139,92,246,0.34), transparent 24%), linear-gradient(135deg, rgba(24,8,43,0.98), rgba(15,23,42,0.94) 58%, rgba(76,29,149,0.72))',
   'impostor-da-palavra': 'radial-gradient(circle at 88% 24%, rgba(127,29,29,0.34), transparent 22%), linear-gradient(135deg, rgba(30,5,8,0.96), rgba(15,23,42,0.92) 58%, rgba(69,10,10,0.72))',
   taboo: 'radial-gradient(circle at 12% 34%, rgba(153,27,27,0.36), transparent 24%), linear-gradient(135deg, rgba(69,10,10,0.98), rgba(15,23,42,0.92) 58%, rgba(127,29,29,0.76))',
   'nem-ferrando': 'radial-gradient(circle at 18% 28%, rgba(120,74,35,0.32), transparent 26%), linear-gradient(135deg, rgba(24,10,2,0.98), rgba(49,31,18,0.95) 58%, rgba(15,23,42,0.9))',
   'quem-sou-eu': 'radial-gradient(circle at 18% 26%, rgba(56,189,248,0.32), transparent 24%), linear-gradient(135deg, rgba(8,47,73,0.98), rgba(15,23,42,0.94) 58%, rgba(14,116,144,0.68))',
   adedonha: 'radial-gradient(circle at 18% 26%, rgba(250,204,21,0.32), transparent 24%), linear-gradient(135deg, rgba(66,32,6,0.98), rgba(15,23,42,0.94) 58%, rgba(133,77,14,0.68))',
-  'top-10': 'radial-gradient(circle at 16% 26%, rgba(34,197,94,0.3), transparent 24%), linear-gradient(135deg, rgba(5,46,22,0.98), rgba(15,23,42,0.94) 58%, rgba(20,83,45,0.74))',
+  'top-10': 'radial-gradient(circle at 16% 26%, rgba(190,242,100,0.34), transparent 24%), linear-gradient(135deg, rgba(20,35,8,0.98), rgba(15,23,42,0.94) 58%, rgba(63,98,18,0.74))',
   'cidade-dorme': 'radial-gradient(circle at 18% 26%, rgba(37,99,235,0.3), transparent 24%), linear-gradient(135deg, rgba(2,6,23,0.98), rgba(15,23,42,0.94) 58%, rgba(30,58,138,0.68))',
 }
 
@@ -28,7 +29,7 @@ const defaultCover = 'radial-gradient(circle at 18% 24%, rgba(139,92,246,0.28), 
 const coverOverlays: Record<string, string> = {
   'ultima-pista': 'linear-gradient(90deg, rgba(20,7,38,0.97), rgba(46,16,101,0.66) 48%, rgba(15,10,31,0.24) 76%, rgba(15,10,31,0.32)), radial-gradient(circle at 88% 24%, rgba(167,139,250,0.16), transparent 28%)',
   taboo: 'linear-gradient(90deg, rgba(69,10,10,0.94), rgba(127,29,29,0.62) 52%, rgba(15,23,42,0.82)), radial-gradient(circle at 86% 28%, rgba(248,113,113,0.22), transparent 26%)',
-  'top-10': 'linear-gradient(90deg, rgba(5,46,22,0.94), rgba(22,101,52,0.62) 52%, rgba(15,23,42,0.82)), radial-gradient(circle at 86% 28%, rgba(74,222,128,0.2), transparent 26%)',
+  'top-10': 'linear-gradient(90deg, rgba(20,35,8,0.95), rgba(77,124,15,0.58) 52%, rgba(15,23,42,0.82)), radial-gradient(circle at 86% 28%, rgba(190,242,100,0.24), transparent 26%)',
 }
 
 const defaultDepthShadow = [
@@ -39,6 +40,12 @@ const defaultDepthShadow = [
 ].join(', ')
 
 const cardDepthShadows: Record<string, string> = {
+  'pista-unica': [
+    '0 30px 62px -30px rgba(13,148,136,0.54)',
+    '0 18px 34px -22px rgba(0,0,0,0.92)',
+    'inset 0 1px 0 rgba(255,255,255,0.1)',
+    'inset 0 -26px 42px rgba(0,0,0,0.22)',
+  ].join(', '),
   'ultima-pista': [
     '0 30px 62px -30px rgba(109,40,217,0.62)',
     '0 18px 34px -22px rgba(0,0,0,0.92)',
@@ -76,7 +83,7 @@ const cardDepthShadows: Record<string, string> = {
     'inset 0 -26px 42px rgba(0,0,0,0.18)',
   ].join(', '),
   'top-10': [
-    '0 30px 62px -30px rgba(34,197,94,0.54)',
+    '0 30px 62px -30px rgba(132,204,22,0.58)',
     '0 18px 34px -22px rgba(0,0,0,0.92)',
     'inset 0 1px 0 rgba(255,255,255,0.1)',
     'inset 0 -26px 42px rgba(0,0,0,0.2)',
@@ -90,6 +97,11 @@ const cardDepthShadows: Record<string, string> = {
 }
 
 const cardThemes: Record<string, { icon: string; title: string; action: string }> = {
+  'pista-unica': {
+    icon: 'border-teal-300/45 bg-teal-950/55 text-teal-100 shadow-teal-950/35',
+    title: 'text-teal-200',
+    action: 'border-teal-400 text-teal-200 hover:border-transparent hover:bg-teal-400 hover:text-teal-950',
+  },
   'ultima-pista': {
     icon: 'border-[#a78bfa]/50 bg-[#160b2d]/70 text-[#ddd6fe] shadow-[#2e1065]/45',
     title: 'text-[#ddd6fe]',
@@ -121,9 +133,9 @@ const cardThemes: Record<string, { icon: string; title: string; action: string }
     action: 'border-yellow-300 text-yellow-300 hover:border-transparent hover:bg-yellow-300 hover:text-slate-950',
   },
   'top-10': {
-    icon: 'border-[#166534]/50 bg-slate-950/55 text-[#22c55e] shadow-[#052e16]/35',
-    title: 'text-[#22c55e]',
-    action: 'border-[#166534] text-[#22c55e] hover:border-transparent hover:bg-[#166534] hover:text-white',
+    icon: 'border-lime-400/50 bg-lime-950/55 text-lime-200 shadow-lime-950/35',
+    title: 'text-lime-300',
+    action: 'border-lime-400 text-lime-300 hover:border-transparent hover:bg-lime-400 hover:text-lime-950',
   },
   'cidade-dorme': {
     icon: 'border-blue-300/45 bg-slate-950/55 text-blue-200 shadow-blue-950/35',
@@ -142,11 +154,12 @@ type GameCardProps = {
   game: GameModule
   badgeLabels?: string[]
   badgeLabel?: string
+  isFavorite?: boolean
   onOpenGame?: (gameId: string) => Promise<void> | void
   revealIndex?: number
 }
 
-export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLabel] : [], onOpenGame, revealIndex = 0 }: GameCardProps) {
+export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLabel] : [], isFavorite = false, onOpenGame, revealIndex = 0 }: GameCardProps) {
   const { t } = useTranslation('hub')
   const navigate = useNavigate()
   const { showFakeAd } = useFakeAd()
@@ -239,6 +252,11 @@ export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLa
                 <GameIcon name={game.iconName} />
               </div>
               <div className="flex flex-wrap items-center justify-end gap-2">
+                {isFavorite ? (
+                  <span aria-label={t('favoriteBadge')} className="inline-flex size-7 items-center justify-center rounded-full border border-rose-300/30 bg-rose-400/15 text-rose-300 shadow-sm backdrop-blur" title={t('favoriteBadge')}>
+                    <Heart aria-hidden="true" className="fill-current" size={14} />
+                  </span>
+                ) : null}
                 {badgeLabels.map((label) => (
                   <span className="rounded-full border border-blue-200/25 bg-blue-200/12 px-2.5 py-0.5 text-[0.58rem] font-black uppercase tracking-[0.13em] text-blue-100 shadow-sm backdrop-blur" key={label}>
                     {label}

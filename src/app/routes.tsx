@@ -29,6 +29,10 @@ const NemFerrandoPlayScreen = lazy(() => import('../features/nem-ferrando/NemFer
 const NemFerrandoResultScreen = lazy(() => import('../features/nem-ferrando/NemFerrandoResultScreen').then((module) => ({ default: module.NemFerrandoResultScreen })))
 const NemFerrandoSetupScreen = lazy(() => import('../features/nem-ferrando/NemFerrandoSetupScreen').then((module) => ({ default: module.NemFerrandoSetupScreen })))
 const PremiumScreen = lazy(() => import('../features/premium/PremiumScreen').then((module) => ({ default: module.PremiumScreen })))
+const PistaUnicaHomeScreen = lazy(() => import('../features/pista-unica/PistaUnicaHomeScreen').then((module) => ({ default: module.PistaUnicaHomeScreen })))
+const PistaUnicaPlayScreen = lazy(() => import('../features/pista-unica/PistaUnicaPlayScreen').then((module) => ({ default: module.PistaUnicaPlayScreen })))
+const PistaUnicaResultScreen = lazy(() => import('../features/pista-unica/PistaUnicaResultScreen').then((module) => ({ default: module.PistaUnicaResultScreen })))
+const PistaUnicaSetupScreen = lazy(() => import('../features/pista-unica/PistaUnicaSetupScreen').then((module) => ({ default: module.PistaUnicaSetupScreen })))
 const PlayersScreen = lazy(() => import('../features/players/PlayersScreen').then((module) => ({ default: module.PlayersScreen })))
 const QuemSouEuHomeScreen = lazy(() => import('../features/quem-sou-eu/QuemSouEuHomeScreen').then((module) => ({ default: module.QuemSouEuHomeScreen })))
 const RankingScreen = lazy(() => import('../features/ranking/RankingScreen').then((module) => ({ default: module.RankingScreen })))
@@ -56,6 +60,10 @@ export function AppRoutes() {
           <Route index element={<HubScreen />} />
           <Route path="settings" element={<SettingsScreen />} />
           {canDisplayAds() ? <Route path="premium" element={<PremiumScreen />} /> : null}
+          <Route path="games/pista-unica" element={<PistaUnicaHomeScreen />} />
+          <Route path="games/pista-unica/setup" element={<PistaUnicaSetupScreen />} />
+          <Route path="games/pista-unica/play" element={<PistaUnicaPlayScreen />} />
+          <Route path="games/pista-unica/result" element={<PistaUnicaResultScreen />} />
           <Route path="players" element={<PlayersScreen />} />
           <Route path="players/ranking" element={<RankingScreen />} />
           {contentAdminEnabled ? <Route path="admin/content" element={<ContentAdminScreen />} /> : null}

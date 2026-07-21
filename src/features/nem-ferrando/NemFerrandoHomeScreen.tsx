@@ -6,6 +6,7 @@ import { Header } from '../../components/layout/Header'
 import { BottomSheet } from '../../components/ui/BottomSheet'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
+import { FavoriteGameButton } from '../games/FavoriteGameButton'
 import { useNemFerrandoStore } from './nemFerrando.store'
 import { useNemFerrandoInitialization } from './useNemFerrandoInitialization'
 
@@ -15,7 +16,7 @@ export function NemFerrandoHomeScreen() {
   useNemFerrandoInitialization()
   const curiosityCount = deck?.cards.reduce((total, card) => total + card.curiosities.length, 0) ?? 0
   return (
-    <div className="min-h-dvh pb-32"><Header backTo="/" title={t('name')} /><section className="px-5 pt-8">
+    <div className="min-h-dvh pb-32"><Header action={<FavoriteGameButton gameId="nem-ferrando" />} backTo="/" title={t('name')} /><section className="px-5 pt-8">
       <div className="mx-auto flex size-24 items-center justify-center rounded-[2rem] bg-orange-400 text-slate-950 shadow-2xl shadow-orange-400/20"><Spade size={44} /></div>
       <div className="mx-auto mt-7 max-w-lg text-center"><p className="text-sm font-bold uppercase tracking-[0.18em] text-orange-300">{t('eyebrow')}</p><h1 className="mt-2 text-4xl font-black tracking-tight">{t('name')}</h1><p className="mt-4 leading-7 text-slate-300">{t('summary')}</p></div>
       <Card className="mx-auto mt-8 max-w-lg p-5"><h2 className="text-lg font-black">{t('objectiveTitle')}</h2><p className="mt-2 text-sm leading-6 text-slate-300">{t('objective')}</p><div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-bold text-orange-300"><span className="inline-flex items-center gap-2"><Users size={18} />2 a 12 jogadores · totalmente offline</span>{deck ? <span>{deck.cards.length} cartas · {curiosityCount} curiosidades</span> : null}</div></Card>

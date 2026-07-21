@@ -13,6 +13,7 @@ import type { GameParticipant } from '../players/players.types'
 import { useTop10Store } from './top10.store'
 import type { Top10Mode, Top10RoundsPerEntity, Top10Team } from './top10.types'
 import { useTop10Initialization } from './useTop10Initialization'
+import { useTop10Theme } from './useTop10Theme'
 
 const roundOptions: Top10RoundsPerEntity[] = [1, 2, 3]
 
@@ -31,6 +32,7 @@ export function Top10SetupScreen() {
   const [teams, setTeams] = useState<Top10Team[]>([])
   const [error, setError] = useState('')
   useTop10Initialization()
+  useTop10Theme()
   useEffect(() => { if (!hydrated) void load() }, [hydrated, load])
   const selectedPlayers = useMemo(() => group?.players.filter((player) => selectedIds.includes(player.id)) ?? [], [group, selectedIds])
   const participants = useMemo(() => [...selectedPlayers.map(playerToParticipant), ...guests], [guests, selectedPlayers])

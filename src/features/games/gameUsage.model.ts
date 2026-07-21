@@ -57,6 +57,23 @@ export function getMostPlayedGameId(games: GameModule[], snapshot: GameUsageSnap
   return mostPlayed?.id ?? null
 }
 
+export function getMostRecentlyOpenedGameId(games: GameModule[], snapshot: GameUsageSnapshot): string | null {
+  let mostRecentGameId: string | null = null
+  let mostRecentTimestamp = Number.NEGATIVE_INFINITY
+
+  for (const game of games) {
+    if (game.status !== 'available') continue
+    const usage = snapshot.games[game.id]
+    if (!usage || usage.openedCount <= 0) continue
+    const timestamp = Date.parse(usage.lastOpenedAt)
+    if (Number.isNaN(timestamp) || timestamp <= mostRecentTimestamp) continue
+    mostRecentGameId = game.id
+    mostRecentTimestamp = timestamp
+  }
+
+  return mostRecentGameId
+}
+
 export function getDiscoverGameId(games: GameModule[], snapshot: GameUsageSnapshot, featuredGameId: string, random = Math.random): string | null {
   const unplayed = games.filter((game) => game.status === 'available' && (snapshot.games[game.id]?.openedCount ?? 0) === 0)
   const preferred = unplayed.filter((game) => game.id !== featuredGameId)

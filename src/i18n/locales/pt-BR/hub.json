@@ -7,8 +7,11 @@
   "playNow": "Jogar agora",
   "comingSoon": "Em breve",
   "featuredBadge": "Destaque",
-  "mostPlayedBadge": "Recente",
+  "recentBadge": "Recente",
+  "favoriteBadge": "Jogo favorito",
   "discoverBadge": "Recomendado",
+  "addFavorite": "Favoritar jogo",
+  "removeFavorite": "Remover dos favoritos",
   "offline": "Offline",
   "players": "{{count}} jogadores",
   "howToPlay": "Como jogar {{name}}",
@@ -33,6 +36,10 @@
     "locked": "Bloqueado"
   },
   "games": {
+    "pista-unica": {
+      "name": "Pista Única",
+      "shortDescription": "Escrevam pistas, eliminem repetições e descubram o desafio."
+    },
     "ultima-pista": {
       "name": "Última Pista",
       "shortDescription": "Faça perguntas e reconstrua a história escondida."

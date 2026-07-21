@@ -11,6 +11,7 @@ import type { Top10Rank } from './content/top10Content.types'
 import { getCurrentTop10Card, getCurrentTop10Mediator, getEligibleTop10ScoringEntities, getTop10AnswerPoints, getTop10Entities } from './top10.session'
 import { useTop10Store } from './top10.store'
 import { useTop10Initialization } from './useTop10Initialization'
+import { useTop10Theme } from './useTop10Theme'
 
 const ranks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as Top10Rank[]
 
@@ -20,6 +21,7 @@ export function Top10PlayScreen() {
   const [selectedRankState, setSelectedRankState] = useState<{ cardIndex: number; rank: Top10Rank | null }>({ cardIndex: -1, rank: null })
   const [answerKeyState, setAnswerKeyState] = useState<{ cardIndex: number; visible: boolean }>({ cardIndex: -1, visible: false })
   useTop10Initialization()
+  useTop10Theme()
   useEffect(() => {
     if (initialized && !session) navigate('/games/top-10', { replace: true })
     if (session?.phase === 'finished') navigate('/games/top-10/result', { replace: true })

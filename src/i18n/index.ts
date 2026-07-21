@@ -32,6 +32,7 @@ import ptImpostorDaPalavra from './locales/pt-BR/impostor-da-palavra.json'
 import ptMimica from './locales/pt-BR/mimica.json'
 import ptNemFerrando from './locales/pt-BR/nem-ferrando.json'
 import ptQuemSouEu from './locales/pt-BR/quem-sou-eu.json'
+import ptPistaUnica from './locales/pt-BR/pista-unica.json'
 import ptTaboo from './locales/pt-BR/taboo.json'
 import ptTop10 from './locales/pt-BR/top-10.json'
 import ptUltimaPista from './locales/pt-BR/ultima-pista.json'
@@ -39,7 +40,7 @@ import ptUltimaPista from './locales/pt-BR/ultima-pista.json'
 export const supportedLocales = ['pt-BR', 'en-US', 'es-419'] as const
 export type SupportedLocale = (typeof supportedLocales)[number]
 const resources = {
-  'pt-BR': { common: ptCommon, hub: ptHub, adedonha: ptAdedonha, 'cidade-dorme': ptCidadeDorme, 'nem-ferrando': ptNemFerrando, 'impostor-da-palavra': ptImpostorDaPalavra, taboo: ptTaboo, mimica: ptMimica, 'quem-sou-eu': ptQuemSouEu, 'top-10': ptTop10, 'ultima-pista': ptUltimaPista },
+  'pt-BR': { common: ptCommon, hub: ptHub, adedonha: ptAdedonha, 'cidade-dorme': ptCidadeDorme, 'nem-ferrando': ptNemFerrando, 'impostor-da-palavra': ptImpostorDaPalavra, taboo: ptTaboo, mimica: ptMimica, 'quem-sou-eu': ptQuemSouEu, 'pista-unica': ptPistaUnica, 'top-10': ptTop10, 'ultima-pista': ptUltimaPista },
   'en-US': { common: enCommon, hub: enHub, adedonha: enAdedonha, 'cidade-dorme': enCidadeDorme, 'nem-ferrando': enNemFerrando, 'impostor-da-palavra': enImpostorDaPalavra, taboo: enTaboo, mimica: enMimica, 'quem-sou-eu': enQuemSouEu, 'top-10': enTop10, 'ultima-pista': enUltimaPista },
   'es-419': { common: esCommon, hub: esHub, adedonha: esAdedonha, 'cidade-dorme': esCidadeDorme, 'nem-ferrando': esNemFerrando, 'impostor-da-palavra': esImpostorDaPalavra, taboo: esTaboo, mimica: esMimica, 'quem-sou-eu': esQuemSouEu, 'top-10': esTop10, 'ultima-pista': esUltimaPista },
 }

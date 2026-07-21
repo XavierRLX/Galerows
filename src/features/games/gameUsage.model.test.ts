@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { gamesRegistry } from './games.registry'
-import { emptyGameUsageSnapshot, getDiscoverGameId, getMostPlayedGameId, normalizeGameUsageSnapshot, recordGameOpenedInSnapshot } from './gameUsage.model'
+import { emptyGameUsageSnapshot, getDiscoverGameId, getMostPlayedGameId, getMostRecentlyOpenedGameId, normalizeGameUsageSnapshot, recordGameOpenedInSnapshot } from './gameUsage.model'
 import type { GameUsageSnapshot } from './gameUsage.types'
 
 describe('game usage model', () => {
@@ -43,6 +43,19 @@ describe('game usage model', () => {
     })).toBe('nem-ferrando')
   })
 
+  it('chooses the most recently opened available game regardless of play count', () => {
+    const snapshot: GameUsageSnapshot = {
+      schemaVersion: 1,
+      games: {
+        'nem-ferrando': { openedCount: 20, lastOpenedAt: '2026-06-20T10:00:00.000Z' },
+        taboo: { openedCount: 1, lastOpenedAt: '2026-06-20T11:00:00.000Z' },
+        damas: { openedCount: 1, lastOpenedAt: '2026-06-20T12:00:00.000Z' },
+      },
+    }
+
+    expect(getMostRecentlyOpenedGameId(gamesRegistry, snapshot)).toBe('taboo')
+  })
+
   it('chooses an available unplayed game for discovery and avoids the featured game when possible', () => {
     const snapshot = {
       schemaVersion: 1,
@@ -58,8 +71,8 @@ describe('game usage model', () => {
       },
     } as const
 
-    expect(getDiscoverGameId(gamesRegistry, snapshot, 'cidade-dorme', () => 0)).toBe('ultima-pista')
-    expect(getDiscoverGameId(gamesRegistry, emptyGameUsageSnapshot, 'cidade-dorme', () => 0)).toBe('ultima-pista')
+    expect(getDiscoverGameId(gamesRegistry, snapshot, 'cidade-dorme', () => 0)).toBe('pista-unica')
+    expect(getDiscoverGameId(gamesRegistry, emptyGameUsageSnapshot, 'cidade-dorme', () => 0)).toBe('pista-unica')
   })
 
   it('does not choose a discovery game when every available game has been opened', () => {

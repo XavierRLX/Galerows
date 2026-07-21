@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Header } from '../../components/layout/Header'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
+import { FavoriteGameButton } from '../games/FavoriteGameButton'
 import { useAdedonhaStore } from './adedonha.store'
 import { useAdedonhaInitialization } from './useAdedonhaInitialization'
 
@@ -14,7 +15,7 @@ export function AdedonhaHomeScreen() {
   const { session, initialized, discard } = useAdedonhaStore()
   useAdedonhaInitialization()
 
-  return <div className="min-h-dvh pb-32"><Header backTo="/" title={t('name')} /><section className="px-5 pt-8">
+  return <div className="min-h-dvh pb-32"><Header action={<FavoriteGameButton gameId="adedonha" />} backTo="/" title={t('name')} /><section className="px-5 pt-8">
     <div className="mx-auto flex size-24 items-center justify-center rounded-[2rem] bg-yellow-400 text-slate-950 shadow-2xl shadow-yellow-500/20"><List size={44} /></div>
     <div className="mx-auto mt-7 max-w-lg text-center"><p className="text-sm font-bold uppercase tracking-[0.18em] text-yellow-200">{t('home.tagline')}</p><h1 className="mt-2 text-4xl font-black tracking-tight">{t('name')}</h1><p className="mt-4 leading-7 text-slate-300">{t('home.description')}</p></div>
     <Card className="mx-auto mt-8 max-w-lg border-yellow-300/30 bg-yellow-400/10 p-5"><h2 className="text-lg font-black">{t('home.howToPlay')}</h2><div className="mt-4 grid gap-3 text-sm leading-6 text-slate-300">

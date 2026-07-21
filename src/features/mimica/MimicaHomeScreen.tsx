@@ -6,6 +6,7 @@ import { Header } from '../../components/layout/Header'
 import { BottomSheet } from '../../components/ui/BottomSheet'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
+import { FavoriteGameButton } from '../games/FavoriteGameButton'
 import { useMimicaStore } from './mimica.store'
 import { useMimicaInitialization } from './useMimicaInitialization'
 
@@ -15,7 +16,7 @@ export function MimicaHomeScreen() {
   const [showRules, setShowRules] = useState(false)
   const { deck, session, initialized, resumeError, discard } = useMimicaStore()
   useMimicaInitialization()
-  return <div className="min-h-dvh pb-32"><Header backTo="/" title={t('name')} /><section className="px-5 pt-8">
+  return <div className="min-h-dvh pb-32"><Header action={<FavoriteGameButton gameId="mimica" />} backTo="/" title={t('name')} /><section className="px-5 pt-8">
     <div className="mx-auto flex size-24 items-center justify-center rounded-[2rem] bg-violet-500 text-white shadow-2xl shadow-violet-500/20"><Drama size={44} /></div>
     <div className="mx-auto mt-7 max-w-lg text-center"><p className="text-sm font-bold uppercase tracking-[0.18em] text-fuchsia-300">{t('eyebrow')}</p><h1 className="mt-2 text-4xl font-black tracking-tight">{t('name')}</h1><p className="mt-4 leading-7 text-slate-300">{t('summary')}</p></div>
     <Card className="mx-auto mt-8 max-w-lg border-violet-400/30 bg-violet-500/10 p-5"><h2 className="text-lg font-black">{t('objectiveTitle')}</h2><p className="mt-2 text-sm leading-6 text-slate-300">{t('objective')}</p><div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-bold text-fuchsia-300"><span className="inline-flex items-center gap-2"><Users size={18} />2+ jogadores · offline</span>{deck ? <span>{deck.cards.length} cartas</span> : null}</div></Card>

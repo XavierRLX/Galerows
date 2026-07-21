@@ -5,7 +5,7 @@ import type { GameParticipant } from '../players/players.types'
 import type { MimicaDeck } from './content/mimicaContent.types'
 import type { MimicaChallengeSource, MimicaConfig, MimicaOpeningHistory, MimicaPreparedChallenge, MimicaSession, MimicaTeam, MimicaTurnResult } from './mimica.types'
 
-const PHASES = ['turn-intro', 'choosing', 'acting', 'scoring', 'turn-summary', 'round-summary', 'finished'] as const
+const PHASES = ['turn-intro', 'choosing', 'previewing', 'acting', 'scoring', 'turn-summary', 'round-summary', 'finished'] as const
 const MODES = ['individual', 'teams'] as const
 const CHALLENGE_SOURCES = ['deck', 'opponent-prepared'] as const
 const DURATIONS = [30, 60, 90, 120] as const
@@ -59,28 +59,40 @@ export function createMimicaSession(
   }
 }
 
-export function beginMimicaTurn(session: MimicaSession, now: Date = new Date()) {
+export function beginMimicaTurn(session: MimicaSession) {
   if (session.phase !== 'turn-intro') return session
   if (session.challengeSource === 'opponent-prepared') {
     const challenge = getCurrentPreparedChallenge(session)
     if (!challenge) return session
     return touch({
       ...session,
-      phase: 'acting',
+      phase: 'previewing',
       currentPreparedChallengeId: challenge.id,
       selectedActionId: null,
-      turnStartedAt: session.config.useTimer ? now.toISOString() : null,
+      turnStartedAt: null,
     })
   }
   if (!session.currentCardId) return session
   return touch({ ...session, phase: 'choosing', selectedActionId: null, turnStartedAt: null })
 }
 
-export function chooseMimicaAction(session: MimicaSession, actionId: string, deck: MimicaDeck, now: Date = new Date()) {
+export function chooseMimicaAction(session: MimicaSession, actionId: string, deck: MimicaDeck) {
   if (session.phase !== 'choosing' || session.challengeSource !== 'deck') return session
   const card = deck.cards.find((item) => item.id === session.currentCardId)
   if (!card?.actions.some((action) => action.id === actionId)) return session
-  return touch({ ...session, phase: 'acting', selectedActionId: actionId, turnStartedAt: session.config.useTimer ? now.toISOString() : null })
+  return touch({ ...session, phase: 'previewing', selectedActionId: actionId, turnStartedAt: null })
+}
+
+export function returnToMimicaChoices(session: MimicaSession) {
+  if (session.phase !== 'previewing' || session.challengeSource !== 'deck') return session
+  return touch({ ...session, phase: 'choosing', selectedActionId: null, turnStartedAt: null })
+}
+
+export function startMimicaActing(session: MimicaSession, now: Date = new Date()) {
+  if (session.phase !== 'previewing') return session
+  if (session.challengeSource === 'deck' && !session.selectedActionId) return session
+  if (session.challengeSource === 'opponent-prepared' && !session.currentPreparedChallengeId) return session
+  return touch({ ...session, phase: 'acting', turnStartedAt: session.config.useTimer ? now.toISOString() : null })
 }
 
 export function markMimicaReadyToScore(session: MimicaSession) {

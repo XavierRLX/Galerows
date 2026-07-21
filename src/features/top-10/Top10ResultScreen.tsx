@@ -10,11 +10,13 @@ import { recordGaleraMatchResult } from '../ranking/ranking.service'
 import { getTop10Entities, getTop10Winners, rankTop10Entities } from './top10.session'
 import { useTop10Store } from './top10.store'
 import { useTop10Initialization } from './useTop10Initialization'
+import { useTop10Theme } from './useTop10Theme'
 
 export function Top10ResultScreen() {
   const navigate = useNavigate()
   const { session, initialized, discard } = useTop10Store()
   useTop10Initialization()
+  useTop10Theme()
   useEffect(() => { if (initialized && (!session || session.phase !== 'finished')) navigate('/games/top-10', { replace: true }) }, [initialized, navigate, session])
   useEffect(() => {
     if (session?.phase !== 'finished') return

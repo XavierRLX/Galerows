@@ -1,0 +1,19 @@
+{
+  "name":"Pista Única",
+  "eyebrow":"Pistas que contam",
+  "summary":"Todo mundo escreve uma pista secreta. No fim, só as pistas únicas ajudam o jogador da vez a descobrir o desafio.",
+  "objectiveTitle":"Objetivo",
+  "objective":"Adivinhe a palavra, o filme ou a série usando as pistas escolhidas pela galera. Cada acerto vale 1 ponto.",
+  "offline":"offline",
+  "flowTitle":"Como funciona",
+  "flow":{"secret":"O jogador da vez não olha; a galera recebe um desafio secreto.","clues":"Cada pessoa escreve uma pista. Depois, o grupo ajusta e remove o que não deve entrar.","score":"Só as pistas únicas aparecem. Acertou? Ganha 1 ponto."},
+  "tipTitle":"Dica:","tip":"Escrevam pistas que ajudem sem falar a resposta. Pistas iguais, mesmo com acentos ou pontuação diferentes, aparecem apenas uma vez.",
+  "discard":"Descartar partida","continue":"Continuar partida","start":"Configurar partida","rulesTitle":"Como jogar","rules":["Escolham pelo menos 3 jogadores e as categorias que entrarão na partida.","Em cada rodada, uma pessoa tenta adivinhar. Todos os outros recebem o celular para escrever uma pista secreta.","Antes de revelar as pistas, o grupo pode editar ou excluir qualquer sugestão.","O jogador recebe 1 ponto se acertar. Ao fim, todos terão uma rodada e o ranking aparece."],"loading":"Carregando partida...",
+  "categories":{"words":{"name":"Palavras","description":"Coisas e ideias conhecidas."},"movies":{"name":"Filmes","description":"Filmes famosos para adivinhar."},"series":{"name":"Séries","description":"Séries marcantes da TV e streaming."}},
+  "setup":{"title":"Preparar partida","players":"Quem vai jogar?","selected":"{{count}} selecionados","manage":"Gerenciar","empty":"Cadastre sua galera ou adicione convidados abaixo.","guestLabel":"Nome do convidado","guestPlaceholder":"Adicionar convidado","add":"Adicionar","guest":"convidado","remove":"Remover {{name}}","categories":"Categorias da partida","categoriesDescription":"Escolha quais tipos de desafio podem ser sorteados.","start":"Começar partida","errors":{"guest":"Informe o nome do convidado.","duplicate":"Este nome já está na partida.","limit":"A partida aceita até 12 jogadores.","players":"Escolha pelo menos 3 jogadores."}},
+  "play":{"secret":"Rodada secreta","exit":"Sair","clueTurn":"Hora da pista","passTo":"Passe para {{name}}","passDescription":"{{guesser}} é quem vai adivinhar. Não deixe essa pessoa olhar a tela.","showTarget":"Ver desafio e escrever pista","onlyYou":"Só você deve olhar","secretTarget":"Desafio secreto","clueLabel":"Sua pista","clueHint":"Use uma palavra ou expressão curta. Não escreva a resposta.","cluePlaceholder":"Ex.: espaço, magia, pizza...","saveClue":"Salvar pista"},
+  "review":{"private":"Tela do grupo","title":"Revisem as pistas","description":"Editem erros, desativem pistas ruins e confirmem o que será mostrado.","include":"Incluir pista","exclude":"Excluir pista","clueField":"Editar pista","ready":"{{count}} pistas únicas prontas","duplicates":"Pistas repetidas não serão mostradas ao jogador, mesmo que estejam escritas de forma diferente.","showGuesser":"Mostrar para quem adivinha"},
+  "guess":{"yourTurn":"Sua vez","title":"Pistas da galera","instruction":"Qual é o desafio?","correct":"Acertou! +1 ponto","skip":"Passar"},
+  "result":{"round":"Rodada {{current}} de {{total}}","correctTitle":"Acertou!","skipTitle":"Não foi dessa vez","correctDescription":"{{name}} ganhou 1 ponto.","skipDescription":"{{name}} não pontuou nesta rodada.","answer":"A resposta era","nextRound":"Próxima rodada","seeRanking":"Ver ranking"},
+  "ranking":{"title":"Ranking","heading":"Partida concluída!","won":"venceu a partida.","wonPlural":"venceram a partida.","points":"{{count}} pt","newGame":"Nova partida","home":"Voltar ao início"}
+}

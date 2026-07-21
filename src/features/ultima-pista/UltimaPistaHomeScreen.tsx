@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Modal } from '../../components/ui/Modal'
 import { AppHaptics } from '../../lib/capacitor/haptics'
+import { FavoriteGameButton } from '../games/FavoriteGameButton'
 import { useUltimaPistaStore } from './ultimaPista.store'
 import { useUltimaPistaInitialization } from './useUltimaPistaInitialization'
 
@@ -21,7 +22,7 @@ export function UltimaPistaHomeScreen() {
   const total = deck?.cards.length ?? 0
   const resolvedCards = deck?.cards.filter((card) => progress?.solvedCardIds.includes(card.id)) ?? []
 
-  return <div className="min-h-dvh pb-28"><Header backTo="/" title={t('name')} /><section className="px-5 py-8">
+  return <div className="min-h-dvh pb-28"><Header action={<FavoriteGameButton gameId="ultima-pista" />} backTo="/" title={t('name')} /><section className="px-5 py-8">
     <div className="mx-auto flex size-24 items-center justify-center rounded-[2rem] border border-[#a78bfa]/35 bg-[#6d28d9]/20 text-[#ddd6fe] shadow-2xl shadow-[#2e1065]/45"><BookKey size={44} /></div>
     <div className="mx-auto mt-7 max-w-lg text-center"><p className="text-sm font-bold uppercase tracking-[0.18em] text-[#c4b5fd]">{t('tagline')}</p><h1 className="mt-3 text-4xl font-black tracking-tight">{t('name')}</h1><p className="mt-4 leading-7 text-slate-300">{t('description')}</p></div>
 

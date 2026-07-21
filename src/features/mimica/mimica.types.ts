@@ -4,7 +4,7 @@ import type { MimicaAction } from './content/mimicaContent.types'
 
 export type MimicaMode = 'individual' | 'teams'
 export type MimicaChallengeSource = 'deck' | 'opponent-prepared'
-export type MimicaPhase = 'turn-intro' | 'choosing' | 'acting' | 'scoring' | 'turn-summary' | 'round-summary' | 'finished'
+export type MimicaPhase = 'turn-intro' | 'choosing' | 'previewing' | 'acting' | 'scoring' | 'turn-summary' | 'round-summary' | 'finished'
 export type MimicaFinishedReason = 'turns-complete' | 'deck-exhausted'
 
 export type MimicaConfig = {

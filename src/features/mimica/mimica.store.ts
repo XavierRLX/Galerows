@@ -5,7 +5,7 @@ import { STORAGE_KEYS } from '../../lib/storage/storage.keys'
 import type { GameParticipant } from '../players/players.types'
 import { loadMimicaDeck } from './content/mimicaContent.service'
 import type { MimicaDeck } from './content/mimicaContent.types'
-import { beginMimicaTurn, chooseMimicaAction, continueAfterMimicaSummary, createMimicaSession, entityIdentity, expireMimicaTurn, isMimicaOpeningHistory, isMimicaSessionCompatible, markMimicaReadyToScore, normalizeMimicaSession, recordMimicaMiss, recordMimicaSuccess } from './mimica.session'
+import { beginMimicaTurn, chooseMimicaAction, continueAfterMimicaSummary, createMimicaSession, entityIdentity, expireMimicaTurn, isMimicaOpeningHistory, isMimicaSessionCompatible, markMimicaReadyToScore, normalizeMimicaSession, recordMimicaMiss, recordMimicaSuccess, returnToMimicaChoices, startMimicaActing } from './mimica.session'
 import type { MimicaChallengeSource, MimicaConfig, MimicaOpeningHistory, MimicaPreparedChallenge, MimicaSession, MimicaTeam } from './mimica.types'
 
 type MimicaState = {
@@ -18,6 +18,8 @@ type MimicaState = {
   start: (participants: GameParticipant[], teams: MimicaTeam[], config: MimicaConfig, challengeSource?: MimicaChallengeSource, preparedChallenges?: MimicaPreparedChallenge[]) => Promise<void>
   beginTurn: () => Promise<void>
   chooseAction: (actionId: string) => Promise<void>
+  returnToChoices: () => Promise<void>
+  startActing: () => Promise<void>
   readyToScore: () => Promise<void>
   success: (guesserId: string | null) => Promise<void>
   miss: () => Promise<void>
@@ -68,6 +70,8 @@ export const useMimicaStore = create<MimicaState>((set, get) => ({
   },
   beginTurn: async () => { await mutateSession(get, set, (session) => beginMimicaTurn(session)) },
   chooseAction: async (actionId) => { await mutateSession(get, set, (session, deck) => chooseMimicaAction(session, actionId, deck)) },
+  returnToChoices: async () => { await mutateSession(get, set, (session) => returnToMimicaChoices(session)) },
+  startActing: async () => { await mutateSession(get, set, (session) => startMimicaActing(session)) },
   readyToScore: async () => { await mutateSession(get, set, (session) => markMimicaReadyToScore(session)) },
   success: async (guesserId) => { await mutateSession(get, set, (session, deck) => recordMimicaSuccess(session, guesserId, deck)) },
   miss: async () => { await mutateSession(get, set, (session, deck) => recordMimicaMiss(session, deck)) },
