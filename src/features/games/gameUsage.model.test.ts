@@ -58,8 +58,8 @@ describe('game usage model', () => {
       },
     } as const
 
-    expect(getDiscoverGameId(gamesRegistry, snapshot, 'cidade-dorme', () => 0)).toBe('cidade-dorme')
-    expect(getDiscoverGameId(gamesRegistry, emptyGameUsageSnapshot, 'cidade-dorme', () => 0)).toBe('nem-ferrando')
+    expect(getDiscoverGameId(gamesRegistry, snapshot, 'cidade-dorme', () => 0)).toBe('ultima-pista')
+    expect(getDiscoverGameId(gamesRegistry, emptyGameUsageSnapshot, 'cidade-dorme', () => 0)).toBe('ultima-pista')
   })
 
   it('does not choose a discovery game when every available game has been opened', () => {

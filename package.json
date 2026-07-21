@@ -9,7 +9,7 @@
     "typecheck": "tsc -b --pretty false",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:content": "vitest run src/features/nem-ferrando/content/nemFerrandoContent.test.ts src/features/impostor-da-palavra/content/impostorDaPalavraContent.test.ts src/features/taboo/content/tabooContent.test.ts src/features/mimica/content/mimicaContent.test.ts src/features/top-10/content/top10Content.test.ts",
+    "test:content": "vitest run src/features/nem-ferrando/content/nemFerrandoContent.test.ts src/features/impostor-da-palavra/content/impostorDaPalavraContent.test.ts src/features/taboo/content/tabooContent.test.ts src/features/mimica/content/mimicaContent.test.ts src/features/top-10/content/top10Content.test.ts src/features/ultima-pista/content/ultimaPistaContent.test.ts",
     "test:watch": "vitest",
     "cap:sync": "npm run build && cap sync",
     "cap:android": "npm run build && cap sync android",

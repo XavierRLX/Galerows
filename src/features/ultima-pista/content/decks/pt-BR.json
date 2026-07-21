@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "gameId": "ultima-pista",
+  "deckId": "ultima-pista-core",
+  "locale": "pt-BR",
+  "version": 3,
+  "title": "Casos da Última Pista",
+  "cards": [
+    {
+      "id": 1,
+      "title": "A Voz Depois da Meia-Noite",
+      "prompt": "Um radialista é achado morto, mas sua voz vai ao ar após meia-noite.",
+      "story": "Dário descobriu que Lúcio desviava dinheiro da rádio. Às 23h35, Lúcio o matou e saiu pela porta técnica, que travava sozinha. A transmissão continuou com blocos gravados, incluindo o anúncio da meia-noite. Por isso, ouvintes julgaram Dário vivo, e a porta sugeriu uma morte impossível.",
+      "essentialFacts": [
+        "Dário morreu antes de sua voz ser ouvida no rádio.",
+        "A transmissão continuou com blocos gravados acionados automaticamente.",
+        "Lúcio saiu por uma porta que se trancava sozinha.",
+        "O álibi de Lúcio começou depois da morte."
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Cabine Entre Estações",
+      "prompt": "Um empresário morre sozinho em um teleférico lacrado. Nada atingiu a cabine por fora durante o trajeto.",
+      "story": "Otávio viajava com uma maleta pesada de protótipos. Mauro, seu sócio, danificara a cinta e a deixara num suporte alto, fingindo que estava presa. Quando o teleférico freou e oscilou, a maleta caiu sobre Otávio. A cinta rompida e a poeira do suporte mostraram que ninguém invadira a cabine: o objeto responsável já estava lá.",
+      "essentialFacts": [
+        "A maleta responsável pela morte já estava dentro da cabine.",
+        "A frenagem fez a cabine oscilar e derrubou a maleta.",
+        "Mauro não fixou a maleta e mentiu para esconder o dano.",
+        "Ninguém abriu a cabine durante o trajeto."
+      ]
+    },
+    {
+      "id": 3,
+      "title": "O Jardim Selado",
+      "prompt": "Uma botânica morre numa estufa fechada. Ao abrirem a porta, o ar e a temperatura pareciam normais.",
+      "story": "Caio ativou o modo de proteção da estufa, acreditando que ela estava vazia. O sistema fechou a ventilação e baixou cortinas térmicas, enquanto um balcão ocultava Helena do sensor. A maçaneta interna emperrou, e o sol aqueceu o local. Ao abrir a porta, Caio desligou o sistema e o ar esfriou, ocultando o calor fatal.",
+      "essentialFacts": [
+        "A estufa esteve muito mais quente antes da descoberta.",
+        "O modo de proteção fechou a ventilação e baixou as cortinas.",
+        "O sensor não detectou Helena atrás do balcão metálico.",
+        "A maçaneta defeituosa impediu sua saída."
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Sob a Baleia",
+      "prompt": "Um curador aparece morto sob um esqueleto de baleia intacto. O museu estava fechado e nenhum osso caiu.",
+      "story": "Rafael descobriu que Íris furtava peças do museu e a confrontou na passarela de restauração. Ela tentou tomar as provas, empurrou-o pelo trecho sem guarda-corpo e o matou. Íris levou o corpo até o salão e o deixou sob a baleia para simular um acidente. Cabos sem tensão e poeira intacta provaram que nenhum osso caiu.",
+      "essentialFacts": [
+        "Rafael morreu após cair da passarela de restauração.",
+        "Íris o empurrou durante o confronto sobre os furtos.",
+        "O corpo foi movido para simular um acidente na exposição.",
+        "Os cabos e a poeira mostravam que o esqueleto não caiu."
+      ]
+    },
+    {
+      "id": 5,
+      "title": "A Última Sessão",
+      "prompt": "O projecionista morre numa cabine fechada, mas o filme é exibido normalmente para uma sala cheia.",
+      "story": "Nilo revisava uma luminária com a energia desligada. Teresa acreditou que ele terminara e religou o quadro pelo painel externo; a instalação defeituosa o matou. A porta da cabine fechou-se sozinha. Mais tarde, o sistema programado iniciou trailers, filme, som e luzes. A sessão normal levou a plateia a supor que Nilo ainda trabalhava.",
+      "essentialFacts": [
+        "Nilo morreu antes de a sessão começar.",
+        "A projeção foi executada por um sistema automático.",
+        "Teresa religou a energia sem saber que Nilo ainda trabalhava.",
+        "Ninguém entrou na cabine durante o filme."
+      ]
+    },
+    {
+      "id": 6,
+      "title": "A Testemunha do Espelho",
+      "prompt": "A última foto de um morto mostra um suspeito presente quando estava longe.",
+      "story": "Leandro confrontou Vítor por desvios de pagamentos, e Vítor o empurrou da plataforma da banda. A foto marcada como 22h10 parecia mostrar Gustavo junto da vítima, embora ele estivesse em outra cidade. O relógio estava noventa minutos adiantado, e Gustavo era apenas um reflexo. Outro reflexo mostrava Vítor entrando no salão.",
+      "essentialFacts": [
+        "O relógio da câmera estava noventa minutos adiantado.",
+        "Gustavo aparecia apenas como reflexo no corredor.",
+        "Vítor empurrou Leandro da plataforma durante a discussão.",
+        "Outro reflexo colocava Vítor no salão antes da morte."
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Maré no Depósito",
+      "prompt": "Uma instrutora afogada é encontrada num depósito completamente seco, longe de qualquer água derramada.",
+      "story": "Marta testou sozinha um tanque de correntes, embora o uso individual fosse proibido. Seu cabo de segurança prendeu-se durante a mudança da corrente, e ela se afogou. Jonas ouviu o alarme tarde demais. Temendo punição por deixar o tanque disponível, levou o corpo ao depósito, secou o caminho e esvaziou o tanque. As evidências revelaram o acidente.",
+      "essentialFacts": [
+        "Marta se afogou no tanque de treinamento.",
+        "Seu cabo de segurança a prendeu durante o teste.",
+        "Jonas moveu o corpo para esconder o uso irregular.",
+        "Jonas chegou depois do acidente e não pretendia matá-la."
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Neve Sem Pegadas",
+      "prompt": "Um astrônomo morre na neve. Só suas pegadas chegam ao observatório de cúpula aberta.",
+      "story": "Álvaro trabalhava sozinho quando um limpa-neve rompeu o cabo entre o sensor e o motor da cúpula. O painel ainda mostrava o sensor ativo, mas a ordem de fechamento não chegava. A neve bloqueou a porta, o rádio não tinha bateria e o aquecedor permanecia desligado. Álvaro morreu de hipotermia; ninguém entrou no observatório.",
+      "essentialFacts": [
+        "Ninguém entrou no observatório depois de Álvaro.",
+        "O limpa-neve rompeu o cabo do sensor sem perceber.",
+        "O cabo rompido impediu que a cúpula recebesse a ordem de fechamento.",
+        "O aquecedor desligado e o rádio sem bateria impediram Álvaro de sobreviver."
+      ]
+    },
+    {
+      "id": 9,
+      "title": "O Trem Imóvel",
+      "prompt": "Um guia morre dentro de um vagão. Os trilhos estão intocados, mas objetos foram lançados para a frente.",
+      "story": "Breno entrou num vagão sobre uma plataforma giratória. Sérgio iniciou um teste, acreditando que a área estava vazia. Durante a rotação, um baú cenográfico mal preso tombou, deslizou pelo corredor e atingiu Breno. O vagão não percorreu os trilhos, por isso a poeira ficou intacta, mas mudou de direção e velocidade. Marcas semicirculares explicavam o movimento.",
+      "essentialFacts": [
+        "O vagão se moveu sobre uma plataforma giratória.",
+        "A poeira intacta não provava imobilidade absoluta.",
+        "Um baú mal fixado atingiu Breno durante a rotação.",
+        "Sérgio iniciou o teste acreditando que a área estava vazia."
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Duas Xícaras Frias",
+      "prompt": "Um contador morre diante de duas xícaras. Uma tem batom, embora nenhuma mulher tenha entrado no estúdio.",
+      "story": "Samuel mostrou a Raul provas de seus desvios na companhia teatral. Durante a discussão, Raul soltou um painel cenográfico alto para impedi-lo de sair e o matou. Depois, deixou duas xícaras para sugerir uma visitante. O batom era antigo: a xícara era adereço de ensaio. Poeira, maquiagem e marcas recentes no trilho revelaram a encenação.",
+      "essentialFacts": [
+        "A xícara com batom era um adereço usado anteriormente.",
+        "Nenhuma mulher esteve presente naquela noite.",
+        "Raul soltou deliberadamente o painel sobre Samuel.",
+        "O motivo era impedir a revelação do desvio de dinheiro."
+      ]
+    },
+    {
+      "id": 11,
+      "title": "A Sombra no Aquário",
+      "prompt": "Uma bióloga aparece morta, embora visitantes afirmem ter conversado com ela depois do horário estimado.",
+      "story": "Célia morreu na área técnica quando uma mangueira se soltou de um suporte mal instalado. Horas depois, visitantes falaram com Marina diante do tanque. Ela usava o mesmo casaco violeta e foi vista de perfil através do vidro curvo. Marina nunca disse ser Célia. O prestador mentiu sobre a revisão para ocultar sua negligência.",
+      "essentialFacts": [
+        "A mulher diante do tanque era Marina, não Célia.",
+        "O casaco igual e o vidro curvo causaram a confusão.",
+        "Célia morreu após a falha de um suporte na área técnica.",
+        "O prestador instalou mal o suporte e mentiu sobre a revisão."
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Batidas no Arquivo",
+      "prompt": "Um arquivista morre entre estantes lacradas. Vinte minutos depois, três colegas ainda ouvem batidas na sala.",
+      "story": "Elias estava atrás de caixas quando Joana fechou as estantes móveis, acreditando que o corredor estava vazio. As caixas bloquearam o sensor, e o fechamento o matou. Ela lacrou a sala sem perceber o acidente. Vinte minutos depois, uma caixa de aço amassada recuperou lentamente a forma, fazendo sua tampa bater no móvel. As batidas não eram pedidos de socorro.",
+      "essentialFacts": [
+        "Caixas mal posicionadas ocultaram Elias do sensor.",
+        "Joana fechou as estantes acreditando que o corredor estava vazio.",
+        "As batidas vinham da caixa metálica recuperando sua forma.",
+        "Os sons não indicavam que Elias ainda estava vivo."
+      ]
+    },
+    {
+      "id": 13,
+      "title": "A Corrente por Dentro",
+      "prompt": "Um homem morre sozinho atrás de uma porta acorrentada. O vizinho ouviu duas pessoas discutindo pouco antes.",
+      "story": "Paulo, ator de voz, ensaiava sozinho uma cena com dois personagens, e o vizinho tomou-a por discussão. Uma infiltração enfraquecera o suporte de uma jardineira presa ao teto. Ela caiu e o matou. A porta continuou acorrentada porque Paulo mesmo a prendera ao chegar. O arquivo no celular mostrou que as duas vozes eram dele.",
+      "essentialFacts": [
+        "Paulo interpretava sozinho os dois lados da discussão.",
+        "A infiltração enfraqueceu o suporte da jardineira.",
+        "Paulo estava sozinho e havia colocado a corrente.",
+        "O estrondo foi a queda da jardineira."
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Jantar Depois da Morte",
+      "prompt": "Um chef morre na despensa, mas pratos continuam saindo por quarenta minutos sob suas ordens.",
+      "story": "Augusto provou um molho cujo ingrediente substituto continha gergelim, ao qual era gravemente alérgico. Bruna trocara os recipientes por engano, e a medicação estava longe. Ele morreu na despensa sem ser ouvido. A equipe continuou o serviço seguindo a folha de horários e instruções que Augusto preparara antes do jantar. Bruna não pretendia matá-lo.",
+      "essentialFacts": [
+        "Augusto morreu antes de os pratos continuarem saindo.",
+        "A equipe seguia uma folha preparada antes do serviço.",
+        "O ingrediente substituto continha gergelim e causou a reação.",
+        "Bruna trocou os recipientes por engano."
+      ]
+    },
+    {
+      "id": 15,
+      "title": "O Alarme Sem Intruso",
+      "prompt": "Um vigia morre quando uma placa cai num depósito. O alarme confirma que nenhum intruso entrou.",
+      "story": "Denis deveria trocar os cabos desgastados de uma placa pesada, mas adiou a manutenção e mentiu sobre a revisão. Na madrugada, vibrações de um trem atravessaram o piso, romperam um cabo e derrubaram a placa sobre Rogério. O alarme estava correto: ninguém entrou. Denis não quis matar, mas sua negligência criou o risco.",
+      "essentialFacts": [
+        "As vibrações de um trem chegaram ao depósito pelo piso.",
+        "Nenhum intruso entrou e o alarme funcionou corretamente.",
+        "Cabos desgastados permitiram a queda da placa.",
+        "Denis adiou a manutenção e mentiu sobre a revisão."
+      ]
+    }
+  ]
+}

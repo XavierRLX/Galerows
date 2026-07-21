@@ -41,6 +41,8 @@ const Top10HomeScreen = lazy(() => import('../features/top-10/Top10HomeScreen').
 const Top10PlayScreen = lazy(() => import('../features/top-10/Top10PlayScreen').then((module) => ({ default: module.Top10PlayScreen })))
 const Top10ResultScreen = lazy(() => import('../features/top-10/Top10ResultScreen').then((module) => ({ default: module.Top10ResultScreen })))
 const Top10SetupScreen = lazy(() => import('../features/top-10/Top10SetupScreen').then((module) => ({ default: module.Top10SetupScreen })))
+const UltimaPistaHomeScreen = lazy(() => import('../features/ultima-pista/UltimaPistaHomeScreen').then((module) => ({ default: module.UltimaPistaHomeScreen })))
+const UltimaPistaPlayScreen = lazy(() => import('../features/ultima-pista/UltimaPistaPlayScreen').then((module) => ({ default: module.UltimaPistaPlayScreen })))
 
 function RouteLoading() {
   return <div aria-label="Carregando tela" className="min-h-dvh bg-slate-950" role="status" />
@@ -61,6 +63,9 @@ export function AppRoutes() {
           <Route path="games/top-10/setup" element={<Top10SetupScreen />} />
           <Route path="games/top-10/play" element={<Top10PlayScreen />} />
           <Route path="games/top-10/result" element={<Top10ResultScreen />} />
+          <Route path="games/ultima-pista" element={<UltimaPistaHomeScreen />} />
+          <Route path="games/ultima-pista/rules" element={<Navigate replace to="/games/ultima-pista" />} />
+          <Route path="games/ultima-pista/play" element={<UltimaPistaPlayScreen />} />
           <Route path="games/nem-ferrando" element={<NemFerrandoHomeScreen />} />
           <Route path="games/nem-ferrando/setup" element={<NemFerrandoSetupScreen />} />
           <Route path="games/nem-ferrando/play" element={<NemFerrandoPlayScreen />} />

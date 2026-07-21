@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "gameId": "ultima-pista",
+  "deckId": "ultima-pista-core",
+  "locale": "en-US",
+  "version": 3,
+  "title": "Final Clue Cases",
+  "cards": [
+    {
+      "id": 1,
+      "title": "The Voice After Midnight",
+      "prompt": "A radio host is found dead, but his voice airs after midnight.",
+      "story": "Dário discovered that Lúcio was stealing from the station. At 11:35 p.m., Lúcio killed him and left through the self-locking technical door. The broadcast continued with prerecorded segments, including the midnight announcement. Listeners therefore believed Dário was alive, while the locked door made the death seem impossible.",
+      "essentialFacts": [
+        "Dário died before his voice was heard on the radio.",
+        "The broadcast continued automatically with prerecorded segments.",
+        "Lúcio left through a self-locking door.",
+        "Lúcio's alibi began after the death."
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Cabin Between Stations",
+      "prompt": "A businessman dies alone inside a sealed cable car. Nothing struck the cabin from outside during the trip.",
+      "story": "Otávio traveled with a heavy case of prototypes. His partner Mauro had damaged its strap and left it on an overhead rack, pretending it was secure. When the cable car braked and swayed, the case fell onto Otávio. The broken strap and dust on the rack proved nobody entered the cabin: the object responsible was already inside.",
+      "essentialFacts": [
+        "The case responsible for the death was already inside.",
+        "Braking made the cabin sway and dislodged the case.",
+        "Mauro failed to secure it and lied about the damage.",
+        "Nobody opened the cabin during the trip."
+      ]
+    },
+    {
+      "id": 3,
+      "title": "The Sealed Garden",
+      "prompt": "A botanist dies inside a closed greenhouse. When the door opens, the air and temperature seem normal.",
+      "story": "Caio activated the greenhouse's protection mode, believing it was empty. The system closed the vents and lowered thermal shades while a counter hid Helena from the sensor. The inside handle jammed, and the sun heated the room. When Caio opened the door, he shut down the system and cooled the air, concealing the fatal heat.",
+      "essentialFacts": [
+        "The greenhouse was much hotter before the discovery.",
+        "Protection mode closed the vents and lowered thermal shades.",
+        "The sensor missed Helena behind the metal counter.",
+        "The faulty handle prevented her escape."
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Beneath the Whale",
+      "prompt": "A curator lies beneath an intact whale skeleton. The closed museum shows no fallen bone.",
+      "story": "Rafael discovered that Íris was stealing museum pieces and confronted her on the restoration walkway. She tried to seize his evidence, pushed him through a section without railing, and killed him. Íris moved the body beneath the whale to stage an accident. Unstrained cables and untouched dust proved that no bone had fallen.",
+      "essentialFacts": [
+        "Rafael died after falling from the restoration walkway.",
+        "Íris pushed him during the confrontation over the thefts.",
+        "The body was moved to stage an exhibition accident.",
+        "The cables and dust showed the skeleton had not fallen."
+      ]
+    },
+    {
+      "id": 5,
+      "title": "The Last Screening",
+      "prompt": "The projectionist dies inside a closed booth, yet the movie plays normally for a full audience.",
+      "story": "Nilo was inspecting a lamp with the power off. Teresa thought he had finished and restored power from an outside panel; the faulty fixture killed him. The booth door closed by itself. Later, the programmed system started trailers, the movie, sound, and lights. The normal screening made the audience assume Nilo was still working.",
+      "essentialFacts": [
+        "Nilo died before the screening began.",
+        "An automated system ran the projection.",
+        "Teresa restored power without knowing Nilo was still working.",
+        "Nobody entered the booth during the movie."
+      ]
+    },
+    {
+      "id": 6,
+      "title": "The Mirror Witness",
+      "prompt": "A dead man's last photo shows a suspect beside him when that suspect was in another city.",
+      "story": "Leandro confronted Vítor over diverted payments, and Vítor pushed him from the band platform. A photo marked 10:10 p.m. seemed to show Gustavo beside the victim, though he was in another city. The clock was ninety minutes fast, and Gustavo was only a reflection. Another reflection showed Vítor entering the hall.",
+      "essentialFacts": [
+        "The camera clock was ninety minutes fast.",
+        "Gustavo appeared only as a reflection in the corridor.",
+        "Vítor pushed Leandro from the platform during the argument.",
+        "Another reflection placed Vítor in the hall before the death."
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Tide in the Storage Room",
+      "prompt": "A drowned instructor is found in a completely dry storage room, far from any spilled water.",
+      "story": "Marta tested a current tank alone, though solo use was forbidden. Her safety line snagged when the current changed, and she drowned. Jonas heard the alarm too late. Afraid of punishment for leaving the tank available, he moved her body to storage, dried the path, and drained the tank. The evidence revealed the accident.",
+      "essentialFacts": [
+        "Marta drowned in the training tank.",
+        "Her safety line trapped her during the test.",
+        "Jonas moved the body to hide the unauthorized use.",
+        "Jonas arrived after the accident and did not intend to kill her."
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Snow Without Footprints",
+      "prompt": "An astronomer dies in a snowbound observatory. Only his footprints lead there, yet the dome remained open.",
+      "story": "Álvaro worked alone when a snowplow severed the cable between the sensor and the dome motor. The panel still showed an active sensor, but the closing command could not arrive. Snow blocked the door, the radio battery was dead, and the heater was off. Álvaro died of hypothermia; nobody entered the observatory.",
+      "essentialFacts": [
+        "Nobody entered the observatory after Álvaro.",
+        "The snowplow unknowingly severed the sensor cable.",
+        "The severed cable kept the closing command from reaching the dome.",
+        "The disabled heater and dead radio kept Álvaro from surviving."
+      ]
+    },
+    {
+      "id": 9,
+      "title": "The Motionless Train",
+      "prompt": "A guide dies inside a railcar. The tracks are untouched, yet objects were thrown forward.",
+      "story": "Breno entered a railcar on a rotating platform. Sérgio started a test, believing the area was empty. During the rotation, a poorly secured prop trunk tipped, slid down the aisle, and struck Breno. The railcar never traveled on the tracks, so the dust remained undisturbed, but it changed direction and speed. Semicircular marks explained the movement.",
+      "essentialFacts": [
+        "The railcar moved on a turntable.",
+        "Untouched track dust did not prove absolute stillness.",
+        "An unsecured trunk struck Breno during the rotation.",
+        "Sérgio began the test believing the area was empty."
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Two Cold Cups",
+      "prompt": "An accountant dies beside two cups. One bears lipstick, though no woman entered the studio that night.",
+      "story": "Samuel showed Raul proof of his theft from the theater company. During the argument, Raul released a tall scenery panel to stop him leaving and killed him. He then left two cups to suggest a visitor. The lipstick was old: the cup was a rehearsal prop. Dust, stage makeup, and fresh track marks exposed the staging.",
+      "essentialFacts": [
+        "The lipstick cup was a previously used prop.",
+        "No woman was present that night.",
+        "Raul deliberately released the panel onto Samuel.",
+        "His motive was preventing discovery of the stolen money."
+      ]
+    },
+    {
+      "id": 11,
+      "title": "The Aquarium Shadow",
+      "prompt": "A biologist is found dead, though visitors claim they spoke with her after the estimated time of death.",
+      "story": "Célia died in the technical area when a hose came loose from a badly installed bracket. Hours later, visitors spoke with Marina by the tank. She wore the same violet coat and was seen in profile through curved glass. Marina never claimed to be Célia. The contractor lied about the inspection to conceal negligence.",
+      "essentialFacts": [
+        "The woman by the tank was Marina, not Célia.",
+        "The matching coat and curved glass caused the confusion.",
+        "Célia died after a support failed in the technical area.",
+        "The contractor installed it badly and lied about the inspection."
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Knocks in the Archive",
+      "prompt": "An archivist dies between sealed shelves. Twenty minutes later, three coworkers still hear knocking inside.",
+      "story": "Elias was behind boxes when Joana closed the mobile shelves, believing the aisle was empty. The boxes blocked the sensor, and the closure killed him. She sealed the room without noticing the accident. Twenty minutes later, a dented steel box slowly regained its shape, making its lid strike the shelves. The knocks were not cries for help.",
+      "essentialFacts": [
+        "Misplaced boxes hid Elias from the sensor.",
+        "Joana closed the shelves believing the aisle was empty.",
+        "The knocks came from the metal box regaining its shape.",
+        "The sounds did not mean Elias was still alive."
+      ]
+    },
+    {
+      "id": 13,
+      "title": "The Chain Inside",
+      "prompt": "A man dies alone behind a chained door. His neighbor heard two people arguing shortly beforehand.",
+      "story": "Paulo, a voice actor, rehearsed a scene alone with two characters, and his neighbor mistook it for an argument. A leak had weakened the support for a hanging planter. It fell and killed him. The door stayed chained because Paulo had locked it himself. A recording on his phone showed that both voices were his.",
+      "essentialFacts": [
+        "Paulo performed both sides of the argument alone.",
+        "The leak weakened the hanging planter's mount.",
+        "Paulo was alone and had secured the chain.",
+        "The crash was the planter falling."
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Dinner After Death",
+      "prompt": "A chef dies in the pantry, but dishes continue leaving the kitchen under his orders for forty minutes.",
+      "story": "Augusto tasted a sauce whose substitute ingredient contained sesame, to which he was severely allergic. Bruna had switched the containers by mistake, and his medication was far away. He died unheard in the pantry. The staff continued service using the schedule and instructions Augusto prepared before dinner. Bruna did not intend to kill him.",
+      "essentialFacts": [
+        "Augusto died before the dishes continued leaving the kitchen.",
+        "The team followed a sheet prepared before service.",
+        "The substitute ingredient contained sesame and caused the reaction.",
+        "Bruna switched the containers by mistake."
+      ]
+    },
+    {
+      "id": 15,
+      "title": "The Alarm Without an Intruder",
+      "prompt": "A guard dies when a panel falls inside a warehouse. The alarm confirms that no intruder entered.",
+      "story": "Denis was supposed to replace the worn cables holding a heavy sign, but delayed maintenance and lied about the inspection. Before dawn, vibrations from a train crossed the floor, snapped a cable, and dropped the sign on Rogério. The alarm was correct: nobody entered. Denis did not intend to kill, but his negligence created the danger.",
+      "essentialFacts": [
+        "Vibrations from a freight train reached the warehouse through the floor.",
+        "No intruder entered, and the alarm worked correctly.",
+        "Worn cables allowed the panel to fall.",
+        "Denis postponed maintenance and lied about the inspection."
+      ]
+    }
+  ]
+}

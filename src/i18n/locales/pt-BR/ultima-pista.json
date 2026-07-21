@@ -1,0 +1,80 @@
+{
+  "name": "Última Pista",
+  "tagline": "Uma frase. Muitas perguntas. Uma história escondida.",
+  "description": "O mediador conhece a verdade. A galera só pode fazer perguntas até reconstruir o que aconteceu.",
+  "objectiveTitle": "Objetivo",
+  "objective": "Descubram juntos a história escondida por trás de cada situação misteriosa.",
+  "cards": "{{count}} cartas",
+  "solvedProgress": "{{solved}} de {{total}} resolvidas",
+  "play": "Jogar",
+  "rules": {
+    "title": "Antes de começar",
+    "subtitle": "Escolham um mediador e mantenham o verso da carta em segredo.",
+    "step1Title": "Leia em segredo",
+    "step1": "O mediador escolhe uma carta e lê sozinho a história completa.",
+    "step2Title": "Façam perguntas",
+    "step2": "A galera recebe apenas a frase misteriosa e tenta reconstruir os fatos.",
+    "step3Title": "Responda somente",
+    "step3": "O mediador pode dizer apenas Sim, Não ou Irrelevante.",
+    "step4Title": "Concluam juntos",
+    "step4": "Quando os pontos essenciais forem descobertos, marquem a carta como resolvida.",
+    "compactSecret": "O mediador lê o verso em segredo e repete apenas o resumo para a galera.",
+    "compactQuestions": "Os jogadores fazem perguntas; o mediador responde somente Sim, Não ou Irrelevante.",
+    "compactResolve": "Quando a história for decifrada, marque a carta como resolvida.",
+    "openDeck": "Abrir baralho"
+  },
+  "deck": {
+    "title": "Baralho",
+    "cardNumber": "Carta {{number}}",
+    "resolved": "Resolvida",
+    "deckComplete": "Baralho concluído!",
+    "deckCompleteDescription": "A galera decifrou todas as histórias disponíveis.",
+    "previous": "Carta anterior",
+    "next": "Próxima carta",
+    "swipeHint": "Deslize para trocar de carta",
+    "choose": "Escolher esta carta",
+    "review": "Rever esta carta",
+    "reset": "Redefinir baralho",
+    "resetTitle": "Redefinir progresso?",
+    "resetDescription": "As cartas resolvidas voltarão a ficar disponíveis. Esta ação não altera o conteúdo do baralho.",
+    "cancel": "Cancelar",
+    "confirmReset": "Redefinir"
+  },
+  "privacy": {
+    "eyebrow": "Conteúdo secreto",
+    "title": "Somente o mediador deve olhar",
+    "description": "Peça para a galera desviar os olhos antes de revelar o verso da carta.",
+    "show": "Mostrar verso",
+    "close": "Voltar ao baralho",
+    "backToRiddle": "Voltar ao enigma"
+  },
+  "back": {
+    "close": "Fechar história e voltar à carta",
+    "eyebrow": "Verso do mediador",
+    "story": "O que aconteceu",
+    "prompt": "Resumo para os jogadores",
+    "essentialFacts": "Pontos essenciais",
+    "essentialDescription": "A galera não precisa repetir cada detalhe, mas deve descobrir estas ideias.",
+    "start": "Começar enigma",
+    "return": "Voltar ao enigma",
+    "backToDeck": "Voltar ao baralho",
+    "markSolved": "Marcar como resolvida",
+    "markUnsolved": "Desmarcar como resolvida"
+  },
+  "playing": {
+    "eyebrow": "Frente da carta",
+    "instruction": "Façam perguntas até reconstruir a história.",
+    "yes": "Sim",
+    "no": "Não",
+    "irrelevant": "Irrelevante",
+    "consult": "Consultar verso",
+    "solve": "Marcar como resolvida",
+    "close": "Fechar sem resolver"
+  },
+  "reveal": {
+    "eyebrow": "Mistério resolvido",
+    "title": "A história completa",
+    "facts": "O que precisava ser descoberto",
+    "backToDeck": "Voltar ao baralho"
+  }
+}

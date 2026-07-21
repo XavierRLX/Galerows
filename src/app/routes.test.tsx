@@ -61,4 +61,11 @@ describe('app navigation', () => {
     await user.click(screen.getByRole('button', { name: /jogar agora cidade dorme/i }))
     expect(await screen.findByRole('heading', { name: 'Cidade Dorme', level: 1 })).toBeInTheDocument()
   })
+
+  it('opens Última Pista from the Hub', async () => {
+    const user = userEvent.setup()
+    render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
+    await user.click(screen.getByRole('button', { name: /jogar agora última pista/i }))
+    expect(await screen.findByRole('heading', { name: 'Última Pista', level: 1 })).toBeInTheDocument()
+  })
 })

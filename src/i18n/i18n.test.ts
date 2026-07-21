@@ -16,6 +16,7 @@ describe('i18n', () => {
       expect(i18n.t('categories.defaults.0', { ns: 'adedonha' })).toBeTruthy()
       expect(i18n.t('name', { ns: 'impostor-da-palavra' })).toBeTruthy()
       expect(i18n.t('name', { ns: 'quem-sou-eu' })).toBeTruthy()
+      expect(i18n.t('name', { ns: 'ultima-pista' })).toBeTruthy()
     }
     await i18n.changeLanguage('pt-BR')
   })

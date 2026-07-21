@@ -1,0 +1,80 @@
+{
+  "name": "Última Pista",
+  "tagline": "Una frase. Muchas preguntas. Una historia oculta.",
+  "description": "El moderador conoce la verdad. Los demás solo pueden hacer preguntas hasta reconstruir lo ocurrido.",
+  "objectiveTitle": "Objetivo",
+  "objective": "Descubran juntos la historia oculta detrás de cada situación misteriosa.",
+  "cards": "{{count}} cartas",
+  "solvedProgress": "{{solved}} de {{total}} resueltas",
+  "play": "Jugar",
+  "rules": {
+    "title": "Antes de empezar",
+    "subtitle": "Elijan un moderador y mantengan en secreto el reverso de la carta.",
+    "step1Title": "Lee en secreto",
+    "step1": "El moderador elige una carta y lee en privado la historia completa.",
+    "step2Title": "Hagan preguntas",
+    "step2": "El grupo solo recibe la frase misteriosa e intenta reconstruir los hechos.",
+    "step3Title": "Responde solamente",
+    "step3": "El moderador solo puede decir Sí, No o Irrelevante.",
+    "step4Title": "Resuelvan juntos",
+    "step4": "Cuando descubran los puntos esenciales, marquen la carta como resuelta.",
+    "compactSecret": "El moderador lee el reverso en secreto y repite solo el resumen al grupo.",
+    "compactQuestions": "Los jugadores hacen preguntas; el moderador responde solo Sí, No o Irrelevante.",
+    "compactResolve": "Cuando descubran la historia, marquen la carta como resuelta.",
+    "openDeck": "Abrir baraja"
+  },
+  "deck": {
+    "title": "Baraja",
+    "cardNumber": "Carta {{number}}",
+    "resolved": "Resuelta",
+    "deckComplete": "¡Baraja completada!",
+    "deckCompleteDescription": "El grupo descifró todas las historias disponibles.",
+    "previous": "Carta anterior",
+    "next": "Siguiente carta",
+    "swipeHint": "Desliza para cambiar de carta",
+    "choose": "Elegir esta carta",
+    "review": "Revisar esta carta",
+    "reset": "Reiniciar baraja",
+    "resetTitle": "¿Reiniciar el progreso?",
+    "resetDescription": "Las cartas resueltas volverán a estar disponibles. Esto no cambia el contenido de la baraja.",
+    "cancel": "Cancelar",
+    "confirmReset": "Reiniciar"
+  },
+  "privacy": {
+    "eyebrow": "Contenido secreto",
+    "title": "Solo el moderador debe mirar",
+    "description": "Pide al grupo que desvíe la mirada antes de revelar el reverso de la carta.",
+    "show": "Mostrar reverso",
+    "close": "Volver a la baraja",
+    "backToRiddle": "Volver al enigma"
+  },
+  "back": {
+    "close": "Cerrar historia y volver a la carta",
+    "eyebrow": "Reverso del moderador",
+    "story": "Qué ocurrió",
+    "prompt": "Resumen para los jugadores",
+    "essentialFacts": "Puntos esenciales",
+    "essentialDescription": "El grupo no necesita repetir cada detalle, pero debe descubrir estas ideas.",
+    "start": "Comenzar enigma",
+    "return": "Volver al enigma",
+    "backToDeck": "Volver a la baraja",
+    "markSolved": "Marcar como resuelta",
+    "markUnsolved": "Desmarcar como resuelta"
+  },
+  "playing": {
+    "eyebrow": "Frente de la carta",
+    "instruction": "Hagan preguntas hasta reconstruir la historia.",
+    "yes": "Sí",
+    "no": "No",
+    "irrelevant": "Irrelevante",
+    "consult": "Consultar reverso",
+    "solve": "Marcar como resuelta",
+    "close": "Cerrar sin resolver"
+  },
+  "reveal": {
+    "eyebrow": "Misterio resuelto",
+    "title": "La historia completa",
+    "facts": "Lo que había que descubrir",
+    "backToDeck": "Volver a la baraja"
+  }
+}

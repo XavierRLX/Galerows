@@ -13,6 +13,7 @@ import { GameStatusBadge } from '../games/GameStatusBadge'
 import type { GameModule } from '../games/games.types'
 
 const coverFallbacks: Record<string, string> = {
+  'ultima-pista': 'radial-gradient(circle at 82% 22%, rgba(139,92,246,0.34), transparent 24%), linear-gradient(135deg, rgba(24,8,43,0.98), rgba(15,23,42,0.94) 58%, rgba(76,29,149,0.72))',
   'impostor-da-palavra': 'radial-gradient(circle at 88% 24%, rgba(127,29,29,0.34), transparent 22%), linear-gradient(135deg, rgba(30,5,8,0.96), rgba(15,23,42,0.92) 58%, rgba(69,10,10,0.72))',
   taboo: 'radial-gradient(circle at 12% 34%, rgba(153,27,27,0.36), transparent 24%), linear-gradient(135deg, rgba(69,10,10,0.98), rgba(15,23,42,0.92) 58%, rgba(127,29,29,0.76))',
   'nem-ferrando': 'radial-gradient(circle at 18% 28%, rgba(120,74,35,0.32), transparent 26%), linear-gradient(135deg, rgba(24,10,2,0.98), rgba(49,31,18,0.95) 58%, rgba(15,23,42,0.9))',
@@ -25,6 +26,7 @@ const coverFallbacks: Record<string, string> = {
 const defaultCover = 'radial-gradient(circle at 18% 24%, rgba(139,92,246,0.28), transparent 24%), linear-gradient(135deg, rgba(15,23,42,0.98), rgba(30,27,75,0.9))'
 
 const coverOverlays: Record<string, string> = {
+  'ultima-pista': 'linear-gradient(90deg, rgba(20,7,38,0.97), rgba(46,16,101,0.66) 48%, rgba(15,10,31,0.24) 76%, rgba(15,10,31,0.32)), radial-gradient(circle at 88% 24%, rgba(167,139,250,0.16), transparent 28%)',
   taboo: 'linear-gradient(90deg, rgba(69,10,10,0.94), rgba(127,29,29,0.62) 52%, rgba(15,23,42,0.82)), radial-gradient(circle at 86% 28%, rgba(248,113,113,0.22), transparent 26%)',
   'top-10': 'linear-gradient(90deg, rgba(5,46,22,0.94), rgba(22,101,52,0.62) 52%, rgba(15,23,42,0.82)), radial-gradient(circle at 86% 28%, rgba(74,222,128,0.2), transparent 26%)',
 }
@@ -37,6 +39,12 @@ const defaultDepthShadow = [
 ].join(', ')
 
 const cardDepthShadows: Record<string, string> = {
+  'ultima-pista': [
+    '0 30px 62px -30px rgba(109,40,217,0.62)',
+    '0 18px 34px -22px rgba(0,0,0,0.92)',
+    'inset 0 1px 0 rgba(255,255,255,0.1)',
+    'inset 0 -26px 42px rgba(0,0,0,0.22)',
+  ].join(', '),
   'impostor-da-palavra': [
     '0 30px 62px -30px rgba(239,68,68,0.52)',
     '0 18px 34px -22px rgba(0,0,0,0.92)',
@@ -82,6 +90,11 @@ const cardDepthShadows: Record<string, string> = {
 }
 
 const cardThemes: Record<string, { icon: string; title: string; action: string }> = {
+  'ultima-pista': {
+    icon: 'border-[#a78bfa]/50 bg-[#160b2d]/70 text-[#ddd6fe] shadow-[#2e1065]/45',
+    title: 'text-[#ddd6fe]',
+    action: 'border-[#8b5cf6] text-[#ddd6fe] hover:border-transparent hover:bg-[#6d28d9] hover:text-white',
+  },
   'impostor-da-palavra': {
     icon: 'border-[#7f1d1d]/50 bg-slate-950/55 text-[#ef4444] shadow-[#450a0a]/35',
     title: 'text-[#ef4444]',

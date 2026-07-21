@@ -1,5 +1,86 @@
 {
-  "brand":"Galerows","subtitle":"Jogos da Galera","description":"Junte sua galera. Que vença o melhor.","gamesTitle":"Qual vai ser o jogo da vez?","settings":"Abrir configurações","playNow":"Jogar agora","comingSoon":"Em breve","featuredBadge":"Destaque","mostPlayedBadge":"Recente","discoverBadge":"Recomendado","offline":"Offline","players":"{{count}} jogadores","howToPlay":"Como jogar {{name}}","nativeAd":{"ariaLabel":"Espaço de anúncio entre jogos","badge":"Anúncio","title":"Espaço reservado para anúncio","description":"Este card simula o anúncio nativo que ficará entre os jogos enquanto a integração real é preparada.","sponsor":"Patrocinado","cta":"Saiba mais"},"tutorial":{"title":"Como jogar {{name}}","stepsTitle":"Fluxo básico","stepOne":"Abra o jogo e configure a partida com a galera.","stepTwo":"Siga as instruções na tela durante cada turno ou rodada.","stepThree":"Confira o resultado no fim e comece outra partida quando quiser."},
-  "status":{"available":"Disponível","coming-soon":"Em breve","locked":"Bloqueado"},
-  "games":{"top-10":{"name":"Top 10","shortDescription":"Descubra listas ranqueadas e some mais pontos nas primeiras posições."},"nem-ferrando":{"name":"Nem Ferrando","shortDescription":"Curiosidades numéricas, palpites absurdos e muitos Ferros para quem errar feio."},"impostor-da-palavra":{"name":"Impostor da Palavra","shortDescription":"Descubra quem está fingindo saber a palavra."},"quem-sou-eu":{"name":"Quem Sou Eu","shortDescription":"Escreva até 5 palavras, coloque o celular na testa e tente adivinhar."},"cidade-dorme":{"name":"Cidade Dorme","shortDescription":"Papéis secretos, blefes e uma cidade em perigo.","description":"Dedução social com mediador, papéis secretos, ações noturnas e votação da cidade."},"adedonha":{"name":"Adedonha","shortDescription":"Crie temas, compartilhe por QR e preencha respostas no próprio celular."},"mimica":{"name":"Mímica","shortDescription":"Faça a galera adivinhar sem dizer uma palavra."},"taboo":{"name":"Dica Proibida","shortDescription":"Descreva a palavra sem usar as pistas proibidas."},"jogo-da-velha":{"name":"Jogo da Velha","shortDescription":"Três símbolos em linha vencem a rodada."},"damas":{"name":"Damas","shortDescription":"Capture as peças e domine o tabuleiro."},"ludo":{"name":"Ludo","shortDescription":"Leve todas as suas peças até a chegada."}}
+  "brand": "Galerows",
+  "subtitle": "Jogos da Galera",
+  "description": "Junte sua galera. Que vença o melhor.",
+  "gamesTitle": "Qual vai ser o jogo da vez?",
+  "settings": "Abrir configurações",
+  "playNow": "Jogar agora",
+  "comingSoon": "Em breve",
+  "featuredBadge": "Destaque",
+  "mostPlayedBadge": "Recente",
+  "discoverBadge": "Recomendado",
+  "offline": "Offline",
+  "players": "{{count}} jogadores",
+  "howToPlay": "Como jogar {{name}}",
+  "nativeAd": {
+    "ariaLabel": "Espaço de anúncio entre jogos",
+    "badge": "Anúncio",
+    "title": "Espaço reservado para anúncio",
+    "description": "Este card simula o anúncio nativo que ficará entre os jogos enquanto a integração real é preparada.",
+    "sponsor": "Patrocinado",
+    "cta": "Saiba mais"
+  },
+  "tutorial": {
+    "title": "Como jogar {{name}}",
+    "stepsTitle": "Fluxo básico",
+    "stepOne": "Abra o jogo e configure a partida com a galera.",
+    "stepTwo": "Siga as instruções na tela durante cada turno ou rodada.",
+    "stepThree": "Confira o resultado no fim e comece outra partida quando quiser."
+  },
+  "status": {
+    "available": "Disponível",
+    "coming-soon": "Em breve",
+    "locked": "Bloqueado"
+  },
+  "games": {
+    "ultima-pista": {
+      "name": "Última Pista",
+      "shortDescription": "Faça perguntas e reconstrua a história escondida."
+    },
+    "top-10": {
+      "name": "Top 10",
+      "shortDescription": "Descubra listas ranqueadas e some mais pontos nas primeiras posições."
+    },
+    "nem-ferrando": {
+      "name": "Nem Ferrando",
+      "shortDescription": "Curiosidades numéricas, palpites absurdos e muitos Ferros para quem errar feio."
+    },
+    "impostor-da-palavra": {
+      "name": "Impostor da Palavra",
+      "shortDescription": "Descubra quem está fingindo saber a palavra."
+    },
+    "quem-sou-eu": {
+      "name": "Quem Sou Eu",
+      "shortDescription": "Escreva até 5 palavras, coloque o celular na testa e tente adivinhar."
+    },
+    "cidade-dorme": {
+      "name": "Cidade Dorme",
+      "shortDescription": "Papéis secretos, blefes e uma cidade em perigo.",
+      "description": "Dedução social com mediador, papéis secretos, ações noturnas e votação da cidade."
+    },
+    "adedonha": {
+      "name": "Adedonha",
+      "shortDescription": "Crie temas, compartilhe por QR e preencha respostas no próprio celular."
+    },
+    "mimica": {
+      "name": "Mímica",
+      "shortDescription": "Faça a galera adivinhar sem dizer uma palavra."
+    },
+    "taboo": {
+      "name": "Dica Proibida",
+      "shortDescription": "Descreva a palavra sem usar as pistas proibidas."
+    },
+    "jogo-da-velha": {
+      "name": "Jogo da Velha",
+      "shortDescription": "Três símbolos em linha vencem a rodada."
+    },
+    "damas": {
+      "name": "Damas",
+      "shortDescription": "Capture as peças e domine o tabuleiro."
+    },
+    "ludo": {
+      "name": "Ludo",
+      "shortDescription": "Leve todas as suas peças até a chegada."
+    }
+  }
 }

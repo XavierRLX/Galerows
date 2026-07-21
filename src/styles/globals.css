@@ -21,6 +21,9 @@ button, a { touch-action: manipulation; }
 }
 .nf-card-enter { animation: nf-card-enter 300ms ease-out both; }
 .nf-answer-reveal { animation: nf-answer-reveal 250ms ease-out both; }
+.ultima-pista-card-from-right { animation: ultima-pista-card-from-right 300ms cubic-bezier(.2,.8,.2,1) both; }
+.ultima-pista-card-from-left { animation: ultima-pista-card-from-left 300ms cubic-bezier(.2,.8,.2,1) both; }
+.ultima-pista-back { animation: ultima-pista-back-reveal 420ms cubic-bezier(.16,1,.3,1) both; transform-origin: center; }
 @keyframes nf-card-enter {
   from { opacity: 0; transform: translateY(10px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
@@ -29,8 +32,20 @@ button, a { touch-action: manipulation; }
   from { opacity: 0; transform: rotateX(-8deg) scale(0.98); }
   to { opacity: 1; transform: rotateX(0) scale(1); }
 }
+@keyframes ultima-pista-card-from-right {
+  from { opacity: 0; transform: translateX(42px) rotate(2deg) scale(0.97); }
+  to { opacity: 1; transform: translateX(0) rotate(0) scale(1); }
+}
+@keyframes ultima-pista-card-from-left {
+  from { opacity: 0; transform: translateX(-42px) rotate(-2deg) scale(0.97); }
+  to { opacity: 1; transform: translateX(0) rotate(0) scale(1); }
+}
+@keyframes ultima-pista-back-reveal {
+  from { opacity: 0; transform: scale(0.86) rotateY(-10deg); }
+  to { opacity: 1; transform: scale(1) rotateY(0); }
+}
 @media (prefers-reduced-motion: reduce) {
-  .nf-card-enter, .nf-answer-reveal { animation: none; }
+  .nf-card-enter, .nf-answer-reveal, .ultima-pista-card-from-right, .ultima-pista-card-from-left, .ultima-pista-back { animation: none; }
 }
 .safe-area {
   padding-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));

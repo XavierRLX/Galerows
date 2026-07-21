@@ -1,0 +1,80 @@
+{
+  "name": "Final Clue",
+  "tagline": "One sentence. Many questions. One hidden story.",
+  "description": "The moderator knows the truth. Everyone else can only ask questions until they reconstruct what happened.",
+  "objectiveTitle": "Goal",
+  "objective": "Work together to uncover the hidden story behind each mysterious situation.",
+  "cards": "{{count}} cards",
+  "solvedProgress": "{{solved}} of {{total}} solved",
+  "play": "Play",
+  "rules": {
+    "title": "Before you start",
+    "subtitle": "Choose a moderator and keep the back of the card secret.",
+    "step1Title": "Read in secret",
+    "step1": "The moderator chooses a card and privately reads the full story.",
+    "step2Title": "Ask questions",
+    "step2": "The group only receives the mysterious sentence and tries to reconstruct the facts.",
+    "step3Title": "Only answer",
+    "step3": "The moderator may only say Yes, No, or Irrelevant.",
+    "step4Title": "Solve together",
+    "step4": "Once the essential facts are uncovered, mark the card as solved.",
+    "compactSecret": "The moderator privately reads the back and repeats only the summary to the group.",
+    "compactQuestions": "Players ask questions; the moderator only answers Yes, No, or Irrelevant.",
+    "compactResolve": "Once the story is uncovered, mark the card as solved.",
+    "openDeck": "Open deck"
+  },
+  "deck": {
+    "title": "Deck",
+    "cardNumber": "Card {{number}}",
+    "resolved": "Solved",
+    "deckComplete": "Deck complete!",
+    "deckCompleteDescription": "Your group solved every available story.",
+    "previous": "Previous card",
+    "next": "Next card",
+    "swipeHint": "Swipe to change cards",
+    "choose": "Choose this card",
+    "review": "Review this card",
+    "reset": "Reset deck",
+    "resetTitle": "Reset progress?",
+    "resetDescription": "Solved cards will become available again. This does not change the deck content.",
+    "cancel": "Cancel",
+    "confirmReset": "Reset"
+  },
+  "privacy": {
+    "eyebrow": "Secret content",
+    "title": "Only the moderator should look",
+    "description": "Ask everyone else to look away before revealing the back of the card.",
+    "show": "Show back",
+    "close": "Back to deck",
+    "backToRiddle": "Back to riddle"
+  },
+  "back": {
+    "close": "Close story and return to card",
+    "eyebrow": "Moderator side",
+    "story": "What happened",
+    "prompt": "Summary for the players",
+    "essentialFacts": "Essential facts",
+    "essentialDescription": "The group does not need every detail, but should uncover these ideas.",
+    "start": "Start riddle",
+    "return": "Back to riddle",
+    "backToDeck": "Back to deck",
+    "markSolved": "Mark as solved",
+    "markUnsolved": "Unmark as solved"
+  },
+  "playing": {
+    "eyebrow": "Front of card",
+    "instruction": "Ask questions until you reconstruct the story.",
+    "yes": "Yes",
+    "no": "No",
+    "irrelevant": "Irrelevant",
+    "consult": "Check the back",
+    "solve": "Mark as solved",
+    "close": "Close without solving"
+  },
+  "reveal": {
+    "eyebrow": "Mystery solved",
+    "title": "The full story",
+    "facts": "What had to be discovered",
+    "backToDeck": "Back to deck"
+  }
+}

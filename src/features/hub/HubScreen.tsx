@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { canDisplayAds } from '../ads/ads.visibility'
 import { getDiscoverGameId, getMostPlayedGameId } from '../games/gameUsage.model'
@@ -21,7 +21,7 @@ export function HubScreen() {
   const { t } = useTranslation('hub')
   const isPremium = usePremiumStore((state) => state.isPremium)
   const [usageSnapshot, setUsageSnapshot] = useState<GameUsageSnapshot | null>(null)
-  const discoverRandom = useRef(Math.random())
+  const [discoverRandom] = useState(() => Math.random())
 
   useEffect(() => {
     let active = true
@@ -36,10 +36,10 @@ export function HubScreen() {
   const badgeIds = useMemo(() => {
     if (!usageSnapshot) return { discover: null, mostPlayed: null }
     return {
-      discover: getDiscoverGameId(gamesRegistry, usageSnapshot, featuredGameId, () => discoverRandom.current),
+      discover: getDiscoverGameId(gamesRegistry, usageSnapshot, featuredGameId, () => discoverRandom),
       mostPlayed: getMostPlayedGameId(gamesRegistry, usageSnapshot),
     }
-  }, [usageSnapshot])
+  }, [discoverRandom, usageSnapshot])
 
   const handleOpenGame = useCallback(async (gameId: string) => {
     const next = await recordGameOpened(gameId)

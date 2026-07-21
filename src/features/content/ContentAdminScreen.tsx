@@ -15,15 +15,18 @@ import type { TabooDeck } from '../taboo/content/tabooContent.types'
 import { validateTabooDeck } from '../taboo/content/tabooContent.validator'
 import type { Top10Deck } from '../top-10/content/top10Content.types'
 import { validateTop10Deck } from '../top-10/content/top10Content.validator'
+import type { UltimaPistaDeck } from '../ultima-pista/content/ultimaPistaContent.types'
+import { validateUltimaPistaDeck } from '../ultima-pista/content/ultimaPistaContent.validator'
 
-type AdminGameId = 'nem-ferrando' | 'impostor-da-palavra' | 'taboo' | 'top-10'
-type AdminDeck = NemFerrandoDeck | ImpostorDaPalavraDeck | TabooDeck | Top10Deck
+type AdminGameId = 'nem-ferrando' | 'impostor-da-palavra' | 'taboo' | 'top-10' | 'ultima-pista'
+type AdminDeck = NemFerrandoDeck | ImpostorDaPalavraDeck | TabooDeck | Top10Deck | UltimaPistaDeck
 
 const adminGames: { id: AdminGameId; name: string }[] = [
   { id: 'nem-ferrando', name: 'Nem Ferrando' },
   { id: 'impostor-da-palavra', name: 'Impostor da Palavra' },
   { id: 'taboo', name: 'Dica Proibida' },
   { id: 'top-10', name: 'Top 10' },
+  { id: 'ultima-pista', name: 'Última Pista' },
 ]
 
 export function ContentAdminScreen() {
@@ -38,7 +41,7 @@ export function ContentAdminScreen() {
   const validate = () => {
     try {
       const parsed: unknown = JSON.parse(text)
-      const result = gameId === 'nem-ferrando' ? validateNemFerrandoDeck(parsed, currentLocale) : gameId === 'impostor-da-palavra' ? validateImpostorDaPalavraDeck(parsed, currentLocale) : gameId === 'taboo' ? validateTabooDeck(parsed, currentLocale) : validateTop10Deck(parsed, currentLocale)
+      const result = gameId === 'nem-ferrando' ? validateNemFerrandoDeck(parsed, currentLocale) : gameId === 'impostor-da-palavra' ? validateImpostorDaPalavraDeck(parsed, currentLocale) : gameId === 'taboo' ? validateTabooDeck(parsed, currentLocale) : gameId === 'top-10' ? validateTop10Deck(parsed, currentLocale) : validateUltimaPistaDeck(parsed, currentLocale)
       setErrors(result.errors)
       setDeck(result.valid ? parsed as AdminDeck : null)
       setMessage(result.valid ? 'JSON válido e pronto para teste.' : '')
@@ -68,7 +71,7 @@ export function ContentAdminScreen() {
           {message ? <p className="mt-4 text-sm font-bold text-lime-300" role="status">{message}</p> : null}
           {errors.length ? <div className="mt-4 rounded-2xl bg-rose-500/10 p-4 text-sm text-rose-200" role="alert">{errors.map((error) => <p key={error}>{error}</p>)}</div> : null}
         </Card>
-        {deck ? <Card className="mt-5 p-5"><p className="text-sm font-bold uppercase tracking-wider text-slate-400">Pré-visualização</p>{deck.gameId === 'nem-ferrando' ? <NemFerrandoPreview deck={deck as NemFerrandoDeck} /> : deck.gameId === 'impostor-da-palavra' ? <ImpostorPreview deck={deck as ImpostorDaPalavraDeck} /> : deck.gameId === 'taboo' ? <TabooPreview deck={deck as TabooDeck} /> : <Top10Preview deck={deck as Top10Deck} />}</Card> : null}
+        {deck ? <Card className="mt-5 p-5"><p className="text-sm font-bold uppercase tracking-wider text-slate-400">Pré-visualização</p>{deck.gameId === 'nem-ferrando' ? <NemFerrandoPreview deck={deck as NemFerrandoDeck} /> : deck.gameId === 'impostor-da-palavra' ? <ImpostorPreview deck={deck as ImpostorDaPalavraDeck} /> : deck.gameId === 'taboo' ? <TabooPreview deck={deck as TabooDeck} /> : deck.gameId === 'top-10' ? <Top10Preview deck={deck as Top10Deck} /> : <UltimaPistaPreview deck={deck as UltimaPistaDeck} />}</Card> : null}
       </section>
     </div>
   )
@@ -91,4 +94,9 @@ function TabooPreview({ deck }: { deck: TabooDeck }) {
 function Top10Preview({ deck }: { deck: Top10Deck }) {
   const card = deck.cards[0]
   return <div className="mt-3 rounded-3xl border border-red-800/50 bg-red-950/30 p-5"><p className="text-xs font-black uppercase tracking-wider text-red-200">{card.theme}</p><h2 className="mt-1 text-2xl font-black text-red-100">{card.question}</h2><div className="mt-4 grid gap-2">{card.answers.map((answer) => <div className="flex items-center justify-between rounded-xl bg-white/10 px-3 py-2 text-sm" key={answer.rank}><span><strong className="text-red-300">#{answer.rank}</strong> {answer.label}</span><span className="font-black text-red-200">{11 - answer.rank} pts</span></div>)}</div></div>
+}
+
+function UltimaPistaPreview({ deck }: { deck: UltimaPistaDeck }) {
+  const card = deck.cards[0]
+  return <div className="mt-3 rounded-3xl border border-amber-300/30 bg-amber-400/10 p-5"><p className="text-xs font-black uppercase tracking-wider text-amber-200">Carta {String(card.id).padStart(2, '0')}</p><h2 className="mt-1 text-2xl font-black text-amber-100">{card.title}</h2><p className="mt-3 text-sm leading-6 text-slate-200">{card.prompt}</p><div className="mt-4 border-t border-white/10 pt-4"><p className="text-xs font-black uppercase tracking-wider text-rose-200">Verso secreto</p><p className="mt-2 text-sm leading-6 text-slate-300">{card.story}</p><p className="mt-3 text-xs font-bold text-slate-400">{card.essentialFacts.length} pontos essenciais</p></div></div>
 }
