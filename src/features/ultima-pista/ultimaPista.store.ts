@@ -4,7 +4,7 @@ import { LocalPreferences } from '../../lib/capacitor/preferences'
 import { STORAGE_KEYS } from '../../lib/storage/storage.keys'
 import { loadUltimaPistaDeck } from './content/ultimaPistaContent.service'
 import type { UltimaPistaDeck } from './content/ultimaPistaContent.types'
-import { createUltimaPistaProgress, normalizeUltimaPistaProgress, toggleUltimaPistaCardSolved, type UltimaPistaProgress } from './ultimaPista.types'
+import { clearUltimaPistaSolvedCards, normalizeUltimaPistaProgress, orderUltimaPistaCardsSequentially, shuffleUltimaPistaCards, toggleUltimaPistaCardSolved, type UltimaPistaProgress } from './ultimaPista.types'
 
 type UltimaPistaState = {
   deck: UltimaPistaDeck | null
@@ -12,6 +12,8 @@ type UltimaPistaState = {
   initialized: boolean
   loading: boolean
   initialize: (locale: SupportedLocale) => Promise<void>
+  orderCardsSequentially: () => Promise<void>
+  shuffleCards: () => Promise<void>
   toggleSolved: (cardId: number) => Promise<void>
   resetProgress: () => Promise<void>
 }
@@ -30,6 +32,22 @@ export const useUltimaPistaStore = create<UltimaPistaState>((set, get) => ({
     if (JSON.stringify(saved) !== JSON.stringify(progress)) await persistProgress(progress)
     set({ deck, progress, initialized: true, loading: false })
   },
+  orderCardsSequentially: async () => {
+    const { deck, progress } = get()
+    if (!deck || !progress) return
+    const next = orderUltimaPistaCardsSequentially(progress, deck)
+    if (next === progress) return
+    await persistProgress(next)
+    set({ progress: next })
+  },
+  shuffleCards: async () => {
+    const { deck, progress } = get()
+    if (!deck || !progress) return
+    const next = shuffleUltimaPistaCards(progress, deck)
+    if (next === progress) return
+    await persistProgress(next)
+    set({ progress: next })
+  },
   toggleSolved: async (cardId) => {
     const { deck, progress } = get()
     if (!deck || !progress) return
@@ -39,9 +57,10 @@ export const useUltimaPistaStore = create<UltimaPistaState>((set, get) => ({
     set({ progress: next })
   },
   resetProgress: async () => {
-    const deck = get().deck
-    if (!deck) return
-    const progress = createUltimaPistaProgress(deck)
+    const current = get().progress
+    if (!current) return
+    const progress = clearUltimaPistaSolvedCards(current)
+    if (progress === current) return
     await persistProgress(progress)
     set({ progress })
   },

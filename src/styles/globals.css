@@ -21,8 +21,12 @@ button, a { touch-action: manipulation; }
 }
 .nf-card-enter { animation: nf-card-enter 300ms ease-out both; }
 .nf-answer-reveal { animation: nf-answer-reveal 250ms ease-out both; }
-.ultima-pista-card-from-right { animation: ultima-pista-card-from-right 300ms cubic-bezier(.2,.8,.2,1) both; }
-.ultima-pista-card-from-left { animation: ultima-pista-card-from-left 300ms cubic-bezier(.2,.8,.2,1) both; }
+.ultima-pista-card-settle { animation: ultima-pista-card-settle 300ms cubic-bezier(.16,1,.3,1) both; }
+.ultima-pista-shuffle-top { animation: ultima-pista-shuffle-top 620ms cubic-bezier(.22,.8,.2,1) both; }
+.ultima-pista-shuffle-middle { animation: ultima-pista-shuffle-middle 620ms cubic-bezier(.22,.8,.2,1) both; }
+.ultima-pista-shuffle-bottom { animation: ultima-pista-shuffle-bottom 620ms cubic-bezier(.22,.8,.2,1) both; }
+.ultima-pista-order-top { animation: ultima-pista-order-top 520ms cubic-bezier(.16,1,.3,1) both; }
+.ultima-pista-order-middle { animation: ultima-pista-order-middle 520ms cubic-bezier(.16,1,.3,1) both; }
 .ultima-pista-back { animation: ultima-pista-back-reveal 420ms cubic-bezier(.16,1,.3,1) both; transform-origin: center; }
 @keyframes nf-card-enter {
   from { opacity: 0; transform: translateY(10px) scale(0.98); }
@@ -32,20 +36,41 @@ button, a { touch-action: manipulation; }
   from { opacity: 0; transform: rotateX(-8deg) scale(0.98); }
   to { opacity: 1; transform: rotateX(0) scale(1); }
 }
-@keyframes ultima-pista-card-from-right {
-  from { opacity: 0; transform: translateX(42px) rotate(2deg) scale(0.97); }
-  to { opacity: 1; transform: translateX(0) rotate(0) scale(1); }
+@keyframes ultima-pista-card-settle {
+  from { opacity: .86; transform: translateY(10px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
-@keyframes ultima-pista-card-from-left {
-  from { opacity: 0; transform: translateX(-42px) rotate(-2deg) scale(0.97); }
-  to { opacity: 1; transform: translateX(0) rotate(0) scale(1); }
+@keyframes ultima-pista-shuffle-top {
+  0%, 100% { transform: translate3d(0,0,0) rotate(0); }
+  28% { transform: translate3d(38px,-7px,0) rotate(7deg); }
+  58% { transform: translate3d(-30px,3px,0) rotate(-6deg); }
+  78% { transform: translate3d(12px,-2px,0) rotate(2deg); }
+}
+@keyframes ultima-pista-shuffle-middle {
+  0%, 100% { transform: translateY(12px) scale(.94) rotate(0); }
+  25% { transform: translate3d(-44px,5px,0) scale(.94) rotate(-8deg); }
+  55% { transform: translate3d(34px,-4px,0) scale(.96) rotate(6deg); }
+  80% { transform: translate3d(-10px,7px,0) scale(.95) rotate(-2deg); }
+}
+@keyframes ultima-pista-shuffle-bottom {
+  0%, 100% { transform: translateY(22px) scale(.88) rotate(0); }
+  32% { transform: translate3d(24px,18px,0) scale(.89) rotate(5deg); }
+  62% { transform: translate3d(-20px,20px,0) scale(.9) rotate(-4deg); }
+}
+@keyframes ultima-pista-order-top {
+  0% { transform: translate3d(20px,-5px,0) rotate(4deg); }
+  100% { transform: translate3d(0,0,0) rotate(0); }
+}
+@keyframes ultima-pista-order-middle {
+  0% { transform: translate3d(-24px,8px,0) scale(.94) rotate(-5deg); }
+  100% { transform: translateY(12px) scale(.94) rotate(0); }
 }
 @keyframes ultima-pista-back-reveal {
   from { opacity: 0; transform: scale(0.86) rotateY(-10deg); }
   to { opacity: 1; transform: scale(1) rotateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .nf-card-enter, .nf-answer-reveal, .ultima-pista-card-from-right, .ultima-pista-card-from-left, .ultima-pista-back { animation: none; }
+  .nf-card-enter, .nf-answer-reveal, .ultima-pista-card-settle, .ultima-pista-shuffle-top, .ultima-pista-shuffle-middle, .ultima-pista-shuffle-bottom, .ultima-pista-order-top, .ultima-pista-order-middle, .ultima-pista-back { animation: none; }
 }
 .safe-area {
   padding-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
