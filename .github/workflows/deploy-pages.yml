@@ -33,6 +33,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VITE_PRIVACY_POLICY_URL: https://xavierrlx.github.io/Galerows/privacy.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

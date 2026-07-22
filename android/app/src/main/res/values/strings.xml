@@ -4,5 +4,4 @@
     <string name="title_activity_main">Galerows</string>
     <string name="package_name">com.galerows.app</string>
     <string name="custom_url_scheme">com.galerows.app</string>
-    <string name="admob_app_id">ca-app-pub-5598392740749077~1101732206</string>
 </resources>

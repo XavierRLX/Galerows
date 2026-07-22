@@ -4,6 +4,7 @@ import { FakeAdProvider } from '../features/ads/FakeAdProvider'
 import { canDisplayAds } from '../features/ads/ads.visibility'
 import { initializeReviewPromptState } from '../features/play-store/reviewPrompt.service'
 import { usePremiumStore } from '../features/premium/premium.store'
+import { PrivacyNotice } from '../features/privacy/PrivacyNotice'
 import { AppRoutes } from './routes'
 import { ScrollToTop } from './ScrollToTop'
 import { useNativeAppSetup } from './useNativeAppSetup'
@@ -18,5 +19,5 @@ export function App() {
   useEffect(() => {
     void initializeReviewPromptState()
   }, [])
-  return <BrowserRouter><FakeAdProvider><ScrollToTop /><AppRoutes /></FakeAdProvider></BrowserRouter>
+  return <BrowserRouter><FakeAdProvider><ScrollToTop /><PrivacyNotice /><AppRoutes /></FakeAdProvider></BrowserRouter>
 }

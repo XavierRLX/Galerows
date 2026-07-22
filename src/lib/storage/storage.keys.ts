@@ -22,6 +22,7 @@ export const STORAGE_KEYS = {
   appFirstOpenedAt: 'galerows.app.first-opened-at',
   appReviewPrompt: 'galerows.app.review-prompt',
   appUpdatePrompt: 'galerows.app.update-prompt',
+  privacyNoticeVersion: 'galerows.privacy.notice-version',
 } as const
 
 export function contentOverrideKey(gameId: string, locale: string) {

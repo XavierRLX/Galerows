@@ -8,6 +8,18 @@ import { AppRoutes } from './routes'
 beforeAll(async () => { await initializeI18n() })
 afterEach(() => cleanup())
 describe('app navigation', () => {
+  it('keeps privacy information permanently accessible from settings', async () => {
+    const user = userEvent.setup()
+    render(<MemoryRouter initialEntries={['/settings']}><AppRoutes /></MemoryRouter>)
+    await user.click(await screen.findByRole('button', { name: /privacidade e dados/i }))
+    expect(await screen.findByRole('heading', { name: /seus dados ficam com você/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /política de privacidade completa/i })).toHaveAttribute(
+      'href',
+      'https://xavierrlx.github.io/Galerows/privacy.html',
+    )
+    expect(screen.getByRole('button', { name: /apagar todos os dados/i })).toBeInTheDocument()
+  })
+
   it('keeps premium entry points hidden while ads are temporarily disabled', async () => {
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
     expect(screen.queryByRole('button', { name: /premium/i })).not.toBeInTheDocument()

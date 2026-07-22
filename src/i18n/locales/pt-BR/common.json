@@ -3,9 +3,35 @@
     "title": "Configurações",
     "language": "Idioma",
     "offlineNote": "A escolha de idioma fica salva neste dispositivo e o app continua funcionando offline.",
-    "privacyOptions": "Opções de privacidade",
+    "privacyCenter": "Privacidade e dados",
     "rateApp": "Avaliar na Play Store",
     "version": "Versão {{version}}"
+  },
+  "privacyNotice": {
+    "title": "Privacidade no Galerows",
+    "description": "Nomes, partidas e preferências ficam somente neste aparelho. O app não exige conta e esta versão não exibe anúncios nem envia esses dados para servidores do Galerows.",
+    "continue": "Entendi e continuar",
+    "readPolicy": "Ver privacidade e dados"
+  },
+  "privacy": {
+    "title": "Privacidade e dados",
+    "summaryTitle": "Seus dados ficam com você",
+    "summary": "O Galerows funciona sem conta e sem banco de dados próprio. Esta versão não contém anúncios nem assinatura. As informações dos jogos são processadas e armazenadas localmente.",
+    "storedTitle": "O que fica no aparelho",
+    "storedDescription": "Podem ficar salvos nomes de jogadores, nome da galera, partidas em andamento, pontuações, favoritos, idioma e preferências. A câmera é usada apenas para ler QR Codes no próprio aparelho; imagens não são gravadas nem enviadas.",
+    "openPolicy": "Abrir Política de Privacidade completa",
+    "contact": "Falar sobre privacidade",
+    "deleteTitle": "Excluir dados locais",
+    "deleteDescription": "A exclusão acontece neste aparelho e não pode ser desfeita.",
+    "clearGameplay": "Apagar nomes, partidas e progresso",
+    "clearAll": "Apagar todos os dados do Galerows",
+    "confirmGameplayTitle": "Apagar dados dos jogos?",
+    "confirmGameplayDescription": "Nomes, grupos, partidas, rankings, favoritos e progresso serão removidos. O idioma e o aviso de privacidade serão preservados.",
+    "confirmAllTitle": "Restaurar o app?",
+    "confirmAllDescription": "Todos os dados locais do Galerows serão removidos, incluindo idioma e preferências. Esta ação não pode ser desfeita.",
+    "cancel": "Cancelar",
+    "confirm": "Apagar",
+    "clearing": "Apagando..."
   },
   "updates": {
     "availableTitle": "Atualização disponível",

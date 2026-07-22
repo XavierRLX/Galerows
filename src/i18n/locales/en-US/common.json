@@ -3,9 +3,35 @@
     "title": "Settings",
     "language": "Language",
     "offlineNote": "Your language choice is saved on this device and the app continues to work offline.",
-    "privacyOptions": "Privacy options",
+    "privacyCenter": "Privacy and data",
     "rateApp": "Rate on Play Store",
     "version": "Version {{version}}"
+  },
+  "privacyNotice": {
+    "title": "Privacy at Galerows",
+    "description": "Names, matches, and preferences stay on this device. The app requires no account, and this version shows no ads or sends this data to Galerows servers.",
+    "continue": "Got it, continue",
+    "readPolicy": "View privacy and data"
+  },
+  "privacy": {
+    "title": "Privacy and data",
+    "summaryTitle": "Your data stays with you",
+    "summary": "Galerows works without an account or its own database. This version contains no ads or subscriptions. Game information is processed and stored locally.",
+    "storedTitle": "What stays on the device",
+    "storedDescription": "Player names, group name, active matches, scores, favorites, language, and preferences may be saved. The camera is used only to read QR Codes on the device; images are not recorded or transmitted.",
+    "openPolicy": "Open the full Privacy Policy",
+    "contact": "Contact us about privacy",
+    "deleteTitle": "Delete local data",
+    "deleteDescription": "Deletion happens on this device and cannot be undone.",
+    "clearGameplay": "Delete names, matches, and progress",
+    "clearAll": "Delete all Galerows data",
+    "confirmGameplayTitle": "Delete game data?",
+    "confirmGameplayDescription": "Names, groups, matches, rankings, favorites, and progress will be removed. Language and the privacy notice will be preserved.",
+    "confirmAllTitle": "Reset the app?",
+    "confirmAllDescription": "All local Galerows data will be removed, including language and preferences. This action cannot be undone.",
+    "cancel": "Cancel",
+    "confirm": "Delete",
+    "clearing": "Deleting..."
   },
   "updates": {
     "availableTitle": "Update available",

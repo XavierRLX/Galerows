@@ -3,9 +3,35 @@
     "title": "Configuración",
     "language": "Idioma",
     "offlineNote": "Tu idioma queda guardado en este dispositivo y la app sigue funcionando sin conexión.",
-    "privacyOptions": "Opciones de privacidad",
+    "privacyCenter": "Privacidad y datos",
     "rateApp": "Calificar en Play Store",
     "version": "Versión {{version}}"
+  },
+  "privacyNotice": {
+    "title": "Privacidad en Galerows",
+    "description": "Los nombres, partidas y preferencias permanecen en este dispositivo. La app no requiere cuenta y esta versión no muestra anuncios ni envía estos datos a servidores de Galerows.",
+    "continue": "Entendido, continuar",
+    "readPolicy": "Ver privacidad y datos"
+  },
+  "privacy": {
+    "title": "Privacidad y datos",
+    "summaryTitle": "Tus datos se quedan contigo",
+    "summary": "Galerows funciona sin cuenta ni base de datos propia. Esta versión no contiene anuncios ni suscripciones. La información de los juegos se procesa y almacena localmente.",
+    "storedTitle": "Qué queda en el dispositivo",
+    "storedDescription": "Pueden guardarse nombres de jugadores, nombre del grupo, partidas activas, puntajes, favoritos, idioma y preferencias. La cámara se usa solo para leer códigos QR en el dispositivo; las imágenes no se graban ni se envían.",
+    "openPolicy": "Abrir la Política de Privacidad completa",
+    "contact": "Contactar sobre privacidad",
+    "deleteTitle": "Eliminar datos locales",
+    "deleteDescription": "La eliminación ocurre en este dispositivo y no se puede deshacer.",
+    "clearGameplay": "Eliminar nombres, partidas y progreso",
+    "clearAll": "Eliminar todos los datos de Galerows",
+    "confirmGameplayTitle": "¿Eliminar datos de los juegos?",
+    "confirmGameplayDescription": "Se eliminarán nombres, grupos, partidas, clasificaciones, favoritos y progreso. Se conservarán el idioma y el aviso de privacidad.",
+    "confirmAllTitle": "¿Restablecer la app?",
+    "confirmAllDescription": "Se eliminarán todos los datos locales de Galerows, incluidos el idioma y las preferencias. Esta acción no se puede deshacer.",
+    "cancel": "Cancelar",
+    "confirm": "Eliminar",
+    "clearing": "Eliminando..."
   },
   "updates": {
     "availableTitle": "Actualización disponible",
