@@ -1,5 +1,7 @@
 # Arquitetura Multiplayer do Galerows
 
+> **Nota de atualização de escopo — 11/10/2026:** este documento mantém o registro histórico das decisões e do roadmap online-first das Fases 1–3. A prioridade de produto posterior, estabelecida em `docs/multiplayer-offline-first-requirements.md`, é **LAN offline-first, exclusivamente mobile, com Impostor da Palavra como primeiro jogo multiplayer e Adedonha como segundo**. Referências abaixo à Adedonha como primeira integração, ao Impostor como segunda validação e à ordem online-first foram superadas; o núcleo genérico, contratos e invariantes permanecem válidos. Esta nota não implica conclusão de gates pendentes.
+
 Atualizado em: 27 de setembro de 2026
 
 ## 1. Status
@@ -633,3 +635,8 @@ A Fase 2 pode começar somente depois que o gestor revisar e aprovar esta Fase 1
 - a divergência do Impostor continua bloqueando apenas o futuro `GameAdapter` desse jogo.
 
 As decisões da seção 24 não bloqueiam o início do core porque tratam de infraestrutura concreta, evolução futura, políticas específicas de sala/jogo ou detalhes de produção. Até a aprovação desta Fase 1.2, este documento permanece referência para revisão e não autoriza implementação.
+
+
+## Adendo de roadmap — Sala persistente (11/10/2026)
+
+O plano histórico desta arquitetura contém referências a Adedonha como primeiro consumidor e a lifecycle ainda incompleto. Prevalece a decisão posterior de **Room persistente (identidade, membership, conexão, revision e host) separada de GameSession (jogo/configurações/rodadas/segredos)**, permitindo `Impostor → lobby → Adedonha` na mesma sala. O runtime atual tem GameAdapter fixo, portanto mudança de jogos requer design técnico de coordenação autoritativa; não basta trocar a rota React. Padrão de entrada: QR/convite seguro; descoberta LAN automática será spike separado (não anunciar token e nunca dispensar pinning/código presencial). Saída definitiva revoga credencial, desconexão transitória preserva membership. A Fase LAN Task 6 está validada apenas no Android experimental; Task 7 Release será atualizada após a evolução do lifecycle. **Especificação normativa de produto:** `multiplayer-persistent-lobby-spec.md`; **etapas de execução:** `superpowers/plans/2026-10-11-persistent-lobby-roadmap.md`. Este adendo não altera a semântica do core implementado.
