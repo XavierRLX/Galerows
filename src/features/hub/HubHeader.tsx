@@ -16,12 +16,12 @@ export function HubHeader() {
         <div className="absolute -bottom-24 left-1/2 size-72 -translate-x-1/2 rounded-full bg-fuchsia-500/20 blur-3xl" />
 
         <div className="relative flex items-center justify-between gap-4">
-          <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-cyan-300/40 bg-slate-950/70 shadow-lg shadow-fuchsia-500/20 ring-1 ring-white/10">
+          <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#b8a0ff] ring-1 ring-white/10">
             <img
               alt="Galerows"
               className="size-full object-cover"
               height="48"
-              src="/icon-galerows.webp"
+              src="/assets/brand/galerows-app-icon.svg"
               width="48"
             />
           </div>
