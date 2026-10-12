@@ -55,6 +55,9 @@ const LanDiagnosticScreen = import.meta.env.VITE_LAN_DIAGNOSTICS === '1'
 const LanCoreProbeScreen = import.meta.env.VITE_LAN_CORE_PROBE === '1'
   ? lazy(() => import('../features/multiplayer/lan/LanCoreProbeScreen').then((module) => ({ default: module.LanCoreProbeScreen })))
   : null
+const LanPersistentRoomProbeScreen = import.meta.env.VITE_LAN_ROOM_V2_PROBE === '1' && Capacitor.isNativePlatform()
+  ? lazy(() => import('../features/multiplayer/lan/LanPersistentRoomProbeScreen').then((module) => ({ default: module.LanPersistentRoomProbeScreen })))
+  : null
 const LanRoomScreen = import.meta.env.VITE_LAN_ROOM_UI === '1' && Capacitor.isNativePlatform()
   ? lazy(() => import('../features/multiplayer/lan/LanRoomScreen').then((module) => ({ default: module.LanRoomScreen })))
   : null
@@ -69,9 +72,10 @@ export function AppRoutes() {
       <Routes>
         {LanDiagnosticScreen ? <Route path="/__lan-diagnostic" element={<LanDiagnosticScreen />} /> : null}
         {LanCoreProbeScreen ? <Route path="/__lan-core" element={<LanCoreProbeScreen />} /> : null}
+        {LanPersistentRoomProbeScreen ? <Route path="/__lan-room-v2" element={<LanPersistentRoomProbeScreen />} /> : null}
         {LanRoomScreen ? <Route path="/__lan-room" element={<LanRoomScreen />} /> : null}
         <Route element={<AppShell />}>
-          <Route index element={LanRoomScreen ? <Navigate replace to="/__lan-room" /> : LanCoreProbeScreen ? <Navigate replace to="/__lan-core" /> : LanDiagnosticScreen ? <Navigate replace to="/__lan-diagnostic" /> : <HubScreen />} />
+          <Route index element={LanPersistentRoomProbeScreen ? <Navigate replace to="/__lan-room-v2" /> : LanRoomScreen ? <Navigate replace to="/__lan-room" /> : LanCoreProbeScreen ? <Navigate replace to="/__lan-core" /> : LanDiagnosticScreen ? <Navigate replace to="/__lan-diagnostic" /> : <HubScreen />} />
           <Route path="settings" element={<SettingsScreen />} />
           <Route path="settings/privacy" element={<PrivacyScreen />} />
           {canDisplayAds() ? <Route path="premium" element={<PremiumScreen />} /> : null}
