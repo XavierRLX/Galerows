@@ -57,9 +57,10 @@ export class LanSecureNativeClient {
   onV2Event(listener: (event: { type: string; frame?: PersistentLanFrame }) => void) {
     return native.addListener('secureLanEvent', event => {
       if (event.type === 'message') {
-        if (!event.data) return
+        if (!event.data) { listener({ type: 'invalid_frame' }); return }
         const parsed = decodePersistentLanFrame(event.data)
         if (parsed.ok) listener({ type: 'message', frame: parsed.frame })
+        else listener({ type: 'invalid_frame' })
       } else listener({ type: event.type })
     })
   }

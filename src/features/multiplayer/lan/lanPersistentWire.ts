@@ -2,6 +2,8 @@ import { isJsonValue, parseRoomCommandV2, PERSISTENT_ROOM_MAX_FRAME_BYTES,
   PERSISTENT_ROOM_PROTOCOL_VERSION } from '../persistentProtocol'
 import type { RoomCommandResultV2, RoomEventV2, RoomSnapshotV2 } from '../persistentProtocol'
 import type { RoomCommandError } from '../persistentProtocol'
+import { validPersistentLanInvite } from './lanPersistentInvite'
+import type { PersistentLanInvite } from './lanPersistentInvite'
 
 const VERSION = PERSISTENT_ROOM_PROTOCOL_VERSION
 
@@ -13,7 +15,30 @@ export interface PersistentResyncRequest {
   lastAppliedRevision: number
 }
 
+export type PersistentAdmissionError = 'invalid_invite' | 'invite_expired' | 'invite_used'
+  | 'too_many_attempts' | 'room_closed' | 'room_full' | 'coordinator_rejected'
 export type PersistentLanFrame =
+  | { kind: 'resumeHello'; protocolVersion: typeof VERSION; roomId: string; playerId: string; resumeToken: string }
+  | { kind: 'rekeyOfferV2'; protocolVersion: typeof VERSION; roomId: string; playerId: string;
+      rekeyId: string; resumeToken: string; resumeExpiresAt: number }
+  | { kind: 'rekeyAckV2' | 'rekeyConfirmedV2'; protocolVersion: typeof VERSION;
+      roomId: string; playerId: string; rekeyId: string }
+  | { kind: 'resumedV2'; protocolVersion: typeof VERSION; playerId: string; snapshot: RoomSnapshotV2;
+      resumeToken: string; resumeExpiresAt: number; resumeId: string }
+  | { kind: 'resumeAckV2' | 'resumeConfirmedV2'; protocolVersion: typeof VERSION;
+      roomId: string; playerId: string; resumeId: string }
+  | { kind: 'leaveRequestV2'; protocolVersion: typeof VERSION; roomId: string; playerId: string; commandId: string }
+  | { kind: 'leaveConfirmedV2'; protocolVersion: typeof VERSION; roomId: string; playerId: string;
+      commandId: string; revision: number }
+  | { kind: 'leaveRejectedV2'; protocolVersion: typeof VERSION; roomId: string; playerId: string;
+      commandId: string; error: 'revocation_failed' | 'internal_authority_failure' }
+  | { kind: 'joinRequestV2'; protocolVersion: typeof VERSION; invite: PersistentLanInvite }
+  | { kind: 'admittedV2'; protocolVersion: typeof VERSION; playerId: string; snapshot: RoomSnapshotV2;
+      admissionId: string; resumeToken: string; resumeExpiresAt: number }
+  | { kind: 'admissionAckV2' | 'admissionConfirmedV2'; protocolVersion: typeof VERSION;
+      roomId: string; playerId: string; admissionId: string }
+  | { kind: 'rejectedV2'; protocolVersion: typeof VERSION; error: PersistentAdmissionError }
+  | { kind: 'roomClosedV2'; protocolVersion: typeof VERSION; roomId: string }
   | { kind: 'commandV2'; protocolVersion: typeof VERSION; command: import('../persistentProtocol').RoomCommandV2 }
   | { kind: 'commandResultV2'; protocolVersion: typeof VERSION; result: RoomCommandResultV2 }
   | { kind: 'snapshotV2'; protocolVersion: typeof VERSION; snapshot: RoomSnapshotV2 }
@@ -49,6 +74,93 @@ export function decodePersistentLanFrame(raw: string): PersistentLanDecodeResult
   if (value.protocolVersion !== VERSION) return { ok: false, error: 'incompatible_protocol' }
   if (!isJsonValue(value)) return invalid()
 
+  if (value.kind === 'resumeHello') {
+    if (!fields(value, 'kind', 'protocolVersion', 'roomId', 'playerId', 'resumeToken')
+      || !nonEmpty(value.roomId) || !nonEmpty(value.playerId) || !hexToken(value.resumeToken)) return invalid()
+    return { ok: true, frame: { kind: 'resumeHello', protocolVersion: VERSION, roomId: value.roomId,
+      playerId: value.playerId, resumeToken: value.resumeToken } }
+  }
+  if (value.kind === 'rekeyOfferV2') {
+    if (!fields(value, 'kind', 'protocolVersion', 'roomId', 'playerId', 'rekeyId', 'resumeToken', 'resumeExpiresAt')
+      || !nonEmpty(value.roomId) || !nonEmpty(value.playerId)
+      || !hexToken(value.rekeyId) || !hexToken(value.resumeToken)
+      || !Number.isSafeInteger(value.resumeExpiresAt) || (value.resumeExpiresAt as number) <= 0) return invalid()
+    return { ok: true, frame: { kind: 'rekeyOfferV2', protocolVersion: VERSION,
+      roomId: value.roomId, playerId: value.playerId, rekeyId: value.rekeyId,
+      resumeToken: value.resumeToken, resumeExpiresAt: value.resumeExpiresAt as number } }
+  }
+  if (value.kind === 'rekeyAckV2' || value.kind === 'rekeyConfirmedV2') {
+    if (!fields(value, 'kind', 'protocolVersion', 'roomId', 'playerId', 'rekeyId')
+      || !nonEmpty(value.roomId) || !nonEmpty(value.playerId) || !hexToken(value.rekeyId)) return invalid()
+    return { ok: true, frame: { kind: value.kind, protocolVersion: VERSION,
+      roomId: value.roomId, playerId: value.playerId, rekeyId: value.rekeyId } }
+  }
+  if (value.kind === 'resumedV2') {
+    if (!fields(value, 'kind', 'protocolVersion', 'playerId', 'snapshot', 'resumeToken', 'resumeExpiresAt', 'resumeId')
+      || !nonEmpty(value.playerId) || !validSnapshot(value.snapshot)
+      || !value.snapshot.roomState.members.some(member => member.playerId === value.playerId && member.role === 'guest')
+      || !hexToken(value.resumeToken) || !hexToken(value.resumeId)
+      || !Number.isSafeInteger(value.resumeExpiresAt) || (value.resumeExpiresAt as number) <= 0) return invalid()
+    return { ok: true, frame: { kind: 'resumedV2', protocolVersion: VERSION, playerId: value.playerId,
+      snapshot: value.snapshot, resumeToken: value.resumeToken, resumeExpiresAt: value.resumeExpiresAt as number,
+      resumeId: value.resumeId } }
+  }
+  if (value.kind === 'resumeAckV2' || value.kind === 'resumeConfirmedV2') {
+    if (!fields(value, 'kind', 'protocolVersion', 'roomId', 'playerId', 'resumeId')
+      || !nonEmpty(value.roomId) || !nonEmpty(value.playerId) || !hexToken(value.resumeId)) return invalid()
+    return { ok: true, frame: { kind: value.kind, protocolVersion: VERSION,
+      roomId: value.roomId, playerId: value.playerId, resumeId: value.resumeId } }
+  }
+  if (value.kind === 'leaveRequestV2') {
+    if (!fields(value, 'kind', 'protocolVersion', 'roomId', 'playerId', 'commandId')
+      || !nonEmpty(value.roomId) || !nonEmpty(value.playerId) || !nonEmpty(value.commandId)) return invalid()
+    return { ok: true, frame: { kind: 'leaveRequestV2', protocolVersion: VERSION,
+      roomId: value.roomId, playerId: value.playerId, commandId: value.commandId } }
+  }
+  if (value.kind === 'leaveConfirmedV2') {
+    if (!fields(value, 'kind', 'protocolVersion', 'roomId', 'playerId', 'commandId', 'revision')
+      || !nonEmpty(value.roomId) || !nonEmpty(value.playerId) || !nonEmpty(value.commandId)
+      || !revision(value.revision)) return invalid()
+    return { ok: true, frame: { kind: 'leaveConfirmedV2', protocolVersion: VERSION,
+      roomId: value.roomId, playerId: value.playerId, commandId: value.commandId, revision: value.revision } }
+  }
+  if (value.kind === 'leaveRejectedV2') {
+    if (!fields(value, 'kind', 'protocolVersion', 'roomId', 'playerId', 'commandId', 'error')
+      || !nonEmpty(value.roomId) || !nonEmpty(value.playerId) || !nonEmpty(value.commandId)
+      || (value.error !== 'revocation_failed' && value.error !== 'internal_authority_failure')) return invalid()
+    return { ok: true, frame: { kind: 'leaveRejectedV2', protocolVersion: VERSION,
+      roomId: value.roomId, playerId: value.playerId, commandId: value.commandId,
+      error: value.error } }
+  }
+  if (value.kind === 'joinRequestV2') {
+    if (!fields(value, 'kind', 'protocolVersion', 'invite')
+      || !validPersistentLanInvite(value.invite)) return invalid()
+    return { ok: true, frame: { kind: 'joinRequestV2', protocolVersion: VERSION, invite: value.invite } }
+  }
+  if (value.kind === 'admittedV2') {
+    if (!fields(value, 'kind', 'protocolVersion', 'playerId', 'snapshot', 'admissionId', 'resumeToken', 'resumeExpiresAt')
+      || !nonEmpty(value.playerId) || !validSnapshot(value.snapshot)
+      || !value.snapshot.roomState.members.some(member => member.playerId === value.playerId && member.role === 'guest')
+      || !hexToken(value.admissionId) || !hexToken(value.resumeToken)
+      || !Number.isSafeInteger(value.resumeExpiresAt) || (value.resumeExpiresAt as number) <= 0) return invalid()
+    return { ok: true, frame: { kind: 'admittedV2', protocolVersion: VERSION, playerId: value.playerId,
+      snapshot: value.snapshot, admissionId: value.admissionId, resumeToken: value.resumeToken,
+      resumeExpiresAt: value.resumeExpiresAt as number } }
+  }
+  if (value.kind === 'admissionAckV2' || value.kind === 'admissionConfirmedV2') {
+    if (!fields(value, 'kind', 'protocolVersion', 'roomId', 'playerId', 'admissionId')
+      || !nonEmpty(value.roomId) || !nonEmpty(value.playerId) || !hexToken(value.admissionId)) return invalid()
+    return { ok: true, frame: { kind: value.kind, protocolVersion: VERSION,
+      roomId: value.roomId, playerId: value.playerId, admissionId: value.admissionId } }
+  }
+  if (value.kind === 'rejectedV2') {
+    if (!fields(value, 'kind', 'protocolVersion', 'error') || !admissionError(value.error)) return invalid()
+    return { ok: true, frame: { kind: 'rejectedV2', protocolVersion: VERSION, error: value.error } }
+  }
+  if (value.kind === 'roomClosedV2') {
+    if (!fields(value, 'kind', 'protocolVersion', 'roomId') || !nonEmpty(value.roomId)) return invalid()
+    return { ok: true, frame: { kind: 'roomClosedV2', protocolVersion: VERSION, roomId: value.roomId } }
+  }
   if (value.kind === 'commandV2') {
     const parsed = parseRoomCommandV2(value.command)
     if (!parsed.ok) return invalid()
@@ -160,6 +272,19 @@ function validGameProjection(value: unknown, sessionId: unknown, selectedGameId:
     && Object.hasOwn(value, 'data') && isJsonValue(value.data)
 }
 
+function fields(value: Record<string, unknown>, ...names: string[]): boolean {
+  return Object.keys(value).length === names.length && names.every(name => Object.hasOwn(value, name))
+}
+function hexToken(value: unknown): value is string {
+  return typeof value === 'string' && /^[0-9a-f]{64}$/.test(value)
+}
+const admissionErrors: ReadonlySet<PersistentAdmissionError> = new Set([
+  'invalid_invite', 'invite_expired', 'invite_used', 'too_many_attempts',
+  'room_closed', 'room_full', 'coordinator_rejected',
+])
+function admissionError(value: unknown): value is PersistentAdmissionError {
+  return admissionErrors.has(value as PersistentAdmissionError)
+}
 function record(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }

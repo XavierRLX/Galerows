@@ -3,6 +3,8 @@ package com.galerows.app;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Looper;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -18,6 +20,8 @@ public class LanServerPlugin extends Plugin {
     private volatile LanSocketServer server;
     private volatile LanTlsIdentity tlsIdentity;
     private volatile LanHelloAuthenticator helloAuthenticator;
+    private final Handler expiryHandler = new Handler(Looper.getMainLooper());
+    private Runnable v2ExpiryTask;
 
     @PluginMethod
     public synchronized void start(PluginCall call) {
@@ -165,6 +169,23 @@ public class LanServerPlugin extends Plugin {
             server = instance;
             tlsIdentity = identity;
             helloAuthenticator = gate;
+            long delayMs = LanV2RoomLifetimePolicy.watchdogDelayMs(protocolVersion);
+            if (delayMs > 0) {
+                // Native watchdog also works when the JS WebView's timer has been suspended.
+                Runnable task = () -> {
+                    synchronized (LanServerPlugin.this) {
+                        if (server == instance) {
+                            JSObject expired = new JSObject();
+                            expired.put("type", "room_expired");
+                            expired.put("peerId", "");
+                            notifyListeners("lanEvent", expired);
+                            shutdown();
+                        }
+                    }
+                };
+                v2ExpiryTask = task;
+                expiryHandler.postDelayed(task, delayMs);
+            }
             JSObject result = new JSObject();
             result.put("port", boundPort);
             if (identity != null) result.put("fingerprint", identity.fingerprint());
@@ -208,6 +229,10 @@ public class LanServerPlugin extends Plugin {
     }
 
     private synchronized void shutdown() {
+        if (v2ExpiryTask != null) {
+            expiryHandler.removeCallbacks(v2ExpiryTask);
+            v2ExpiryTask = null;
+        }
         LanSocketServer current = server;
         server = null;
         helloAuthenticator = null;

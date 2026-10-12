@@ -253,7 +253,8 @@ export class AuthoritativeRoomRuntimeV2 {
     try {
       const snapshot = this.makeSnapshot(this.state, this.members, playerId, this.revision)
       if (!isJsonValue(snapshot)) return { ok: false, error: 'internal_authority_failure' }
-      return roomFrameFits(snapshot) ? { ok: true, snapshot } : { ok: false, error: 'frame_too_large' }
+      return roomFrameFits({ kind: 'snapshotV2', protocolVersion: PERSISTENT_ROOM_PROTOCOL_VERSION, snapshot })
+        ? { ok: true, snapshot } : { ok: false, error: 'frame_too_large' }
     } catch { return { ok: false, error: 'internal_authority_failure' } }
   }
 
@@ -313,11 +314,15 @@ export class AuthoritativeRoomRuntimeV2 {
       for (const member of members.values()) {
         const snapshot = this.makeSnapshot(state, members, member.playerId, revision)
         if (!isJsonValue(snapshot)) return { ok: false, error: 'internal_authority_failure' }
-        if (!roomFrameFits(snapshot)) return { ok: false, error: 'frame_too_large' }
+        if (!roomFrameFits({ kind: 'snapshotV2', protocolVersion: PERSISTENT_ROOM_PROTOCOL_VERSION, snapshot })) {
+          return { ok: false, error: 'frame_too_large' }
+        }
         snapshots.set(member.playerId, snapshot)
         if (member.connectionId) {
           const event: RoomEventV2 = { ...snapshot, kind: 'projection' }
-          if (!roomFrameFits(event)) return { ok: false, error: 'frame_too_large' }
+          if (!roomFrameFits({ kind: 'eventV2', protocolVersion: PERSISTENT_ROOM_PROTOCOL_VERSION, event })) {
+            return { ok: false, error: 'frame_too_large' }
+          }
           deliveries.push({ playerId: member.playerId, connectionId: member.connectionId, event })
         }
       }
@@ -376,6 +381,9 @@ export class RoomCoordinatorV2 {
   disconnect(connectionId: string) { return this.runExclusive(runtime => runtime.disconnect(connectionId)) }
   reassociate(playerId: string, connectionId: string) { return this.runExclusive(runtime => runtime.reassociate(playerId, connectionId)) }
   processCommand(input: unknown, connectionId: string) { return this.runExclusive(runtime => runtime.processCommand(input, connectionId)) }
+  snapshotFor(playerId: string, connectionId: string) {
+    return this.runExclusive(runtime => runtime.snapshotFor(playerId, connectionId))
+  }
 }
 
 function cloneMembers(members: ReadonlyMap<string, Membership>) {

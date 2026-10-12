@@ -49,9 +49,10 @@ export class LanNativeHost {
   onV2Event(listener: (event: { type: string; peerId: string; frame?: PersistentLanFrame }) => void) {
     return native.addListener('lanEvent', event => {
       if (event.type === 'message') {
-        if (!event.data) return
+        if (!event.data) { listener({ type: 'invalid_frame', peerId: event.peerId }); return }
         const parsed = decodePersistentLanFrame(event.data)
         if (parsed.ok) listener({ type: 'message', peerId: event.peerId, frame: parsed.frame })
+        else listener({ type: 'invalid_frame', peerId: event.peerId })
       } else listener({ type: event.type, peerId: event.peerId })
     })
   }

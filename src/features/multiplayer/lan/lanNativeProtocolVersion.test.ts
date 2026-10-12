@@ -67,7 +67,12 @@ describe('native protocol version opt-in bridge', () => {
     const cb = native.client.addListener.mock.calls[0][1] as (event: unknown) => void
     cb({ type: 'message', data: JSON.stringify(frame) })
     cb({ type: 'message', data: JSON.stringify({ kind: 'roomClosed', protocolVersion: 1, roomId: 'r' }) })
-    expect(collected).toEqual([{ type: 'message', frame }])
+    expect(collected).toEqual([{ type: 'message', frame }, { type: 'invalid_frame' }])
+    const hostEvents: unknown[] = []
+    await host.onV2Event(event => hostEvents.push(event))
+    const hostCb = native.server.addListener.mock.calls[0][1] as (event: unknown) => void
+    hostCb({ type: 'message', peerId: 'p', data: '{bad' })
+    expect(hostEvents).toEqual([{ type: 'invalid_frame', peerId: 'p' }])
   })
 
   it('stores explicitly versioned resume credentials without losing TLS pin', async () => {
