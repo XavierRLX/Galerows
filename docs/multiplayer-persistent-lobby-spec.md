@@ -1,5 +1,7 @@
 # Galerows — Sala persistente e lobby multi-jogos (produto + arquitetura v0.1)
 
+> **SUPERSEDE UX — 12/10/2026:** o documento mais recente `docs/galerows-games-modes-local-discovery-v0.2.md` estabelece catálogo como entrada principal, modos por jogo, salas descobertas na LAN, fallback QR e código visual de seis dígitos, sem senha ou comparação manual extra. As seções antigas sobre entrada obrigatória por código presencial e convite longo são **históricas**, não orientação de UX atual. **Persistem os invariantes de segurança**: Room/GameSession, host autoritativo, WSS, secrets privados e gate de autenticação antes do novo ingresso; não remover proteções existentes até revisão técnica aprovada. Plano: `docs/superpowers/plans/2026-10-12-games-first-discovery-gates.md`.
+
 **Decisão de produto aprovada em 11/10/2026.** Este documento registra o novo comportamento-alvo do multiplayer. É **especificação, não implementação**. Nenhuma Task 7, integração de jogo ou descoberta de salas foi autorizada por este documento.
 
 ## 1. Objetivo e limites
