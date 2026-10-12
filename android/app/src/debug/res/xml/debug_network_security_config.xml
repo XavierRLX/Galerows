@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Physical hotspot host for the 4A offline test; Debug only. -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain>10.245.112.98</domain>
+    </domain-config>
+</network-security-config>

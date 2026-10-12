@@ -60,6 +60,22 @@ type TestRuntime = AuthoritativeRoomRuntime<
 >
 
 describe('AuthoritativeRoomRuntime', () => {
+  it('does not retain a partial membership if join projection throws', () => {
+    const base = createTestAdapter({ parseCalls: 0, applyCalls: 0 })
+    let nextPlayer = 0
+    const runtime = new AuthoritativeRoomRuntime({ roomId: 'room-1',
+      adapter: { ...base, projectPrivate: (state, playerId) => {
+        if (playerId === 'player-2') throw new Error('projection_failed')
+        return base.projectPrivate(state, playerId)
+      } },
+      createPlayerId: () => `player-${++nextPlayer}` })
+    expect(runtime.join('connection-1')?.playerId).toBe('player-1')
+    expect(() => runtime.join('connection-2')).toThrow('projection_failed')
+    expect(runtime.getRevision()).toBe(1)
+    expect(runtime.hasMembership('player-2')).toBe(false)
+    expect(runtime.createResyncSnapshot(resyncRequest('player-1', 1), 'connection-1'))
+      .toMatchObject({ ok: true, snapshot: { roomState: { playerIds: ['player-1'] } } })
+  })
   it('starts room revision at 0', () => {
     const { runtime } = createRuntime()
     expect(runtime.getRevision()).toBe(0)

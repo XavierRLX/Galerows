@@ -8,6 +8,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.galerows.app"
+    testBuildType (project.findProperty('lanTestBuildType') ?: 'secureProbe')
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.galerows.app"
@@ -41,6 +42,15 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        secureProbe {
+            initWith release
+            applicationIdSuffix '.secureprobe'
+            signingConfig signingConfigs.debug
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+            matchingFallbacks = ['release']
+        }
     }
 }
 
@@ -59,6 +69,7 @@ dependencies {
     implementation 'com.google.android.play:review:2.0.2'
     implementation project(':capacitor-android')
     testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.json:json:20240303"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')

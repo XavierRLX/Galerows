@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application android:networkSecurityConfig="@xml/debug_network_security_config">
+        <meta-data android:name="com.galerows.app.ALLOW_CLEARTEXT_POC" android:value="true" />
+    </application>
+</manifest>

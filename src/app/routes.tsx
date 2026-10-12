@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react'
+import { Capacitor } from '@capacitor/core'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from '../components/layout/AppShell'
 import { canDisplayAds } from '../features/ads/ads.visibility'
@@ -48,6 +49,15 @@ const Top10ResultScreen = lazy(() => import('../features/top-10/Top10ResultScree
 const Top10SetupScreen = lazy(() => import('../features/top-10/Top10SetupScreen').then((module) => ({ default: module.Top10SetupScreen })))
 const UltimaPistaHomeScreen = lazy(() => import('../features/ultima-pista/UltimaPistaHomeScreen').then((module) => ({ default: module.UltimaPistaHomeScreen })))
 const UltimaPistaPlayScreen = lazy(() => import('../features/ultima-pista/UltimaPistaPlayScreen').then((module) => ({ default: module.UltimaPistaPlayScreen })))
+const LanDiagnosticScreen = import.meta.env.VITE_LAN_DIAGNOSTICS === '1'
+  ? lazy(() => import('../features/multiplayer/lan/LanDiagnosticScreen').then((module) => ({ default: module.LanDiagnosticScreen })))
+  : null
+const LanCoreProbeScreen = import.meta.env.VITE_LAN_CORE_PROBE === '1'
+  ? lazy(() => import('../features/multiplayer/lan/LanCoreProbeScreen').then((module) => ({ default: module.LanCoreProbeScreen })))
+  : null
+const LanRoomScreen = import.meta.env.VITE_LAN_ROOM_UI === '1' && Capacitor.isNativePlatform()
+  ? lazy(() => import('../features/multiplayer/lan/LanRoomScreen').then((module) => ({ default: module.LanRoomScreen })))
+  : null
 
 function RouteLoading() {
   return <div aria-label="Carregando tela" className="min-h-dvh bg-slate-950" role="status" />
@@ -57,8 +67,11 @@ export function AppRoutes() {
   return (
     <Suspense fallback={<RouteLoading />}>
       <Routes>
+        {LanDiagnosticScreen ? <Route path="/__lan-diagnostic" element={<LanDiagnosticScreen />} /> : null}
+        {LanCoreProbeScreen ? <Route path="/__lan-core" element={<LanCoreProbeScreen />} /> : null}
+        {LanRoomScreen ? <Route path="/__lan-room" element={<LanRoomScreen />} /> : null}
         <Route element={<AppShell />}>
-          <Route index element={<HubScreen />} />
+          <Route index element={LanRoomScreen ? <Navigate replace to="/__lan-room" /> : LanCoreProbeScreen ? <Navigate replace to="/__lan-core" /> : LanDiagnosticScreen ? <Navigate replace to="/__lan-diagnostic" /> : <HubScreen />} />
           <Route path="settings" element={<SettingsScreen />} />
           <Route path="settings/privacy" element={<PrivacyScreen />} />
           {canDisplayAds() ? <Route path="premium" element={<PremiumScreen />} /> : null}

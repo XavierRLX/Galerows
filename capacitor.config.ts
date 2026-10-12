@@ -6,6 +6,9 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   backgroundColor: '#020617',
   android: {
+    // This is enabled only while building the dedicated LAN diagnostic APK.
+    // Capacitor's https://localhost origin otherwise blocks ws:// LAN sockets.
+    allowMixedContent: process.env.VITE_LAN_POC_CLEARTEXT === '1',
     // The first store release has no monetization. Keep AdMob and RevenueCat
     // out of the native binary until their respective Play Console releases.
     includePlugins: [

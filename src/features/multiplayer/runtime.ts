@@ -117,18 +117,24 @@ export class AuthoritativeRoomRuntime<
     const playerId = this.createUniquePlayerId()
     this.memberships.set(playerId, { playerId, connectionId })
     this.revision += 1
-    const afterRoomState = this.projectRoomState()
-
-    return {
-      playerId,
-      snapshot: this.createSnapshotFor(playerId),
-      deliveries: this.projectedDeliveries(
-        recipients,
-        beforeRoomState,
-        this.canonicalState,
-        afterRoomState,
-        this.canonicalState,
-      ),
+    try {
+      const afterRoomState = this.projectRoomState()
+      return {
+        playerId,
+        snapshot: this.createSnapshotFor(playerId),
+        deliveries: this.projectedDeliveries(
+          recipients,
+          beforeRoomState,
+          this.canonicalState,
+          afterRoomState,
+          this.canonicalState,
+        ),
+      }
+    } catch (error) {
+      // No result or delivery escaped this synchronous join; restore its membership and revision.
+      this.memberships.delete(playerId)
+      this.revision -= 1
+      throw error
     }
   }
 

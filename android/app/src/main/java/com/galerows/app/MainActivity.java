@@ -7,6 +7,8 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(PlayStorePlugin.class);
+        registerPlugin(LanServerPlugin.class);
+        registerPlugin(LanSecureClientPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }
