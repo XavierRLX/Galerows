@@ -6,6 +6,10 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   backgroundColor: '#020617',
   android: {
+    // LAN invite/resume/rekey credentials pass through the Capacitor bridge. Its debug
+    // logger includes complete plugin arguments and WebView console payloads in logcat.
+    // Disable bridge logging even for the isolated secureProbe APK; never log secrets.
+    loggingBehavior: 'none',
     // This is enabled only while building the dedicated LAN diagnostic APK.
     // Capacitor's https://localhost origin otherwise blocks ws:// LAN sockets.
     allowMixedContent: process.env.VITE_LAN_POC_CLEARTEXT === '1',
