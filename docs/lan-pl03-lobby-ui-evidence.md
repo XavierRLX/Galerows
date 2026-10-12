@@ -1,5 +1,7 @@
 # Galerows — PL-03: UI de lobby persistente, etapa de integração
 
+> **ADENDO de fechamento, 12/10/2026 (prevalece sobre as pendências históricas abaixo):** o S25 FE voltou ao ADB, e **a UI PL-03 foi aprovada fisicamente no S23 e S25 FE, duas execuções de 12/12 etapas**, com Wi-Fi compartilhado, QR PNG decodificado, entrada manual segura, troca de jogos sintéticos e retomada após desligamento real do Wi-Fi convidado. Corrigidos por TDD o QR de 300px e a seleção indevida de hotspot versus Wi-Fi. A webcam/câmera do convidado ainda **não** escaneou o QR fisicamente. Detalhes em `docs/lan-pl03-lobby-physical-2026-10-12.md`. O texto antigo de HOLD corresponde à etapa anterior ao ensaio.
+
 **Data:** 12/10/2026 (BRT). **Branch:** `feat/multiplayer-lan-task1-wss`. **Baseline antes de iniciar:** `7f99feb` (PL-02B encerrado). **Escopo:** UI Android de Room v2 com jogos sintéticos (`toy` e `counter`), sem integração do Impostor da Palavra, Adedonha, descoberta de salas ou matchmaking.
 
 ## Fonte visual: identidade própria Galerows
