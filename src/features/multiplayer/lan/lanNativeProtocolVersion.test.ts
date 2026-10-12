@@ -2,6 +2,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const native = vi.hoisted(() => ({
   server: {
+    discoverLanAddress: vi.fn(async (options?: { preferHotspot?: boolean }) => {
+      void options
+      return { ip: '192.168.0.84', interfaceName: 'wlan0' }
+    }),
     startSecure: vi.fn(async (...args: unknown[]) => { void args; return { port: 10001, fingerprint: 'a'.repeat(64) } }),
     send: vi.fn(async (...args: unknown[]) => { void args }),
     addListener: vi.fn(async (...args: unknown[]) => { void args; return { remove: async () => undefined } }),
@@ -37,6 +41,16 @@ describe('native protocol version opt-in bridge', () => {
     expect(JSON.parse(call.hello)).toEqual({
       kind: 'hello', protocolVersion: 1, roomId: 'r', inviteToken: 'a'.repeat(64),
     })
+  })
+
+  it('keeps the legacy interface preference implicit and explicitly selects v2 Wi-Fi or hotspot', async () => {
+    const host = new LanNativeHost()
+    await host.discoverLanAddress()
+    await host.discoverLanAddress(false)
+    await host.discoverLanAddress(true)
+    expect(native.server.discoverLanAddress.mock.calls.map(call => call[0])).toEqual([
+      {}, { preferHotspot: false }, { preferHotspot: true },
+    ])
   })
 
   it('can opt in to v2 for a secure host without switching any v1 client', async () => {

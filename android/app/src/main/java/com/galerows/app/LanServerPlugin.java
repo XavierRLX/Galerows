@@ -53,7 +53,7 @@ public class LanServerPlugin extends Plugin {
     @PluginMethod
     public void discoverLanAddress(PluginCall call) {
         try {
-            LanAddressDiscovery.Address address = LanAddressDiscovery.discover();
+            LanAddressDiscovery.Address address = LanAddressDiscovery.discover(call.getBoolean("preferHotspot", true));
             if (address == null) {
                 call.reject("lan_interface_unavailable");
                 return;

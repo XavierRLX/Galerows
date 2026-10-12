@@ -6,7 +6,7 @@ import { decodePersistentLanFrame, encodePersistentLanFrame } from './lanPersist
 import type { PersistentLanFrame } from './lanPersistentWire'
 
 interface NativeLanServer {
-  discoverLanAddress(): Promise<{ ip: string; interfaceName: string }>
+  discoverLanAddress(options?: { preferHotspot?: boolean }): Promise<{ ip: string; interfaceName: string }>
   start(options: { roomId: string; inviteToken: string; port?: number }): Promise<{ port: number }>
   startSecure(options: { roomId: string; inviteToken: string; port?: number; protocolVersion?: 1 | 2 }): Promise<{ port: number; fingerprint: string }>
   stop(): Promise<void>
@@ -22,7 +22,9 @@ const native = registerPlugin<NativeLanServer>('GalerowsLanServer')
 
 /** Android native host bridge; caller must enforce room authority and peer identity. */
 export class LanNativeHost {
-  discoverLanAddress() { return native.discoverLanAddress() }
+  discoverLanAddress(preferHotspot?: boolean) {
+    return native.discoverLanAddress(preferHotspot === undefined ? {} : { preferHotspot })
+  }
   start(roomId: string, inviteToken: string, port = 0) {
     return native.start({ roomId, inviteToken, port })
   }

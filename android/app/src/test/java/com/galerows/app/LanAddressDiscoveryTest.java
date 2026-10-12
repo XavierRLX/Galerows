@@ -9,12 +9,23 @@ import org.junit.Test;
 
 public class LanAddressDiscoveryTest {
     @Test
-    public void hotspotWinsOverWifiRegardlessOfEnumerationOrder() {
+    public void legacyCallWithoutNetworkPreferenceStillChoosesHotspot() {
         LanAddressDiscovery.Address selected = LanAddressDiscovery.select(Arrays.asList(
-            new LanAddressDiscovery.Address("wlan0", "192.168.1.4"),
+            new LanAddressDiscovery.Address("wlan0", "192.168.0.84"),
             new LanAddressDiscovery.Address("swlan0", "10.245.112.98")));
         assertEquals("swlan0", selected.interfaceName);
-        assertEquals("10.245.112.98", selected.ip);
+    }
+
+    @Test
+    public void explicitWifiPreferenceChoosesWifiWhenBothInterfacesAreActive() {
+        LanAddressDiscovery.Address selected = LanAddressDiscovery.select(Arrays.asList(
+            new LanAddressDiscovery.Address("wlan0", "192.168.1.4"),
+            new LanAddressDiscovery.Address("swlan0", "10.245.112.98")), false);
+        assertEquals("wlan0", selected.interfaceName);
+        assertEquals("192.168.1.4", selected.ip);
+        assertEquals("swlan0", LanAddressDiscovery.select(Arrays.asList(
+            new LanAddressDiscovery.Address("wlan0", "192.168.1.4"),
+            new LanAddressDiscovery.Address("swlan0", "10.245.112.98")), true).interfaceName);
     }
 
     @Test

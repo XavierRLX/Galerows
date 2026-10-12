@@ -24,7 +24,9 @@ final class LanAddressDiscovery {
 
     private LanAddressDiscovery() { }
 
-    static Address discover() throws SocketException {
+    static Address discover() throws SocketException { return discover(true); }
+
+    static Address discover(boolean preferHotspot) throws SocketException {
         List<Address> candidates = new ArrayList<>();
         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
         if (interfaces == null) return null;
@@ -36,14 +38,16 @@ final class LanAddressDiscovery {
                 }
             }
         }
-        return select(candidates);
+        return select(candidates, preferHotspot);
     }
 
-    static Address select(List<Address> candidates) {
+    static Address select(List<Address> candidates) { return select(candidates, true); }
+
+    static Address select(List<Address> candidates, boolean preferHotspot) {
         Address best = null;
         int bestRank = Integer.MAX_VALUE;
         for (Address candidate : candidates) {
-            int rank = rank(candidate.interfaceName);
+            int rank = rank(candidate.interfaceName, preferHotspot);
             if (rank == Integer.MAX_VALUE || !privateIpv4(candidate.ip)) continue;
             if (best == null || rank < bestRank
                 || (rank == bestRank && candidate.interfaceName.compareTo(best.interfaceName) < 0)) {
@@ -54,12 +58,12 @@ final class LanAddressDiscovery {
         return best;
     }
 
-    private static int rank(String name) {
+    private static int rank(String name, boolean preferHotspot) {
         if (name == null) return Integer.MAX_VALUE;
         String normalized = name.toLowerCase(Locale.ROOT);
         if (normalized.startsWith("swlan") || normalized.startsWith("softap")
-            || normalized.startsWith("ap")) return 0;
-        if (normalized.startsWith("wlan") || normalized.startsWith("wifi")) return 1;
+            || normalized.startsWith("ap")) return preferHotspot ? 0 : 1;
+        if (normalized.startsWith("wlan") || normalized.startsWith("wifi")) return preferHotspot ? 1 : 0;
         return Integer.MAX_VALUE;
     }
 
