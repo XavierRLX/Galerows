@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, CheckCircle2, Link2, QrCode, ShieldCheck, Users, Wifi, WifiOff } from 'lucide-react'
-import QRCode from 'qrcode'
+import { createLobbyInviteQr } from './lobbyInviteQr'
 import { AuthoritativeRoomRuntimeV2, RoomCoordinatorV2, RoomLifecycleAdapter } from '../../persistentRoom'
 import { syntheticMultiplayerGames } from '../../multiplayerGames.synthetic'
 import type { RoomCommandV2, RoomSnapshotV2 } from '../../persistentProtocol'
@@ -39,6 +39,7 @@ function humanError(error: unknown): string {
 /** Opt-in Android-only UX for persistent Room v2; no real games or public matchmaking. */
 export function LanPersistentLobbyScreen() {
   const [mode, setMode] = useState<Mode>('entry')
+  const [preferHotspot, setPreferHotspot] = useState(false)
   const [role, setRole] = useState<Role>('host')
   const [invitation, setInvitation] = useState('')
   const [enteredCode, setEnteredCode] = useState('')
@@ -68,7 +69,7 @@ export function LanPersistentLobbyScreen() {
       if (latest && latest.capability !== currentInviteCapability.current) {
         currentInviteCapability.current = latest.capability
         const serialized = encodePersistentLanInvite(latest)
-        void QRCode.toDataURL(serialized, { margin: 2, width: 300, errorCorrectionLevel: 'M' })
+        void createLobbyInviteQr(serialized)
           .then(image => {
             if (currentInviteCapability.current !== latest.capability) return
             setInvitation(serialized)
@@ -114,7 +115,7 @@ export function LanPersistentLobbyScreen() {
   async function regenerateInvite(host: LanPersistentRoomHost, ticket = host.currentInvite) {
     if (!ticket) throw new Error('room_closed')
     const text = encodePersistentLanInvite(ticket)
-    const image = await QRCode.toDataURL(text, { margin: 2, width: 300, errorCorrectionLevel: 'M' })
+    const image = await createLobbyInviteQr(text)
     currentInviteCapability.current = ticket.capability
     setInvitation(text)
     setQr(image)
@@ -148,7 +149,7 @@ export function LanPersistentLobbyScreen() {
       })
       const host = new LanPersistentRoomHost(new RoomCoordinatorV2(runtime), server)
       try {
-        const address = await server.discoverLanAddress()
+        const address = await server.discoverLanAddress(preferHotspot)
         const ticket = await host.start(room, address.ip)
         await regenerateInvite(host, ticket)
         hostRef.current = host
@@ -288,6 +289,10 @@ export function LanPersistentLobbyScreen() {
       <p className="pl03-kicker"><span className="pl03-light" /> GALEROWS / MULTIPLAYER LOCAL</p>
       <h1>O jogo começa <em>com a galera.</em></h1>
       <p className="pl03-entry-lead">Todo mundo no próprio celular. Uma sala que continua entre as rodadas — sem conta e sem matchmaking.</p>
+      {mode === 'entry' && <label className="pl03-network-choice">
+        <input type="checkbox" checked={preferHotspot} onChange={event => setPreferHotspot(event.target.checked)} />
+        <span><strong>Usar hotspot deste celular</strong><small>Marque apenas se os amigos estiverem conectados ao hotspot do anfitrião. Para o mesmo Wi-Fi, deixe desmarcado.</small></span>
+      </label>}
       <div className="pl03-entry-cards">
         {mode === 'entry' && <>
           <button type="button" className="pl03-entry-card" onClick={startHost} disabled={busy}>

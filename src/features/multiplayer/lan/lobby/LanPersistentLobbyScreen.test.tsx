@@ -4,7 +4,7 @@ import { LanPersistentLobbyScreen } from './LanPersistentLobbyScreen'
 import { decodePersistentLanInvite } from '../lanPersistentInvite'
 import type { PersistentLanFrame } from '../lanPersistentWire'
 
-const network = vi.hoisted(() => ({ available: true,
+const network = vi.hoisted(() => ({ available: true, lastPreference: null as boolean | null,
   emit: null as ((event: { type: string; peerId: string; frame?: PersistentLanFrame }) => void) | null,
   sent: [] as Array<{ peerId: string; frame: PersistentLanFrame }>,
 }))
@@ -12,7 +12,8 @@ const network = vi.hoisted(() => ({ available: true,
 vi.mock('qrcode', () => ({ default: { toDataURL: vi.fn(async () => 'data:image/png;base64,dGVzdA==') } }))
 vi.mock('../lanNativeHost', () => ({
   LanNativeHost: class {
-    discoverLanAddress = async () => {
+    discoverLanAddress = async (preferHotspot = false) => {
+      network.lastPreference = preferHotspot
       if (!network.available) throw new Error('lan_interface_unavailable')
       return { ip: '10.0.0.1', interfaceName: 'wlan0' }
     }
@@ -30,9 +31,19 @@ vi.mock('../lanNativeHost', () => ({
   },
 }))
 
-afterEach(() => { network.available = true; network.emit = null; network.sent = []; cleanup() })
+afterEach(() => { network.lastPreference = null; network.available = true; network.emit = null; network.sent = []; cleanup() })
 
 describe('PL-03 Android lobby journey', () => {
+  it('defaults to shared Wi-Fi and supports explicitly choosing the host hotspot', async () => {
+    render(<LanPersistentLobbyScreen />)
+    const selectHotspot = screen.getByRole('checkbox', { name: /Usar hotspot deste celular/i })
+    expect(selectHotspot).not.toBeChecked()
+    fireEvent.click(selectHotspot)
+    fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
+    await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
+    expect(network.lastPreference).toBe(true)
+  })
+
   it('guides player to enable Wi-Fi when there is no LAN IP yet', async () => {
     network.available = false
     render(<LanPersistentLobbyScreen />)
