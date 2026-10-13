@@ -30,6 +30,8 @@ export class LanPersistentGuestAdmission {
   private readonly native: NativeV2
   private readonly timeoutMs: number
   private phase: Phase = 'idle'
+  // A pinned, authenticated host closure is terminal; no vault-based resume exists.
+  private closedByHost = false
   private listener: { remove: () => Promise<void> } | null = null
   private pending: Pending | null = null
   private pendingCommand: PendingCommand | null = null
@@ -55,6 +57,9 @@ export class LanPersistentGuestAdmission {
 
   /** Diagnostics: number of completed Android vault rotations, never a credential. */
   getRekeyCount() { return this.persistedRekeyCount }
+
+  /** Terminal signal from an authenticated roomClosedV2; no secrets are exposed. */
+  wasClosedByHost() { return this.closedByHost }
 
   getState() {
     return this.phase === 'admitted' ? this.replica?.getState() ?? null : null
@@ -272,6 +277,7 @@ export class LanPersistentGuestAdmission {
     const frame = event.frame
     if (frame.kind === 'rejectedV2') { this.fail(frame.error); return }
     if (frame.kind === 'roomClosedV2' && frame.roomId === this.roomId) {
+      this.closedByHost = true
       void this.native.clearResumeCredential(frame.roomId).catch(() => undefined)
       this.fail('room_closed')
       return

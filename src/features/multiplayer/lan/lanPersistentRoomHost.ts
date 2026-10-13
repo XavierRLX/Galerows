@@ -1,6 +1,7 @@
 import type { RoomCoordinatorV2, RoomDeliveryV2, RoomJoinV2 } from '../persistentRoom'
 import type { RoomCommandV2, RoomCommandResultV2 } from '../persistentProtocol'
 import { hostVerificationCode, newLanCapability } from './lanInvite'
+import { codeRoomCapability, newShortRoomCode } from './lanShortRoomCode'
 import type { LanNativeHost } from './lanNativeHost'
 import { createPersistentLanInvite, samePersistentLanInvite } from './lanPersistentInvite'
 import type { PersistentLanInvite } from './lanPersistentInvite'
@@ -9,6 +10,7 @@ import type { PersistentLanFrame, PersistentAdmissionError } from './lanPersiste
 
 type NativeV2 = Pick<LanNativeHost, 'startSecureV2' | 'rotateInviteToken' | 'registerResumeToken'
   | 'revokeResumeToken' | 'closePeer' | 'sendV2' | 'stop' | 'onV2Event'>
+  & Partial<Pick<LanNativeHost, 'setRoomCodeToken'>>
 type NativeEvent = { type: string; peerId: string; frame?: PersistentLanFrame }
 type Binding = { peerId: string; connectionId: string; playerId: string; resumeToken: string }
 type Pending = { binding: Binding; joined: Extract<RoomJoinV2, { ok: true }>;
@@ -31,6 +33,8 @@ export const PERSISTENT_V2_MAX_ROOM_AGE_MS = 23 * 60 * 60 * 1000
  */
 export class LanPersistentRoomHost {
   currentInvite: PersistentLanInvite | null = null
+  private shortCode: string | null = null
+  private shortCodeToken: string | null = null
   private listener: { remove: () => Promise<void> } | null = null
   private readonly peers = new Set<string>()
   private readonly bindings = new Map<string, Binding>()
@@ -93,6 +97,8 @@ export class LanPersistentRoomHost {
     return scheduled
   }
 
+  publicRoomCode() { return this.shortCode }
+
   hostCode() {
     if (!this.fingerprint) throw new Error('not_running')
     return hostVerificationCode(this.fingerprint)
@@ -103,11 +109,17 @@ export class LanPersistentRoomHost {
     this.listener = await this.native.onV2Event(event => this.enqueue(() => this.handle(event)))
     try {
       const capability = newLanCapability()
+      const shortCode = newShortRoomCode()
+      const shortCodeToken = await codeRoomCapability(roomId, shortCode)
       const result = await this.native.startSecureV2(roomId, capability)
       const invite = createPersistentLanInvite({ roomId, hostIp,
         port: result.port, fingerprint: result.fingerprint, capability })
       this.roomId = roomId; this.hostIp = hostIp; this.port = result.port
       this.fingerprint = result.fingerprint; this.currentInvite = invite
+      this.shortCode = shortCode
+      this.shortCodeToken = shortCodeToken
+      // Initialize room authority BEFORE NSD makes the short-code endpoint visible.
+      if (this.native.setRoomCodeToken) await this.native.setRoomCodeToken(roomId, shortCode, shortCodeToken)
       this.roomAgeTimer = setTimeout(() => { void this.stop().catch(() => undefined) }, PERSISTENT_V2_MAX_ROOM_AGE_MS)
       return invite
     } catch (error) {
@@ -168,6 +180,8 @@ export class LanPersistentRoomHost {
       await this.listener?.remove()
       this.listener = null
       this.currentInvite = null
+      this.shortCode = null
+      this.shortCodeToken = null
     }
   }
 
@@ -237,17 +251,23 @@ export class LanPersistentRoomHost {
     const reject = async (error: PersistentAdmissionError) =>
       this.native.sendV2(peerId, { kind: 'rejectedV2', protocolVersion: 2, error }).catch(() => this.dropPeer(peerId))
     if ((this.failedAttempts.get(peerId) ?? 0) >= 3) { await reject('too_many_attempts'); return }
-    if (Date.now() >= issued.expiresAt) { await reject('invite_expired'); return }
-    if (this.pending || this.consumed.has(invite.capability)) { await reject('invite_used'); return }
-    if (!samePersistentLanInvite(issued, invite)) {
+    const byShortCode = this.shortCodeToken !== null && invite.capability === this.shortCodeToken
+      && invite.roomId === this.roomId && invite.port === this.port
+      && invite.fingerprint === this.fingerprint && invite.hostIp === this.hostIp
+      && invite.issuedAt <= Date.now() + 5_000 && invite.expiresAt > Date.now()
+    if (!byShortCode && Date.now() >= issued.expiresAt) { await reject('invite_expired'); return }
+    if (this.pending || (!byShortCode && this.consumed.has(invite.capability))) { await reject('invite_used'); return }
+    if (!byShortCode && !samePersistentLanInvite(issued, invite)) {
       this.failedAttempts.set(peerId, (this.failedAttempts.get(peerId) ?? 0) + 1)
       await reject('invalid_invite')
       return
     }
 
-    // Consume the capability in native before mutating runtime; another hello cannot reuse it.
-    try { await this.refreshInvite() }
-    catch { await this.dropPeer(peerId); throw new Error('invite_rotation_failed') }
+    // QR remains one-use; short code stays available for friends joining later.
+    if (!byShortCode) {
+      try { await this.refreshInvite() }
+      catch { await this.dropPeer(peerId); throw new Error('invite_rotation_failed') }
+    }
 
     const connectionId = `lan-v2-${crypto.randomUUID()}`
     const joined = await this.coordinator.joinGuest(connectionId)

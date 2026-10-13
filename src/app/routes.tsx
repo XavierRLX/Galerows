@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Capacitor } from '@capacitor/core'
+import { lanNativeMvpAvailable } from '../features/multiplayer/lan/lanPlatform'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from '../components/layout/AppShell'
 import { canDisplayAds } from '../features/ads/ads.visibility'
@@ -55,13 +55,13 @@ const LanDiagnosticScreen = import.meta.env.VITE_LAN_DIAGNOSTICS === '1'
 const LanCoreProbeScreen = import.meta.env.VITE_LAN_CORE_PROBE === '1'
   ? lazy(() => import('../features/multiplayer/lan/LanCoreProbeScreen').then((module) => ({ default: module.LanCoreProbeScreen })))
   : null
-const LanPersistentLobbyScreen = import.meta.env.VITE_LAN_PERSISTENT_LOBBY_UI === '1' && Capacitor.isNativePlatform()
+const LanPersistentLobbyScreen = import.meta.env.VITE_LAN_PERSISTENT_LOBBY_UI === '1' && lanNativeMvpAvailable()
   ? lazy(() => import('../features/multiplayer/lan/lobby/LanPersistentLobbyScreen').then(module => ({ default: module.LanPersistentLobbyScreen })))
   : null
-const LanPersistentRoomProbeScreen = import.meta.env.VITE_LAN_ROOM_V2_PROBE === '1' && Capacitor.isNativePlatform()
+const LanPersistentRoomProbeScreen = import.meta.env.VITE_LAN_ROOM_V2_PROBE === '1' && lanNativeMvpAvailable()
   ? lazy(() => import('../features/multiplayer/lan/LanPersistentRoomProbeScreen').then((module) => ({ default: module.LanPersistentRoomProbeScreen })))
   : null
-const LanRoomScreen = import.meta.env.VITE_LAN_ROOM_UI === '1' && Capacitor.isNativePlatform()
+const LanRoomScreen = import.meta.env.VITE_LAN_ROOM_UI === '1' && lanNativeMvpAvailable()
   ? lazy(() => import('../features/multiplayer/lan/LanRoomScreen').then((module) => ({ default: module.LanRoomScreen })))
   : null
 
@@ -77,9 +77,11 @@ export function AppRoutes() {
         {LanCoreProbeScreen ? <Route path="/__lan-core" element={<LanCoreProbeScreen />} /> : null}
         {LanPersistentRoomProbeScreen ? <Route path="/__lan-room-v2" element={<LanPersistentRoomProbeScreen />} /> : null}
         {LanPersistentLobbyScreen ? <Route path="/__lan-lobby-v2" element={<LanPersistentLobbyScreen />} /> : null}
+        {LanPersistentLobbyScreen ? <Route path="/__lan-lobby-v2/entrar" element={<LanPersistentLobbyScreen initialMode="join" />} /> : null}
+        {LanPersistentLobbyScreen ? <Route path="/__lan-lobby-v2/criar" element={<LanPersistentLobbyScreen initialMode="entry" />} /> : null}
         {LanRoomScreen ? <Route path="/__lan-room" element={<LanRoomScreen />} /> : null}
         <Route element={<AppShell />}>
-          <Route index element={LanPersistentLobbyScreen ? <Navigate replace to="/__lan-lobby-v2" /> : LanPersistentRoomProbeScreen ? <Navigate replace to="/__lan-room-v2" /> : LanRoomScreen ? <Navigate replace to="/__lan-room" /> : LanCoreProbeScreen ? <Navigate replace to="/__lan-core" /> : LanDiagnosticScreen ? <Navigate replace to="/__lan-diagnostic" /> : <HubScreen />} />
+          <Route index element={<HubScreen />} />
           <Route path="settings" element={<SettingsScreen />} />
           <Route path="settings/privacy" element={<PrivacyScreen />} />
           {canDisplayAds() ? <Route path="premium" element={<PremiumScreen />} /> : null}

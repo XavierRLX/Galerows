@@ -9,6 +9,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(PlayStorePlugin.class);
         registerPlugin(LanServerPlugin.class);
         registerPlugin(LanSecureClientPlugin.class);
+        registerPlugin(LanRoomDiscoveryPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }

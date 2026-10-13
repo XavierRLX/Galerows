@@ -1,13 +1,22 @@
 import type { RoomSnapshotV2 } from '../../persistentProtocol'
 
 export type LobbyRole = 'host' | 'guest'
-export type LobbyGameId = 'toy' | 'counter'
+export type LobbyGameId = 'toy' | 'counter' | 'impostor-da-palavra' | 'pista-unica' | 'cidade-dorme'
 
 export const lobbyGameCatalog = {
   toy: { title: 'Cartas secretas', subtitle: 'Cada pessoa recebe uma informação só sua.', action: 'Enviar pista',
     icon: 'cards', minPlayers: 2, defaultValue: 2, maxValue: 5, configField: 'rounds', unit: 'rodadas' },
   counter: { title: 'Contagem em equipe', subtitle: 'Avancem juntos até atingir o objetivo.', action: 'Somar 1',
     icon: 'target', minPlayers: 2, defaultValue: 3, maxValue: 20, configField: 'target', unit: 'pontos' },
+  'cidade-dorme': { title: 'Cidade Dorme', subtitle: 'Papéis secretos, noite e votação no celular de cada jogador.',
+    action: 'Jogar', icon: 'cards', minPlayers: 4, defaultValue: 1, maxValue: 1,
+    configField: 'roleOptions', unit: 'papéis' },
+  'pista-unica': { title: 'Pista Única', subtitle: 'Cada pessoa escreve sua pista no próprio celular.',
+    action: 'Jogar', icon: 'target', minPlayers: 3, defaultValue: 1, maxValue: 1,
+    configField: 'categories', unit: 'categorias' },
+  'impostor-da-palavra': { title: 'Impostor da Palavra', subtitle: 'Encontre o impostor antes que ele roube a palavra.',
+    action: 'Jogar', icon: 'cards', minPlayers: 3, defaultValue: 1, maxValue: 1,
+    configField: 'rounds', unit: 'rodada' },
 } as const
 
 export function lobbySummary(snapshot: RoomSnapshotV2, role: LobbyRole, ownId: string | null) {
@@ -20,7 +29,7 @@ export function lobbySummary(snapshot: RoomSnapshotV2, role: LobbyRole, ownId: s
   const connected = members.filter(member => member.connected)
   const readyCount = connected.filter(member => member.ready).length
   const allReady = connected.length >= 2 && readyCount === connected.length
-  const gameId: LobbyGameId | null = state.selectedGameId === 'toy' || state.selectedGameId === 'counter'
+  const gameId: LobbyGameId | null = state.selectedGameId === 'toy' || state.selectedGameId === 'counter' || state.selectedGameId === 'impostor-da-palavra' || state.selectedGameId === 'pista-unica' || state.selectedGameId === 'cidade-dorme'
     ? state.selectedGameId : null
   const ownMember = members.find(member => member.isYou)
   return {
@@ -32,7 +41,8 @@ export function lobbySummary(snapshot: RoomSnapshotV2, role: LobbyRole, ownId: s
     ownReady: Boolean(ownMember?.ready),
     canReady: Boolean(ownMember?.connected) && (state.phase === 'lobby' || state.phase === 'configuring'),
     canStart: role === 'host' && state.phase === 'configuring' && gameId !== null
-      && state.selectedConfig !== null && allReady,
+      && state.selectedConfig !== null && allReady
+      && connected.length >= lobbyGameCatalog[gameId].minPlayers,
     phase: state.phase,
     phaseLabel: state.phase === 'lobby' ? 'Na sala' : state.phase === 'configuring'
       ? 'Preparando a rodada' : state.phase === 'playing' ? 'Partida em andamento' : 'Fim de rodada',
@@ -40,6 +50,7 @@ export function lobbySummary(snapshot: RoomSnapshotV2, role: LobbyRole, ownId: s
 }
 
 export function gameConfig(gameId: LobbyGameId, value: number) {
+  if (gameId === 'pista-unica' || gameId === 'cidade-dorme') throw new Error('invalid_config')
   const catalog = lobbyGameCatalog[gameId]
   if (!Number.isSafeInteger(value) || value < 1 || value > catalog.maxValue) throw new Error('invalid_config')
   return { [catalog.configField]: value }

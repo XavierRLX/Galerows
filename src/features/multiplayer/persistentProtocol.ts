@@ -50,6 +50,14 @@ export interface RoomBarrierPublicV2 {
   isComplete: boolean
 }
 
+/** Scores are ephemeral to the current LAN Room. Never include private game cards. */
+export interface RoomCompetitionV2 {
+  status: 'active' | 'finished'
+  completedGames: number
+  standings: { playerId: string; displayName: string; points: number; wins: number; played: number }[]
+  winnerPlayerIds: string[]
+}
+
 export interface RoomStatePublicV2 {
   hostPlayerId: string
   phase: RoomPhase
@@ -59,6 +67,8 @@ export interface RoomStatePublicV2 {
   currentGameSessionId: string | null
   lastPublicResult: { gameSessionId: string; gameId: string; status: 'completed' | 'aborted' } | null
   barriers: readonly RoomBarrierPublicV2[]
+  /** Optional for compatibility with pre-G5E test fixtures; real v2 Rooms always include it. */
+  competition?: RoomCompetitionV2
 }
 
 export interface GamePublicV2 { gameSessionId: string; gameId: string; data: unknown }

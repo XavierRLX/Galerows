@@ -3,7 +3,8 @@ import type { RoomEffect } from './gameAdapter'
 import type { RoomCommandError } from './persistentProtocol'
 
 export interface MultiplayerGameContext { clock: Clock; random: () => number }
-export interface MultiplayerGameAction { playerId: string; type: string; payload: unknown }
+export interface MultiplayerGameAction { playerId: string; role?: 'host' | 'guest';
+  connectedParticipantIds?: readonly string[]; type: string; payload: unknown }
 export type MultiplayerGameTransition<TState> =
   | { accepted: false; error: RoomCommandError }
   | { accepted: true; changed: false; roomEffects?: readonly RoomEffect[] }
@@ -19,6 +20,8 @@ export interface MultiplayerGameDefinition<TConfig, TState> {
     context: MultiplayerGameContext): MultiplayerGameTransition<TState>
   projectPublic(state: Readonly<TState>): unknown
   projectPrivate(state: Readonly<TState>, playerId: string): unknown | null
+  /** Trusted game-authoritative award at completion. Exactly one 0–2 value per participant. */
+  awardPoints?(state: Readonly<TState>): Readonly<Record<string, number>> | null
 }
 
 /** Type erasure is confined to registration; each game's reducer keeps its own typed state/config. */
@@ -32,6 +35,7 @@ export interface RegisteredMultiplayerGame {
     context: MultiplayerGameContext): MultiplayerGameTransition<unknown>
   projectPublic(state: unknown): unknown
   projectPrivate(state: unknown, playerId: string): unknown | null
+  awardPoints?: (state: unknown) => Readonly<Record<string, number>> | null
 }
 
 export function defineMultiplayerGame<TConfig, TState>(definition: MultiplayerGameDefinition<TConfig, TState>): RegisteredMultiplayerGame {
@@ -42,5 +46,6 @@ export function defineMultiplayerGame<TConfig, TState>(definition: MultiplayerGa
     applyCommand: (state, action, context) => definition.applyCommand(state as TState, action, context),
     projectPublic: state => definition.projectPublic(state as TState),
     projectPrivate: (state, playerId) => definition.projectPrivate(state as TState, playerId),
+    ...(definition.awardPoints ? { awardPoints: (state: unknown) => definition.awardPoints!(state as TState) } : {}),
   }
 }

@@ -90,12 +90,45 @@ const host = await connect(9222)
 const guest = await connect(9223)
 const evidence = []
 let guestWifiChanged = false
+async function navigateCatalogRoundTrip(session, label) {
+  const before = await view(session)
+  if (!before.active) throw new Error('g2_not_in_room_' + label)
+  await click(session, 'Ver jogos')
+  await waitFor(session, 'Array.from(document.querySelectorAll("button")).some(b => b.getAttribute("aria-label")?.startsWith("Conhecer "))', 'g2_catalog_' + label)
+  const gameCount = await session.eval('Array.from(document.querySelectorAll("button")).filter(b => b.getAttribute("aria-label")?.startsWith("Conhecer ")).length')
+  if (gameCount !== 10) throw new Error('g2_catalog_incomplete_' + label)
+  if (await session.eval('Boolean(document.querySelector("[data-testid=pl03-lobby]"))')) throw new Error('g2_catalog_still_lobby')
+  await click(session, 'Voltar à sala')
+  await waitFor(session, 'Boolean(document.querySelector("[data-testid=pl03-lobby]"))', 'g2_return_' + label)
+  const after = await view(session)
+  if (!after.active || after.revision !== before.revision || after.members !== before.members || after.game !== before.game || after.score !== before.score) {
+    throw new Error('g2_room_changed_during_navigation_' + label)
+  }
+}
 async function checkpoint(label) {
   const h = await view(host), g = await view(guest)
   evidence.push({ step: label, h, g })
   console.log('STEP', label, JSON.stringify({host:h,guest:g}))
 }
+// G1 keeps the games catalog at "/" even in experimental builds.
+async function ensureProbeEntry(session, name) {
+  await waitFor(session,
+    'Boolean(document.querySelector("[data-testid=pl03-entry]")) || Boolean(document.querySelector("button[aria-label^=\\"Conhecer \\"]"))',
+    name + '_app_ready')
+  const hasEntry = await session.eval('Boolean(document.querySelector("[data-testid=pl03-entry]"))')
+  if (hasEntry) return
+  const catalogCount = await session.eval('Array.from(document.querySelectorAll("button")).filter(b => b.getAttribute("aria-label")?.startsWith("Conhecer ")).length')
+  if (catalogCount !== 10) throw new Error('g2_entry_catalog_missing_' + name)
+  await session.eval(`(() => {
+    window.history.pushState(null, '', '/__lan-lobby-v2')
+    window.dispatchEvent(new PopStateEvent('popstate'))
+    return true
+  })()`)
+}
+
 try {
+  await ensureProbeEntry(host, 'host')
+  await ensureProbeEntry(guest, 'guest')
   await waitFor(host, 'Boolean(document.querySelector("[data-testid=pl03-entry]"))', 'host_entry')
   await waitFor(guest, 'Boolean(document.querySelector("[data-testid=pl03-entry]"))', 'guest_entry')
   await checkpoint('entry_on_both')
@@ -125,6 +158,9 @@ try {
   await waitFor(guest, 'Boolean(document.querySelector("[data-testid=pl03-lobby]"))', 'guest_admitted', 22000)
   await waitFor(host, 'document.querySelectorAll(".pl03-player").length === 2', 'host_two_members')
   await checkpoint('two_members_admitted')
+  await navigateCatalogRoundTrip(host, 'host_initial')
+  await navigateCatalogRoundTrip(guest, 'guest_initial')
+  await checkpoint('g2_both_returned_to_same_room')
   const after = await host.eval('document.getElementById("pl03-invite-text")?.value')
   if (after === invite) throw new Error('stale_host_invite_after_guest_admission')
   await checkpoint('invitation_rotated')
@@ -187,6 +223,9 @@ try {
   await click(guest, 'Somar 1')
   await waitFor(host, 'document.querySelector(".pl03-score strong")?.textContent.includes("1")', 'counter_applied_both')
   await checkpoint('counter_increment')
+  await navigateCatalogRoundTrip(host, 'host_during_counter')
+  await navigateCatalogRoundTrip(guest, 'guest_during_counter')
+  await checkpoint('g2_counter_state_persisted_during_navigation')
   await click(guest, 'Sair da sala')
   await waitFor(guest, 'Boolean(document.querySelector("[role=dialog]"))', 'guest_leave_modal')
   await click(guest, 'Sim, sair da sala')

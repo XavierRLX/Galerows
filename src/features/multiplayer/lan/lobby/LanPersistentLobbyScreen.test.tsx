@@ -1,4 +1,5 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { LanPersistentLobbyScreen } from './LanPersistentLobbyScreen'
 import { decodePersistentLanInvite } from '../lanPersistentInvite'
@@ -34,8 +35,15 @@ vi.mock('../lanNativeHost', () => ({
 afterEach(() => { network.lastPreference = null; network.available = true; network.emit = null; network.sent = []; cleanup() })
 
 describe('PL-03 Android lobby journey', () => {
+  it('opens the secure legacy join form from the experimental game-first shortcut', () => {
+    render(<MemoryRouter><LanPersistentLobbyScreen initialMode="join" /></MemoryRouter>)
+    expect(screen.getByRole('heading', { name: /Entre na roda/ })).toBeInTheDocument()
+    expect(screen.getByLabelText(/Verificação do QR/)).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Criar uma sala/ })).not.toBeInTheDocument()
+  })
+
   it('defaults to shared Wi-Fi and supports explicitly choosing the host hotspot', async () => {
-    render(<LanPersistentLobbyScreen />)
+    render(<MemoryRouter><LanPersistentLobbyScreen /></MemoryRouter>)
     const selectHotspot = screen.getByRole('checkbox', { name: /Usar hotspot deste celular/i })
     expect(selectHotspot).not.toBeChecked()
     fireEvent.click(selectHotspot)
@@ -46,14 +54,14 @@ describe('PL-03 Android lobby journey', () => {
 
   it('guides player to enable Wi-Fi when there is no LAN IP yet', async () => {
     network.available = false
-    render(<LanPersistentLobbyScreen />)
+    render(<MemoryRouter><LanPersistentLobbyScreen /></MemoryRouter>)
     fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(/Ative o Wi-Fi/))
     expect(screen.getByRole('button', { name: /Criar uma sala/ })).toBeEnabled()
   })
 
   it('refreshes the QR and manual invite after an authenticated guest joins', async () => {
-    render(<LanPersistentLobbyScreen />)
+    render(<MemoryRouter><LanPersistentLobbyScreen /></MemoryRouter>)
     fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
     await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
     const field = () => screen.getByLabelText('Texto completo do convite') as HTMLTextAreaElement
@@ -76,20 +84,20 @@ describe('PL-03 Android lobby journey', () => {
   })
 
   it('shows two distinct LAN entry options and accessible manual invitation', () => {
-    render(<LanPersistentLobbyScreen />)
+    render(<MemoryRouter><LanPersistentLobbyScreen /></MemoryRouter>)
     expect(screen.getByRole('heading', { name: /O jogo começa com a galera/ })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Criar uma sala/ })).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /Entrar numa sala/ }))
     expect(screen.getByRole('heading', { name: /Entre na roda/ })).toBeInTheDocument()
-    expect(screen.getByLabelText('Convite da sala')).toBeInTheDocument()
-    expect(screen.getByLabelText('Código de verificação do anfitrião')).toBeInTheDocument()
+    expect(screen.getByLabelText(/Convite completo/)).toBeInTheDocument()
+    expect(screen.getByLabelText(/Verificação do QR/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Entrar na sala/ })).toBeDisabled()
     fireEvent.click(screen.getByRole('button', { name: 'Voltar' }))
     expect(screen.getByRole('button', { name: /Criar uma sala/ })).toBeInTheDocument()
   })
 
   it('creates a native-secured host Room, selects synthetic game and keeps start disabled with only host', async () => {
-    render(<LanPersistentLobbyScreen />)
+    render(<MemoryRouter><LanPersistentLobbyScreen /></MemoryRouter>)
     fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
     await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
     expect(screen.queryByText('1 / 1 prontos')).not.toBeInTheDocument()

@@ -15,6 +15,7 @@ final class LanHelloAuthenticator implements Predicate<String> {
     private final String roomId;
     private final int protocolVersion;
     private final AtomicReference<String> token;
+    private final AtomicReference<String> shortCodeToken = new AtomicReference<>(null);
     private final Map<String, ArrayDeque<ResumeToken>> resumeTokens = new HashMap<>();
     private static final int MAX_PLAYERS = 16;
     private static final long MAX_RESUME_LIFETIME_MS = 24L * 60 * 60 * 1000;
@@ -40,9 +41,18 @@ final class LanHelloAuthenticator implements Predicate<String> {
         this.token = new AtomicReference<>(initialToken);
     }
 
+    String roomIdentifier() { return roomId; }
+    int version() { return protocolVersion; }
+
     void rotate(String nextToken) {
         if (nextToken == null || !nextToken.matches("[0-9a-f]{64}")) throw new IllegalArgumentException("invalid_token");
         token.set(nextToken);
+    }
+
+    void enableShortCodeToken(String codeToken) {
+        if (!validToken(codeToken) || protocolVersion != 2)
+            throw new IllegalArgumentException("invalid_room_code_token");
+        shortCodeToken.set(codeToken);
     }
 
     synchronized void registerResumeToken(String playerId, String resumeToken, long expiresAt) {
@@ -103,9 +113,12 @@ final class LanHelloAuthenticator implements Predicate<String> {
             if (hello.optInt("protocolVersion") != protocolVersion || !roomId.equals(hello.optString("roomId"))) return false;
             if ("resumeHello".equals(hello.optString("kind")))
                 return resumeMatches(hello.optString("playerId"), hello.optString("resumeToken"));
-            return "hello".equals(hello.optString("kind"))
-                && MessageDigest.isEqual(token.get().getBytes(StandardCharsets.UTF_8),
-                    hello.optString("inviteToken").getBytes(StandardCharsets.UTF_8));
+            if (!"hello".equals(hello.optString("kind"))) return false;
+            byte[] candidate = hello.optString("inviteToken").getBytes(StandardCharsets.UTF_8);
+            String roomCodeCredential = shortCodeToken.get();
+            return MessageDigest.isEqual(token.get().getBytes(StandardCharsets.UTF_8), candidate)
+                || (roomCodeCredential != null
+                && MessageDigest.isEqual(roomCodeCredential.getBytes(StandardCharsets.UTF_8), candidate));
         } catch (Exception ignored) { return false; }
     }
 }

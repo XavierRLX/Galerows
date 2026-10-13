@@ -18,6 +18,14 @@ afterEach(async () => {
 })
 
 describe('HubScreen usage badges', () => {
+  it('shows the complete catalog to a newcomer without LAN setup', () => {
+    render(<MemoryRouter initialEntries={['/']}><HubScreen /></MemoryRouter>)
+    expect(screen.getAllByRole('button', { name: /^Conhecer / })).toHaveLength(10)
+    expect(screen.getAllByRole('button', { name: /^Em breve / })).toHaveLength(3)
+    expect(screen.getByRole('heading', { name: 'Impostor da Palavra' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Voltar à sala/ })).not.toBeInTheDocument()
+  })
+
   it('keeps the featured badge and shows a discovery badge for an unplayed game', async () => {
     render(<MemoryRouter><HubScreen /></MemoryRouter>)
 

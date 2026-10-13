@@ -20,6 +20,7 @@ public class LanServerPlugin extends Plugin {
     private volatile LanSocketServer server;
     private volatile LanTlsIdentity tlsIdentity;
     private volatile LanHelloAuthenticator helloAuthenticator;
+    private LanRoomNsdPublisher nsdPublisher;
     private final Handler expiryHandler = new Handler(Looper.getMainLooper());
     private Runnable v2ExpiryTask;
 
@@ -64,6 +65,34 @@ public class LanServerPlugin extends Plugin {
             call.resolve(result);
         } catch (SocketException | SecurityException error) {
             call.reject("lan_interface_unavailable");
+        }
+    }
+
+    /**
+     * G4-lite: second, short-code-derived token for nearby casual play.
+     * Does NOT rotate or expose the QR invite capability or resume credentials.
+     */
+    @PluginMethod
+    public synchronized void setRoomCodeToken(PluginCall call) {
+        if (secureGate(call) == null) return;
+        String code = call.getString("code");
+        String roomId = call.getString("roomId");
+        String credential = call.getString("token");
+        if (code == null || !code.matches("[0-9]{6}") || roomId == null
+            || !roomId.matches("[A-Za-z0-9_-]{1,64}") || !roomId.equals(helloAuthenticator.roomIdentifier())
+            || credential == null || !credential.matches("[0-9a-f]{64}")
+            || helloAuthenticator.version() != 2) {
+            call.reject("invalid_room_code"); return;
+        }
+        try {
+            helloAuthenticator.enableShortCodeToken(credential);
+            // DNS-SD is a convenience locator, never proof of the original host.
+            if (nsdPublisher == null) nsdPublisher = new LanRoomNsdPublisher(getContext());
+            nsdPublisher.publish(roomId, server.port(), code, tlsIdentity.fingerprint());
+            call.resolve();
+        } catch (Exception error) {
+            // Native WSS stays running; QR fallback still functions.
+            call.reject("lan_room_code_unavailable");
         }
     }
 
@@ -169,6 +198,7 @@ public class LanServerPlugin extends Plugin {
             server = instance;
             tlsIdentity = identity;
             helloAuthenticator = gate;
+            // A G4-lite Room publishes only AFTER its code credential is configured.
             long delayMs = LanV2RoomLifetimePolicy.watchdogDelayMs(protocolVersion);
             if (delayMs > 0) {
                 // Native watchdog also works when the JS WebView's timer has been suspended.
@@ -229,6 +259,10 @@ public class LanServerPlugin extends Plugin {
     }
 
     private synchronized void shutdown() {
+        if (nsdPublisher != null) {
+            nsdPublisher.stop();
+            nsdPublisher = null;
+        }
         if (v2ExpiryTask != null) {
             expiryHandler.removeCallbacks(v2ExpiryTask);
             v2ExpiryTask = null;

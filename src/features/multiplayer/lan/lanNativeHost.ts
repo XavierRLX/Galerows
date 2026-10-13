@@ -11,6 +11,7 @@ interface NativeLanServer {
   startSecure(options: { roomId: string; inviteToken: string; port?: number; protocolVersion?: 1 | 2 }): Promise<{ port: number; fingerprint: string }>
   stop(): Promise<void>
   rotateInviteToken(options: { inviteToken: string }): Promise<void>
+  setRoomCodeToken(options: { roomId: string; code: string; token: string }): Promise<void>
   registerResumeToken(options: { playerId: string; resumeToken: string; expiresAt: number }): Promise<void>
   revokeResumeToken(options: { playerId: string; resumeToken: string }): Promise<void>
   closePeer(options: { peerId: string }): Promise<void>
@@ -36,6 +37,9 @@ export class LanNativeHost {
     return native.startSecure({ roomId, inviteToken, port, protocolVersion: 2 })
   }
   stop() { return native.stop() }
+  setRoomCodeToken(roomId: string, code: string, token: string) {
+    return native.setRoomCodeToken({ roomId, code, token })
+  }
   rotateInviteToken(inviteToken: string) { return native.rotateInviteToken({ inviteToken }) }
   registerResumeToken(playerId: string, resumeToken: string, expiresAt: number) {
     return native.registerResumeToken({ playerId, resumeToken, expiresAt })

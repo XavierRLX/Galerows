@@ -6,7 +6,7 @@ import type { RoomEffect } from './gameAdapter'
 import type { MultiplayerGameContext, RegisteredMultiplayerGame } from './multiplayerGames'
 import { isJsonValue, parseRoomCommandV2, PERSISTENT_ROOM_PROTOCOL_VERSION, roomFrameFits } from './persistentProtocol'
 import type { RoomCommandV2, RoomCommandError, RoomCommandResultV2, RoomEventV2,
-  RoomPhase, RoomSnapshotV2, RoomStatePublicV2 } from './persistentProtocol'
+  RoomCompetitionV2, RoomPhase, RoomSnapshotV2, RoomStatePublicV2 } from './persistentProtocol'
 
 type Receipt = { command: RoomCommandV2; result: RoomCommandResultV2 }
 const RECENT_COMMAND_ID_LIMIT = 64
@@ -38,6 +38,7 @@ interface CanonicalRoom {
   session: GameSession | null
   lastPublicResult: { gameSessionId: string; gameId: string; status: 'completed' | 'aborted' } | null
   sessionOrdinal: number
+  competition: RoomCompetitionV2
 }
 interface Candidate { state: CanonicalRoom; members: Map<string, Membership>; changed: boolean }
 type Reduction = { ok: true; candidate: Candidate } | { ok: false; error: RoomCommandError }
@@ -75,8 +76,19 @@ export class RoomLifecycleAdapter {
     if (command.scope === 'game') return this.reduceGame(command, state, members, context)
 
     const hostAction = command.type === 'SELECT_GAME' || command.type === 'CONFIGURE_GAME'
-      || command.type === 'START_GAME' || command.type === 'END_GAME' || command.type === 'RETURN_TO_LOBBY'
+      || command.type === 'START_GAME' || command.type === 'END_GAME'
+      || command.type === 'RETURN_TO_LOBBY' || command.type === 'FINISH_SESSION'
     if (hostAction && actor.role !== 'host') return { ok: false, error: 'unauthorized' }
+    // The champion ceremony is terminal for this tournament, not for the WSS
+    // connection: existing members can still see standings and exit gracefully.
+    if (state.competition.status === 'finished') return { ok: false, error: 'invalid_phase' }
+    if (command.type === 'FINISH_SESSION') {
+      if (state.phase !== 'lobby' || state.competition.completedGames === 0
+        || command.payload !== null) return { ok: false, error: 'invalid_phase' }
+      const leaders = competitionLeaders(state.competition)
+      state.competition = { ...state.competition, status: 'finished', winnerPlayerIds: leaders }
+      return { ok: true, candidate: { state, members, changed: true } }
+    }
     if (command.type === 'SELECT_GAME') {
       if (state.phase !== 'lobby' && state.phase !== 'configuring') return { ok: false, error: 'invalid_phase' }
       const gameId = field(command.payload, 'gameId')
@@ -131,6 +143,22 @@ export class RoomLifecycleAdapter {
     }
     if (command.type === 'END_GAME') {
       if (state.phase !== 'playing' || !state.session) return { ok: false, error: 'invalid_phase' }
+      if (state.session.gameId === 'impostor-da-palavra' || state.session.gameId === 'pista-unica' || state.session.gameId === 'cidade-dorme') {
+        const projection = this.games.get(state.session.gameId)!.projectPublic(state.session.gameState)
+        if (!field(projection, 'step') || field(projection, 'step') !== 'summary') {
+          return { ok: false, error: 'invalid_phase' }
+        }
+      }
+      const game = this.games.get(state.session.gameId)!
+      // Read awards from trusted host-owned game state. Guest payloads cannot
+      // create or alter points, and an invalid adapter cannot commit partial changes.
+      if (game.awardPoints) {
+        const awards = game.awardPoints(state.session.gameState)
+        if (!validAwards(awards, state.session.participantIds)) {
+          return { ok: false, error: 'invalid_payload' }
+        }
+        state.competition = applyRoundAwards(state.competition, awards, state.session.participantIds)
+      }
       state.phase = 'results'; state.session.status = 'completed'
       state.lastPublicResult = { gameSessionId: state.session.gameSessionId,
         gameId: state.session.gameId, status: 'completed' }
@@ -153,7 +181,9 @@ export class RoomLifecycleAdapter {
     if (!state.session.participantIds.includes(command.playerId)) return { ok: false, error: 'not_participant' }
     const game = this.games.get(state.session.gameId)!
     const transition = game.applyCommand(state.session.gameState,
-      { playerId: command.playerId, type: command.type, payload: command.payload }, context)
+      { playerId: command.playerId, role: members.get(command.playerId)!.role,
+        connectedParticipantIds: state.session.participantIds.filter(id => members.get(id)?.connectionId !== null),
+        type: command.type, payload: command.payload }, context)
     if (!transition.accepted) return { ok: false, error: transition.error }
     if (transition.changed) state.session.gameState = transition.state
     const barrierChanged = applyEffects(state.session, transition.roomEffects ?? [])
@@ -180,7 +210,8 @@ export class AuthoritativeRoomRuntimeV2 {
   private readonly createPlayerId: () => string
   private revision = 1
   private state: CanonicalRoom = { phase: 'lobby', selectedGameId: null, selectedConfig: null, configured: false,
-    session: null, lastPublicResult: null, sessionOrdinal: 0 }
+    session: null, lastPublicResult: null, sessionOrdinal: 0,
+    competition: { status: 'active', completedGames: 0, standings: [], winnerPlayerIds: [] } }
   private members = new Map<string, Membership>()
 
   constructor(options: AuthoritativeRoomRuntimeV2Options) {
@@ -188,6 +219,9 @@ export class AuthoritativeRoomRuntimeV2 {
     this.roomId = options.roomId; this.hostPlayerId = options.hostPlayerId; this.adapter = options.adapter
     this.context = { clock: options.clock ?? systemClock, random: options.random ?? Math.random }
     this.createPlayerId = options.createPlayerId ?? (() => crypto.randomUUID())
+    this.state.competition.standings.push({
+      playerId: options.hostPlayerId, displayName: 'Anfitrião', points: 0, played: 0, wins: 0,
+    })
     this.members.set(options.hostPlayerId, { playerId: options.hostPlayerId, connectionId: options.hostConnectionId,
       role: 'host', ready: false, participation: 'active', nextClientSeq: 1, recentCommandIds: [] })
   }
@@ -197,6 +231,7 @@ export class AuthoritativeRoomRuntimeV2 {
   getConnectionId(playerId: string) { return this.members.get(playerId)?.connectionId ?? null }
 
   joinGuest(connectionId: string, displayName?: string): RoomJoinV2 {
+    if (this.state.competition.status === 'finished') return { ok: false, error: 'invalid_phase' }
     if (!connectionId || this.memberForConnection(connectionId)) return { ok: false, error: 'unauthorized' }
     if (this.members.size >= 12) return { ok: false, error: 'room_full' }
     let playerId = this.createPlayerId()
@@ -206,9 +241,14 @@ export class AuthoritativeRoomRuntimeV2 {
       participation: this.state.phase === 'playing' || this.state.phase === 'results' ? 'waiting' : 'active',
       ...(displayName ? { displayName: displayName.slice(0, 40) } : {}), nextClientSeq: 1,
       recentCommandIds: [] })
-    const prepared = this.preflight(this.state, members, this.revision + 1)
+    const state = cloneRoom(this.state)
+    state.competition.standings.push({
+      playerId, displayName: displayName?.slice(0, 40) || `Jogador ${members.size}`,
+      points: 0, played: 0, wins: 0,
+    })
+    const prepared = this.preflight(state, members, this.revision + 1)
     if (!prepared.ok) return { ok: false, error: prepared.error }
-    this.members = members; this.revision++
+    this.state = state; this.members = members; this.revision++
     return { ok: true, playerId, snapshot: prepared.snapshots.get(playerId)!,
       deliveries: prepared.deliveries.filter(delivery => delivery.playerId !== playerId) }
   }
@@ -339,6 +379,7 @@ export class AuthoritativeRoomRuntimeV2 {
         ...(member.displayName ? { displayName: member.displayName } : {}) })),
       selectedGameId: state.selectedGameId, selectedConfig: clone(state.selectedConfig),
       currentGameSessionId: session?.gameSessionId ?? null, lastPublicResult: clone(state.lastPublicResult),
+      competition: clone(state.competition),
       barriers: session ? [...session.barriers.values()].map(barrier => ({ gameSessionId: session.gameSessionId,
         id: barrier.id, type: barrier.type, expectedCount: barrier.expectedPlayerIds.length,
         completedCount: barrier.completedPlayerIds.length, isComplete: barrier.isComplete })) : [] }
@@ -386,6 +427,34 @@ export class RoomCoordinatorV2 {
   }
 }
 
+function validAwards(awards: Readonly<Record<string, number>> | null,
+  participantIds: readonly string[]): awards is Readonly<Record<string, number>> {
+  if (!record(awards)) return false
+  const keys = Object.keys(awards)
+  return keys.length === participantIds.length && keys.every(id => participantIds.includes(id))
+    && participantIds.every(id => Number.isSafeInteger(awards[id]) && awards[id] >= 0 && awards[id] <= 2)
+}
+
+function applyRoundAwards(competition: RoomCompetitionV2, awards: Readonly<Record<string, number>>,
+  participantIds: readonly string[]): RoomCompetitionV2 {
+  return {
+    ...competition, completedGames: competition.completedGames + 1,
+    standings: competition.standings.map(entry => {
+      if (!participantIds.includes(entry.playerId)) return entry
+      const earned = awards[entry.playerId]
+      return { ...entry, points: entry.points + earned, wins: entry.wins + (earned > 0 ? 1 : 0),
+        played: entry.played + 1 }
+    }),
+  }
+}
+
+function competitionLeaders(competition: RoomCompetitionV2): string[] {
+  if (competition.completedGames === 0) return []
+  const high = Math.max(...competition.standings.map(entry => entry.points))
+  if (high <= 0) return []
+  return competition.standings.filter(entry => entry.points === high).map(entry => entry.playerId)
+}
+
 function cloneMembers(members: ReadonlyMap<string, Membership>) {
   return new Map([...members].map(([id, member]) => [id, { ...member, recentCommandIds: [...member.recentCommandIds] }]))
 }
@@ -395,6 +464,7 @@ function rememberCommandId(member: Membership, commandId: string) {
 }
 function cloneRoom(state: CanonicalRoom): CanonicalRoom {
   return { ...state, selectedConfig: clone(state.selectedConfig), lastPublicResult: clone(state.lastPublicResult),
+    competition: clone(state.competition),
     session: state.session ? { ...state.session, participantIds: [...state.session.participantIds],
       config: clone(state.session.config), gameState: clone(state.session.gameState),
       barriers: new Map([...state.session.barriers].map(([id, barrier]) => [id, clone(barrier)])) } : null }

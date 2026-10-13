@@ -1,4 +1,6 @@
 import type { PointerEvent } from 'react'
+import { lazy, Suspense } from 'react'
+import { lanNativeMvpAvailable } from '../multiplayer/lan/lanPlatform'
 import { GripVertical, Pencil, Plus, Trash2, Trophy, Users } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -7,6 +9,14 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { cn } from '../../lib/utils/cn'
 import { usePlayersStore } from './players.store'
+
+// Experimental LAN entry is colocated with the existing "Minha Galera"
+ // route, never imported into the default release or home catalog.
+const PlayersLanRoomActions = import.meta.env.VITE_GAMES_FIRST_LAN_ENTRY === '1'
+  && import.meta.env.VITE_LAN_PERSISTENT_LOBBY_UI === '1'
+  && lanNativeMvpAvailable()
+  ? lazy(() => import('../hub/HomeRoomActions').then(module => ({ default: module.HomeRoomActions })))
+  : null
 
 export function PlayersScreen() {
   const navigate = useNavigate()
@@ -69,6 +79,7 @@ export function PlayersScreen() {
       <Header action={<Button aria-label="Abrir ranking" size="icon" variant="secondary" onClick={() => navigate('/players/ranking')}><Trophy size={18} /></Button>} backTo="/" title="Minha Galera" />
       <section className="px-5 py-7">
         <div className="flex items-center gap-3"><div className="rounded-2xl bg-violet-400 p-3 text-slate-950"><Users /></div><div><h1 className="text-2xl font-black">Seu grupo de jogadores</h1><p className="text-sm text-slate-400">Salve uma vez e reutilize em qualquer jogo.</p></div></div>
+        {PlayersLanRoomActions && <Suspense fallback={null}><PlayersLanRoomActions /></Suspense>}
 
         <label className="mt-7 block text-sm font-bold text-slate-300" htmlFor="group-name">Nome da galera</label>
         <div className="mt-2 flex gap-2">

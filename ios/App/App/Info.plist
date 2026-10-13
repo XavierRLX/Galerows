@@ -22,6 +22,12 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>O Galerows usa a rede Wi-Fi local para encontrar salas e jogar com amigos próximos, sem precisar de internet.</string>
+    <key>NSBonjourServices</key>
+    <array><string>_galerows._tcp</string></array>
+    <key>NSCameraUsageDescription</key>
+    <string>O Galerows usa a câmera somente quando você escolhe ler o QR Code de uma sala.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

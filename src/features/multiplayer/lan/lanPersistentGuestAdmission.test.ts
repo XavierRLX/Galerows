@@ -51,6 +51,19 @@ function setup() {
 }
 
 describe('PL-02B guest v2 authorized entry', () => {
+  it('marks an authenticated roomClosedV2 as terminal and clears resume credentials', async () => {
+    const { host, guest, guestNative, emitGuest } = setup()
+    const invite = await host.start('room-2', '10.1.1.2')
+    await guest.connectInvite(invite, () => host.hostCode())
+    expect(guest.wasClosedByHost()).toBe(false)
+    emitGuest({ kind: 'roomClosedV2', protocolVersion: 2, roomId: 'room-2' })
+    expect(guest.wasClosedByHost()).toBe(true)
+    expect(guest.getState()).toBeNull()
+    expect(guestNative.clearResumeCredential).toHaveBeenCalledWith('room-2')
+    await guest.disconnect()
+    await host.stop()
+  })
+
   it('uses WSS v2, checks the host code, stores versioned credential before ACK, and confirms membership', async () => {
     const { host, guest, runtime, guestNative, hostNative } = setup()
     const invite = await host.start('room-2', '10.1.1.2')

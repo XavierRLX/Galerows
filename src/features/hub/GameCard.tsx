@@ -1,4 +1,5 @@
-import { Heart, Play } from 'lucide-react'
+import { ArrowRight, Heart, Play, Smartphone, Wifi } from 'lucide-react'
+import { Capacitor } from '@capacitor/core'
 import type { CSSProperties } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -9,6 +10,7 @@ import { cn } from '../../lib/utils/cn'
 import { AppHaptics } from '../../lib/capacitor/haptics'
 import { useFakeAd } from '../ads/useFakeAd'
 import { GameStatusBadge } from '../games/GameStatusBadge'
+import { getGameModeCapabilities } from '../games/gameModes.registry'
 import type { GameModule } from '../games/games.types'
 
 const coverFallbacks: Record<string, string> = {
@@ -157,6 +159,7 @@ export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLa
   const [isRevealed, setIsRevealed] = useState(false)
   const [revealDelayActive, setRevealDelayActive] = useState(false)
   const available = game.status === 'available'
+  const modes = getGameModeCapabilities(game)
   const name = t(`games.${game.id}.name`, { defaultValue: game.name })
   const description = t(`games.${game.id}.shortDescription`, { defaultValue: game.shortDescription })
   const theme = cardThemes[game.id] ?? defaultTheme
@@ -260,6 +263,18 @@ export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLa
                 <p className="line-clamp-2 max-w-sm text-sm leading-5 text-slate-200">
                   {description}
                 </p>
+                {available && <>
+                  <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.69rem] font-semibold leading-4 text-slate-200">
+                    <span className="inline-flex items-center gap-1.5"><Smartphone aria-hidden="true" size={13} />{modes.local.label}</span>
+                    {modes.lan === 'comingSoon' && <span className="inline-flex items-center gap-1.5 text-violet-200"><Wifi aria-hidden="true" size={13} />
+                      {game.id === 'impostor-da-palavra' && import.meta.env.VITE_GAMES_FIRST_LAN_ENTRY === '1'
+                        && import.meta.env.VITE_LAN_PERSISTENT_LOBBY_UI === '1' && Capacitor.isNativePlatform()
+                        ? 'LAN experimental' : 'LAN em preparação'}</span>}
+                  </div>
+                  <button aria-label={`Conhecer ${name}`} className="mt-2 inline-flex min-h-8 items-center gap-1.5 rounded-md text-xs font-bold text-white underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" type="button" onClick={() => void openGame()}>
+                    Conhecer jogo <ArrowRight aria-hidden="true" size={13} />
+                  </button>
+                </>}
               </div>
               <Button
                 aria-label={available ? `${t('playNow')} ${name}` : `${t('comingSoon')} ${name}`}
