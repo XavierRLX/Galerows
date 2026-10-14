@@ -99,4 +99,22 @@ describe('approved lobby and impostor improvements',()=>{
     expect(fresh.roomState.competition?.completedGames).toBe(1)
     expect(r.pub().step).toBe('reveal')
   })
+  it('confirms a correct word guess gives the impostor exactly one extra point even when the group catches them',()=>{
+    const r=room(3)
+    r.start({scoringMode:'individual'})
+    const impostor=r.players.find(p=>r.priv(p).kind==='impostor')!
+    const friend=r.players.find(p=>p.id!==impostor.id)!
+    const word=r.priv(friend).word!
+    r.openVotes()
+    for(const p of r.players)r.ok(p,'VOTE',{playerId:p.id===impostor.id?friend.id:impostor.id},'game')
+    expect(r.pub().step).toBe('final-guess')
+    expect(r.pub().result).toBeNull()
+    r.ok(impostor,'GUESS_WORD',{word},'game')
+    expect(r.pub().step).toBe('summary')
+    expect(r.pub().winner).toBe('group')
+    expect(r.pub().result?.impostorGuessedCorrectly).toBe(true)
+    expect(r.pub().result?.points[impostor.id]).toBe(1)
+    expect(r.send(impostor,'GUESS_WORD',{word},'game').error).toBe('invalid_phase')
+  })
+
 })

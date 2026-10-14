@@ -20,6 +20,11 @@ export function ImpostorDaPalavraPlayScreen() {
   const [correctVoters, setCorrectVoters] = useState<string[]>([])
   useImpostorDaPalavraInitialization()
   useEffect(() => {
+    if (!showSecret || session?.phase !== 'role-pass') return
+    const timeout = window.setTimeout(() => setShowSecret(false), 5000)
+    return () => window.clearTimeout(timeout)
+  }, [showSecret, session?.phase, session?.round, session?.rolePassIndex])
+  useEffect(() => {
     if (initialized && !session) navigate('/games/impostor-da-palavra', { replace: true })
     if (session?.phase === 'finished') navigate('/games/impostor-da-palavra/result', { replace: true })
   }, [initialized, navigate, session])
@@ -40,6 +45,7 @@ export function ImpostorDaPalavraPlayScreen() {
       <Card className={cn('mx-auto mt-8 flex min-h-60 max-w-lg items-center justify-center p-6 text-center transition', showSecret && 'border-violet-400 bg-violet-400/15 shadow-2xl shadow-violet-500/20')}>
         {showSecret && briefing ? <Briefing briefing={briefing} t={t} /> : <div><EyeOff className="mx-auto text-slate-500" size={54} /><p className="mt-4 text-lg font-bold text-slate-400">Palavra escondida</p></div>}
       </Card>
+      <p className="mt-3 text-center text-xs text-slate-400">A informação se esconde automaticamente após 5 segundos.</p>
       <div className="mx-auto mt-6 grid max-w-lg gap-3">{showSecret ? <Button className="bg-violet-400 text-slate-950 hover:bg-violet-300" size="lg" onClick={async () => { setShowSecret(false); await advanceRole(); await AppHaptics.light() }}><EyeOff size={19} />{t('play.hide')}</Button> : <Button className="bg-violet-400 text-slate-950 hover:bg-violet-300" size="lg" onClick={async () => { setShowSecret(true); await AppHaptics.medium() }}><Eye size={19} />{t('play.show')}</Button>}</div>
     </Shell>
   }
@@ -109,7 +115,14 @@ export function ImpostorDaPalavraPlayScreen() {
   if (session.phase === 'round-summary' && session.lastRoundResult) {
     const finished = session.round >= session.participants.length
     const impostorInfo = session.config.impostorMode === 'no-word' ? t('play.noWord') : session.config.impostorMode === 'hint' ? card.impostorHint : card.alternateWord
-    return <Shell title={title}><CenteredIcon icon={<Trophy size={40} />} /><h1 className="mt-5 text-center text-3xl font-black">{t('play.summaryTitle')}</h1><Card className="mx-auto mt-6 max-w-lg p-5"><SummaryRow label={t('play.secretWord')} value={card.word} /><SummaryRow label={t('play.impostorWas')} value={impostor.name} /><SummaryRow label={t('play.accusedWas')} value={accused?.name ?? '-'} /><SummaryRow label={t('play.impostorInfo')} value={impostorInfo} /></Card><Card className="mx-auto mt-4 max-w-lg overflow-hidden"><p className="border-b border-white/10 p-4 text-sm font-black uppercase tracking-wider text-slate-400">{t('play.pointsAwarded')}</p>{session.participants.map((item) => { const award = session.lastRoundResult?.awards.find((entry) => entry.participantId === item.id)?.points ?? 0; return <div className="flex items-center justify-between border-b border-white/10 px-5 py-3 last:border-0" key={item.id}><span className="font-bold">{item.name}</span><span className={cn('font-black', award ? 'text-violet-300' : 'text-slate-500')}>{award ? `+${award}` : t('play.noPoints')}</span></div> })}</Card><Button className="mx-auto mt-6 flex w-full max-w-lg bg-violet-400 text-slate-950 hover:bg-violet-300" size="lg" onClick={async () => { const done = await continueSummary(); if (done) navigate('/games/impostor-da-palavra/result') }}>{finished ? t('play.seeResult') : t('play.nextRound')}<ArrowRight size={19} /></Button></Shell>
+    return <Shell title={title}><CenteredIcon icon={<Trophy size={40} />} /><h1 className="mt-5 text-center text-3xl font-black">{t('play.summaryTitle')}</h1>
+      {session.lastRoundResult.finalGuessCorrect && <div role="status"
+        className="mx-auto mt-5 max-w-lg rounded-2xl border border-lime-300/40 bg-lime-300/10 p-4 text-center">
+        <strong className="text-lime-200">O impostor acertou a palavra!</strong>
+        <p className="mt-2 text-sm text-slate-200">{session.config.scoringMode === 'individual'
+          ? 'Acertou a palavra e ganhou +1 ponto extra.'
+          : 'O palpite estava correto.'}</p>
+      </div>}<Card className="mx-auto mt-6 max-w-lg p-5"><SummaryRow label={t('play.secretWord')} value={card.word} /><SummaryRow label={t('play.impostorWas')} value={impostor.name} /><SummaryRow label={t('play.accusedWas')} value={accused?.name ?? '-'} /><SummaryRow label={t('play.impostorInfo')} value={impostorInfo} /></Card><Card className="mx-auto mt-4 max-w-lg overflow-hidden"><p className="border-b border-white/10 p-4 text-sm font-black uppercase tracking-wider text-slate-400">{t('play.pointsAwarded')}</p>{session.participants.map((item) => { const award = session.lastRoundResult?.awards.find((entry) => entry.participantId === item.id)?.points ?? 0; return <div className="flex items-center justify-between border-b border-white/10 px-5 py-3 last:border-0" key={item.id}><span className="font-bold">{item.name}</span><span className={cn('font-black', award ? 'text-violet-300' : 'text-slate-500')}>{award ? `+${award}` : t('play.noPoints')}</span></div> })}</Card><Button className="mx-auto mt-6 flex w-full max-w-lg bg-violet-400 text-slate-950 hover:bg-violet-300" size="lg" onClick={async () => { const done = await continueSummary(); if (done) navigate('/games/impostor-da-palavra/result') }}>{finished ? t('play.seeResult') : t('play.nextRound')}<ArrowRight size={19} /></Button></Shell>
   }
 
   return <Shell title={title}><p className="text-center text-slate-400">Carregando...</p></Shell>

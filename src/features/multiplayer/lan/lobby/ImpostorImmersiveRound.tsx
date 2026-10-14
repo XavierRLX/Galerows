@@ -52,6 +52,11 @@ function ImpostorImmersiveBody({snapshot, playerId, isHost, busy, connected, onA
     return ()=>{window.removeEventListener('blur',hide);document.removeEventListener('visibilitychange',visibility)}
   },[])
   useEffect(()=>{
+    if (!revealed || pub?.step !== 'reveal' || !connected) return
+    const timeout = window.setTimeout(() => setRevealed(false), 5000)
+    return () => window.clearTimeout(timeout)
+  }, [revealed, pub?.step, connected])
+  useEffect(()=>{
     if(!exitPrompt)return
     const handleBack=(event:Event)=>{event.preventDefault();setExitPrompt(false)}
     const handleKey=(event:KeyboardEvent)=>{if(event.key==='Escape'){event.preventDefault();setExitPrompt(false)}}
@@ -97,7 +102,7 @@ function ImpostorImmersiveBody({snapshot, playerId, isHost, busy, connected, onA
         {pub.step==='reveal'&&<section className="ip-real-identity">
           <div className="ip-stage-heading"><p className="ip-eyebrow">SÓ VOCÊ PODE VER</p>
             <h1>Seu segredo fica com você.</h1>
-            <p>Confira em particular e revele novamente sempre que precisar.</p>
+            <p>Confira em particular. A informação fica visível por 5 segundos e pode ser revelada novamente.</p>
           </div>
           {!priv&&<p role="status" className="ip-team-pending">Esta rodada já está em andamento. Você participará da próxima.</p>}
           {priv&&<section className={'ip-secret-card'+(showSecret?' ip-secret-open':'')} aria-label="Sua informação secreta">
@@ -205,6 +210,13 @@ function ImpostorImmersiveBody({snapshot, playerId, isHost, busy, connected, onA
             <p>{pub.reason==='tied-vote'?'Empate no desempate: o impostor escapou.'
               :pub.reason==='not-found'?'O grupo votou na pessoa errada.':'O impostor foi descoberto.'}</p>
           </div>
+          {pub.result?.impostorGuessedCorrectly && <div className="ip-word-bonus" role="status">
+            <Check size={22} aria-hidden="true"/>
+            <div><strong>O impostor acertou a palavra!</strong>
+              <p>{pub.scoringMode === 'individual'
+                ? 'Acertou a palavra e ganhou +1 ponto extra.'
+                : 'O palpite estava correto.'}</p></div>
+          </div>}
           {pub.result&&<><div className="ip-debrief">
             <div><span className="ip-eyebrow">O IMPOSTOR ERA</span>
               <strong>{nameOf(pub.result.impostorId)}</strong></div>

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import {
   ArrowLeft, ArrowRight, Check, ChevronRight, CircleCheck, Crown, DoorOpen,
   Eye, EyeOff, Gamepad2, Pencil, Layers3, Lightbulb, LockKeyhole, Minus, Plus, QrCode, RotateCw,
-  ShieldQuestion, Skull, Spade, Target, Trophy, Users, Wifi, WifiOff, X,
+  ShieldQuestion, Skull, Spade, Target, Trophy, Users, WifiOff, BookOpen, X,
 } from 'lucide-react'
 import type { RoomCompetitionV2, RoomSnapshotV2 } from '../../persistentProtocol'
 import { gameConfig, lobbyGameCatalog, lobbySummary } from './lobbyView'
@@ -15,6 +15,7 @@ import type { ImpostorMode, ConversationMode } from '../../../impostor-da-palavr
 import type { LobbyGameId, LobbyRole } from './lobbyView'
 import { LanScreenHeader } from './LanScreenHeader'
 import { LobbyRulesSummary } from './LobbyRulesSummary'
+import { ImpostorRulesGuide } from './ImpostorRulesGuide'
 import './lobby.css'
 
 type Action = () => void | Promise<void>
@@ -106,7 +107,7 @@ function RoomCompetitionPanel({ competition, isHost, canFinish, onFinishSession 
 }
 
 export function LobbyRoomView({
-  snapshot, role, playerId, busy, connected = true, status, error, roomCode, inviteQr,
+  snapshot, role, playerId, busy, connected = true, error, roomCode, inviteQr,
   onSelect, onConfigure, onReady, onStart, onGameAction, onGameCommand, onEnd, onBackToLobby,
   onFinishSession, onReconnect, onLeave, onClose, onRefreshInvite, onBrowseGames, onBack, onRename, onReplay,
 }: LobbyRoomViewProps) {
@@ -131,6 +132,7 @@ export function LobbyRoomView({
   const [showCatalog, setShowCatalog] = useState(false)
   const [showPlayers, setShowPlayers] = useState(false)
   const [showStandings, setShowStandings] = useState(false)
+  const [showRulesGuide, setShowRulesGuide] = useState(false)
   const [editingName, setEditingName] = useState(false)
   const ownName = snapshot.roomState.members.find(member => member.playerId === playerId)?.displayName ?? ''
   const [nameDraft, setNameDraft] = useState(ownName)
@@ -209,14 +211,11 @@ export function LobbyRoomView({
     void onSelect(id)
   }
 
-  return <div className="pl03" data-testid="pl03-lobby">
-    <LanScreenHeader title="Sala da galera" onBack={() => void (onBack ?? onBrowseGames)?.()} />
+  return <div className="pl03 pl03-in-room" data-testid="pl03-lobby">
+    <LanScreenHeader title="Sala da galera" onBack={() => void (onBack ?? onBrowseGames)?.()}
+      room={{ code: roomCode ?? snapshot.roomId.slice(-6).toUpperCase(), connected }} />
     <div className="pl03-container">
-      <div className="pl03-feedback" role="status">
-        <span className="pl03-feedback-icon">{connected ? <Wifi size={16} aria-hidden="true" /> : <WifiOff size={16} aria-hidden="true" />}</span>
-        <span className="pl03-room-state"><strong>Sala {snapshot.roomId.slice(-6).toUpperCase()}</strong><small>{connected ? summary.phaseLabel : status}</small></span>
-        <span className="pl03-status-badge">{connected ? 'Conectado' : 'Sem conexão'}</span>
-      </div>
+      {!connected && <p className="pl03-connection-warning" role="status">Conexão interrompida. Aguardando reconexão com a sala.</p>}
       {error && <p role="alert" className="pl03-error"><WifiOff size={17} aria-hidden="true" /> {error}</p>}
 
       {isHost && <details className="pl03-share">
@@ -313,6 +312,10 @@ export function LobbyRoomView({
                 <span className="pl03-game-illustration"><GameGlyph gameId={summary.gameId!} /></span>
                 <div><small>JOGO SELECIONADO</small><strong>{summary.game.title}</strong><span>{summary.game.subtitle}</span></div>
               </div>
+              {summary.gameId === 'impostor-da-palavra' && <button type="button"
+                className="pl03-link-btn pl03-how-to-play" onClick={() => setShowRulesGuide(true)}>
+                <BookOpen size={17} aria-hidden="true" /> Como jogar Impostor da Palavra
+              </button>}
               {isHost && (summary.phase === 'configuring' || summary.phase === 'lobby') &&
                 <button className="pl03-link-btn" type="button" onClick={() => setShowCatalog(true)} disabled={busy || !connected}>Trocar jogo <ArrowRight size={15} aria-hidden="true" /></button>}
             </div>}
@@ -498,6 +501,7 @@ export function LobbyRoomView({
       </footer>
     </div>
 
+    {showRulesGuide && <ImpostorRulesGuide onClose={() => setShowRulesGuide(false)} />}
     {exitPrompt && <div className="pl03-modal-backdrop"><div ref={exitDialog} className="pl03-dialog" role="dialog"
       aria-modal="true" aria-labelledby="pl03-exit-title">
       <button type="button" className="pl03-dismiss" aria-label="Cancelar saída" onClick={() => setExitPrompt(false)}><X size={21} /></button>

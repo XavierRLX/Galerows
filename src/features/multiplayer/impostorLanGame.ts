@@ -62,7 +62,7 @@ export interface ImpostorLanPublic {
   winner: 'impostor' | 'group' | null
   reason: 'not-found' | 'stolen-word' | 'caught' | 'tied-vote' | null
   result: { word: string; impostorId: string; guessedWord: string | null;
-    points: Record<string, number> } | null
+    impostorGuessedCorrectly?: boolean; points: Record<string, number> } | null
 }
 
 export interface ImpostorLanPrivate {
@@ -300,6 +300,7 @@ export const impostorLanGame = defineMultiplayerGame<ImpostorLanConfig, Impostor
     winner: state.winner, reason: state.reason,
     result: state.step === 'summary'
       ? { word: state.word, impostorId: state.impostorId, guessedWord: state.guessedWord,
+        impostorGuessedCorrectly: state.guessedWord !== null && matchWord(state.guessedWord) === matchWord(state.word),
         points: points(state) } : null,
   }),
   projectPrivate: (state, id): ImpostorLanPrivate | null => {

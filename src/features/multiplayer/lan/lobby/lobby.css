@@ -254,3 +254,48 @@
 .ip-guess-form label{font-size:15px;font-weight:700}
 .ip-guess-form input{border:1px solid #8272a9;border-radius:13px;background:#16112d;color:white;padding:15px;font-size:18px;min-height:48px}
 .ip-team-brief button{min-height:40px;padding:9px 12px;margin:6px 8px 6px 0;border:1px solid #8778aa;border-radius:10px;color:inherit;background:rgba(127,101,190,.25)}
+
+/* Lobby final: a fixed-height frame keeps the room and connection status visible. */
+.pl03-in-room{height:100dvh;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.pl03-in-room .pl03-header{width:100%;flex:0 0 auto;padding-block:calc(7px + env(safe-area-inset-top,0px)) 7px;min-height:58px;gap:8px}
+.pl03-in-room .pl03-header h1{font-size:clamp(16px,4.4vw,22px);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-width:0}
+.pl03-header-room{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none;max-width:48%;min-width:0}
+.pl03-header-room>div{display:grid;gap:1px;min-width:0}
+.pl03-header-room strong{font-size:12px;font-weight:800;color:var(--cream);white-space:nowrap}
+.pl03-header-room small{font-size:10px;line-height:1.1;color:var(--muted);white-space:nowrap}
+.pl03-connection-light{width:10px;height:10px;border-radius:50%;flex:none}
+.pl03-connection-light.is-connected{background:#98ee70;box-shadow:0 0 0 2px #98ee7024;animation:pl03-live-pulse 1.65s ease-in-out infinite}
+.pl03-connection-light.is-disconnected{background:#ff6275;box-shadow:0 0 0 2px #ff627530}
+@keyframes pl03-live-pulse{50%{box-shadow:0 0 0 6px #98ee7030;opacity:.65}}
+@media(prefers-reduced-motion:reduce){.pl03-connection-light.is-connected{animation:none}}
+.pl03-in-room .pl03-container{flex:1;min-height:0;display:flex;flex-direction:column;padding:8px 0 0;overflow:hidden}
+.pl03-in-room .pl03-share{flex:none;margin-bottom:4px}
+.pl03-in-room .pl03-share summary{min-height:42px}
+.pl03-in-room .pl03-compact-tools{flex:none;margin-bottom:6px;gap:5px}
+.pl03-in-room .pl03-compact-tools button{min-height:40px;padding:5px 8px}
+.pl03-in-room .pl03-layout{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:2px 0 8px}
+.pl03-in-room .pl03-primary{display:block}
+.pl03-in-room .pl03-game{min-height:0}
+.pl03-in-room .pl03-footer{flex:none;padding-block:5px calc(5px + env(safe-area-inset-bottom,0px))}
+.pl03-how-to-play{margin-top:8px;border:1px solid #b8a0ff55!important;border-radius:12px!important;padding:8px 12px!important;min-height:40px!important}
+.pl03-guide-backdrop{position:fixed;inset:0;z-index:125;padding:max(12px,env(safe-area-inset-top,0px)) 12px max(12px,env(safe-area-inset-bottom,0px));background:rgba(4,3,13,.86);display:grid;place-items:center}
+.pl03-guide{display:flex;flex-direction:column;width:min(100%,610px);max-height:100%;overflow:hidden;border-radius:20px;border:1px solid #816aa8;background:#181228;box-shadow:0 22px 90px #000c}
+.pl03-guide-header{flex:none;display:flex;gap:10px;align-items:flex-start;justify-content:space-between;padding:20px 18px 13px;border-bottom:1px solid #816aa83d}
+.pl03-guide-header>div>span{display:flex;align-items:center;gap:6px;color:#c1aff5;font-size:11px;font-weight:700;letter-spacing:.09em}
+.pl03-guide-header h2{font-size:clamp(18px,5vw,24px);margin-top:7px;line-height:1.2}
+.pl03-guide-header button{width:40px;height:40px;flex:none;border:1px solid #816aa8;border-radius:12px;background:#352b4a;color:white}
+.pl03-guide-content{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:8px 18px 15px;display:grid;gap:8px}
+.pl03-guide-content section{padding:13px 0;border-bottom:1px solid #ffffff17}
+.pl03-guide-content h3{font-size:16px;display:flex;align-items:center;gap:9px;color:#e4d7ff;margin:0 0 8px}
+.pl03-guide-content p,.pl03-guide-content dd,.pl03-guide-content li{font-size:13px;line-height:1.6;color:#d5cbe2}
+.pl03-guide-content dl{display:grid;gap:5px;margin:0}
+.pl03-guide-content dt{font-weight:800;color:#f4edff;margin-top:9px;font-size:14px}
+.pl03-guide-content dd{margin:0}
+.pl03-guide-content ol{padding-left:21px;display:grid;gap:7px;margin:0}
+.pl03-guide-footer{flex:none;padding:12px 18px;background:#221a36;border-top:1px solid #816aa83d}
+.pl03-guide-footer button{width:100%;min-height:46px;border:none;border-radius:12px;background:var(--lime);color:#1b2012;font-weight:800;display:flex;align-items:center;justify-content:center;gap:9px}
+.ip-word-bonus{display:flex;align-items:center;gap:12px;padding:16px;margin:16px 0;border:1px solid #a5ed7c80;background:#a5ed7c1c;color:#d5ffb8;border-radius:15px}
+.ip-word-bonus strong{font-size:16px}
+.ip-word-bonus p{margin:5px 0 0;font-size:13px;color:#f0ffe7}
+@media(max-width:390px){.pl03-header-room strong{font-size:11px}.pl03-header-room small{font-size:9px}.pl03-in-room .pl03-compact-tools button{font-size:11px;padding-inline:6px}.pl03-in-room .pl03-container{width:min(100% - 20px,1000px)}}
+.pl03-connection-warning{font-size:12px;color:#ffb3bf;background:#ff62751a;border:1px solid #ff62754a;border-radius:10px;padding:8px 10px;margin:0 0 6px!important;flex:none}
