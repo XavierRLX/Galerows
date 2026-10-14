@@ -7,9 +7,9 @@ Base do código: `src/features/cidade-dorme/{cidadeDorme.rules,cidadeDorme.setup
 ## A. Decisões aprovadas pelo responsável de produto
 
 - Duas conduções: `automatic` (todos jogam, host participa e executa orquestrador autoritativo) e `mayor` (prefeito humano com um aparelho próprio, controla e narra, **não joga, não recebe papel e não vota**).
-- Com dois integrantes assassinos: **1 Assassino + 1 Traidor**. O Assassino começa com a ação noturna de matar. O Traidor só assume essa ação **quando o Assassino morrer**, e desde que esteja vivo.
-- Ao revelar o papel, Assassino e Traidor **sabem reciprocamente os nomes e papéis**. A relação nunca aparece nas projeções públicas.
-- **Investigação do Traidor — APROVADO:** enquanto inativo e o Assassino original estiver vivo, Detetive recebe `innocent`; após promoção autoritativa a Assassino ativo, recebe `suspect`. Cada resultado é um snapshot histórico da noite investigada; nunca recalcular retroativamente nem revelar a sucessão publicamente.
+- Configurações de equipe assassina aprovadas: **1 integrante = 1 Assassino**; **2 integrantes = 1 Assassino + 1 Traidor**; **3 integrantes = 1 Assassino + 2 Traidores**. O Assassino original executa a ação noturna; os Traidores só agem após a morte do ator ativo, pela ordem de sucessão sorteada no início. No máximo **um integrante** pode executar `KILL` por noite.
+- Ao revelar os papéis, **todos os membros da equipe assassina** conhecem privadamente os nomes e papéis dos demais. No caso de dois Traidores, a ordem de sucessão também é mostrada apenas à equipe. Essa ordem nunca entra no estado público; os demais jogadores não conhecem o líder nem os sucessores.
+- **Investigação do Traidor — APROVADO:** cada Traidor **inativo** retorna `innocent` ao Detetive, independentemente de qual aliado esteja executando os ataques. Quando **aquele Traidor** for promovido a Assassino ativo, passa a retornar `suspect`. O Assassino original é sempre `suspect` enquanto vivo. Assim, com 2 Traidores, o segundo continua `innocent` mesmo depois da promoção do primeiro. Cada resultado é um snapshot histórico da noite investigada; nunca recalcular retroativamente nem revelar a sucessão publicamente.
 - **Jester / Coringa opcional**. Se for efetivamente **eliminado pela votação**, vence. Assassinato noturno, empate de votos ou sobreviver até outro vencedor não dão a vitória ao Jester.
 - LAN deve oferecer as regras do modo de 1 celular: quantidade de assassinos, médico, detetive, Jester, revelar papel ao morrer, médico se autoprotege/limite, repetir proteção e outras opções existentes; não duplicar regras divergentes.
 
@@ -17,16 +17,17 @@ Base do código: `src/features/cidade-dorme/{cidadeDorme.rules,cidadeDorme.setup
 
 | Estado | Quem executa `KILL` na noite válida | Consequência |
 |---|---|---|
-| Assassino e Traidor vivos | Somente Assassino | Traidor participa do debate e vota; não age à noite |
-| Assassino eliminado, Traidor vivo | Somente Traidor a partir da **próxima noite** | Promoção autoritativa e privada, uma vez |
-| Traidor eliminado, Assassino vivo | Somente Assassino | Assassino perde sucessor |
-| Ambos eliminados | Ninguém | Vitória da cidade, salvo prioridade do Jester por voto |
+| Assassino original vivo e Traidores vivos | Somente Assassino original | Traidores debatem e votam, mas não têm ação noturna |
+| Assassino original eliminado, Traidor 1 vivo | Somente Traidor 1 a partir da **próxima noite** | Promoção secreta e autoritativa |
+| Ator ativo eliminado, Traidor 2 vivo | Somente Traidor 2 a partir da **próxima noite** | Próximo sucessor vivo na ordem predefinida assume |
+| Traidor de maior prioridade eliminado antes de assumir | Ator atual permanece | Ao precisar de sucessor, ignorar o Traidor morto |
+| Todos os membros assassinos eliminados | Ninguém | Vitória da cidade, salvo prioridade do Jester por voto |
 
-- Manter `roleKey='traitor'` como papel original; a capacidade de matar é estado derivado no host (ator ativo), **não reatribuir o papel original**. Após promoção, painel privado pode exibir “Você assumiu a função de Assassino”.
-- Bloquear comandos `KILL` forjados do Traidor ainda inativo; bloquear alvo aliado (Assassino/Traidor) e comandos duplicados/atrasados.
-- O Assassino conhece o Traidor, e o Traidor conhece o Assassino na carta inicial. Um jogador da cidade, Detetive, Médico ou Jester jamais recebe esses IDs no snapshot privado; host-jogador não recebe privilégio adicional de leitura de segredos pela interface.
-- Transição ao Traidor ativo é **secreta**. A voz pública continua “Assassino, acorde”; não anunciar “Traidor assumiu” nem o nome do novo Assassino. Se `revealRoleOnDeath=true`, o papel original do eliminado pode ser publicado conforme configuração, mas o sucessor não é exposto.
-- O Traidor conta como membro vivo da equipe assassina desde o começo para condição de vitória; a cidade NÃO vence apenas ao eliminar o Assassino enquanto o Traidor permanece vivo.
+- Manter `roleKey='traitor'` como papel original; a capacidade de matar é derivada da lista de prioridade e dos jogadores vivos, **não reatribuir o papel original**. Após promoção, o painel privado pode exibir “Você assumiu a função de Assassino”. A promoção acontece logicamente quando se confirma uma eliminação, mas a ação `KILL` só está disponível na próxima noite válida.
+- Bloquear comandos `KILL` forjados de qualquer Traidor ainda inativo, mesmo depois que outro Traidor tenha assumido; bloquear alvo aliado (Assassino/Traidores) e comandos duplicados/atrasados. Se o sucessor prioritário morreu, escolher o próximo **vivo** sem novo sorteio. Desconexão do ator ativo pausa/aguarda; **não** promove Traidor por perda de rede.
+- Cada integrante da equipe assassina conhece privadamente todos os aliados e, quando houver dois Traidores, sua prioridade de sucessão. Cidadão, Detetive, Médico ou Jester jamais recebem esses IDs ou a ordem no snapshot privado; host-jogador não recebe privilégio adicional pela interface.
+- Transição ao Traidor ativo é **secreta**. A voz pública continua “Assassino, acorde”; não anunciar “Traidor assumiu”, número da sucessão nem o nome do novo ator. Se `revealRoleOnDeath=true`, o papel original do eliminado pode ser publicado conforme configuração, mas a identidade do sucessor não é exposta.
+- **Todos os Traidores vivos** contam para o tamanho da equipe assassina desde o começo, inclusive quando inativos. A cidade só vence ao eliminar **Assassino e todos os Traidores**, não ao eliminar apenas o ator ativo. Para paridade, usar a facção, não o papel que está com a ação de matar.
 - A regra de paridade existente precisa contabilizar integrantes assassinos vivos, incluindo Traidor ainda inativo. Prioridade de vitória: Jester votado > cidade se equipe assassina inteira eliminada > assassinos por paridade.
 - Empate do Cidade Dorme: ninguém eliminado, sem vitória do Jester nem promoção. Não importar desempate do Impostor.
 
@@ -53,8 +54,8 @@ Base do código: `src/features/cidade-dorme/{cidadeDorme.rules,cidadeDorme.setup
 
 ## E. Configuração e gatilhos de papel
 
-- Oferecer 1 Assassino ou 1 Assassino + 1 Traidor; a opção de dois só é recomendada para grupos grandes (padrão de projeto atual sugere dois a partir de 8 participantes).
-- **Pendente:** hoje o modo de 1 celular permite **3 assassinos** e recomenda 3 com 12 jogadores. Não inventar 2 Traidores nem ignorar a opção de 3 sem decisão específica do responsável.
+- Oferecer **1 Assassino**, **1 Assassino + 1 Traidor** ou **1 Assassino + 2 Traidores**. Preservar os valores disponíveis no modo de 1 celular. Preset atual: 1 integrante para 4–7 jogadores, 2 integrantes para 8–11 e 3 para 12; ajustar os nomes dos papéis, não a contagem total sem outra aprovação.
+- Ao criar a GameSession, sortear uma **lista imutável** de prioridade (`killerId`, `traitorPriorityIds`), guardada apenas no servidor host e nas projeções privadas dos aliados. O ator autorizado para cada noite é o primeiro integrante **vivo** dessa lista; qualquer morto anterior é pulado. A lista não muda por desconexão ou por troca de fase.
 - Médico, Detetive, Jester, revelação ao morrer e regras de proteção devem vir de configuração compartilhada entre os dois modos.
 - Painel de configuração do lobby pode ficar em seções recolhíveis para evitar scroll da tela inteira.
 
@@ -68,14 +69,17 @@ Base do código: `src/features/cidade-dorme/{cidadeDorme.rules,cidadeDorme.setup
 6. Traidor eliminado antes do Assassino: não existe outro sucessor; Assassino segue ativo.
 7. Ambos eliminados: cidade vence; empates não eliminam ninguém.
 8. Jester votado e eliminado vence imediatamente; Jester morto à noite não vence.
-9. Detetive nunca recebe resultados de investigação de outros jogadores. Testar Traidor `innocent` antes de assumir e `suspect` após assumir, preservando o histórico antigo sem recalcular; a mesma regra deve valer no modo de 1 celular.
+9. Detetive nunca recebe resultados de investigação de outros jogadores. Com dois Traidores, testar `innocent` para ambos no início, `suspect` para o Traidor 1 após primeira sucessão e `innocent` ainda para o Traidor 2, que só se torna `suspect` ao assumir depois; preservar investigações antigas; paridade igual no modo de 1 celular.
 10. Cliente desconectado, áudio repetido, ações duplicadas/atrasadas ou GameSession anterior não alteram decisões nem reproduzem segredos de outra rodada.
-11. Mesmo comportamento de regras no modo de 1 celular e no LAN; manter compatibilidade de saves existentes.
+11. Com três integrantes, sortear ordem única 1 Assassino → Traidor 1 → Traidor 2; matar Traidor 1 antes da sucessão faz Traidor 2 assumir direto após morte do Assassino; ator ativo morto nunca realiza ação seguinte; rejeitar `KILL` de dois atores na mesma noite. Desconectar não é morrer e não ativa sucessão.
+12. Se apenas um Traidor ficar vivo, a cidade não vence; quando todos os integrantes assassinos morrerem, cidade vence; membro inativo conta na paridade da equipe.
+13. Mesmo comportamento de regras no modo de 1 celular e no LAN; manter compatibilidade de saves existentes.
 
-## G. Decisões ainda abertas (não presumir aprovação)
-- **Configuração com três assassinos:** manter 1 Assassino + 2 Traidores com sucessão definida (precisaria regra de prioridade), limitar o novo modo a até dois integrantes, ou criar uma terceira configuração. Não implementar sem escolha.
-- **Visibilidade do prefeito:** quais detalhes secretos o prefeito humano deve poder consultar? Sugerido: mapa de papéis protegido por ação explícita e status privado de ações, sem exibir em tela pública.
+## G. Decisão ainda aberta (não presumir aprovação)
+
+A composição com três integrantes está **APROVADA** (Assassino + 2 Traidores, sucessão por ordem sorteada e secreta). Resta:
+- **Visibilidade do prefeito — PENDENTE:** decidir se o prefeito vê apenas progresso/ações concluídas sem identidades, ou se pode abrir um mapa completo de papéis em painel confidencial deliberado. Recomendação: painel padrão sem segredos, com consulta excepcional protegida por uma ação explícita (sem expor isso aos jogadores).
 
 ## H. Estado da entrega
 
-Documento de design apenas. Nenhum ajuste de código, APK, deploy, sala LAN ou `main` nesta etapa. A investigação dinâmica do Traidor já foi aprovada. Antes de implementar, atualizar o plano CITY-UX e resolver a composição com três integrantes assassinos e a visibilidade de segredos do prefeito.
+Documento de design apenas. Nenhum ajuste de código, APK, deploy, sala LAN ou `main` nesta etapa. **A investigação dinâmica do Traidor e a composição com três integrantes e ordem de sucessão foram aprovadas.** Antes da implementação dos controles do prefeito, resolver sua visibilidade de informações privadas; atualizar o plano CITY-UX preservando eventuais edições concorrentes.
