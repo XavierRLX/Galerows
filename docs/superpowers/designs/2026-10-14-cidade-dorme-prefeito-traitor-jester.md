@@ -36,7 +36,7 @@ Base do código: `src/features/cidade-dorme/{cidadeDorme.rules,cidadeDorme.setup
 - Modo `automatic`: todos os membros da sala que participam recebem papel, inclusive o host. Se o host morrer **como personagem**, servidor LAN permanece ativo.
 - Modo `mayor`: o host é narrador/árbitro, está na Room mas **não** integra `participantIds`; não ocupa vaga de papel, não participa do mínimo de jogadores e não entra na votação.
 - Com mínimo atual de 4 participantes, prefeito dedicado exige **1 dispositivo de prefeito + 4 de jogadores**. Os atuais 3 aparelhos físicos + emulador permitem homologar `automatic` com quatro, mas não `mayor` com quatro jogadores.
-- Prefeito recebe painel de roteiro da noite e status das ações autorizadas. Acesso a mapa secreto de papéis, se necessário para narrar, deve ser explícito e restrito ao dispositivo de moderador — nunca compartilhar esse mapa nos snapshots comuns.
+- **Painel do Prefeito — APROVADO:** por padrão, exibe somente roteiro, fase, conexão dos jogadores, número de ações pendentes/concluídas, pausa e botões autorizados de avançar; nenhum papel, identidade da equipe assassina, alvo ou investigação fica exposto. O botão separado **Consultar papéis e ações** exige confirmação consciente de privacidade no dispositivo do prefeito. A consulta é apenas leitura, temporária, não exibe segredos no estado público, não autoriza escolher alvos nem votar; pode ser fechada imediatamente e deve ocultar dados ao perder foco/bloquear o aparelho. Host no modo automático jamais recebe este painel privilegiado.
 - O host controla revisionamento, validações, relógio/instante de fase e `eventId` monotônico para evitar efeitos duplicados. Celular reconectado restaura fase e apenas seus segredos.
 - Fases: identidades privadas (todos confirmam) → narração “Todos dormem” → Assassino seleciona alvo (ou Traidor promovido) → Médico protege se vivo/habilitado → Detetive investiga se vivo/habilitado → “Cidade acorda” e consequência pública → discussão → voto individual → apuração/empate/resultado → próxima noite ou encerramento.
 - Mesmo evento de fase e legenda aparece a todos; **somente o ator autorizado tem ação secreta**. Os outros veem espera temática, sem indicação do alvo ou do papel do ator.
@@ -75,11 +75,10 @@ Base do código: `src/features/cidade-dorme/{cidadeDorme.rules,cidadeDorme.setup
 12. Se apenas um Traidor ficar vivo, a cidade não vence; quando todos os integrantes assassinos morrerem, cidade vence; membro inativo conta na paridade da equipe.
 13. Mesmo comportamento de regras no modo de 1 celular e no LAN; manter compatibilidade de saves existentes.
 
-## G. Decisão ainda aberta (não presumir aprovação)
+## G. Gate das regras de produto — FECHADO
 
-A composição com três integrantes está **APROVADA** (Assassino + 2 Traidores, sucessão por ordem sorteada e secreta). Resta:
-- **Visibilidade do prefeito — PENDENTE:** decidir se o prefeito vê apenas progresso/ações concluídas sem identidades, ou se pode abrir um mapa completo de papéis em painel confidencial deliberado. Recomendação: painel padrão sem segredos, com consulta excepcional protegida por uma ação explícita (sem expor isso aos jogadores).
+A composição com três integrantes está **APROVADA** (Assassino + 2 Traidores, sucessão por ordem sorteada e secreta). A visibilidade do prefeito também está **APROVADA**: painel padrão sem informações secretas e consulta privada deliberada de papéis/ações mediante confirmação. Não há outras decisões de regra bloqueando o início da implementação incremental. Novos critérios técnicos ou ambiguidades serão tratados como gates específicos, sem inventar regra.
 
 ## H. Estado da entrega
 
-Documento de design apenas. Nenhum ajuste de código, APK, deploy, sala LAN ou `main` nesta etapa. **A investigação dinâmica do Traidor e a composição com três integrantes e ordem de sucessão foram aprovadas.** Antes da implementação dos controles do prefeito, resolver sua visibilidade de informações privadas; atualizar o plano CITY-UX preservando eventuais edições concorrentes.
+Documento de design; nenhuma implementação é implicada apenas por este registro. **A investigação dinâmica do Traidor, a sucessão de até dois Traidores e o painel privado do Prefeito estão aprovados.** Prosseguir em branch/worktree isolado, com contratos e TDD primeiro; preservar alterações locais não relacionadas, sem alterar `main` nem o servidor Live dos aparelhos até gate posterior.
