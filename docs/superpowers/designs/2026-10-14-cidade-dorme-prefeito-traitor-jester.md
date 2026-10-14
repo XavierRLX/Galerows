@@ -9,6 +9,7 @@ Base do código: `src/features/cidade-dorme/{cidadeDorme.rules,cidadeDorme.setup
 - Duas conduções: `automatic` (todos jogam, host participa e executa orquestrador autoritativo) e `mayor` (prefeito humano com um aparelho próprio, controla e narra, **não joga, não recebe papel e não vota**).
 - Com dois integrantes assassinos: **1 Assassino + 1 Traidor**. O Assassino começa com a ação noturna de matar. O Traidor só assume essa ação **quando o Assassino morrer**, e desde que esteja vivo.
 - Ao revelar o papel, Assassino e Traidor **sabem reciprocamente os nomes e papéis**. A relação nunca aparece nas projeções públicas.
+- **Investigação do Traidor — APROVADO:** enquanto inativo e o Assassino original estiver vivo, Detetive recebe `innocent`; após promoção autoritativa a Assassino ativo, recebe `suspect`. Cada resultado é um snapshot histórico da noite investigada; nunca recalcular retroativamente nem revelar a sucessão publicamente.
 - **Jester / Coringa opcional**. Se for efetivamente **eliminado pela votação**, vence. Assassinato noturno, empate de votos ou sobreviver até outro vencedor não dão a vitória ao Jester.
 - LAN deve oferecer as regras do modo de 1 celular: quantidade de assassinos, médico, detetive, Jester, revelar papel ao morrer, médico se autoprotege/limite, repetir proteção e outras opções existentes; não duplicar regras divergentes.
 
@@ -67,16 +68,14 @@ Base do código: `src/features/cidade-dorme/{cidadeDorme.rules,cidadeDorme.setup
 6. Traidor eliminado antes do Assassino: não existe outro sucessor; Assassino segue ativo.
 7. Ambos eliminados: cidade vence; empates não eliminam ninguém.
 8. Jester votado e eliminado vence imediatamente; Jester morto à noite não vence.
-9. Detetive nunca recebe resultados de investigação de outros jogadores; regra de Traidor suspeito/inocente será testada após decisão.
+9. Detetive nunca recebe resultados de investigação de outros jogadores. Testar Traidor `innocent` antes de assumir e `suspect` após assumir, preservando o histórico antigo sem recalcular; a mesma regra deve valer no modo de 1 celular.
 10. Cliente desconectado, áudio repetido, ações duplicadas/atrasadas ou GameSession anterior não alteram decisões nem reproduzem segredos de outra rodada.
 11. Mesmo comportamento de regras no modo de 1 celular e no LAN; manter compatibilidade de saves existentes.
 
 ## G. Decisões ainda abertas (não presumir aprovação)
-
-- **Investigação do Traidor:** o Detetive vê `suspect` desde o começo (afiliação assassina) OU `innocent` enquanto Traidor está inativo e `suspect` após promoção? Recomendação inicial: suspeito desde o começo por consistência de facção, mas exige decisão de produto.
 - **Configuração com três assassinos:** manter 1 Assassino + 2 Traidores com sucessão definida (precisaria regra de prioridade), limitar o novo modo a até dois integrantes, ou criar uma terceira configuração. Não implementar sem escolha.
 - **Visibilidade do prefeito:** quais detalhes secretos o prefeito humano deve poder consultar? Sugerido: mapa de papéis protegido por ação explícita e status privado de ações, sem exibir em tela pública.
 
 ## H. Estado da entrega
 
-Documento de design apenas. Nenhum ajuste de código, APK, deploy, sala LAN ou `main` nesta etapa. Antes de implementar, atualizar o plano CITY-UX e aprovar as duas decisões de regras que impactam o core.
+Documento de design apenas. Nenhum ajuste de código, APK, deploy, sala LAN ou `main` nesta etapa. A investigação dinâmica do Traidor já foi aprovada. Antes de implementar, atualizar o plano CITY-UX e resolver a composição com três integrantes assassinos e a visibilidade de segredos do prefeito.
