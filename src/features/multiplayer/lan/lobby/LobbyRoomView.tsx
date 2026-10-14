@@ -1,17 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
-  ArrowLeft, ArrowRight, Check, ChevronRight, CircleCheck, Copy, Crown, DoorOpen,
-  Eye, EyeOff, Gamepad2, Layers3, Lightbulb, LockKeyhole, Minus, Plus, QrCode, RotateCw,
-  ShieldCheck, ShieldQuestion, Skull, Spade, Sparkles, Target, Trophy, Users, Wifi, WifiOff, X,
+  ArrowLeft, ArrowRight, Check, ChevronRight, CircleCheck, Crown, DoorOpen,
+  Eye, EyeOff, Gamepad2, Pencil, Layers3, Lightbulb, LockKeyhole, Minus, Plus, QrCode, RotateCw,
+  ShieldQuestion, Skull, Spade, Target, Trophy, Users, Wifi, WifiOff, X,
 } from 'lucide-react'
 import type { RoomCompetitionV2, RoomSnapshotV2 } from '../../persistentProtocol'
 import { gameConfig, lobbyGameCatalog, lobbySummary } from './lobbyView'
 import { ImpostorLanRound } from './ImpostorLanRound'
+import { ImpostorImmersiveRound } from './ImpostorImmersiveRound'
 import { PistaUnicaLanRound } from './PistaUnicaLanRound'
 import { CidadeDormeLanRound } from './CidadeDormeLanRound'
 import type { PistaUnicaCategory } from '../../../pista-unica/pistaUnica.types'
 import type { ImpostorMode, ConversationMode } from '../../../impostor-da-palavra/impostorDaPalavra.types'
 import type { LobbyGameId, LobbyRole } from './lobbyView'
+import { LanScreenHeader } from './LanScreenHeader'
+import { LobbyRulesSummary } from './LobbyRulesSummary'
 import './lobby.css'
 
 type Action = () => void | Promise<void>
@@ -41,6 +44,9 @@ export interface LobbyRoomViewProps {
   onLeave: Action
   onClose: Action
   onRefreshInvite: Action
+  onRename?: (name: string) => void | Promise<void>
+  onReplay?: Action
+  onBack?: Action
   onBrowseGames?: Action
 }
 
@@ -56,7 +62,7 @@ function word(value: unknown, field: string) {
   const candidate = (value as Record<string, unknown>)[field]
   return typeof candidate === 'string' || typeof candidate === 'number' ? String(candidate) : null
 }
-const cardNames = Object.keys(lobbyGameCatalog) as LobbyGameId[]
+const cardNames: LobbyGameId[] = ['impostor-da-palavra', 'pista-unica', 'cidade-dorme']
 
 function RoomCompetitionPanel({ competition, isHost, canFinish, onFinishSession }: {
   competition: RoomCompetitionV2; isHost: boolean; canFinish: boolean; onFinishSession?: Action
@@ -100,26 +106,61 @@ function RoomCompetitionPanel({ competition, isHost, canFinish, onFinishSession 
 }
 
 export function LobbyRoomView({
-  snapshot, role, playerId, busy, connected = true, status, error, code, roomCode, hostIp, inviteQr, inviteText,
+  snapshot, role, playerId, busy, connected = true, status, error, roomCode, inviteQr,
   onSelect, onConfigure, onReady, onStart, onGameAction, onGameCommand, onEnd, onBackToLobby,
-  onFinishSession, onReconnect, onLeave, onClose, onRefreshInvite, onBrowseGames,
+  onFinishSession, onReconnect, onLeave, onClose, onRefreshInvite, onBrowseGames, onBack, onRename, onReplay,
 }: LobbyRoomViewProps) {
   const summary = lobbySummary(snapshot, role, playerId)
   const isHost = role === 'host'
   const competition = snapshot.roomState.competition
   const competitionFinished = competition?.status === 'finished'
+  const saved = snapshot.roomState.selectedConfig as Record<string, unknown> | null
   const [configNumber, setConfigNumber] = useState(2)
-  const [impostorMode, setImpostorMode] = useState<ImpostorMode>('no-word')
-  const [conversationMode, setConversationMode] = useState<ConversationMode>('one-word')
-  const [pistaCategories, setPistaCategories] = useState<PistaUnicaCategory[]>(['words', 'movies', 'series'])
+  const [impostorMode, setImpostorMode] = useState<ImpostorMode>(() => (saved?.impostorMode as ImpostorMode) ?? 'no-word')
+  const [conversationMode, setConversationMode] = useState<ConversationMode>(() => (saved?.conversationMode as ConversationMode) ?? 'one-word')
+  const [scoringMode, setScoringMode] = useState<'classic' | 'individual'>(() => saved?.scoringMode === 'individual' ? 'individual' : 'classic')
+  const [timerSeconds, setTimerSeconds] = useState<0 | 120 | 180 | 300>(() =>
+    saved?.timerSeconds === 120 || saved?.timerSeconds === 180 || saved?.timerSeconds === 300
+      ? saved.timerSeconds : 0)
+  const [pistaCategories, setPistaCategories] = useState<PistaUnicaCategory[]>(() => (saved?.categories as PistaUnicaCategory[]) ?? ['words', 'movies', 'series'])
   const [cidadeRoles, setCidadeRoles] = useState({
-    enableDoctor: true, enableDetective: true,
-    enableJester: false, revealRoleOnDeath: false,
+    enableDoctor: typeof saved?.enableDoctor === 'boolean' ? saved.enableDoctor : true,
+    enableDetective: typeof saved?.enableDetective === 'boolean' ? saved.enableDetective : true,
+    enableJester: saved?.enableJester === true, revealRoleOnDeath: saved?.revealRoleOnDeath === true,
   })
   const [showCatalog, setShowCatalog] = useState(false)
+  const [showPlayers, setShowPlayers] = useState(false)
+  const [showStandings, setShowStandings] = useState(false)
+  const [editingName, setEditingName] = useState(false)
+  const ownName = snapshot.roomState.members.find(member => member.playerId === playerId)?.displayName ?? ''
+  const [nameDraft, setNameDraft] = useState(ownName)
+  const openPlayers = () => { setShowStandings(false); setShowPlayers(true); setEditingName(false); setNameDraft(ownName) }
+  const closePanels = () => { setShowPlayers(false); setShowStandings(false); setEditingName(false) }
   const [revealedSessionId, setRevealedSessionId] = useState<string | null>(null)
   const [exitPrompt, setExitPrompt] = useState(false)
-  const [copied, setCopied] = useState(false)
+  const exitDialog = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!exitPrompt) return
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    const buttons = () => Array.from(exitDialog.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? [])
+    buttons()[0]?.focus()
+    const closePrompt = (event: Event) => { event.preventDefault(); setExitPrompt(false) }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closePrompt(event)
+      if (event.key === 'Tab') {
+        const controls = buttons(), first = controls[0], last = controls.at(-1)
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+      }
+    }
+    window.addEventListener('galerows:back', closePrompt)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('galerows:back', closePrompt)
+      document.removeEventListener('keydown', onKey)
+      if (opener?.isConnected) opener.focus()
+    }
+  }, [exitPrompt])
 
   useEffect(() => {
     // A private card intentionally revealed in the foreground must never remain
@@ -147,11 +188,21 @@ export function LobbyRoomView({
   const canAct = !busy && connected && summary.phase === 'playing'
     && summary.members.find(member => member.isYou)?.participation === 'active'
 
-  async function copyInvite() {
-    if (!inviteText || !navigator.clipboard?.writeText) return
-    try { await navigator.clipboard.writeText(inviteText); setCopied(true) }
-    catch { setCopied(false) }
+  // No extra lobby between START_GAME and personal identity. Every native device
+  // renders the same authoritative GameSession phase; only its own card is private.
+  const currentImpostor = snapshot.gamePublicState?.gameId === 'impostor-da-palavra'
+    ? snapshot.gamePublicState.data as { flow?: string } : null
+  if ((summary.phase === 'playing' || summary.phase === 'results')
+    && summary.gameId === 'impostor-da-palavra'
+    && currentImpostor?.flow === 'individual-vote' && onGameCommand) {
+    return <ImpostorImmersiveRound snapshot={snapshot} playerId={playerId} isHost={isHost}
+      busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
+      onEnd={() => void onEnd()} onBackToLobby={() => void onBackToLobby()}
+      onReplay={onReplay ? () => void onReplay() : undefined}
+      onReconnect={() => void onReconnect()} onLeave={() => void onLeave()}
+      onClose={() => void onClose()} />
   }
+
   function selectGame(id: LobbyGameId) {
     setShowCatalog(false)
     setConfigNumber(lobbyGameCatalog[id].defaultValue)
@@ -159,35 +210,65 @@ export function LobbyRoomView({
   }
 
   return <div className="pl03" data-testid="pl03-lobby">
-    <header className="pl03-header">
-      <img src="/assets/brand/galerows-logo.svg" alt="Galerows" width="168" height="42" />
-      <span className="pl03-header-tag"><Wifi size={14} aria-hidden="true" /> LOCAL / LAN</span>
-    </header>
-
+    <LanScreenHeader title="Sala da galera" onBack={() => void (onBack ?? onBrowseGames)?.()} />
     <div className="pl03-container">
-      <div className="pl03-kicker"><span className="pl03-light" /> SALA DA GALERA <span className="pl03-kicker-sep">/</span> VERSÃO DE TESTE</div>
-      <section className="pl03-intro" aria-label="Informações da sala">
-        <div>
-          <h1>Todo mundo <em>na roda.</em></h1>
-          <p>Uma sala, vários jogos. A próxima rodada começa aqui.</p>
-        </div>
-        <div className="pl03-revision" aria-label={`Revisão da sala ${snapshot.revision}`}>
-          <span>REV.</span><strong>{String(snapshot.revision).padStart(2, '0')}</strong>
-        </div>
-      </section>
-
       <div className="pl03-feedback" role="status">
         <span className="pl03-feedback-icon">{connected ? <Wifi size={16} aria-hidden="true" /> : <WifiOff size={16} aria-hidden="true" />}</span>
-        <span>{status}</span>
-        <span className="pl03-status-badge">{summary.phaseLabel}</span>
+        <span className="pl03-room-state"><strong>Sala {snapshot.roomId.slice(-6).toUpperCase()}</strong><small>{connected ? summary.phaseLabel : status}</small></span>
+        <span className="pl03-status-badge">{connected ? 'Conectado' : 'Sem conexão'}</span>
       </div>
       {error && <p role="alert" className="pl03-error"><WifiOff size={17} aria-hidden="true" /> {error}</p>}
 
+      {isHost && <details className="pl03-share">
+        <summary><QrCode size={20} aria-hidden="true" /><span>Convidar amigos</span><ChevronRight size={18} aria-hidden="true" /></summary>
+        <div className="pl03-share-content">
+          {inviteQr && <div className="pl03-qr"><img src={inviteQr} alt="QR de convite da sala" width="256" height="256" /></div>}
+          <div className="pl03-share-copy">
+            <h2>Entre com a câmera</h2>
+            <p>No outro celular, toque em Ler QR Code e aponte para esta tela.</p>
+            {roomCode && <div className="pl03-short-code-host"><small>OU USE O CÓDIGO DA SALA</small>
+              <strong aria-label={`Código da sala ${roomCode}`}>{roomCode}</strong></div>}
+            <p>Todos no mesmo Wi-Fi ou hotspot.</p>
+            <button type="button" className="pl03-quiet-btn" onClick={() => void onRefreshInvite()} disabled={busy || !connected}>
+              <RotateCw size={16} aria-hidden="true" /> Renovar convite</button>
+          </div>
+        </div>
+      </details>}
+
+      <nav className="pl03-compact-tools" aria-label="Painéis da sala">
+        <button type="button" aria-expanded={showPlayers} onClick={() => showPlayers ? closePanels() : openPlayers()}>
+          <Users size={18} /> Jogadores · {summary.connectedCount} <small>{summary.readyCount} / {summary.connectedCount} prontos</small>
+          <ChevronRight size={16} />
+        </button>
+        {onRename && <button type="button" aria-label="Editar meu nome" onClick={() => { openPlayers(); setEditingName(true) }}>
+          <Pencil size={17}/><span>Meu nome</span></button>}
+        {competition && competition.completedGames > 0 && <button type="button" aria-expanded={showStandings}
+          onClick={() => { setShowPlayers(false); setShowStandings(v => !v) }}>
+          <Trophy size={18}/><span>Placar</span></button>}
+      </nav>
       <div className="pl03-layout">
         <div className="pl03-primary">
-          <section className="pl03-panel pl03-players" aria-labelledby="pl03-players-title">
+          {showPlayers && <div className="pl03-lobby-overlay" onPointerDown={event => {
+            if (event.target === event.currentTarget) closePanels()
+          }}>
+          <section className="pl03-panel pl03-players pl03-lobby-popover" aria-labelledby="pl03-players-title" role="dialog" aria-modal="true">
+            <button type="button" className="pl03-panel-dismiss" aria-label="Fechar jogadores" onClick={closePanels}><X size={20}/></button>
+            {onRename && <div className="pl03-rename-form">
+              {editingName ? <form onSubmit={event => {
+                event.preventDefault(); if (!nameDraft.trim() || nameDraft.trim().length > 32) return
+                void onRename(nameDraft.trim()); setEditingName(false)
+              }}>
+                <label htmlFor="pl03-personal-name">Seu nome nas próximas partidas</label>
+                <input id="pl03-personal-name" value={nameDraft} maxLength={32}
+                  onChange={event => setNameDraft(event.target.value)} placeholder="Como quer ser chamado?" />
+                <button type="submit" disabled={!nameDraft.trim() || busy || !connected}>Salvar nome</button>
+                <button type="button" onClick={() => setEditingName(false)}>Cancelar</button>
+              </form> : <button type="button" onClick={() => setEditingName(true)}>
+                <Pencil size={15}/> Editar meu nome
+              </button>}
+            </div>}
             <div className="pl03-section-heading">
-              <div><span className="pl03-eyebrow">QUEM TÁ NO JOGO</span><h2 id="pl03-players-title">A galera <span>chegou.</span></h2></div>
+              <h2 id="pl03-players-title">Jogadores</h2>
               <span className="pl03-count"><Users size={15} aria-hidden="true" /> {summary.connectedCount}/12</span>
             </div>
             <div className="pl03-people-list">
@@ -198,16 +279,13 @@ export function LobbyRoomView({
                     : member.participation === 'waiting' ? 'Aguardando próxima partida' : 'Jogador'}</span></div>
                 <span className={`pl03-ready ${!member.connected ? 'off' : member.ready ? 'on' : ''}`}>
                   {member.connected && member.ready ? <Check size={13} aria-hidden="true" /> : null}
-                  {!member.connected ? 'Offline' : member.ready ? 'Pronto' : 'Aguardando'}
+                  {!member.connected ? 'Desconectado' : member.ready ? 'Pronto' : 'Aguardando'}
                 </span>
               </div>)}
             </div>
             <footer className="pl03-players-foot"><span><CircleCheck size={16} aria-hidden="true" /> {summary.readyCount} / {summary.connectedCount} prontos</span>
-              <span>Até 12 na sala</span></footer>
-          </section>
-
-          {competition && <RoomCompetitionPanel competition={competition} isHost={isHost}
-            canFinish={!busy && connected && summary.phase === 'lobby'} onFinishSession={onFinishSession} />}
+</footer>
+          </section></div>}
 
           {!competitionFinished && <section className="pl03-panel pl03-game" aria-labelledby="pl03-game-title">
             <div className="pl03-section-heading">
@@ -218,10 +296,10 @@ export function LobbyRoomView({
 
             {(summary.phase === 'lobby' || summary.phase === 'configuring') && isHost && (!summary.gameId || showCatalog) &&
               <div className="pl03-game-options">
-                {cardNames.map((id, index) => <button type="button" className={`pl03-game-option game-${id}`} key={id}
+                {cardNames.map((id) => <button type="button" className={`pl03-game-option game-${id}`} key={id}
                   onClick={() => selectGame(id)} disabled={busy || !connected} aria-label={`Selecionar ${lobbyGameCatalog[id].title}`}>
                   <span className="pl03-game-illustration"><GameGlyph gameId={id} /></span>
-                  <span className="pl03-game-copy"><small>0{index + 1} / {id === 'impostor-da-palavra' || id === 'pista-unica' || id === 'cidade-dorme' ? 'JOGO MULTIPLAYER' : 'EXPERIÊNCIA TESTE'}</small><strong>{lobbyGameCatalog[id].title}</strong>
+                  <span className="pl03-game-copy"><small>{lobbyGameCatalog[id].minPlayers}–12 jogadores</small><strong>{lobbyGameCatalog[id].title}</strong>
                     <span>{lobbyGameCatalog[id].subtitle}</span></span>
                   <ChevronRight size={19} aria-hidden="true" />
                 </button>)}
@@ -240,6 +318,8 @@ export function LobbyRoomView({
             </div>}
 
             {summary.phase === 'configuring' && summary.game && <>
+              <details className="pl03-rule-editor" open={snapshot.roomState.selectedConfig ? undefined : true}>
+                <summary>Regras do jogo</summary>
               {isHost && summary.gameId === 'impostor-da-palavra' ? <div className="pl03-impostor-config">
                 <strong>Como o impostor joga?</strong>
                 <div className="pl03-impostor-choices">
@@ -257,9 +337,25 @@ export function LobbyRoomView({
                       aria-pressed={conversationMode === value} disabled={busy || !connected}
                       onClick={() => setConversationMode(value)}>{label}</button>)}
                 </div>
-                <p>3 a 12 celulares. Cada pessoa vê sua palavra ou pista individualmente. O impostor pode roubar a palavra no final.</p>
+                <strong>Tempo para conversar (opcional)</strong>
+                <div className="pl03-impostor-choices" role="group" aria-label="Cronômetro do Impostor">
+                  {([ [0, 'Sem limite'], [120, '2 minutos'], [180, '3 minutos'], [300, '5 minutos'] ] as const)
+                    .map(([value, label]) => <button key={value} type="button"
+                      className={timerSeconds === value ? 'is-selected' : ''}
+                      aria-pressed={timerSeconds === value} disabled={busy || !connected}
+                      onClick={() => setTimerSeconds(value)}>{label}</button>)}
+                </div>
+                <strong>Como contar os pontos?</strong>
+                <div className="pl03-impostor-choices" role="group" aria-label="Pontuação do Impostor">
+                  {([['classic', 'Clássica'], ['individual', 'Por acertos']] as const).map(([mode,label])=>
+                    <button key={mode} type="button" aria-pressed={scoringMode===mode}
+                      className={scoringMode===mode?'is-selected':''} disabled={busy||!connected}
+                      onClick={()=>setScoringMode(mode)}>{label}</button>)}
+                </div>
+                <p>Todos entram na identidade depois de iniciar. Cada um responde à pergunta coletiva ou dá uma pista em voz alta.</p>
+                {scoringMode === 'individual' && <p>Acerto individual: +1 por voto correto e +1 se a maioria absoluta acertar. O impostor recebe +1 se escapar e +1 se descobrir a palavra.</p>}
                 <button className="pl03-secondary-btn" type="button" disabled={busy || !connected}
-                  onClick={() => void onConfigure({ impostorMode, conversationMode })}>
+                  onClick={() => void onConfigure({ impostorMode, conversationMode, flow: 'individual-vote', timerSeconds, scoringMode })}>
                   <Check size={17} aria-hidden="true" /> Salvar regras do Impostor
                 </button>
               </div> : isHost && summary.gameId === 'pista-unica' ? <div className="pl03-impostor-config">
@@ -309,12 +405,16 @@ export function LobbyRoomView({
                   <Check size={17} aria-hidden="true" /> Salvar regras
                 </button>
               </div> : <div className="pl03-hint"><LockKeyhole size={15} aria-hidden="true" /> O anfitrião define as regras.</div>}
-              {Boolean(snapshot.roomState.selectedConfig) && <div className="pl03-configured"><Check size={14} /> Regras confirmadas para esta rodada</div>}
+              </details>
+              {Boolean(snapshot.roomState.selectedConfig) && <>
+                <div className="pl03-configured"><Check size={14} /> Regras confirmadas para esta rodada</div>
+                <LobbyRulesSummary gameId={summary.gameId} config={snapshot.roomState.selectedConfig} />
+              </>}
             </>}
 
             {(summary.phase === 'lobby' || summary.phase === 'configuring') && <>
               <div className="pl03-action-area">
-                {summary.canReady && (isHost || Boolean(snapshot.roomState.selectedConfig)) &&
+                {summary.canReady && Boolean(snapshot.roomState.selectedConfig) &&
                   <button type="button" className={summary.ownReady ? 'pl03-secondary-btn pl03-ready-action' : 'pl03-primary-btn'}
                     onClick={() => void onReady(!summary.ownReady)} disabled={busy || !connected}>
                     {summary.ownReady ? <><Check size={18} /> Cancelar pronto</> : <><Check size={18} /> Estou pronto</>}</button>}
@@ -322,7 +422,11 @@ export function LobbyRoomView({
                   onClick={() => void onStart()} disabled={busy || !connected || !summary.canStart}>
                   <Gamepad2 size={19} aria-hidden="true" /> Iniciar rodada <ArrowRight size={18} aria-hidden="true" /></button>}
               </div>
-              {isHost && summary.game && !summary.canStart && <p className="pl03-helper">Para começar, salve as regras e aguarde {summary.gameId === 'cidade-dorme' ? 'ao menos 4 jogadores conectados e todos prontos' : summary.gameId === 'impostor-da-palavra' || summary.gameId === 'pista-unica' ? 'ao menos 3 jogadores conectados e todos prontos' : 'pelo menos dois jogadores prontos'}.</p>}
+              {isHost && summary.game && !summary.canStart && <p className="pl03-helper">
+                {!snapshot.roomState.selectedConfig ? 'Salve as regras para preparar a rodada.'
+                  : summary.connectedCount < summary.game.minPlayers ? `Convide mais ${summary.game.minPlayers - summary.connectedCount} ${summary.game.minPlayers - summary.connectedCount === 1 ? 'jogador' : 'jogadores'} para começar.`
+                    : 'Todos precisam marcar pronto para começar.'}
+              </p>}
               {!isHost && <p className="pl03-helper">Marque pronto quando estiver tudo certo. O anfitrião inicia a partida.</p>}
             </>}
 
@@ -357,57 +461,32 @@ export function LobbyRoomView({
                   <Plus size={18} aria-hidden="true" /> {summary.game?.action || 'Jogar agora'}</button>
                 {isHost && <button type="button" className="pl03-secondary-btn" onClick={() => void onEnd()} disabled={busy || !connected}>Encerrar rodada</button>}
               </div>
-              <p className="pl03-helper">Partida sintética para validar a sala. Nenhum jogo real está ativado.</p>
             </div>}
 
             {summary.phase === 'results' && <div className="pl03-results">
               <div className="pl03-results-glyph"><Trophy size={30} aria-hidden="true" /></div>
-              <h3>Mais uma pra conta.</h3>
-              <p>Rodada encerrada. Todo mundo continua na mesma sala para escolher o próximo jogo.</p>
-              {isHost ? <button type="button" className="pl03-primary-btn" onClick={() => void onBackToLobby()} disabled={busy || !connected}>
-                <RotateCw size={18} aria-hidden="true" /> Voltar ao lobby</button>
+              <h3>Rodada encerrada</h3>
+              <p>O placar foi atualizado. Escolham o próximo jogo na mesma sala.</p>
+              {isHost ? <div className="pl03-replay-actions">
+                {onReplay && <button type="button" className="pl03-primary-btn" onClick={() => void onReplay()}
+                  disabled={busy || !connected}><RotateCw size={18}/> Jogar novamente</button>}
+                <button type="button" className="pl03-secondary-btn" onClick={() => void onBackToLobby()} disabled={busy || !connected}>
+                Voltar ao lobby</button></div>
                 : <div className="pl03-hint"><Users size={16} aria-hidden="true" /> Aguardando o anfitrião voltar ao lobby.</div>}
             </div>}
           </section>}
-        </div>
+          {showStandings && competition && <div className="pl03-lobby-overlay" onPointerDown={event => {
+            if (event.target === event.currentTarget) closePanels()
+          }}><div className="pl03-lobby-popover" role="dialog" aria-modal="true" aria-label="Placar da sala">
+            <button className="pl03-panel-dismiss" type="button" aria-label="Fechar placar" onClick={closePanels}><X size={20}/></button>
+            <RoomCompetitionPanel competition={competition} isHost={isHost}
+              canFinish={!busy && connected && summary.phase === 'lobby'} onFinishSession={onFinishSession} />
+          </div></div>}
 
-        <aside className="pl03-aside">
-          {isHost && <section className="pl03-panel pl03-invite" aria-labelledby="pl03-invite-title">
-            <div className="pl03-invite-heading"><span className="pl03-eyebrow">CONVITE LAN</span>
-              <ShieldCheck size={22} aria-hidden="true" /></div>
-            <h2 id="pl03-invite-title">Chama a <em>galera.</em></h2>
-            <p>Compartilhe estes seis números. Todo mundo no mesmo Wi-Fi encontra e entra rapidinho.</p>
-            {roomCode && <div className="pl03-short-code-host">
-              <small>CÓDIGO PARA ENTRAR</small><strong aria-label={`Código da sala ${roomCode}`}>{roomCode}</strong>
-              <span>Seis números, sem copiar convite grande</span>
-            </div>}
-            {inviteQr && <div className="pl03-qr"><img src={inviteQr} alt="QR de convite da sala" width="216" height="216" /></div>}
-            {code && <details className="pl03-manual">
-              <summary>Verificação adicional para entrada por QR</summary>
-              <div className="pl03-code"><small>CÓDIGO DE SEGURANÇA DO QR</small><strong>{code}</strong></div>
-            </details>}
-            {hostIp && <span className="pl03-address">Rede local: {hostIp}</span>}
-            <details className="pl03-manual"><summary><QrCode size={16} /> Convite para digitar</summary>
-              <label htmlFor="pl03-invite-text">Texto completo do convite</label>
-              <textarea id="pl03-invite-text" readOnly value={inviteText || ''} rows={3} />
-              <button type="button" onClick={() => void copyInvite()} className="pl03-secondary-btn">
-                <Copy size={16} aria-hidden="true" /> {copied ? 'Copiado' : 'Copiar convite'}</button></details>
-            <button type="button" className="pl03-quiet-btn" onClick={() => void onRefreshInvite()} disabled={busy || !connected}>
-              <RotateCw size={16} aria-hidden="true" /> Renovar convite</button>
-          </section>}
-          <section className="pl03-panel pl03-side-note">
-            <Sparkles size={25} aria-hidden="true" />
-            <span className="pl03-eyebrow">É MELHOR JUNTO</span>
-            <h2>Uma sala.<br /><em>Mil resenhas.</em></h2>
-            <p>Sem conta, sem matchmaking e sem internet obrigatória para a rede local.</p>
-            <div><Check size={14} aria-hidden="true" /> Sala contínua entre rodadas</div>
-            <div><Check size={14} aria-hidden="true" /> Cada um no próprio celular</div>
-          </section>
-        </aside>
+        </div>
       </div>
 
       <footer className="pl03-footer">
-        <div><span>GALEROWS / LAN V2</span><small>Prova de interface • PL-03</small></div>
         {onBrowseGames && <button type="button" className="pl03-quiet-btn" onClick={() => void onBrowseGames()} disabled={busy}>
           <Gamepad2 size={17} aria-hidden="true" /> Ver jogos
         </button>}
@@ -419,16 +498,17 @@ export function LobbyRoomView({
       </footer>
     </div>
 
-    {exitPrompt && <div className="pl03-modal-backdrop"><div className="pl03-dialog" role="dialog"
+    {exitPrompt && <div className="pl03-modal-backdrop"><div ref={exitDialog} className="pl03-dialog" role="dialog"
       aria-modal="true" aria-labelledby="pl03-exit-title">
       <button type="button" className="pl03-dismiss" aria-label="Cancelar saída" onClick={() => setExitPrompt(false)}><X size={21} /></button>
       <div className="pl03-dialog-icon"><DoorOpen size={25} aria-hidden="true" /></div>
       <h2 id="pl03-exit-title">{isHost ? 'Encerrar a sala?' : 'Sair da sala?'}</h2>
       <p>{isHost ? 'A conexão será encerrada para todos. Finalizar uma rodada não fecha a sala.'
         : 'Você sairá definitivamente e precisará de um novo convite para entrar.'}</p>
-      <button type="button" className="pl03-danger-btn" disabled={busy || !connected}
+      {!connected && !isHost && <p>Sem conexão, você pode fechar a tela neste aparelho. A saída não será confirmada pelo anfitrião e seu jogador poderá continuar listado na sala anterior.</p>}
+      <button type="button" className="pl03-danger-btn" disabled={busy}
         onClick={() => { setExitPrompt(false); void (isHost ? onClose() : onLeave()) }}>
-        {isHost ? 'Sim, encerrar sala' : 'Sim, sair da sala'} <ArrowRight size={16} /></button>
+        {isHost ? 'Sim, encerrar sala' : connected ? 'Sim, sair da sala' : 'Fechar neste aparelho'} <ArrowRight size={16} /></button>
       <button type="button" className="pl03-quiet-btn" onClick={() => setExitPrompt(false)} disabled={busy}><ArrowLeft size={16} /> Continuar na sala</button>
     </div></div>}
   </div>

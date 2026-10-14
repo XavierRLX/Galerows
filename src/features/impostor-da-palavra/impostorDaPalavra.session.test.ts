@@ -32,6 +32,12 @@ const noShuffle = () => 0.999999
 const defaultConfig: ImpostorDaPalavraConfig = { impostorMode: 'no-word', conversationMode: 'one-word' }
 
 describe('Impostor da Palavra session', () => {
+  it('rejects unrecognized settings in local games, as the LAN validator already does', () => {
+    const unexpected = { ...defaultConfig, unknownSetting: 'should-not-be-stored' }
+    expect(() => createImpostorDaPalavraSession(participants, unexpected, deck, noShuffle))
+      .toThrow('A configuração do jogo é inválida.')
+  })
+
   it('creates independent impostor draws and does not persist reveal state', () => {
     const session = createImpostorDaPalavraSession(participants, defaultConfig, deck, noShuffle)
     expect(session.impostorQueue).toEqual(Array.from({ length: participants.length }, () => participants[0].id))
@@ -48,10 +54,10 @@ describe('Impostor da Palavra session', () => {
     expect(getParticipantBriefing({ ...base, config: { ...base.config, impostorMode: 'alternate-word' } }, deck, base.currentImpostorId)).toEqual({ kind: 'word', word: deck.cards[0].alternateWord })
   })
 
-  it('assigns a distinct guided question to every participant', () => {
+  it('assigns one guided question shared by every participant', () => {
     const session = createImpostorDaPalavraSession(participants, { ...defaultConfig, conversationMode: 'guided-questions' }, deck, noShuffle)
     expect(Object.keys(session.questionAssignments)).toHaveLength(participants.length)
-    expect(new Set(Object.values(session.questionAssignments))).toHaveLength(participants.length)
+    expect(new Set(Object.values(session.questionAssignments))).toHaveLength(1)
     expect(Object.values(session.questionAssignments).every((id) => questionIds.includes(id))).toBe(true)
   })
 

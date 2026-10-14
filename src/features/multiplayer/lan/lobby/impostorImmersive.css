@@ -1,0 +1,41 @@
+/* Real LAN Impostor immersion. Reuse prototype design tokens, not mock state. */
+.ip-immersive { isolation:isolate; min-height:100dvh; padding-bottom:max(30px, env(safe-area-inset-bottom)); }
+.ip-immersive .ip-playfield { width:100%; max-width:520px; margin:auto; }
+.ip-immersive .ip-game-meta { padding-top:12px; }
+.ip-immersive .ip-game-meta > span { display:flex; gap:5px; align-items:center; }
+.ip-immersive .ip-real-game-meta { min-height:57px; }
+.ip-immersive .ip-real-offline { border:1px solid #ffa9b964; background:#3b2530; padding:13px; border-radius:12px; color:#ffbecb; margin-top:10px; font-size:12px; }
+.ip-immersive .ip-real-offline button { display:block; margin-top:10px; min-height:44px; border:1px solid #ffa9b966; background:transparent; color:#fff; border-radius:8px; padding:9px 15px; }
+.ip-immersive .ip-real-countdown { min-height:65dvh; display:flex; flex-direction:column; gap:10px; align-items:center; justify-content:center; text-align:center; color:var(--ip-violet); }
+.ip-immersive .ip-real-countdown span { font-weight:700; font-size:14px; letter-spacing:.1em; }
+.ip-immersive .ip-real-countdown strong { font-size:clamp(100px,35vw,155px); font-weight:850; font-variant-numeric:tabular-nums; line-height:1.2; color:var(--ip-lime); text-shadow:0 0 45px #d2f86a47; }
+.ip-immersive .ip-real-countdown p { color:var(--ip-muted); font-size:13px; }
+.ip-immersive .ip-real-identity .ip-stage-heading h1,
+.ip-immersive .ip-real-voting .ip-stage-heading h1 { font-size:clamp(24px,6.6vw,34px); font-weight:780; line-height:1.18; letter-spacing:-.05em; margin:7px 0 9px; }
+.ip-immersive .ip-real-identity .ip-stage-heading p:last-child,
+.ip-immersive .ip-real-voting .ip-stage-heading p:last-child { color:var(--ip-muted); font-size:12px; }
+.ip-immersive .ip-real-identity .ip-secret-card { margin-bottom:16px; }
+.ip-immersive .ip-real-identity .ip-secret-content h2 { font-size:23px; line-height:1.2; font-weight:750; }
+.ip-immersive .ip-real-identity .ip-secret-open .ip-secret-content h2 { font-size:clamp(25px,8vw,37px); color:var(--ip-lime); }
+.ip-immersive .ip-team-pending { display:flex; align-items:center; gap:10px; padding:13px; border:1px solid #b8a0ff29; border-radius:12px; background:#b8a0ff0b; color:#d6cbe4; margin-bottom:16px; font-size:12px; }
+.ip-immersive .ip-team-pending svg { color:var(--ip-violet); }
+.ip-immersive .ip-real-results .ip-result-icon { margin:36px auto 20px; width:135px; height:135px; display:grid; place-items:center; color:var(--ip-lime); border-radius:40px; background:#d2f86a13; border:1px solid #d2f86a45; transform:rotate(-7deg); }
+.ip-immersive .ip-real-results .ip-result-hero { padding-top:0; }
+.ip-immersive .ip-real-results .ip-scoreboard { margin-bottom:28px; }
+.ip-immersive .ip-real-results .ip-scoreboard h2 { font-size:18px; font-weight:750; margin-bottom:10px; }
+.ip-immersive .ip-real-results .ip-debrief strong { display:block; margin-top:10px; }
+.ip-immersive .ip-real-results .ip-button { margin-bottom:20px; }
+.ip-immersive .ip-suspects { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.ip-immersive .ip-suspects button { min-height:122px; }
+.ip-immersive .ip-vote-avatar { width:44px; height:44px; font-size:13px; }
+@media (min-width:600px){.ip-immersive .ip-suspects { grid-template-columns:repeat(3,minmax(0,1fr)); }}
+@media (prefers-reduced-motion:reduce){.ip-immersive .ip-real-countdown strong {text-shadow:none;}}
+.ip-real-footer { text-align:center; margin-top:35px; padding-bottom:8px; }
+.ip-real-footer > button { min-height:44px; background:transparent; color:#aa9dbb; padding:10px 20px; border:0; font-size:12px; }
+.ip-exit-backdrop { position:fixed; z-index:100; inset:0; display:grid; place-items:center; background:#08070dd8; padding:20px; }
+.ip-exit-dialog { width:min(100%,380px); border:1px solid #b8a0ff45; border-radius:20px; background:#1b1723; padding:26px; display:grid; gap:16px; }
+.ip-exit-dialog h2 { font-size:23px; font-weight:760; }
+.ip-exit-dialog p { font-size:13px; color:#d3c7df; }
+.ip-exit-dialog button { min-height:48px; padding:12px 15px; border-radius:12px; font-weight:750; }
+.ip-exit-confirm { border:1px solid #ffa9b954; background:#ffa9b918; color:#ffc7d4; }
+.ip-exit-cancel { border:1px solid #b8a0ff33; background:transparent; color:#dcd2ec; }

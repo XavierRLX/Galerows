@@ -29,10 +29,11 @@ describe('PL-03 persistent lobby UI', () => {
     render(<LobbyRoomView snapshot={scene()} role="host" playerId="host" busy={false}
       code="ABCD-EFGH" inviteQr="data:image/png;base64,abcd" inviteText="secret-invite"
       hostIp="192.168.0.1" status="Conectado à rede local" {...callbacks} />)
-    expect(screen.getByRole('img', { name: 'Galerows' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Sala da galera', level: 1 })).toBeInTheDocument()
     expect(screen.getByText('2 / 2 prontos')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Iniciar rodada' }))
     expect(callbacks.onStart).toHaveBeenCalledOnce()
+    fireEvent.click(screen.getByText('Convidar amigos'))
     expect(screen.getByRole('img', { name: 'QR de convite da sala' })).toBeInTheDocument()
   })
 
@@ -98,6 +99,17 @@ describe('PL-03 persistent lobby UI', () => {
     expect(screen.getByRole('button', { name: /Reconectar/ })).toBeEnabled()
   })
 
+  it('offers offline guests a local close while retaining secure leave for connected guests', () => {
+    const callbacks = actions()
+    render(<LobbyRoomView snapshot={scene('lobby')} role="guest" playerId="guest"
+      busy={false} connected={false} status="Conexão interrompida" {...callbacks} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Sair da sala' }))
+    expect(screen.getByText(/não será confirmada pelo anfitrião/i)).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Fechar neste aparelho' }))
+    expect(callbacks.onLeave).toHaveBeenCalledOnce()
+    expect(callbacks.onClose).not.toHaveBeenCalled()
+  })
+
   it('returns to the same lobby after results rather than closing the room', () => {
     const callbacks = actions()
     render(<LobbyRoomView snapshot={scene('results')} role="host" playerId="host" busy={false}
@@ -117,6 +129,7 @@ describe('PL-03 persistent lobby UI', () => {
       ] }
     render(<LobbyRoomView snapshot={snapshot} role="host" playerId="host" busy={false}
       status="Conectado à rede local" {...callbacks} />)
+    fireEvent.click(screen.getByRole('button', { name: /Placar/ }))
     expect(screen.getByRole('heading', { name: 'Placar da sala' })).toBeInTheDocument()
     expect(screen.getByText('2 partidas pontuadas')).toBeInTheDocument()
     expect(screen.getByText('Ana')).toBeInTheDocument()
@@ -136,6 +149,7 @@ describe('PL-03 persistent lobby UI', () => {
       ] }
     render(<LobbyRoomView snapshot={snapshot} role="guest" playerId="guest" busy={false}
       status="Conectado à rede local" {...callbacks} />)
+    fireEvent.click(screen.getByRole('button', { name: /Placar/ }))
     expect(screen.getByRole('heading', { name: 'Campeões da galera!' })).toBeInTheDocument()
     expect(screen.getByText('Ana e Anfitrião')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Encerrar disputa' })).not.toBeInTheDocument()
@@ -153,8 +167,91 @@ describe('PL-03 persistent lobby UI', () => {
       ] }
     render(<LobbyRoomView snapshot={snapshot} role="guest" playerId="guest" busy={false}
       status="Conectado à rede local" {...callbacks} />)
+    fireEvent.click(screen.getByRole('button', { name: /Placar/ }))
     expect(screen.getByRole('heading', { name: 'Placar da sala' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Encerrar disputa' })).not.toBeInTheDocument()
   })
 
+})
+
+it('uses a compact room header, keeps sharing secondary and never exposes the raw invite', () => {
+  const callbacks = actions(), back = vi.fn()
+  render(<LobbyRoomView snapshot={scene()} role="host" playerId="host" busy={false}
+    status="Conectado" roomCode="123456" inviteText="secret-invite" code="ABCD-EFGH" hostIp="192.168.0.1"
+    inviteQr="data:image/png;base64,abcd" onBack={back} {...callbacks} />)
+  expect(screen.getByRole('heading', { name: 'Sala da galera', level: 1 })).toBeInTheDocument()
+  expect(screen.queryByRole('img', { name: 'Galerows' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+  expect(screen.queryByText('ABCD-EFGH')).not.toBeInTheDocument()
+  expect(screen.queryByText(/Mil resenhas|VERSÃO DE TESTE/)).not.toBeInTheDocument()
+  fireEvent.click(screen.getByText('Convidar amigos'))
+  expect(screen.getByRole('img', { name: 'QR de convite da sala' })).toBeVisible()
+  fireEvent.click(screen.getByRole('button', { name: 'Voltar para Minha Galera' }))
+  expect(back).toHaveBeenCalledOnce()
+  expect(callbacks.onClose).not.toHaveBeenCalled()
+})
+
+it('offers only the three real multiplayer games in the catalog', () => {
+  const snapshot = scene('lobby')
+  snapshot.roomState.selectedGameId = null
+  render(<LobbyRoomView snapshot={snapshot} role="host" playerId="host" busy={false} status="Conectado" {...actions()} />)
+  expect(screen.getAllByRole('button', { name: /^Selecionar / })).toHaveLength(3)
+  expect(screen.getByRole('button', { name: 'Selecionar Cidade Dorme' })).toBeInTheDocument()
+})
+
+it('shows confirmed rules to the guest without granting configuration controls', () => {
+  const snapshot = scene()
+  snapshot.roomState.selectedGameId = 'pista-unica'
+  snapshot.roomState.selectedConfig = { categories: ['words', 'movies'] }
+  render(<LobbyRoomView snapshot={snapshot} role="guest" playerId="guest" busy={false} status="Conectado" {...actions()} />)
+  expect(screen.getByText('Palavras, Filmes')).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /Salvar categorias/ })).not.toBeInTheDocument()
+})
+
+it('Android back and Escape dismiss exit confirmation without terminating the room', () => {
+  const callbacks = actions()
+  render(<LobbyRoomView snapshot={scene()} role="host" playerId="host" busy={false} status="Conectado" {...callbacks} />)
+  const leave = screen.getByRole('button', { name: 'Encerrar sala' })
+  leave.focus()
+  fireEvent.click(leave)
+  expect(screen.getByRole('button', { name: 'Cancelar saída' })).toHaveFocus()
+  const back = new Event('galerows:back', { cancelable: true })
+  fireEvent(window, back)
+  expect(back.defaultPrevented).toBe(true)
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(leave).toHaveFocus()
+  fireEvent.click(leave)
+  fireEvent.keyDown(document, { key: 'Escape' })
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(callbacks.onClose).not.toHaveBeenCalled()
+})
+
+it('restores saved host rules after returning to the room', () => {
+  const snapshot = scene()
+  snapshot.roomState.selectedGameId = 'pista-unica'
+  snapshot.roomState.selectedConfig = { categories: ['movies'] }
+  const callbacks = actions()
+  render(<LobbyRoomView snapshot={snapshot} role="host" playerId="host" busy={false} status="Conectado" {...callbacks} />)
+  fireEvent.click(screen.getByText('Regras do jogo'))
+  expect(screen.getByRole('button', { name: 'Filmes' })).toHaveAttribute('aria-pressed', 'true')
+  expect(screen.getByRole('button', { name: 'Palavras' })).toHaveAttribute('aria-pressed', 'false')
+  fireEvent.click(screen.getByRole('button', { name: 'Salvar categorias da Pista Única' }))
+  expect(callbacks.onConfigure).toHaveBeenCalledWith({ categories: ['movies'] })
+})
+
+it('host configures the same room for immersive Impostor voting, with optional timer and no second lobby', () => {
+  const snapshot = scene('configuring')
+  snapshot.roomState.selectedGameId = 'impostor-da-palavra'
+  snapshot.roomState.selectedConfig = null
+  const callbacks = actions()
+  render(<LobbyRoomView snapshot={snapshot} role="host" playerId="host"
+    busy={false} status="Conectado" {...callbacks} />)
+  fireEvent.click(screen.getByRole('button', { name: '3 minutos' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Salvar regras do Impostor' }))
+  expect(callbacks.onConfigure).toHaveBeenCalledWith({
+    impostorMode: 'no-word', conversationMode: 'one-word',
+    flow: 'individual-vote', timerSeconds: 180, scoringMode: 'classic',
+  })
+  expect(screen.queryByTestId('impostor-immersive')).not.toBeInTheDocument()
+  expect(screen.getByRole('heading', { name: 'Sala da galera' })).toBeInTheDocument()
 })

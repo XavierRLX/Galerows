@@ -8,6 +8,7 @@ export function useNativeAppSetup() {
     void StatusBarService.configure()
     void SplashScreenService.hide()
     const removeBackListener = AppLifecycle.onBackButton(() => {
+      if (!window.dispatchEvent(new Event('galerows:back', { cancelable: true }))) return
       if (window.history.length > 1) window.history.back()
       else void AppLifecycle.exit()
     })

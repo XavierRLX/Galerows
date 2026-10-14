@@ -1,0 +1,217 @@
+body:has(.cdp-root) { min-width: 320px; background: #07111c; }
+.cdp-root {
+  --cdp-ink: #07111c; --cdp-panel: #101d2a; --cdp-panel-soft: #142332;
+  --cdp-line: #a5b6c52b; --cdp-text: #f4efe4; --cdp-muted: #bac6cc;
+  --cdp-gold: #e9c894; --cdp-red: #e68f84; --cdp-blue: #a8d0e5;
+  --cdp-ease: cubic-bezier(.23, 1, .32, 1);
+  min-height: 100dvh; color: var(--cdp-text); background: #07111c; overflow-x: clip;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.cdp-root *, .cdp-root *::before, .cdp-root *::after { box-sizing: border-box; }
+.cdp-root :is(h1,h2,h3,p,ul) { margin: 0; }
+.cdp-root ul { padding: 0; list-style: none; }
+.cdp-root button { font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.cdp-root button:disabled { cursor: not-allowed; opacity: .42; }
+.cdp-root :is(button,summary):focus-visible { outline: 2px solid var(--cdp-gold); outline-offset: 4px; }
+.cdp-root :is(h1,h2):focus { outline: none; }
+.cdp-root svg { flex: none; }
+.cdp-root em { font-style: normal; color: var(--cdp-gold); }
+.cdp-shell { width: min(100%, 1180px); min-height: 100dvh; margin: auto; padding: 0 clamp(18px, 4vw, 48px); display: flex; flex-direction: column; }
+.cdp-header { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 14px; border-bottom: 1px solid var(--cdp-line); }
+.cdp-brand { border: 0; background: transparent; color: var(--cdp-text); display: inline-flex; gap: 12px; align-items: center; padding: 0; text-align: left; font-size: 12px !important; font-weight: 800 !important; letter-spacing: .13em; }
+.cdp-brand b { color: var(--cdp-gold); font-weight: 600; }
+.cdp-brand-moon { width: 29px; height: 29px; border: 2px solid var(--cdp-gold); border-radius: 50%; box-shadow: inset -9px -2px 0 #07111c, 0 0 20px #e9c89424; background: var(--cdp-gold); transform: rotate(-25deg); }
+.cdp-preview-label { color: var(--cdp-muted); font-size: 10px; font-weight: 700; letter-spacing: .15em; white-space: nowrap; }
+.cdp-footer { display: flex; align-items: center; gap: 8px; margin-top: auto; min-height: 62px; color: #aab7bf; font-size: 11px; border-top: 1px solid var(--cdp-line); }
+.cdp-online { width: 7px; height: 7px; border-radius: 50%; display: inline-block; background: #a3d9bd; box-shadow: 0 0 10px #a3d9bd77; flex: none; }
+.cdp-kicker { color: var(--cdp-gold); font-size: 10px; font-weight: 800; letter-spacing: .23em; }
+.cdp-root h1, .cdp-root h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -.045em; }
+.cdp-root h1 { font-size: clamp(42px, 6vw, 82px); line-height: .99; }
+.cdp-root h2 { font-size: clamp(27px, 3vw, 38px); line-height: 1.08; }
+.cdp-primary, .cdp-secondary { min-height: 50px; border-radius: 4px; display: inline-flex; justify-content: center; align-items: center; gap: 10px; padding: 12px 18px; font-size: 13px !important; font-weight: 750 !important; text-align: center; transition: background-color .16s var(--cdp-ease), color .16s var(--cdp-ease), transform .16s var(--cdp-ease); }
+.cdp-primary { border: 1px solid var(--cdp-gold); background: var(--cdp-gold); color: #17202a; }
+.cdp-secondary { border: 1px solid #e9c89465; background: #e9c8940a; color: var(--cdp-text); }
+.cdp-primary:not(:disabled):active, .cdp-secondary:not(:disabled):active { transform: translateY(1px); }
+@media (hover: hover) and (pointer: fine) {
+  .cdp-primary:not(:disabled):hover { background: #f3d9aa; }
+  .cdp-secondary:not(:disabled):hover { background: #e9c8941c; }
+}
+
+/* The existing City Dorme artwork leads both entry and room; type stays on its dark shore. */
+.cdp-entry { flex: 1; min-height: min(730px, calc(100dvh - 138px)); position: relative; isolation: isolate; display: grid; align-items: center; }
+.cdp-entry-art { position: absolute; inset: 0 -48px 0 -48px; z-index: -2; background: url('/assets/games/cidade-dorme.jpg') center right / cover no-repeat; }
+.cdp-entry::after { content: ''; position: absolute; inset: 0 -48px; z-index: -1; background: linear-gradient(90deg, #07111cf7 0%, #07111cda 36%, #07111c42 78%), linear-gradient(0deg, #07111c 0%, transparent 38%); }
+.cdp-entry-copy { width: min(100%, 655px); padding: 70px 0 90px; }
+.cdp-entry h1 { margin-top: 18px; max-width: 11ch; }
+.cdp-entry-copy > p:not(.cdp-kicker) { max-width: 49ch; margin-top: 25px; line-height: 1.6; color: #e4e9e8; font-size: 16px; }
+.cdp-entry-actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 34px; }
+.cdp-entry-actions .cdp-primary { min-width: 262px; }
+.cdp-entry-copy > small { display: block; max-width: 42ch; margin-top: 24px; color: #bbc5ca; line-height: 1.5; }
+
+.cdp-room-main, .cdp-game-main { padding: 24px 0 46px; }
+.cdp-topline { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 18px; color: var(--cdp-muted); font-size: 11px; font-weight: 700; letter-spacing: .09em; }
+.cdp-topline button { padding: 6px 0; display: inline-flex; align-items: center; gap: 7px; background: none; border: 0; color: var(--cdp-muted); }
+.cdp-topline span { display: inline-flex; align-items: center; gap: 8px; }
+.cdp-room-hero { min-height: 240px; position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: end; justify-content: space-between; gap: 20px; border: 1px solid #e9c89435; border-radius: 5px; padding: clamp(24px, 4vw, 45px); }
+.cdp-room-hero-image { position: absolute; inset: 0; z-index: -2; background: url('/assets/games/cidade-dorme.jpg') center 38% / cover no-repeat; }
+.cdp-room-hero::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #07111cf0 0%, #07111cc5 45%, #07111c35 100%); }
+.cdp-room-hero h1 { margin-top: 11px; font-size: clamp(36px, 5vw, 60px); }
+.cdp-room-hero-content > p:last-child { max-width: 48ch; color: #e0e8e9; line-height: 1.5; margin-top: 15px; font-size: 14px; }
+.cdp-room-code { min-width: 120px; padding: 13px 16px; background: #07111cbf; border: 1px solid #e9c89470; text-align: center; }
+.cdp-room-code small { display: block; font-size: 9px; color: var(--cdp-muted); letter-spacing: .1em; }
+.cdp-room-code strong { display: block; font-family: Georgia, serif; font-size: 25px; color: var(--cdp-gold); margin-top: 3px; }
+.cdp-room-grid { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); gap: 16px; margin-top: 16px; align-items: start; }
+.cdp-panel { padding: 24px; background: var(--cdp-panel); border: 1px solid var(--cdp-line); border-radius: 5px; min-width: 0; }
+.cdp-section-head { display: flex; align-items: start; justify-content: space-between; gap: 16px; margin-bottom: 19px; }
+.cdp-section-head h2 { margin-top: 7px; font-size: 29px; }
+.cdp-section-head > span, .cdp-section-head > svg { color: var(--cdp-gold); font-size: 12px; white-space: nowrap; }
+.cdp-roster ul { display: grid; }
+.cdp-roster li { display: flex; align-items: center; gap: 12px; min-height: 62px; border-top: 1px solid var(--cdp-line); }
+.cdp-avatar { display: grid; place-items: center; width: 37px; height: 37px; color: var(--cdp-gold); border: 1px solid #e9c8944d; background: #e9c8940d; font-family: Georgia, serif; font-size: 15px; }
+.cdp-member-name { min-width: 0; flex: 1; display: grid; gap: 3px; }
+.cdp-member-name strong { font-size: 13px; }
+.cdp-member-name small { display: inline-flex; align-items: center; gap: 4px; color: var(--cdp-muted); font-size: 10px; }
+.cdp-ready-chip { color: #b5bec2; font-size: 10px; }
+.cdp-ready-chip.is-ready { color: #a3d9bd; }
+.cdp-hint { color: var(--cdp-muted); line-height: 1.5; font-size: 12px; margin-top: 16px !important; }
+.cdp-game-choice { display: flex; gap: 16px; align-items: center; border: 1px solid #e9c89445; background: #e9c8940a; padding: 18px; margin-bottom: 18px; }
+.cdp-game-choice > svg { color: var(--cdp-gold); }
+.cdp-game-choice div { display: grid; gap: 4px; }
+.cdp-game-choice strong { font-family: Georgia, serif; font-size: 22px; font-weight: 500; }
+.cdp-game-choice span { color: var(--cdp-muted); font-size: 11px; }
+.cdp-settings > .cdp-secondary, .cdp-config > .cdp-secondary { width: 100%; }
+.cdp-config h3 { font-family: Georgia, serif; font-size: 23px; font-weight: 500; }
+.cdp-config > p { color: var(--cdp-muted); font-size: 12px; line-height: 1.55; margin: 6px 0 16px; }
+.cdp-config .cdp-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 62px; border: 0; border-top: 1px solid var(--cdp-line); padding: 10px 0; background: none; color: var(--cdp-text); text-align: left; }
+.cdp-toggle > span:first-child { display: grid; gap: 3px; }
+.cdp-toggle strong { font-size: 13px; font-weight: 650; }
+.cdp-toggle small { font-size: 11px; color: var(--cdp-muted); line-height: 1.35; }
+.cdp-switch { position: relative; flex: none; width: 40px; height: 24px; border: 1px solid #9aadb467; border-radius: 20px; background: #677a8440; transition: background-color .16s var(--cdp-ease); }
+.cdp-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #d8dfdf; transition: transform .16s var(--cdp-ease); }
+.cdp-toggle[aria-pressed=true] .cdp-switch { background: var(--cdp-gold); border-color: var(--cdp-gold); }
+.cdp-toggle[aria-pressed=true] .cdp-switch::after { transform: translateX(16px); background: #142332; }
+.cdp-config-note { color: var(--cdp-gold) !important; }
+.cdp-saved { display: flex; align-items: center; gap: 7px; margin-top: 14px !important; color: #a3d9bd !important; font-size: 12px; }
+.cdp-guest-rules { display: flex; gap: 12px; align-items: start; color: var(--cdp-muted); font-size: 13px; line-height: 1.5; }
+.cdp-guest-rules svg { color: var(--cdp-gold); }
+.cdp-launch { display: flex; align-items: center; justify-content: space-between; gap: 22px; padding: 27px 30px; margin-top: 16px; background: #192b39; border-top: 2px solid var(--cdp-gold); }
+.cdp-launch h2 { margin-top: 6px; font-size: 30px; }
+.cdp-launch p:not(.cdp-kicker) { color: var(--cdp-muted); font-size: 12px; margin-top: 7px; }
+.cdp-launch-actions { display: flex; gap: 9px; flex-wrap: wrap; justify-content: end; }
+.cdp-launch-actions > p { max-width: 25ch; text-align: right; }
+.cdp-countdown { display: flex; align-items: center; gap: 16px; color: var(--cdp-gold); }
+.cdp-countdown > span { font-size: 11px; font-weight: 700; letter-spacing: .13em; }
+.cdp-countdown strong { font-family: Georgia, serif; font-size: 70px; font-weight: 400; line-height: .9; font-variant-numeric: tabular-nums; }
+.cdp-countdown button { display: inline-flex; align-items: center; gap: 5px; min-height: 42px; color: var(--cdp-text); background: #e9c89410; border: 1px solid #e9c89460; padding: 8px 12px; font-size: 12px; }
+
+.cdp-transition-scene { position: relative; flex: 1; min-height: calc(100dvh - 138px); display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; text-align: center; background: radial-gradient(circle at 50% 36%, #2d4f70 0%, #0b1b2e 34%, #07111c 70%); }
+.cdp-transition-scene::before { content: ''; position: absolute; inset: 35% -10% 0; background: url('/assets/games/cidade-dorme.jpg') center bottom / cover no-repeat; opacity: .28; mask-image: linear-gradient(0deg, #000 10%, transparent 100%); }
+.cdp-transition-scene > :not(.cdp-transition-moon) { position: relative; z-index: 1; }
+.cdp-transition-scene h1 { max-width: 12ch; margin-top: 20px; font-size: clamp(42px, 7vw, 86px); }
+.cdp-transition-moon { width: 130px; height: 130px; border-radius: 50%; background: #f0e6cb; box-shadow: 0 0 70px #bcd9ec55, 0 0 150px #bcd9ec27; animation: cdp-moon-in .9s var(--cdp-ease) both; }
+.cdp-transition-scene .cdp-kicker, .cdp-transition-scene h1 { animation: cdp-title-in .9s var(--cdp-ease) both; }
+@keyframes cdp-moon-in { from { opacity: 0; transform: translateY(24px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes cdp-title-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+.cdp-chapter { min-height: 260px; position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: end; border: 1px solid #e9c89435; padding: clamp(25px, 4vw, 48px); }
+.cdp-chapter-art { position: absolute; inset: 0; z-index: -2; background: url('/assets/games/cidade-dorme.jpg') center 35% / cover no-repeat; }
+.cdp-chapter::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #07111cf1 0%, #07111cd2 46%, #07111c55 100%); }
+.cdp-chapter:not(.cdp-step-reveal):not(.cdp-step-killer-turn):not(.cdp-step-doctor-turn):not(.cdp-step-detective-turn) .cdp-chapter-art { filter: sepia(.35) brightness(1.45); }
+.cdp-chapter:not(.cdp-step-reveal):not(.cdp-step-killer-turn):not(.cdp-step-doctor-turn):not(.cdp-step-detective-turn)::after { background: linear-gradient(90deg, #142b37f0 0%, #142b37cf 46%, #1d364478 100%); }
+.cdp-chapter-copy { max-width: 650px; }
+.cdp-chapter h1 { margin-top: 12px; }
+.cdp-chapter p:last-child { max-width: 55ch; margin-top: 14px; font-size: 14px; line-height: 1.55; color: #e6ecec; }
+.cdp-game-grid { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: 16px; align-items: start; margin-top: 16px; }
+.cdp-game-grid:has(> .cdp-story-panel:only-child) { grid-template-columns: 1fr; }
+.cdp-role-panel { min-width: 0; background: #203042; border: 1px solid #d4b8837a; padding: 20px; box-shadow: inset 0 0 0 6px #07111c55; }
+.cdp-role-top { display: flex; align-items: center; gap: 8px; color: var(--cdp-gold); font-size: 10px; font-weight: 700; letter-spacing: .12em; }
+.cdp-role-top span:last-child { margin-left: auto; }
+.cdp-role-covered, .cdp-role-content { min-height: 225px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 12px; }
+.cdp-role-covered svg { color: var(--cdp-gold); }
+.cdp-role-covered strong { font-family: Georgia, serif; font-weight: 400; font-size: 27px; }
+.cdp-role-covered span { max-width: 25ch; color: var(--cdp-muted); font-size: 12px; line-height: 1.5; }
+.cdp-role-content p { color: var(--cdp-gold); font-size: 10px; font-weight: 800; letter-spacing: .16em; }
+.cdp-role-content h2 { font-size: clamp(35px, 4vw, 49px); }
+.cdp-role-content > span { max-width: 32ch; color: #e3ebed; font-size: 12px; line-height: 1.5; }
+.cdp-role-content small { color: var(--cdp-gold); line-height: 1.4; }
+.cdp-role-panel > .cdp-secondary { width: 100%; }
+.cdp-story-panel { min-height: 315px; min-width: 0; padding: clamp(24px, 3vw, 40px); background: var(--cdp-panel); border: 1px solid var(--cdp-line); }
+.cdp-story-panel h2 { margin-top: 10px; }
+.cdp-story-panel > p:not(.cdp-kicker) { max-width: 55ch; margin-top: 12px; color: var(--cdp-muted); font-size: 13px; line-height: 1.5; }
+.cdp-story-panel > .cdp-primary, .cdp-story-panel > .cdp-secondary { margin-top: 24px; margin-right: 8px; }
+.cdp-targets { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 23px; }
+.cdp-targets > button:not(.cdp-primary) { min-height: 43px; border: 1px solid #9ab1bc70; background: #132634; color: var(--cdp-text); padding: 9px 16px; font-size: 12px; }
+.cdp-targets > button[aria-pressed=true] { border-color: var(--cdp-gold); color: var(--cdp-gold); background: #e9c8941b; }
+.cdp-targets > .cdp-primary { flex-basis: 100%; margin-top: 9px; }
+.cdp-fallen { display: flex; align-items: center; gap: 8px; margin-top: 16px !important; color: var(--cdp-muted); font-size: 12px; }
+.cdp-final-roles { margin-top: 20px !important; border-top: 1px solid var(--cdp-line); }
+.cdp-final-roles li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--cdp-line); font-size: 12px; }
+.cdp-final-roles strong { color: var(--cdp-gold); }
+
+.cdp-results-main { flex: 1; padding: 45px 0 60px; max-width: 720px; }
+.cdp-results-art { height: 220px; background: linear-gradient(0deg, #07111c, transparent 60%), url('/assets/games/cidade-dorme.jpg') center / cover no-repeat; margin-bottom: 23px; }
+.cdp-results-main h1 { margin-top: 12px; }
+.cdp-results-main > p:not(.cdp-kicker) { max-width: 52ch; margin: 18px 0 25px; color: var(--cdp-muted); line-height: 1.55; }
+.cdp-score-list { border-top: 1px solid var(--cdp-line); margin-bottom: 26px; }
+.cdp-score-list > div { display: flex; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--cdp-line); font-size: 13px; }
+.cdp-score-list strong { color: var(--cdp-gold); }
+
+.cdp-lab { margin-top: 20px; background: #142535; border: 1px solid #e9c8943c; color: #d8e1e3; }
+.cdp-lab summary { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; padding: 10px 15px; font-size: 12px; font-weight: 700; list-style: none; }
+.cdp-lab summary::-webkit-details-marker { display: none; }
+.cdp-lab[open] summary svg { transform: rotate(180deg); }
+.cdp-lab > div { border-top: 1px solid var(--cdp-line); padding: 15px; display: flex; flex-wrap: wrap; gap: 9px; }
+.cdp-lab p { flex-basis: 100%; color: var(--cdp-muted); font-size: 12px; line-height: 1.45; margin-bottom: 5px !important; }
+.cdp-lab button { min-height: 38px; border: 1px solid #e9c89454; background: #e9c8940b; color: var(--cdp-text); padding: 7px 11px; font-size: 11px; }
+.cdp-lab button[aria-pressed=true] { color: #17202a; background: var(--cdp-gold); }
+.cdp-lab-views { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 5px; }
+.cdp-notice { position: fixed; bottom: 20px; left: 50%; z-index: 10; width: min(440px, calc(100% - 28px)); transform: translateX(-50%); padding: 13px 15px; display: flex; justify-content: space-between; align-items: center; gap: 15px; background: #4e2527; color: #fff4ef; border: 1px solid #f5b1a3; box-shadow: 0 15px 45px #0008; font-size: 12px; line-height: 1.5; }
+.cdp-notice button { background: none; border: 0; color: inherit; }
+
+@media (max-width: 780px) {
+  .cdp-room-grid, .cdp-game-grid { grid-template-columns: 1fr; }
+  .cdp-room-hero { min-height: 260px; }
+  .cdp-launch { align-items: stretch; flex-direction: column; }
+  .cdp-launch-actions { justify-content: start; }
+  .cdp-countdown { justify-content: space-between; }
+}
+@media (max-width: 520px) {
+  .cdp-shell { padding: 0 16px; }
+  .cdp-header { min-height: 64px; }
+  .cdp-brand { font-size: 10px !important; letter-spacing: .08em; }
+  .cdp-brand b { display: none; }
+  .cdp-preview-label { font-size: 9px; }
+  .cdp-entry { min-height: calc(100dvh - 126px); align-items: end; }
+  .cdp-entry-art, .cdp-entry::after { left: -16px; right: -16px; }
+  .cdp-entry-art { background-position: 61% center; }
+  .cdp-entry::after { background: linear-gradient(0deg, #07111c 0%, #07111ce6 44%, #07111c2a 100%); }
+  .cdp-entry-copy { padding: 185px 0 50px; }
+  .cdp-entry h1 { font-size: clamp(42px, 10vw, 59px); max-width: 12ch; }
+  .cdp-entry-copy > p:not(.cdp-kicker) { font-size: 14px; }
+  .cdp-entry-actions { display: grid; }
+  .cdp-room-main, .cdp-game-main { padding-top: 15px; }
+  .cdp-room-hero { padding: 23px; min-height: 295px; display: flex; align-items: end; }
+  .cdp-room-hero-image { background-position: 65% center; }
+  .cdp-room-hero::after { background: linear-gradient(0deg, #07111cf4 5%, #07111cae 52%, #07111c10 100%); }
+  .cdp-room-hero-content > p:last-child { font-size: 12px; }
+  .cdp-room-code { position: absolute; top: 14px; right: 14px; min-width: 91px; padding: 7px; }
+  .cdp-room-code small { font-size: 7px; }
+  .cdp-room-code strong { font-size: 20px; }
+  .cdp-panel { padding: 20px; }
+  .cdp-launch { padding: 20px; }
+  .cdp-launch h2 { font-size: 28px; }
+  .cdp-launch-actions { display: grid; }
+  .cdp-launch-actions > * { width: 100%; }
+  .cdp-chapter { min-height: 250px; padding: 22px; }
+  .cdp-chapter-art { background-position: 64% center; }
+  .cdp-chapter::after { background: linear-gradient(0deg, #07111cf2 0%, #07111caa 66%, #07111c20 100%); }
+  .cdp-chapter h1 { font-size: 45px; }
+  .cdp-chapter-copy p:last-child { font-size: 12px; }
+  .cdp-story-panel { min-height: 0; }
+  .cdp-transition-moon { width: 92px; height: 92px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cdp-transition-moon, .cdp-transition-scene .cdp-kicker, .cdp-transition-scene h1 { animation: cdp-soft-appear .2s ease-out both; }
+  .cdp-primary, .cdp-secondary, .cdp-switch, .cdp-switch::after { transition-duration: .01ms; }
+  @keyframes cdp-soft-appear { from { opacity: .5; } to { opacity: 1; } }
+}

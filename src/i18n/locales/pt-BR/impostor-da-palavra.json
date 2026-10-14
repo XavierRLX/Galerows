@@ -19,8 +19,9 @@
   },
   "conversation": {
     "one-word": { "name": "Uma palavra", "description": "Cada jogador fala uma única palavra relacionada." },
-    "guided-questions": { "name": "Perguntas guiadas", "description": "O aplicativo mostra uma pergunta para cada jogador responder." }
+    "guided-questions": { "name": "Perguntas guiadas", "description": "Todos respondem à mesma pergunta, que pode ser trocada pelo organizador." }
   },
+  "modeEntry": {"title":"Como vocês vão jogar?","description":"Escolham antes de configurar a partida.","singleTitle":"1 celular","singleDescription":"Todos passam o mesmo celular para ver o segredo. A discussão e a votação são presenciais; no app, só registram quem foi acusado.","singleAction":"Configurar partida · 1 celular","continueSingle":"Continuar partida · 1 celular","multiTitle":"Vários celulares","multiDescription":"Cada pessoa joga no próprio celular na mesma rede Wi-Fi. O anfitrião cria a sala e cada jogador vota no app.","createAction":"Criar sala · vários celulares","joinAction":"Entrar em sala","unavailable":"Disponível no Android com multiplayer LAN habilitado."},
   "configureGame": "Configurar partida",
   "continueGame": "Continuar partida",
   "discardGame": "Descartar partida",
@@ -28,10 +29,10 @@
   "rules": [
     "Cada participante será o impostor exatamente uma vez durante a partida.",
     "Não diga a palavra secreta nem dê uma pista óbvia demais.",
-    "Depois das pistas, o grupo escolhe um acusado em conjunto.",
+    "Depois das pistas, os amigos discutem e votam presencialmente. Uma pessoa registra apenas o acusado no celular.",
     "Se for descoberto, o impostor ainda pode tentar adivinhar a palavra."
   ],
-  "setup": {
+  "setup": {"timerTitle":"Cronômetro da conversa","timerOff":"Sem tempo","timer120":"2 minutos","timer180":"3 minutos","timer300":"5 minutos","timerHelp":"A contagem começa nas pistas. Ao zerar, vocês continuam a conversa e votam presencialmente.",
     "title": "Configurar partida",
     "playersTitle": "Quem vai jogar?",
     "selected": "{{count}}/12 selecionados",
@@ -46,7 +47,7 @@
     "rounds": "A partida terá {{count}} rodadas: cada pessoa será impostor uma vez.",
     "start": "Iniciar partida"
   },
-  "play": {
+  "play": {"timerLabel":"Tempo das pistas","timerDone":"Tempo encerrado. Conversem e votem presencialmente quando estiverem prontos.",
     "round": "Rodada {{current}} de {{total}}",
     "progress": "Jogador {{current}} de {{total}}",
     "passTo": "Passe o celular para {{name}}",
@@ -67,10 +68,10 @@
     "nextClue": "Próximo jogador",
     "startDiscussion": "Começar discussão",
     "discussionTitle": "Conversem e descubram o impostor",
-    "discussionText": "Relembrem as respostas e pistas. Quando chegarem a um acordo, registrem a acusação.",
+    "discussionText": "Discutam e votem entre vocês, presencialmente. Depois, registrem apenas quem foi acusado no celular.",
     "chooseAccused": "Escolher acusado",
     "accusationTitle": "Quem é o impostor?",
-    "accusationText": "Escolha a decisão final do grupo. Ela não poderá ser alterada.",
+    "accusationText": "Após a votação presencial, escolha o acusado decidido pela galera. Não é necessário registrar cada voto.",
     "confirmAccusation": "Confirmar acusação: {{name}}",
     "wrongAccusation": "A acusação estava errada",
     "finalGuessTitle": "Última chance do impostor",

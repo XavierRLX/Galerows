@@ -1,13 +1,15 @@
 import type { SupportedLocale } from '../../i18n'
 import type { GameParticipant } from '../players/players.types'
 
-export type ImpostorDaPalavraPhase = 'role-pass' | 'conversation-intro' | 'clue-turn' | 'discussion' | 'accusation' | 'final-guess' | 'round-summary' | 'finished'
+export type ImpostorDaPalavraPhase = 'role-pass' | 'conversation-intro' | 'clue-turn' | 'discussion' | 'accusation' | 'final-guess' | 'manual-score' | 'round-summary' | 'finished'
 export type ImpostorMode = 'no-word' | 'hint' | 'alternate-word'
 export type ConversationMode = 'one-word' | 'guided-questions'
 
 export type ImpostorDaPalavraConfig = {
   impostorMode: ImpostorMode
   conversationMode: ConversationMode
+  timerSeconds?: 0 | 120 | 180 | 300
+  scoringMode?: 'classic' | 'individual'
 }
 
 export type ImpostorDaPalavraAward = {
@@ -46,6 +48,8 @@ export type ImpostorDaPalavraSession = {
   phase: ImpostorDaPalavraPhase
   participants: GameParticipant[]
   config: ImpostorDaPalavraConfig
+  timerStartedAt?: number | null // optional to preserve stored sessions from earlier releases
+  pendingFinalGuessCorrect?: boolean | null
   scores: Record<string, number>
   round: number
   impostorQueue: string[]

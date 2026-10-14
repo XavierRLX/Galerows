@@ -1,7 +1,7 @@
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { HomeRoomActions } from './HomeRoomActions'
 
 afterEach(() => cleanup())
@@ -12,7 +12,7 @@ function Destination() {
 }
 
 describe('experimental LAN entry actions', () => {
-  it('opens the existing secure joining flow instead of pretending to discover rooms', async () => {
+  it('navigates directly to discovery', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}>
       <Routes>
@@ -24,7 +24,7 @@ describe('experimental LAN entry actions', () => {
     expect(screen.getByText('Destino: /__lan-lobby-v2/entrar')).toBeInTheDocument()
   })
 
-  it('opens the existing secure host setup instead of starting WSS automatically', async () => {
+  it('navigates directly to the create route', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}>
       <Routes>
@@ -42,4 +42,14 @@ describe('experimental LAN entry actions', () => {
     expect(screen.getByRole('heading', { name: 'Jogar em rede local' })).toBeInTheDocument()
     expect(screen.getByText(/cada pessoa no seu celular/i)).toBeInTheDocument()
   })
+})
+
+it('lets the host choose hotspot before the direct create action', async () => {
+  const { RoomSessionContext } = await import('../multiplayer/lan/lobby/RoomSessionContext')
+  const setPreferHotspot = vi.fn()
+  const session = { mode: 'entry', preferHotspot: false, setPreferHotspot } as unknown as import('../multiplayer/lan/lobby/RoomSessionProvider').RoomSession
+  render(<MemoryRouter><RoomSessionContext.Provider value={session}><HomeRoomActions /></RoomSessionContext.Provider></MemoryRouter>)
+  await userEvent.click(screen.getByText('Opções de rede'))
+  await userEvent.click(screen.getByRole('checkbox', { name: 'Usar hotspot deste celular' }))
+  expect(setPreferHotspot).toHaveBeenCalledWith(true)
 })

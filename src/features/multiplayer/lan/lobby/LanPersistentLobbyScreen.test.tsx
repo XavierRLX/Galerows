@@ -5,12 +5,12 @@ import { LanPersistentLobbyScreen } from './LanPersistentLobbyScreen'
 import { decodePersistentLanInvite } from '../lanPersistentInvite'
 import type { PersistentLanFrame } from '../lanPersistentWire'
 
-const network = vi.hoisted(() => ({ available: true, lastPreference: null as boolean | null,
+const network = vi.hoisted(() => ({ available: true, invites: [] as string[], lastPreference: null as boolean | null,
   emit: null as ((event: { type: string; peerId: string; frame?: PersistentLanFrame }) => void) | null,
   sent: [] as Array<{ peerId: string; frame: PersistentLanFrame }>,
 }))
 
-vi.mock('qrcode', () => ({ default: { toDataURL: vi.fn(async () => 'data:image/png;base64,dGVzdA==') } }))
+vi.mock('qrcode', () => ({ default: { toDataURL: vi.fn(async (invite: string) => { network.invites.push(invite); return 'data:image/png;base64,dGVzdA==' }) } }))
 vi.mock('../lanNativeHost', () => ({
   LanNativeHost: class {
     discoverLanAddress = async (preferHotspot = false) => {
@@ -32,22 +32,23 @@ vi.mock('../lanNativeHost', () => ({
   },
 }))
 
-afterEach(() => { network.lastPreference = null; network.available = true; network.emit = null; network.sent = []; cleanup() })
+afterEach(() => { network.invites = []; network.lastPreference = null; network.available = true; network.emit = null; network.sent = []; cleanup() })
 
 describe('PL-03 Android lobby journey', () => {
-  it('opens the secure legacy join form from the experimental game-first shortcut', () => {
+  it('opens discovery directly without legacy technical fields', () => {
     render(<MemoryRouter><LanPersistentLobbyScreen initialMode="join" /></MemoryRouter>)
-    expect(screen.getByRole('heading', { name: /Entre na roda/ })).toBeInTheDocument()
-    expect(screen.getByLabelText(/Verificação do QR/)).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /Criar uma sala/ })).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Salas disponíveis' })).toBeInTheDocument()
+    expect(screen.queryByLabelText(/Verificação do QR/)).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Criar sala/ })).not.toBeInTheDocument()
   })
 
   it('defaults to shared Wi-Fi and supports explicitly choosing the host hotspot', async () => {
     render(<MemoryRouter><LanPersistentLobbyScreen /></MemoryRouter>)
+    fireEvent.click(screen.getByText('Opções de rede'))
     const selectHotspot = screen.getByRole('checkbox', { name: /Usar hotspot deste celular/i })
     expect(selectHotspot).not.toBeChecked()
     fireEvent.click(selectHotspot)
-    fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Criar sala/ }))
     await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
     expect(network.lastPreference).toBe(true)
   })
@@ -55,17 +56,18 @@ describe('PL-03 Android lobby journey', () => {
   it('guides player to enable Wi-Fi when there is no LAN IP yet', async () => {
     network.available = false
     render(<MemoryRouter><LanPersistentLobbyScreen /></MemoryRouter>)
-    fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Criar sala/ }))
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(/Ative o Wi-Fi/))
-    expect(screen.getByRole('button', { name: /Criar uma sala/ })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /Criar sala/ })).toBeEnabled()
   })
 
-  it('refreshes the QR and manual invite after an authenticated guest joins', async () => {
+  it('rotates the QR payload internally without exposing an invitation field after an authenticated guest joins', async () => {
     render(<MemoryRouter><LanPersistentLobbyScreen /></MemoryRouter>)
-    fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Criar sala/ }))
     await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
-    const field = () => screen.getByLabelText('Texto completo do convite') as HTMLTextAreaElement
-    const first = field().value
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    const currentInvite = () => network.invites.at(-1)!
+    const first = currentInvite()
     const parsed = decodePersistentLanInvite(first)
     if (!parsed.ok) throw new Error('invalid_test_invite')
     network.emit?.({ type: 'connected', peerId: 'second-phone' })
@@ -79,31 +81,19 @@ describe('PL-03 Android lobby journey', () => {
       playerId: admission.playerId, admissionId: admission.admissionId,
     } })
     await waitFor(() => expect(screen.getByText('0 / 2 prontos')).toBeInTheDocument())
-    await waitFor(() => expect(field().value).not.toBe(first), { timeout: 2500 })
-    expect(decodePersistentLanInvite(field().value).ok).toBe(true)
+    await waitFor(() => expect(currentInvite()).not.toBe(first), { timeout: 2500 })
+    expect(decodePersistentLanInvite(currentInvite()).ok).toBe(true)
   })
 
-  it('shows two distinct LAN entry options and accessible manual invitation', () => {
+  it('creates a native-secured host Room, selects a real game and keeps start disabled with only host', async () => {
     render(<MemoryRouter><LanPersistentLobbyScreen /></MemoryRouter>)
-    expect(screen.getByRole('heading', { name: /O jogo começa com a galera/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Criar uma sala/ })).toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: /Entrar numa sala/ }))
-    expect(screen.getByRole('heading', { name: /Entre na roda/ })).toBeInTheDocument()
-    expect(screen.getByLabelText(/Convite completo/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Verificação do QR/)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Entrar na sala/ })).toBeDisabled()
-    fireEvent.click(screen.getByRole('button', { name: 'Voltar' }))
-    expect(screen.getByRole('button', { name: /Criar uma sala/ })).toBeInTheDocument()
-  })
-
-  it('creates a native-secured host Room, selects synthetic game and keeps start disabled with only host', async () => {
-    render(<MemoryRouter><LanPersistentLobbyScreen /></MemoryRouter>)
-    fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Criar sala/ }))
     await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
     expect(screen.queryByText('1 / 1 prontos')).not.toBeInTheDocument()
     expect(screen.getByText('0 / 1 prontos')).toBeInTheDocument()
+    fireEvent.click(screen.getByText('Convidar amigos'))
     expect(screen.getByRole('img', { name: 'QR de convite da sala' })).toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: 'Selecionar Cartas secretas' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Selecionar Impostor da Palavra' }))
     await waitFor(() => expect(screen.getByRole('button', { name: /Salvar regras/ })).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: /Salvar regras/ }))
     await waitFor(() => expect(screen.getByText('Regras confirmadas para esta rodada')).toBeInTheDocument())
@@ -115,4 +105,19 @@ describe('PL-03 Android lobby journey', () => {
     fireEvent.click(screen.getByRole('button', { name: /Sim, encerrar sala/ }))
     await waitFor(() => expect(screen.getByTestId('pl03-entry')).toBeInTheDocument())
   })
+})
+
+it('creates directly and does not recreate a room after explicit closure on the create route', async () => {
+  render(<MemoryRouter><LanPersistentLobbyScreen initialMode="create" /></MemoryRouter>)
+  await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
+  expect(network.lastPreference).toBe(false)
+  expect(screen.queryByRole('button', { name: 'Entrar em sala' })).not.toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: 'Encerrar sala' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Sim, encerrar sala' }))
+  await waitFor(() => expect(screen.getByTestId('pl03-entry')).toBeInTheDocument())
+  expect(screen.getByRole('button', { name: 'Criar sala' })).toBeEnabled()
+  expect(network.invites).toHaveLength(1)
+  fireEvent.click(screen.getByRole('button', { name: 'Criar sala' }))
+  await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
+  expect(network.invites).toHaveLength(2)
 })

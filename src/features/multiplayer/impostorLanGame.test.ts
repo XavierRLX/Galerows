@@ -276,3 +276,104 @@ describe('G5B genuine multiplayer Room authority — Impostor da Palavra', () =>
     }
   })
 })
+
+describe('Impostor immersive LAN individual voting — trusted Room authority', () => {
+  const config: ImpostorLanConfig = {
+    impostorMode: 'no-word', conversationMode: 'one-word', flow: 'individual-vote', timerSeconds: 120,
+  }
+  function readyForVoting(guests = 2) {
+    const sim = simulator(guests)
+    sim.start(config)
+    for (const player of sim.players) sim.ok(player, 'ACK_BRIEFING', null, 'game')
+    sim.ok(sim.players[0], 'START_VOTING', null, 'game')
+    return sim
+  }
+  it('starts right on identity with a host timestamp and keeps each card private', () => {
+    const sim = simulator()
+    sim.start(config)
+    expect(sim.state(sim.players[0]).public).toMatchObject({
+      flow: 'individual-vote', step: 'reveal', seenCount: 0, startedAt: 10000, timerSeconds: 120,
+      voteCount: 0, voteRound: 1,
+    })
+    expect(sim.send(sim.players[1], 'START_VOTING', null, 'game').result.error).toBe('unauthorized')
+    for (const player of sim.players) sim.ok(player, 'ACK_BRIEFING', null, 'game')
+    const before = sim.runtime.getRevision()
+    sim.ok(sim.players[1], 'ACK_BRIEFING', null, 'game')
+    expect(sim.runtime.getRevision()).toBe(before)
+    expect(sim.send(sim.players[1], 'START_TIMER', null, 'game').result.error).toBe('invalid_phase')
+    sim.ok(sim.players[0], 'START_TIMER', null, 'game')
+    expect(sim.state(sim.players[1]).public.timerStartedAt).toBe(10000)
+    expect(sim.send(sim.players[0], 'START_TIMER', null, 'game').result.status).toBe('rejected')
+    sim.ok(sim.players[0], 'START_VOTING', null, 'game')
+    expect(sim.state(sim.players[0]).private.word).toBeUndefined()
+    expect(sim.state(sim.players[0]).public.result).toBeNull()
+  })
+
+  it('collects separate immutable votes with no interim tally, then computes result', () => {
+    const sim = readyForVoting()
+    const imp = impostor(sim)
+    for (const [n, player] of sim.players.entries()) {
+      sim.ok(player, 'VOTE', { playerId: imp.id }, 'game')
+      const pub = sim.state(player).public
+      if (n < 2) {
+        expect(pub).toMatchObject({ step: 'voting', voteCount: n + 1, result: null, accusedId: null })
+        expect(JSON.stringify(pub)).not.toContain('impostorId')
+        expect(JSON.stringify(pub)).not.toContain('votes')
+        expect(sim.state(player).private.hasVoted).toBe(true)
+        expect(sim.state(sim.players[(n + 1) % 3]).private.hasVoted).toBe(false)
+        const rev = sim.runtime.getRevision()
+        expect(sim.send(player, 'VOTE', { playerId: 'host' }, 'game').result.status).toBe('accepted')
+        expect(sim.runtime.getRevision()).toBe(rev)
+      }
+    }
+    expect(sim.state(sim.players[0]).public).toMatchObject({ step: 'summary', winner: 'group',
+      result: { impostorId: imp.id } })
+    sim.ok(sim.players[0], 'END_GAME')
+    expect(sim.view(sim.players[0]).roomState.phase).toBe('results')
+    sim.ok(sim.players[0], 'RETURN_TO_LOBBY')
+    expect(sim.view(sim.players[0]).roomState.phase).toBe('lobby')
+  })
+
+  it('runs one private runoff for a tie, and finishes inconclusive second tie deterministically', () => {
+    const sim = readyForVoting()
+    for (const [i, player] of sim.players.entries()) {
+      sim.ok(player, 'VOTE', { playerId: sim.players[i].id }, 'game')
+    }
+    expect(sim.state(sim.players[0]).public).toMatchObject({ step: 'voting', voteRound: 2, voteCount: 0 })
+    const candidates = sim.state(sim.players[0]).public.runoffCandidates!
+    expect(candidates).toHaveLength(3)
+    for (const [i, player] of sim.players.entries()) {
+      sim.ok(player, 'VOTE', { playerId: candidates[i] }, 'game')
+    }
+    expect(sim.state(sim.players[0]).public).toMatchObject({
+      step: 'summary', winner: 'impostor', reason: 'tied-vote',
+    })
+  })
+
+  it('requires all original participants and never accepts a guest moderator or late entrant vote', () => {
+    const sim = simulator()
+    sim.start(config)
+    for (const player of sim.players) sim.ok(player, 'ACK_BRIEFING', null, 'game')
+    const revision = sim.runtime.getRevision()
+    expect(sim.send(sim.players[1], 'START_VOTING', null, 'game').result.error).toBe('unauthorized')
+    expect(sim.runtime.getRevision()).toBe(revision)
+    sim.runtime.disconnect(sim.players[2].conn)
+    expect(sim.send(sim.players[0], 'START_VOTING', null, 'game').result.error).toBe('not_ready')
+    const rejoined = { id: sim.players[2].id, conn: 'secure-rejoined' }
+    expect(sim.runtime.reassociate(rejoined.id, rejoined.conn).ok).toBe(true)
+    sim.ok(sim.players[0], 'START_VOTING', null, 'game')
+    const late = sim.runtime.joinGuest('newcomer')
+    expect(late.ok).toBe(true)
+    if (!late.ok) return
+    const newPlayer = { id: late.playerId, conn: 'newcomer' }
+    expect(sim.send(newPlayer, 'VOTE', { playerId: sim.players[0].id }, 'game').result.error).toBe('not_participant')
+    expect(sim.send(sim.players[0], 'VOTE', { playerId: 'outsider' }, 'game').result.error).toBe('invalid_phase')
+  })
+
+  it('keeps 12-player projections below protocol frame size including runoff', () => {
+    const sim = readyForVoting(11)
+    for (const player of sim.players) {
+      expect(roomFrameFits({ kind: 'snapshotV2', protocolVersion: 2, snapshot: sim.view(player) })).toBe(true)
+    }
+  })
+})

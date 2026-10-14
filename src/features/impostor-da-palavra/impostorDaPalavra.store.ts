@@ -5,7 +5,7 @@ import { STORAGE_KEYS } from '../../lib/storage/storage.keys'
 import type { GameParticipant } from '../players/players.types'
 import { loadImpostorDaPalavraDeck } from './content/impostorDaPalavraContent.service'
 import type { ImpostorDaPalavraDeck } from './content/impostorDaPalavraContent.types'
-import { advanceClueTurn, advanceRolePass, beginAccusation, beginConversation, confirmAccusation, continueAfterRound, createImpostorDaPalavraSession, isOpeningHistory, isSessionCompatible, participantIdentity, recordFinalGuess, selectAccusedParticipant } from './impostorDaPalavra.session'
+import { advanceClueTurn, advanceRolePass, beginAccusation, beginConversation, confirmAccusation, continueAfterRound, createImpostorDaPalavraSession, isOpeningHistory, isSessionCompatible, participantIdentity, recordFinalGuess, recordManualVoteWinners, nextSharedQuestion, drawFirstSpeaker, selectAccusedParticipant } from './impostorDaPalavra.session'
 import type { ImpostorDaPalavraConfig, ImpostorDaPalavraOpeningHistory, ImpostorDaPalavraSession } from './impostorDaPalavra.types'
 
 type ImpostorDaPalavraState = {
@@ -19,6 +19,9 @@ type ImpostorDaPalavraState = {
   restart: () => Promise<void>
   advanceRole: () => Promise<void>
   beginConversation: () => Promise<void>
+  changeQuestion: () => Promise<void>
+  redrawFirstSpeaker: () => Promise<void>
+  recordManualVotes: (correctVoterIds: string[]) => Promise<void>
   advanceClue: () => Promise<void>
   beginAccusation: () => Promise<void>
   selectAccused: (participantId: string) => Promise<void>
@@ -63,6 +66,9 @@ export const useImpostorDaPalavraStore = create<ImpostorDaPalavraState>((set, ge
   },
   advanceRole: async () => { await mutateSession(get, set, (session) => advanceRolePass(session)) },
   beginConversation: async () => { await mutateSession(get, set, (session) => beginConversation(session)) },
+  changeQuestion: async () => { await mutateSession(get, set, (session, deck) => nextSharedQuestion(session, deck)) },
+  redrawFirstSpeaker: async () => { await mutateSession(get, set, (session) => drawFirstSpeaker(session)) },
+  recordManualVotes: async (ids) => { await mutateSession(get, set, (session) => recordManualVoteWinners(session, ids)) },
   advanceClue: async () => { await mutateSession(get, set, (session) => advanceClueTurn(session)) },
   beginAccusation: async () => { await mutateSession(get, set, (session) => beginAccusation(session)) },
   selectAccused: async (participantId) => { await mutateSession(get, set, (session) => selectAccusedParticipant(session, participantId)) },

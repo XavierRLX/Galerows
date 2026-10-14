@@ -77,11 +77,24 @@ export class RoomLifecycleAdapter {
 
     const hostAction = command.type === 'SELECT_GAME' || command.type === 'CONFIGURE_GAME'
       || command.type === 'START_GAME' || command.type === 'END_GAME'
-      || command.type === 'RETURN_TO_LOBBY' || command.type === 'FINISH_SESSION'
+      || command.type === 'RETURN_TO_LOBBY' || command.type === 'REPLAY_GAME' || command.type === 'FINISH_SESSION'
     if (hostAction && actor.role !== 'host') return { ok: false, error: 'unauthorized' }
     // The champion ceremony is terminal for this tournament, not for the WSS
     // connection: existing members can still see standings and exit gracefully.
     if (state.competition.status === 'finished') return { ok: false, error: 'invalid_phase' }
+    if (command.type === 'SET_DISPLAY_NAME') {
+      const name = field(command.payload, 'name')
+      if (typeof name !== 'string' || !name.trim() || name.trim().length > 32
+        || [...name].some(char => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127) || (Object.keys(command.payload as Record<string, unknown>).length !== 1)) {
+        return { ok: false, error: 'invalid_payload' }
+      }
+      const normalized = name.trim().replace(/\s+/g, ' ')
+      const changed = actor.displayName !== normalized
+      actor.displayName = normalized
+      state.competition.standings = state.competition.standings.map(row =>
+        row.playerId === actor.playerId ? { ...row, displayName: normalized } : row)
+      return { ok: true, candidate: { state, members, changed } }
+    }
     if (command.type === 'FINISH_SESSION') {
       if (state.phase !== 'lobby' || state.competition.completedGames === 0
         || command.payload !== null) return { ok: false, error: 'invalid_phase' }
@@ -162,6 +175,27 @@ export class RoomLifecycleAdapter {
       state.phase = 'results'; state.session.status = 'completed'
       state.lastPublicResult = { gameSessionId: state.session.gameSessionId,
         gameId: state.session.gameId, status: 'completed' }
+      return { ok: true, candidate: { state, members, changed: true } }
+    }
+    if (command.type === 'REPLAY_GAME') {
+      if (state.phase !== 'results' || !state.session || state.session.status !== 'completed') {
+        return { ok: false, error: 'invalid_phase' }
+      }
+      const previous = state.session
+      const game = this.games.get(previous.gameId)!
+      const validated = game.validateConfig(previous.config)
+      if (!validated.ok) return { ok: false, error: 'invalid_config' }
+      const connected = previous.participantIds.every(id => members.get(id)?.connectionId !== null)
+      if (!connected) return { ok: false, error: 'not_ready' }
+      const ordinal = state.sessionOrdinal + 1
+      state.sessionOrdinal = ordinal
+      state.session = { gameSessionId: `${roomId}:game-${ordinal}`, gameId: previous.gameId,
+        status: 'running', participantIds: [...previous.participantIds], config: validated.config,
+        gameState: game.createInitialState(validated.config, previous.participantIds, context),
+        barriers: new Map() }
+      state.phase = 'playing'
+      state.lastPublicResult = null
+      for (const member of members.values()) member.ready = false
       return { ok: true, candidate: { state, members, changed: true } }
     }
     if (command.type === 'RETURN_TO_LOBBY') {

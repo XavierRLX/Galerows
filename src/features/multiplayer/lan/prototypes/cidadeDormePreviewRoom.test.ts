@@ -1,0 +1,71 @@
+import { describe, expect, it } from 'vitest'
+import { CidadeDormePreviewRoom } from './cidadeDormePreviewRoom'
+
+describe('Cidade Dorme preview room', () => {
+  it('uses the real City adapter for room, ready, secret roles and a complete day', () => {
+    const room = new CidadeDormePreviewRoom()
+    expect(room.snapshot('host').roomState.members).toHaveLength(1)
+    room.joinNext(); room.joinNext(); room.joinNext()
+    expect(room.snapshot('host').roomState.members).toHaveLength(4)
+    expect(room.roomCommand('host', 'SELECT_GAME', { gameId: 'cidade-dorme' }).status).toBe('accepted')
+    const config = { enableDoctor: false, enableDetective: true, enableJester: false, revealRoleOnDeath: false }
+    expect(room.roomCommand('host', 'CONFIGURE_GAME', config).status).toBe('accepted')
+    for (const id of room.playerIds()) expect(room.roomCommand(id, 'READY', { ready: true }).status).toBe('accepted')
+    expect(room.roomCommand('host', 'START_GAME').status).toBe('accepted')
+    const host = room.snapshot('host')
+    const guest = room.snapshot('guest-1')
+    expect(host.gamePublicState?.data).toMatchObject({ step: 'reveal' })
+    expect(JSON.stringify(host.gamePublicState)).not.toContain('role')
+    expect(host.privateState?.data).toHaveProperty('role')
+    expect(guest.privateState?.data).toHaveProperty('role')
+    for (const id of room.playerIds()) expect(room.gameCommand(id, 'ACK_ROLE', null).status).toBe('accepted')
+    expect(room.gameCommand('host', 'START_NIGHT', null).status).toBe('accepted')
+    for (let turn = 0; turn < 3 && room.gameState().step !== 'morning' && room.gameState().step !== 'summary'; turn++) {
+      expect(room.simulateCurrentAction()).toBe(true)
+    }
+    expect(room.gameState().step).toBe('morning')
+    expect(room.gameCommand('host', 'START_DISCUSSION', null).status).toBe('accepted')
+    expect(room.gameCommand('host', 'START_VOTE', null).status).toBe('accepted')
+    expect(room.simulateRemainingVotes()).toBe(room.gameState().eligibleVoters)
+    expect(room.gameCommand('host', 'RESOLVE_VOTE', null).status).toBe('accepted')
+    expect(room.gameState().step).toBe('summary')
+    expect(room.roomCommand('host', 'END_GAME', null).status).toBe('accepted')
+    expect(room.roomCommand('host', 'RETURN_TO_LOBBY', null).status).toBe('accepted')
+    expect(room.snapshot('guest-1').privateState).toBeNull()
+    expect(room.snapshot('host').roomState.members).toHaveLength(4)
+  })
+
+  it('does not let a guest configure or start the room', () => {
+    const room = new CidadeDormePreviewRoom()
+    room.joinNext()
+    expect(room.roomCommand('guest-1', 'SELECT_GAME', { gameId: 'cidade-dorme' }).error).toBe('unauthorized')
+    expect(room.snapshot('host').roomState.phase).toBe('lobby')
+  })
+
+  it('simulates a later doctor turn without repeating the previous protected target', () => {
+    const room = new CidadeDormePreviewRoom()
+    room.joinNext(); room.joinNext(); room.joinNext()
+    room.roomCommand('host', 'SELECT_GAME', { gameId: 'cidade-dorme' })
+    room.roomCommand('host', 'CONFIGURE_GAME', { enableDoctor: true, enableDetective: false,
+      enableJester: false, revealRoleOnDeath: false })
+    for (const id of room.playerIds()) room.roomCommand(id, 'READY', { ready: true })
+    room.roomCommand('host', 'START_GAME')
+    for (const id of room.playerIds()) room.gameCommand(id, 'ACK_ROLE')
+    room.gameCommand('host', 'START_NIGHT')
+    expect(room.simulateCurrentAction()).toBe(true)
+    expect(room.gameState().step).toBe('doctor-turn')
+    expect(room.simulateCurrentAction()).toBe(true)
+    expect(room.gameState().step).toBe('morning')
+    room.gameCommand('host', 'START_DISCUSSION')
+    room.gameCommand('host', 'START_VOTE')
+    const alive = room.gameState().players.filter(player => player.alive).map(player => player.id)
+    for (const id of alive) room.gameCommand(id, 'CAST_VOTE', { playerId: id })
+    room.gameCommand('host', 'RESOLVE_VOTE')
+    expect(room.gameState().step).toBe('vote-result')
+    room.gameCommand('host', 'NEXT_NIGHT')
+    expect(room.simulateCurrentAction()).toBe(true)
+    expect(room.gameState().step).toBe('doctor-turn')
+    expect(room.simulateCurrentAction()).toBe(true)
+    expect(room.gameState().step).toBe('morning')
+  })
+})

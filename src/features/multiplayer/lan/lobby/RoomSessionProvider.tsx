@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { LocalPreferences } from '../../../../lib/capacitor/preferences'
 import type { ReactNode } from 'react'
 import { RoomSessionContext } from './RoomSessionContext'
 import { describeRoomSessionError } from './roomSessionErrors'
@@ -56,6 +57,8 @@ function useRoomSessionManager() {
   const currentInviteCapability = useRef<string | null>(null)
   const inFlight = useRef(false)
   const disposed = useRef(false)
+  const lastNameLoadedForRoom = useRef<string | null>(null)
+  const roomActionRef = useRef<(type: string, payload: unknown) => void>(() => undefined)
   // Invalidates completion callbacks from the Room that was just terminated.
   const sessionEpoch = useRef(0)
 
@@ -179,6 +182,7 @@ function useRoomSessionManager() {
   }
 
   function startHost() {
+    if (roomRef.current) return
     void run(async () => {
       const server = new LanNativeHost()
       const room = 'galerows-' + crypto.randomUUID()
@@ -244,6 +248,17 @@ function useRoomSessionManager() {
     })
   }
 
+  /** Optical scanning explicitly trusts the identity carried by the host's QR. */
+  function joinScannedInvite(raw: string) {
+    if (roomRef.current) return
+    void run(async () => {
+      const decoded = decodePersistentLanInvite(raw)
+      if (!decoded.ok) throw new Error(decoded.error)
+      setStatus('Conectando…')
+      await connectGuest(decoded.invite, () => hostVerificationCode(decoded.invite.fingerprint))
+    })
+  }
+
   /** G4-lite: LAN announcement provides an unverified initial pin; QR mode remains stronger. */
   function joinDiscoveredRoom(room: DiscoveredLanRoom) {
     void run(async () => {
@@ -296,9 +311,42 @@ function useRoomSessionManager() {
     })
   }
 
+  useEffect(() => { roomActionRef.current = action })
+
+  function saveDisplayName(name: string) {
+    const trimmed = name.trim().replace(/\s+/g,' ')
+    if (!trimmed || trimmed.length > 32 || [...trimmed].some(char => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127)) return
+    void LocalPreferences.setJson('galerows:lan:myDisplayName', trimmed)
+      .then(() => action('SET_DISPLAY_NAME', { name: trimmed }))
+      .catch(() => setError('Não foi possível salvar seu nome neste aparelho.'))
+  }
+
+  useEffect(() => {
+    if (!roomId || !playerId || busy || !snapshot || !connected) return
+    const key = roomId + ':' + playerId
+    if (lastNameLoadedForRoom.current === key) return
+    lastNameLoadedForRoom.current = key
+    void LocalPreferences.getJson<string>('galerows:lan:myDisplayName')
+      .then(name => { if (typeof name === 'string' && name.trim()
+        && name !== snapshot.roomState.members.find(m => m.playerId === playerId)?.displayName) {
+        roomActionRef.current('SET_DISPLAY_NAME', { name })
+      } }).catch(() => undefined)
+  }, [roomId, playerId, busy, snapshot, connected])
+
   function leave() {
     void run(async () => {
-      await guestRef.current?.leaveRoom()
+      const guest = guestRef.current
+      if (!connected) {
+        // A disconnected client cannot obtain the host's signed leave ACK.
+        // Only close the local UI and socket; keep native resume credentials,
+        // since revocation was not authenticated or confirmed by the host.
+        await guest?.disconnect().catch(() => undefined)
+        guestRef.current = null
+        resetUi()
+        setStatus('Sala fechada neste aparelho. A saída não foi confirmada pelo anfitrião.')
+        return
+      }
+      await guest?.leaveRoom()
       guestRef.current = null
       resetUi()
     })
@@ -325,7 +373,7 @@ function useRoomSessionManager() {
     mode, preferHotspot, setPreferHotspot, role, invitation, setInvitation,
     enteredCode, setEnteredCode, roomId, playerId, snapshot, qr, hostCode, roomCode, hostIp,
     scannerOpen, setScannerOpen, status, error, setError, busy, connected,
-    startHost, joinGuest, joinDiscoveredRoom, resumeGuest, action, leave, closeRoom, refreshInvite,
+    startHost, joinGuest, joinScannedInvite, joinDiscoveredRoom, resumeGuest, action, leave, closeRoom, refreshInvite, saveDisplayName,
   }
 }
 

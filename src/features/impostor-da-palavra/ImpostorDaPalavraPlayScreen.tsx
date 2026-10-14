@@ -8,14 +8,16 @@ import { Card } from '../../components/ui/Card'
 import { AppHaptics } from '../../lib/capacitor/haptics'
 import { cn } from '../../lib/utils/cn'
 import { getParticipantBriefing } from './impostorDaPalavra.session'
+import { ImpostorLocalTimer } from './ImpostorLocalTimer'
 import { useImpostorDaPalavraStore } from './impostorDaPalavra.store'
 import { useImpostorDaPalavraInitialization } from './useImpostorDaPalavraInitialization'
 
 export function ImpostorDaPalavraPlayScreen() {
   const { t } = useTranslation('impostor-da-palavra')
   const navigate = useNavigate()
-  const { deck, session, initialized, advanceRole, beginConversation, advanceClue, beginAccusation, selectAccused, confirmAccusation, recordFinalGuess, continueSummary } = useImpostorDaPalavraStore()
+  const { deck, session, initialized, advanceRole, beginConversation, changeQuestion, redrawFirstSpeaker, advanceClue, beginAccusation, selectAccused, confirmAccusation, recordFinalGuess, recordManualVotes, continueSummary } = useImpostorDaPalavraStore()
   const [showSecret, setShowSecret] = useState(false)
+  const [correctVoters, setCorrectVoters] = useState<string[]>([])
   useImpostorDaPalavraInitialization()
   useEffect(() => {
     if (initialized && !session) navigate('/games/impostor-da-palavra', { replace: true })
@@ -42,7 +44,27 @@ export function ImpostorDaPalavraPlayScreen() {
     </Shell>
   }
 
-  if (session.phase === 'conversation-intro') return <Shell title={title}><CenteredIcon icon={<MessageCircle size={40} />} /><h1 className="mt-5 text-center text-3xl font-black">{t('play.everyoneReady')}</h1><p className="mx-auto mt-3 max-w-md text-center leading-7 text-slate-400">{t('play.conversationIntro')}</p><Button className="mx-auto mt-8 flex w-full max-w-lg bg-violet-400 text-slate-950 hover:bg-violet-300" size="lg" onClick={() => void beginConversation()}>{t('play.startConversation')}<ArrowRight size={19} /></Button></Shell>
+  if (session.phase === 'conversation-intro') {
+    const first = session.participants.find(person => person.id === session.speakingOrder[0])
+    const qid = Object.values(session.questionAssignments)[0]
+    const sharedQuestion = deck.questions.find(item => item.id === qid)
+    return <Shell title={title}>
+      <CenteredIcon icon={<MessageCircle size={40} />}/>
+      <h1 className="mt-5 text-center text-3xl font-black">Todos visualizaram!</h1>
+      <p className="mx-auto mt-3 max-w-md text-center leading-7 text-slate-400">
+        Todos conferiram suas identidades. Organizem quem começa ou sorteiem o primeiro jogador.
+        Vocês podem fazer perguntas adicionais em voz alta.</p>
+      {sharedQuestion && <Card className="mx-auto mt-5 max-w-lg p-4 text-center">
+        <small>Pergunta para todos</small>
+        <p className="mt-2 text-xl font-black">{sharedQuestion.text}</p>
+        <Button variant="secondary" className="mx-auto mt-3" onClick={() => void changeQuestion()}>Trocar pergunta</Button>
+      </Card>}
+      <p className="mt-5 text-center">Primeiro jogador: <strong>{first?.name}</strong></p>
+      <Button className="mx-auto mt-3" variant="secondary" onClick={() => void redrawFirstSpeaker()}>Sortear quem começa</Button>
+      <Button className="mx-auto mt-6 flex w-full max-w-lg bg-violet-400 text-slate-950 hover:bg-violet-300"
+        size="lg" onClick={() => void beginConversation()}>{t('play.startConversation')}<ArrowRight size={19}/></Button>
+    </Shell>
+  }
 
   if (session.phase === 'clue-turn') {
     const participantId = session.speakingOrder[session.clueTurnIndex]
@@ -53,15 +75,36 @@ export function ImpostorDaPalavraPlayScreen() {
     return <Shell action={t('play.progress', { current: session.clueTurnIndex + 1, total: session.participants.length })} title={title}>
       <div className="text-center"><CenteredIcon icon={<MessageCircle size={38} />} /><h1 className="mt-5 text-3xl font-black">{t('play.yourTurn', { name: participant.name })}</h1></div>
       <Card className="mx-auto mt-8 max-w-lg border-violet-400/30 bg-violet-400/10 p-6 text-center">{session.config.conversationMode === 'guided-questions' ? <><p className="text-sm font-black uppercase tracking-wider text-violet-300">{t('play.questionLabel')}</p><p className="mt-3 text-2xl font-black leading-9">{question?.text}</p></> : <><p className="text-sm font-black uppercase tracking-wider text-violet-300">{t('conversation.one-word.name')}</p><p className="mt-3 text-xl font-bold leading-8">{t('play.sayOneWord')}</p></>}</Card>
+      <ImpostorLocalTimer startedAt={session.timerStartedAt} durationSeconds={session.config.timerSeconds} />
       <Button className="mx-auto mt-8 flex w-full max-w-lg bg-violet-400 text-slate-950 hover:bg-violet-300" size="lg" onClick={async () => { await advanceClue(); await AppHaptics.light() }}>{last ? t('play.startDiscussion') : t('play.nextClue')}<ArrowRight size={19} /></Button>
     </Shell>
   }
 
-  if (session.phase === 'discussion') return <Shell title={title}><CenteredIcon icon={<Search size={40} />} /><h1 className="mt-5 text-center text-3xl font-black">{t('play.discussionTitle')}</h1><p className="mx-auto mt-3 max-w-md text-center leading-7 text-slate-400">{t('play.discussionText')}</p><Button className="mx-auto mt-8 flex w-full max-w-lg bg-violet-400 text-slate-950 hover:bg-violet-300" size="lg" onClick={() => void beginAccusation()}>{t('play.chooseAccused')}<ArrowRight size={19} /></Button></Shell>
+  if (session.phase === 'discussion') return <Shell title={title}><CenteredIcon icon={<Search size={40} />} /><h1 className="mt-5 text-center text-3xl font-black">{t('play.discussionTitle')}</h1><p className="mx-auto mt-3 max-w-md text-center leading-7 text-slate-400">{t('play.discussionText')}</p><ImpostorLocalTimer startedAt={session.timerStartedAt} durationSeconds={session.config.timerSeconds} /><Button className="mx-auto mt-8 flex w-full max-w-lg bg-violet-400 text-slate-950 hover:bg-violet-300" size="lg" onClick={() => void beginAccusation()}>{t('play.chooseAccused')}<ArrowRight size={19} /></Button></Shell>
 
   if (session.phase === 'accusation') return <Shell title={title}><CenteredIcon icon={<ShieldQuestion size={40} />} /><h1 className="mt-5 text-center text-3xl font-black">{t('play.accusationTitle')}</h1><p className="mx-auto mt-2 max-w-md text-center text-slate-400">{t('play.accusationText')}</p><Card className="mx-auto mt-6 max-w-lg overflow-hidden">{session.participants.map((item) => <button className={cn('flex min-h-14 w-full items-center justify-between border-b border-white/10 px-5 text-left font-bold last:border-0', session.accusedParticipantId === item.id && 'bg-violet-400/15 text-violet-300')} key={item.id} onClick={() => void selectAccused(item.id)} type="button"><span>{item.name}</span><span>{session.accusedParticipantId === item.id ? '✓' : ''}</span></button>)}</Card><Button className="mx-auto mt-6 flex w-full max-w-lg bg-violet-400 text-slate-950 hover:bg-violet-300" disabled={!accused} size="lg" onClick={() => void confirmAccusation()}>{accused ? t('play.confirmAccusation', { name: accused.name }) : t('play.chooseAccused')}</Button></Shell>
 
   if (session.phase === 'final-guess') return <Shell title={title}><CenteredIcon icon={<HelpCircle size={40} />} /><h1 className="mt-5 text-center text-3xl font-black">{t('play.finalGuessTitle')}</h1><p className="mx-auto mt-3 max-w-md text-center leading-7 text-slate-400">{t('play.finalGuessText', { name: impostor.name })}</p><div className="mx-auto mt-8 grid max-w-lg gap-3"><Button className="bg-violet-400 text-slate-950 hover:bg-violet-300" size="lg" onClick={() => void recordFinalGuess(true)}>{t('play.guessCorrect')}</Button><Button size="lg" variant="secondary" onClick={() => void recordFinalGuess(false)}>{t('play.guessWrong')}</Button></div></Shell>
+
+  if (session.phase === 'manual-score') return <Shell title={title}>
+    <CenteredIcon icon={<Trophy size={38}/>}/>
+    <h1 className="mt-5 text-center text-3xl font-black">Quem acertou o impostor?</h1>
+    <p className="mx-auto mt-3 max-w-md text-center text-slate-400">
+      A votação já aconteceu presencialmente. Agora, uma pessoa registra quais amigos votaram
+      corretamente em {impostor.name}. Não é necessário registrar cada voto no aplicativo.</p>
+    <Card className="mx-auto mt-6 max-w-lg overflow-hidden">
+      {session.participants.filter(person=>person.id!==session.currentImpostorId).map(person=>
+        <button type="button" key={person.id} aria-pressed={correctVoters.includes(person.id)}
+          className={cn('flex min-h-14 w-full items-center justify-between border-b border-white/10 px-4',
+            correctVoters.includes(person.id)&&'bg-violet-400/20')}
+          onClick={()=>setCorrectVoters(current=>current.includes(person.id)
+            ?current.filter(id=>id!==person.id):[...current,person.id])}>
+          {person.name}<span>{correctVoters.includes(person.id)?'✓':''}</span></button>)}
+    </Card>
+    <Button className="mx-auto mt-6 flex w-full max-w-lg bg-violet-400 text-slate-950"
+      size="lg" onClick={()=>{void recordManualVotes(correctVoters);setCorrectVoters([])}}>
+      Confirmar acertos e mostrar pontos</Button>
+  </Shell>
 
   if (session.phase === 'round-summary' && session.lastRoundResult) {
     const finished = session.round >= session.participants.length

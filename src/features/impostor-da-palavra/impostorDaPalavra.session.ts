@@ -2,11 +2,10 @@ import { createId } from '../../lib/utils/createId'
 import { shuffle } from '../../lib/utils/shuffle'
 import type { GameParticipant } from '../players/players.types'
 import type { ImpostorDaPalavraDeck } from './content/impostorDaPalavraContent.types'
-import type { ConversationMode, ImpostorDaPalavraAward, ImpostorDaPalavraBriefing, ImpostorDaPalavraConfig, ImpostorDaPalavraOpeningHistory, ImpostorDaPalavraRoundResult, ImpostorDaPalavraSession, ImpostorMode } from './impostorDaPalavra.types'
+import type { ImpostorDaPalavraAward, ImpostorDaPalavraBriefing, ImpostorDaPalavraConfig, ImpostorDaPalavraOpeningHistory, ImpostorDaPalavraRoundResult, ImpostorDaPalavraSession } from './impostorDaPalavra.types'
+import { isImpostorLocalConfig } from './impostorSharedConfig'
 
-const PHASES = ['role-pass', 'conversation-intro', 'clue-turn', 'discussion', 'accusation', 'final-guess', 'round-summary', 'finished'] as const
-const IMPOSTOR_MODES: ImpostorMode[] = ['no-word', 'hint', 'alternate-word']
-const CONVERSATION_MODES: ConversationMode[] = ['one-word', 'guided-questions']
+const PHASES = ['role-pass', 'conversation-intro', 'clue-turn', 'discussion', 'accusation', 'final-guess', 'manual-score', 'round-summary', 'finished'] as const
 
 export function createImpostorDaPalavraSession(
   participants: GameParticipant[],
@@ -31,6 +30,8 @@ export function createImpostorDaPalavraSession(
     phase: 'role-pass',
     participants: [...participants],
     config: { ...config },
+    timerStartedAt: null,
+    pendingFinalGuessCorrect: null,
     scores: Object.fromEntries(participants.map((participant) => [participant.id, 0])),
     round: 1,
     impostorQueue,
@@ -73,7 +74,8 @@ export function advanceRolePass(session: ImpostorDaPalavraSession) {
 
 export function beginConversation(session: ImpostorDaPalavraSession) {
   if (session.phase !== 'conversation-intro') return session
-  return touch({ ...session, phase: 'clue-turn', clueTurnIndex: 0 })
+  return touch({ ...session, phase: 'clue-turn', clueTurnIndex: 0,
+    timerStartedAt: session.config.timerSeconds ? Date.now() : null })
 }
 
 export function advanceClueTurn(session: ImpostorDaPalavraSession) {
@@ -94,16 +96,55 @@ export function selectAccusedParticipant(session: ImpostorDaPalavraSession, part
 
 export function confirmAccusation(session: ImpostorDaPalavraSession) {
   if (session.phase !== 'accusation' || !session.accusedParticipantId) return session
+  if (session.config.scoringMode === 'individual') return touch({ ...session, phase: 'final-guess' })
   if (session.accusedParticipantId === session.currentImpostorId) return touch({ ...session, phase: 'final-guess' })
   return finishRound(session, false, null, [{ participantId: session.currentImpostorId, points: 2 }])
 }
 
 export function recordFinalGuess(session: ImpostorDaPalavraSession, correct: boolean) {
   if (session.phase !== 'final-guess' || !session.accusedParticipantId) return session
+  if (session.config.scoringMode === 'individual') return touch({ ...session, phase: 'manual-score', pendingFinalGuessCorrect: correct })
   const awards: ImpostorDaPalavraAward[] = correct
     ? [{ participantId: session.currentImpostorId, points: 2 }]
     : session.participants.filter((participant) => participant.id !== session.currentImpostorId).map((participant) => ({ participantId: participant.id, points: 1 }))
   return finishRound(session, true, correct, awards)
+}
+
+/** One-phone votes remain verbal; a moderator marks only who voted correctly, after guessing. */
+export function recordManualVoteWinners(session: ImpostorDaPalavraSession, correctVoterIds: string[]) {
+  if (session.phase !== 'manual-score' || session.config.scoringMode !== 'individual') return session
+  const ids = new Set(correctVoterIds)
+  if (ids.size !== correctVoterIds.length || ids.has(session.currentImpostorId)
+    || [...ids].some(id => !session.participants.some(person => person.id === id))) return session
+  const majority = ids.size > session.participants.length / 2
+  const awards: ImpostorDaPalavraAward[] = session.participants.map(person => ({
+    participantId: person.id,
+    points: person.id === session.currentImpostorId
+      ? Number(session.accusedParticipantId !== session.currentImpostorId) + Number(session.pendingFinalGuessCorrect === true)
+      : ids.has(person.id) ? majority ? 2 : 1 : 0,
+  })).filter(award => award.points > 0)
+  return finishRound(session, session.accusedParticipantId === session.currentImpostorId,
+    session.pendingFinalGuessCorrect === true, awards)
+}
+
+/** Organizer may change the shared question before conversation starts. */
+export function nextSharedQuestion(session: ImpostorDaPalavraSession, deck: ImpostorDaPalavraDeck) {
+  if (session.phase !== 'conversation-intro' || session.config.conversationMode !== 'guided-questions') return session
+  const card = deck.cards.find(item => item.id === session.currentCardId)
+  if (!card || card.questionIds.length < 2) return session
+  const currentId = Object.values(session.questionAssignments)[0]
+  const index = card.questionIds.indexOf(currentId)
+  const nextId = card.questionIds[(index + 1) % card.questionIds.length]
+  return touch({ ...session, questionAssignments:
+    Object.fromEntries(session.participants.map(person => [person.id, nextId])) })
+}
+
+export function drawFirstSpeaker(session: ImpostorDaPalavraSession, random: () => number = Math.random) {
+  if (session.phase !== 'conversation-intro' || session.speakingOrder.length < 2) return session
+  const speakingOrder = [...session.speakingOrder]
+  const index = 1 + Math.min(speakingOrder.length - 2, Math.max(0, Math.floor(random() * (speakingOrder.length - 1))))
+  ;[speakingOrder[0], speakingOrder[index]] = [speakingOrder[index], speakingOrder[0]]
+  return touch({ ...session, speakingOrder })
 }
 
 export function continueAfterRound(session: ImpostorDaPalavraSession, deck: ImpostorDaPalavraDeck, random: () => number = Math.random) {
@@ -127,6 +168,8 @@ export function continueAfterRound(session: ImpostorDaPalavraSession, deck: Impo
     questionAssignments: {},
     accusedParticipantId: null,
     lastRoundResult: null,
+    timerStartedAt: null,
+    pendingFinalGuessCorrect: null,
   }
   return touch({ ...next, questionAssignments: createQuestionAssignments(next, deck, random) })
 }
@@ -166,6 +209,9 @@ export function isSessionCompatible(value: unknown, deck: ImpostorDaPalavraDeck)
     && typeof session.id === 'string'
     && session.participants.every(isParticipant)
     && isConfig(session.config)
+    && (session.timerStartedAt === undefined || session.timerStartedAt === null
+      || (typeof session.timerStartedAt === 'number' && Number.isFinite(session.timerStartedAt) && session.timerStartedAt >= 0))
+    && (session.pendingFinalGuessCorrect === undefined || session.pendingFinalGuessCorrect === null || typeof session.pendingFinalGuessCorrect === 'boolean')
     && isScoreRecord(session.scores, ids)
     && typeof session.phase === 'string' && (PHASES as readonly string[]).includes(session.phase)
     && Number.isInteger(session.round) && session.round! >= 1 && session.round! <= session.participants.length
@@ -220,8 +266,8 @@ function createQuestionAssignments(session: ImpostorDaPalavraSession, deck: Impo
   if (session.config.conversationMode === 'one-word') return {}
   const card = deck.cards.find((item) => item.id === session.currentCardId)
   if (!card || card.questionIds.length < session.participants.length) throw new Error('A palavra não possui perguntas suficientes para todos os participantes.')
-  const questions = shuffle(card.questionIds, random).slice(0, session.participants.length)
-  return Object.fromEntries(session.speakingOrder.map((participantId, index) => [participantId, questions[index]]))
+  const question = shuffle(card.questionIds, random)[0]
+  return Object.fromEntries(session.speakingOrder.map(participantId => [participantId, question]))
 }
 
 function createImpostorQueue(participants: GameParticipant[], random: () => number) {
@@ -252,9 +298,7 @@ function participantIdentityById(session: ImpostorDaPalavraSession, participantI
 }
 
 function isConfig(value: unknown): value is ImpostorDaPalavraConfig {
-  if (!isRecord(value)) return false
-  return typeof value.impostorMode === 'string' && IMPOSTOR_MODES.includes(value.impostorMode as ImpostorMode)
-    && typeof value.conversationMode === 'string' && CONVERSATION_MODES.includes(value.conversationMode as ConversationMode)
+  return isImpostorLocalConfig(value)
 }
 
 function isParticipant(value: unknown): value is GameParticipant {

@@ -9,7 +9,7 @@ type Props = {
   onEnd: () => void
 }
 const phaseLabels: Record<ImpostorLanPublic['step'], string> = {
-  reveal: 'Cartas secretas', clues: 'Rodada de pistas', discussion: 'Conversem e desconfiem',
+  reveal: 'Cartas secretas', voting: 'Votação individual', clues: 'Rodada de pistas', discussion: 'Conversem e desconfiem',
   accusation: 'Quem é o impostor?', 'final-guess': 'Última chance de roubar a palavra', summary: 'Resultado da rodada',
 }
 

@@ -47,6 +47,7 @@ function Harness() {
   return <MemoryRouter initialEntries={['/__lan-lobby-v2']}>
     <RoomSessionProvider>
       <Routes>
+        <Route path="/players" element={<><h1>Minha Galera</h1><HomeRoomActions /></>} />
         <Route path="/" element={<><h1>Jogos disponíveis</h1><HomeRoomActions /></>} />
         <Route path="/__lan-lobby-v2" element={<LanPersistentLobbyScreen />} />
       </Routes>
@@ -57,9 +58,10 @@ function Harness() {
 describe('G2 persistent LAN room navigation', () => {
   it('retains the authoritative host and Room when returning to catalog and back, then closes only explicitly', async () => {
     const { unmount } = render(<Harness />)
-    fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Criar sala/ }))
     await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
-    const revision = screen.getByLabelText(/Revisão da sala/).getAttribute('aria-label')
+    fireEvent.click(screen.getByRole('button', { name: 'Selecionar Impostor da Palavra' }))
+    await waitFor(() => expect(screen.getByText('Impostor da Palavra')).toBeInTheDocument())
     expect(native.started).toBe(1)
 
     fireEvent.click(screen.getByRole('button', { name: /Ver jogos/ }))
@@ -69,7 +71,7 @@ describe('G2 persistent LAN room navigation', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Voltar à sala' }))
     expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument()
-    expect(screen.getByLabelText(/Revisão da sala/)).toHaveAttribute('aria-label', revision)
+    expect(screen.getByText('Impostor da Palavra')).toBeInTheDocument()
     expect(native.started).toBe(1)
     expect(native.stopped).toBe(0)
 
@@ -81,11 +83,11 @@ describe('G2 persistent LAN room navigation', () => {
     expect(native.stopped).toBe(1)
   })
 
-  it('lets newcomers return from the LAN entry screen to the complete games catalog', () => {
+  it('lets newcomers return from LAN to Minha Galera', () => {
     render(<Harness />)
     expect(screen.queryByRole('button', { name: /Voltar à sala/ })).not.toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: /Voltar aos jogos/ }))
-    expect(screen.getByRole('heading', { name: 'Jogos disponíveis' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /Voltar para Minha Galera/ }))
+    expect(screen.getByRole('heading', { name: 'Minha Galera' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /Voltar à sala/ })).not.toBeInTheDocument()
     expect(native.started).toBe(0)
   })
@@ -93,7 +95,7 @@ describe('G2 persistent LAN room navigation', () => {
   it('cancels a native host start that resolves after its owning provider unmounts', async () => {
     native.delayStart = true
     const { unmount } = render(<Harness />)
-    fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Criar sala/ }))
     await waitFor(() => expect(native.releaseStart).not.toBeNull())
     expect(native.stopped).toBe(0)
     unmount()
@@ -103,7 +105,7 @@ describe('G2 persistent LAN room navigation', () => {
 
   it('drops the active banner when native lifetime policy terminates the host Room', async () => {
     render(<Harness />)
-    fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Criar sala/ }))
     await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
     expect(native.emit).not.toBeNull()
     native.emit?.({ type: 'room_expired', peerId: '' })
@@ -114,7 +116,7 @@ describe('G2 persistent LAN room navigation', () => {
 
   it('revalidates a native-expired host room immediately when the app becomes visible, not only on the 400ms timer', async () => {
     render(<Harness />)
-    fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Criar sala/ }))
     await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
     expect(native.emit).not.toBeNull()
     native.emit?.({ type: 'room_expired', peerId: '' })
@@ -126,9 +128,10 @@ describe('G2 persistent LAN room navigation', () => {
 
   it('ignores a failed QR result from an invite update after the Room was terminated', async () => {
     render(<Harness />)
-    fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Criar sala/ }))
     await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
     qrMock.holdNext = true
+    fireEvent.click(screen.getByText('Convidar amigos'))
     fireEvent.click(screen.getByRole('button', { name: /Renovar convite/ }))
     await waitFor(() => expect(qrMock.settle).not.toBeNull())
     native.emit?.({ type: 'room_expired', peerId: '' })
@@ -142,7 +145,7 @@ describe('G2 persistent LAN room navigation', () => {
 
   it('closes host transport when the provider itself is destroyed', async () => {
     const { unmount } = render(<Harness />)
-    fireEvent.click(screen.getByRole('button', { name: /Criar uma sala/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Criar sala/ }))
     await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
     expect(native.stopped).toBe(0)
     unmount()

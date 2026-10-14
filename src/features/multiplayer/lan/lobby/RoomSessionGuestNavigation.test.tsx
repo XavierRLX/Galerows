@@ -7,7 +7,7 @@ import { HomeRoomActions } from '../../../hub/HomeRoomActions'
 import { LanPersistentLobbyScreen } from './LanPersistentLobbyScreen'
 import { RoomSessionProvider } from './RoomSessionProvider'
 
-const guest = vi.hoisted(() => ({ joins: 0, disconnects: 0, leaves: 0, resumes: 0, live: true, closed: false }))
+const guest = vi.hoisted(() => ({ joins: 0, disconnects: 0, leaves: 0, resumes: 0, live: true, closed: false, scanned: '' }))
 const roomId = 'g2-test-room'
 const playerId = 'guest-one'
 const secret = 'PRIVATE-G2-NEVER-IN-HOME'
@@ -30,6 +30,8 @@ function roomSnapshot(): RoomSnapshotV2 {
   }
 }
 
+vi.mock('../LanQrScanner', () => ({ LanQrScanner: ({ onScan }: { onScan: (raw: string) => void }) =>
+  <button onClick={() => onScan(guest.scanned)}>Capturar QR</button> }))
 vi.mock('qrcode', () => ({ default: { toDataURL: vi.fn(async () => 'data:image/png;base64,dGVzdA==') } }))
 vi.mock('../lanSecureNativeClient', () => ({ LanSecureNativeClient: class {} }))
 vi.mock('../lanPersistentGuestAdmission', () => ({
@@ -62,9 +64,9 @@ function enter() {
   const invitation = createPersistentLanInvite({
     roomId, hostIp: '10.0.0.1', port: 43211, fingerprint: 'ab'.repeat(32), capability: 'cd'.repeat(32),
   })
-  fireEvent.change(screen.getByLabelText(/Convite completo/), { target: { value: encodePersistentLanInvite(invitation) } })
-  fireEvent.change(screen.getByLabelText(/Verificação do QR/), { target: { value: 'ABAB-ABAB-ABAB' } })
-  fireEvent.click(screen.getByRole('button', { name: /Entrar na sala/ }))
+  guest.scanned = encodePersistentLanInvite(invitation)
+  fireEvent.click(screen.getByRole('button', { name: 'Ler QR Code' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Capturar QR' }))
 }
 
 describe('G2 guest navigation lifecycle', () => {
@@ -129,6 +131,22 @@ describe('G2 guest navigation lifecycle', () => {
     expect(screen.queryByRole('button', { name: /Revelar minha carta/ })).not.toBeInTheDocument()
     expect(screen.getByText(/Conexão interrompida/)).toBeInTheDocument()
     expect(guest.disconnects).toBe(0)
+  })
+
+  it('allows a disconnected guest to close locally without claiming an authenticated leave', async () => {
+    render(<Harness />)
+    enter()
+    await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
+    guest.live = false
+    await waitFor(() => expect(screen.getByText(/Conexão interrompida/)).toBeInTheDocument(), { timeout: 2200 })
+    fireEvent.click(screen.getByRole('button', { name: /Sair da sala/ }))
+    expect(screen.getByText(/não será confirmada pelo anfitrião/i)).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Fechar neste aparelho' }))
+    await waitFor(() => expect(screen.getByTestId('pl03-entry')).toBeInTheDocument())
+    expect(guest.leaves).toBe(0)
+    expect(guest.disconnects).toBe(1)
+    expect(screen.queryByText(secret)).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Reconectar/ })).not.toBeInTheDocument()
   })
 
   it('explicit leave is terminal and removes the active room banner', async () => {

@@ -65,6 +65,14 @@ const LanRoomScreen = import.meta.env.VITE_LAN_ROOM_UI === '1' && lanNativeMvpAv
   ? lazy(() => import('../features/multiplayer/lan/LanRoomScreen').then((module) => ({ default: module.LanRoomScreen })))
   : null
 
+// Visual sandbox only: never bundled into a release or connected to a LAN room.
+const ImpostorPrototype = import.meta.env.DEV
+  ? lazy(() => import('../features/multiplayer/lan/prototypes/ImpostorPrototype'))
+  : null
+const CidadeDormePrototype = import.meta.env.DEV
+  ? lazy(() => import('../features/multiplayer/lan/prototypes/CidadeDormePrototype'))
+  : null
+
 function RouteLoading() {
   return <div aria-label="Carregando tela" className="min-h-dvh bg-slate-950" role="status" />
 }
@@ -73,12 +81,18 @@ export function AppRoutes() {
   return (
     <Suspense fallback={<RouteLoading />}>
       <Routes>
+        {ImpostorPrototype && <>
+          <Route path="/__prototype/impostor-room" element={<ImpostorPrototype screen="room" />} />
+          <Route path="/__prototype/impostor-game" element={<ImpostorPrototype screen="game" />} />
+          <Route path="/__prototype/impostor-result" element={<ImpostorPrototype screen="result" />} />
+        </>}
+        {CidadeDormePrototype && <Route path="/__prototype/cidade-dorme" element={<CidadeDormePrototype />} />}
         {LanDiagnosticScreen ? <Route path="/__lan-diagnostic" element={<LanDiagnosticScreen />} /> : null}
         {LanCoreProbeScreen ? <Route path="/__lan-core" element={<LanCoreProbeScreen />} /> : null}
         {LanPersistentRoomProbeScreen ? <Route path="/__lan-room-v2" element={<LanPersistentRoomProbeScreen />} /> : null}
         {LanPersistentLobbyScreen ? <Route path="/__lan-lobby-v2" element={<LanPersistentLobbyScreen />} /> : null}
         {LanPersistentLobbyScreen ? <Route path="/__lan-lobby-v2/entrar" element={<LanPersistentLobbyScreen initialMode="join" />} /> : null}
-        {LanPersistentLobbyScreen ? <Route path="/__lan-lobby-v2/criar" element={<LanPersistentLobbyScreen initialMode="entry" />} /> : null}
+        {LanPersistentLobbyScreen ? <Route path="/__lan-lobby-v2/criar" element={<LanPersistentLobbyScreen initialMode="create" />} /> : null}
         {LanRoomScreen ? <Route path="/__lan-room" element={<LanRoomScreen />} /> : null}
         <Route element={<AppShell />}>
           <Route index element={<HubScreen />} />

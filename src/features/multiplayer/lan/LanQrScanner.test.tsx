@@ -8,13 +8,13 @@ beforeEach(() => {
 })
 afterEach(() => { cleanup(); vi.restoreAllMocks() })
 
-it('explains denied camera access and offers manual entry', async () => {
+it('explains denied camera access and lets the player close the scanner', async () => {
   Object.defineProperty(navigator, 'mediaDevices', { configurable: true, value: {
     getUserMedia: vi.fn(async () => { throw new DOMException('Denied', 'NotAllowedError') }),
   } })
   render(<LanQrScanner onClose={() => undefined} onScan={() => undefined} />)
   expect(await screen.findByRole('alert')).toHaveTextContent('Permissão da câmera negada')
-  expect(screen.getByRole('button', { name: 'Digitar convite' })).toBeInTheDocument()
+  expect(screen.getByRole('button', { name: 'Fechar' })).toBeInTheDocument()
 })
 
 it('releases the camera when the scanner is unmounted', async () => {

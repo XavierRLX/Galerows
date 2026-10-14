@@ -1,77 +1,79 @@
-import { Settings, Sparkles, Trophy, Users } from 'lucide-react'
+import { Settings, Trophy, Users } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
-import { canDisplayAds } from '../ads/ads.visibility'
+
+const iconAction = 'shrink-0 border-0 bg-transparent shadow-none hover:bg-transparent active:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#D2F86A]'
 
 export function HubHeader() {
   const { t } = useTranslation('hub')
   const navigate = useNavigate()
 
   return (
-    <section className="relative isolate pb-4">
-      <div className="hub-header-panel relative overflow-hidden bg-[#180735] px-5 pb-8 pt-4 shadow-2xl shadow-violet-950/50 sm:px-6 sm:pb-9 sm:pt-5">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(139,92,246,0.5),transparent_28%),radial-gradient(circle_at_82%_16%,rgba(14,165,233,0.28),transparent_30%),linear-gradient(135deg,rgba(88,28,135,0.92),rgba(2,6,23,0.25)_58%)]" />
-        <div className="absolute -right-16 top-14 size-60 rounded-full border border-cyan-300/20 bg-cyan-400/10 blur-sm" />
-        <div className="absolute -bottom-24 left-1/2 size-72 -translate-x-1/2 rounded-full bg-fuchsia-500/20 blur-3xl" />
+    <section className="relative isolate pb-2">
+      <div className="hub-header-panel relative overflow-hidden border-b border-[#B8A0FF]/20 bg-[#1b1129] px-4 py-4 shadow-xl shadow-violet-950/30 sm:px-6 sm:py-5">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_30%,rgba(184,160,255,0.22),transparent_58%),linear-gradient(110deg,#1b1129,#261b38_65%,#1a122b)]"
+        />
+        <img
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-5 -top-16 w-56 rotate-[-11deg] opacity-50 sm:-right-8 sm:-top-24 sm:w-72"
+          height="256"
+          src="/assets/brand/galerows-mark.svg"
+          width="256"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#1b1129]/95 via-[#1b1129]/55 to-[#1b1129]/15"
+        />
 
-        <div className="relative flex items-center justify-between gap-4">
-          <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#b8a0ff] ring-1 ring-white/10">
-            <img
-              alt="Galerows"
-              className="size-full object-cover"
-              height="48"
-              src="/assets/brand/galerows-app-icon.svg"
-              width="48"
-            />
-          </div>
-          <div className="flex gap-2">
-            {canDisplayAds() ? (
-              <Button
-                aria-label="Premium"
-                className="rounded-full border-lime-300/20 bg-lime-300/15 text-lime-200 shadow-lg shadow-violet-950/30 backdrop-blur hover:bg-lime-300/25"
-                size="icon"
-                variant="secondary"
-                onClick={() => navigate('/premium')}
-              >
-                <Sparkles size={19} />
-              </Button>
-            ) : null}
-            <Button
-              aria-label="Minha Galera"
-              className="rounded-full border-white/10 bg-white/10 text-white shadow-lg shadow-violet-950/30 backdrop-blur hover:bg-white/15"
-              size="icon"
-              variant="secondary"
-              onClick={() => navigate('/players')}
-            >
-              <Users size={19} />
-            </Button>
-            <Button
-              aria-label="Ranking da Galera"
-              className="rounded-full border-yellow-300/20 bg-yellow-300/15 text-yellow-200 shadow-lg shadow-violet-950/30 backdrop-blur hover:bg-yellow-300/25"
-              size="icon"
-              variant="secondary"
-              onClick={() => navigate('/players/ranking')}
-            >
-              <Trophy size={19} />
-            </Button>
-            <Button
-              aria-label={t('settings')}
-              className="rounded-full border-white/10 bg-white/10 text-white shadow-lg shadow-violet-950/30 backdrop-blur hover:bg-white/15"
-              size="icon"
-              variant="secondary"
-              onClick={() => navigate('/settings')}
-            >
-              <Settings size={19} />
-            </Button>
-          </div>
-        </div>
-
-        <div className="relative mt-6 max-w-xl">
-          <h1 className="text-3xl font-black leading-none tracking-tight text-white sm:text-4xl">{t('brand')}</h1>
-          <p className="mt-1.5 text-sm font-extrabold uppercase tracking-[0.16em] text-cyan-200/85 sm:text-[0.95rem]">{t('subtitle')}</p>
-        </div>
+        <h1 className="relative flex min-h-12 items-center" aria-label="Galerows — Jogos da Galera">
+          <img
+            alt=""
+            aria-hidden="true"
+            className="block h-auto w-[clamp(8.2rem,41vw,12.2rem)] max-w-full drop-shadow-[0_1px_12px_rgba(0,0,0,0.8)]"
+            height="178"
+            src="/assets/brand/galerows-wordmark.svg"
+            width="530"
+          />
+        </h1>
       </div>
+
+      <nav aria-label="Atalhos do Galerows" className="flex w-full items-center justify-between px-4 pt-1 sm:px-6">
+        <div>
+          <Button
+            aria-label="Minha Galera"
+            className={`${iconAction} text-[#B8A0FF]`}
+            size="icon"
+            variant="ghost"
+            onClick={() => navigate('/players')}
+          >
+            <Users aria-hidden="true" fill="currentColor" size={25} strokeWidth={1.7} />
+          </Button>
+        </div>
+        <div className="flex items-center gap-1">
+          <Button
+            aria-label="Ranking da Galera"
+            className={`${iconAction} text-[#D2F86A]`}
+            size="icon"
+            variant="ghost"
+            onClick={() => navigate('/players/ranking')}
+          >
+            <Trophy aria-hidden="true" fill="currentColor" size={25} strokeWidth={1.7} />
+          </Button>
+          <Button
+            aria-label={t('settings')}
+            className={`${iconAction} text-[#FFA9B9]`}
+            size="icon"
+            variant="ghost"
+            onClick={() => navigate('/settings')}
+          >
+            <Settings aria-hidden="true" className="[&_circle]:fill-[#080a18] [&_circle]:stroke-[#080a18]" fill="currentColor" size={25} strokeWidth={1.7} />
+          </Button>
+        </div>
+      </nav>
     </section>
   )
 }

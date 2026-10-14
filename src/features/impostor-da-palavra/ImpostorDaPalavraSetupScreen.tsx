@@ -12,10 +12,11 @@ import { usePlayersStore } from '../players/players.store'
 import type { GameParticipant } from '../players/players.types'
 import { useImpostorDaPalavraStore } from './impostorDaPalavra.store'
 import type { ConversationMode, ImpostorMode } from './impostorDaPalavra.types'
+import { CONVERSATION_MODES, IMPOSTOR_MODES, IMPOSTOR_TIMER_SECONDS } from './impostorSharedConfig'
 import { useImpostorDaPalavraInitialization } from './useImpostorDaPalavraInitialization'
 
-const modes: ImpostorMode[] = ['no-word', 'hint', 'alternate-word']
-const conversations: ConversationMode[] = ['one-word', 'guided-questions']
+const modes = IMPOSTOR_MODES
+const conversations = CONVERSATION_MODES
 
 export function ImpostorDaPalavraSetupScreen() {
   const { t } = useTranslation('impostor-da-palavra')
@@ -28,6 +29,8 @@ export function ImpostorDaPalavraSetupScreen() {
   const [guestName, setGuestName] = useState('')
   const [impostorMode, setImpostorMode] = useState<ImpostorMode>('no-word')
   const [conversationMode, setConversationMode] = useState<ConversationMode>('one-word')
+  const [timerSeconds, setTimerSeconds] = useState<0 | 120 | 180 | 300>(0)
+  const [scoringMode, setScoringMode] = useState<'classic' | 'individual'>('classic')
   const [error, setError] = useState('')
   useImpostorDaPalavraInitialization()
   useEffect(() => { if (!hydrated) void load() }, [hydrated, load])
@@ -44,7 +47,7 @@ export function ImpostorDaPalavraSetupScreen() {
   }
   const begin = async () => {
     if (count < 3 || count > 12) { setError(t('errors.playerCount')); return }
-    await start([...selectedPlayers.map(playerToParticipant), ...guests], { impostorMode, conversationMode })
+    await start([...selectedPlayers.map(playerToParticipant), ...guests], { impostorMode, conversationMode, timerSeconds, scoringMode })
     await showFakeAd({ placement: 'start-match' })
     navigate('/games/impostor-da-palavra/play')
   }
@@ -56,6 +59,25 @@ export function ImpostorDaPalavraSetupScreen() {
     {guests.map((guest) => <div className="mt-2 flex items-center justify-between rounded-2xl bg-violet-400/10 px-4 py-3" key={guest.id}><span className="font-bold">{guest.name} <small className="text-violet-300">{t('setup.guest')}</small></span><Button aria-label={`Remover ${guest.name}`} size="icon" variant="ghost" onClick={() => setGuests((current) => current.filter((item) => item.id !== guest.id))}>×</Button></div>)}
     <h2 className="mt-7 text-sm font-bold uppercase tracking-wider text-slate-400">{t('setup.modeTitle')}</h2><div className="mt-3 grid gap-3">{modes.map((mode) => <ChoiceCard active={impostorMode === mode} description={t(`modes.${mode}.description`)} key={mode} title={t(`modes.${mode}.name`)} onClick={() => setImpostorMode(mode)} />)}</div>
     <h2 className="mt-7 text-sm font-bold uppercase tracking-wider text-slate-400">{t('setup.conversationTitle')}</h2><div className="mt-3 grid grid-cols-2 gap-3">{conversations.map((mode) => <ChoiceCard active={conversationMode === mode} description={t(`conversation.${mode}.description`)} icon={<MessageCircleQuestion size={20} />} key={mode} title={t(`conversation.${mode}.name`)} onClick={() => setConversationMode(mode)} />)}</div>
+    <h2 className="mt-7 text-sm font-bold uppercase tracking-wider text-slate-400">{t('setup.timerTitle')}</h2>
+    <div className="mt-3 grid grid-cols-4 gap-2" role="group" aria-label={t('setup.timerTitle')}>
+      {IMPOSTOR_TIMER_SECONDS.map((seconds) => <button key={seconds} type="button"
+        aria-pressed={timerSeconds === seconds} onClick={() => setTimerSeconds(seconds)}
+        className={cn('min-h-12 rounded-xl border px-2 py-3 text-sm font-bold',
+          timerSeconds === seconds ? 'border-violet-400 bg-violet-400/15 text-violet-200' : 'border-white/15 text-slate-300')}>
+        {t(seconds === 0 ? 'setup.timerOff' : `setup.timer${seconds}`)}
+      </button>)}
+    </div>
+    <p className="mt-2 text-xs text-slate-400">{t('setup.timerHelp')}</p>
+    <h2 className="mt-7 text-sm font-bold uppercase tracking-wider text-slate-400">Pontuação</h2>
+    <div className="mt-3 grid grid-cols-2 gap-2" role="group" aria-label="Pontuação do Impostor">
+      {([['classic','Clássica'],['individual','Por acertos']] as const).map(([value,label])=>
+        <button type="button" key={value} aria-pressed={scoringMode===value} onClick={()=>setScoringMode(value)}
+          className={cn('rounded-2xl border px-4 py-3 text-sm font-bold',
+            scoringMode===value?'border-violet-400 bg-violet-400/15':'border-white/15')}>
+          {label}</button>)}
+    </div>
+    <p className="mt-2 text-xs text-slate-400">Na pontuação por acertos, a votação permanece presencial; uma pessoa marca os acertos depois que o impostor der seu palpite.</p>
     <p className="mt-5 rounded-2xl bg-violet-400/10 p-4 text-sm text-violet-200">{t('setup.rounds', { count })}</p>
     {error ? <p className="mt-4 text-sm font-bold text-rose-300" role="alert">{error}</p> : null}<Button className="mt-6 w-full bg-violet-400 text-slate-950 hover:bg-violet-300" disabled={count < 3} size="lg" onClick={() => void begin()}>{t('setup.start')}</Button>
   </section></div>

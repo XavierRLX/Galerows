@@ -9,8 +9,8 @@ export function describeRoomSessionError(reason: unknown): string {
   if (code.includes('invite_used')) return 'Este convite já foi usado. Peça ao anfitrião para renovar o QR.'
   if (code.includes('too_many_attempts')) return 'Muitas tentativas de entrada. Peça um convite novo ao anfitrião.'
   if (code.includes('incompatible_invite')) return 'Este convite é incompatível com a versão atual do Galerows.'
-  if (code.includes('invalid_invite')) return 'O convite não é válido. Confira o texto ou leia o QR novamente.'
-  if (code.includes('host_identity_mismatch')) return 'O código não confere. Verifique pessoalmente com o anfitrião.'
+  if (code.includes('invalid_invite')) return 'O convite não é válido. Peça ao anfitrião para renovar o QR e leia novamente.'
+  if (code.includes('host_identity_mismatch')) return 'A identidade do anfitrião não confere. Peça que ele renove o QR e leia novamente.'
   if (code.includes('room_full')) return 'A sala está cheia. Aguarde uma vaga ou peça ao anfitrião para criar outra.'
   if (code.includes('room_closed')) return 'Esta sala foi encerrada pelo anfitrião.'
   if (code.includes('invalid_resume') || code.includes('resume_vault_failed')) {
