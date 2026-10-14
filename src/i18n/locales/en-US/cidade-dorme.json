@@ -41,6 +41,11 @@
       "name": "Jester",
       "shortDescription": "Tries to be voted out by the town.",
       "objective": "Win by being eliminated by vote."
+    },
+    "traitor": {
+      "name": "Traitor",
+      "shortDescription": "Knows the killer team but attacks only when promoted.",
+      "objective": "Help the killer team win while keeping your identity secret."
     }
   },
   "home": {

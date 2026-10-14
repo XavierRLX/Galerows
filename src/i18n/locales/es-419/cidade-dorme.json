@@ -41,6 +41,11 @@
       "name": "Bufón",
       "shortDescription": "Intenta ser eliminado por la votación de la ciudad.",
       "objective": "Ganar si es eliminado por votación."
+    },
+    "traitor": {
+      "name": "Traidor",
+      "shortDescription": "Conoce a sus aliados y ataca únicamente cuando asume el mando.",
+      "objective": "Ayudar al equipo asesino a ganar sin revelar su identidad."
     }
   },
   "home": {

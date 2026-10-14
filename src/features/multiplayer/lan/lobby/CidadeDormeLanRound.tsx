@@ -14,7 +14,7 @@ type Props = {
   onEnd: () => void | Promise<void>
 }
 const roleLabels: Record<RoleKey, string> = {
-  killer: 'Assassino', doctor: 'Médico', detective: 'Detetive',
+  killer: 'Assassino', traitor: 'Traidor', doctor: 'Médico', detective: 'Detetive',
   citizen: 'Cidadão', jester: 'Coringa',
 }
 const titleFor: Record<CidadeDormeLanStep, string> = {
@@ -58,7 +58,7 @@ function CidadeDormeLanBody({ snapshot, playerId, isHost, busy, connected, onAct
       ? 'Anfitrião' : `Jogador ${index + 1}`)
   }
   const alive = data.players.filter(player => player.alive)
-  const correctRole = data.step === 'killer-turn' ? mine?.role === 'killer'
+  const correctRole = data.step === 'killer-turn' ? (mine?.activeKiller ?? (mine?.role === 'killer'))
     : data.step === 'doctor-turn' ? mine?.role === 'doctor'
       : data.step === 'detective-turn' ? mine?.role === 'detective' : data.step === 'voting'
   const canPick = Boolean(mine?.canAct && correctRole) && !blocked

@@ -58,7 +58,8 @@ describe('Cidade Dorme setup presets', () => {
     }
     expect(getCidadeDormeRoleCounts(settings)).toEqual({
       citizen: 0,
-      killer: 2,
+      killer: 1,
+      traitor: 1,
       detective: 1,
       doctor: 1,
       jester: 1,

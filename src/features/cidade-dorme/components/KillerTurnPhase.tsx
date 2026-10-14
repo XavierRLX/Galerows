@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '../../../components/ui/Button'
 import { Card } from '../../../components/ui/Card'
 import { cn } from '../../../lib/utils/cn'
-import { getAlivePlayers } from '../cidadeDorme.rules'
+import { getActiveKiller, getAlivePlayers, getMurderOrder } from '../cidadeDorme.rules'
 import type { GameState } from '../cidadeDorme.types'
 
 type KillerTurnPhaseProps = {
@@ -15,10 +15,13 @@ type KillerTurnPhaseProps = {
 export function KillerTurnPhase({ session, onConfirmTarget }: KillerTurnPhaseProps) {
   const { t } = useTranslation('cidade-dorme')
   const alivePlayers = getAlivePlayers(session.players)
-  const aliveKillers = alivePlayers.filter((player) => player.roleKey === 'killer')
+  const activeKiller = getActiveKiller(session.players,
+    session.murderOrder ?? getMurderOrder(session.players, () => .99999))
+  const aliveKillers = activeKiller ? [activeKiller] : []
   const [selectedActorId, setSelectedActorId] = useState(session.currentNightAction.killerActorId ?? aliveKillers[0]?.id ?? '')
   const effectiveActorId = aliveKillers.some((player) => player.id === selectedActorId) ? selectedActorId : aliveKillers[0]?.id ?? ''
-  const targets = alivePlayers.filter((player) => player.id !== effectiveActorId)
+  const targets = alivePlayers.filter(player =>
+    !(session.murderOrder ?? getMurderOrder(session.players, () => .99999)).includes(player.id))
   const [selectedTargetId, setSelectedTargetId] = useState(targets.some((player) => player.id === session.currentNightAction.killerTargetId) ? session.currentNightAction.killerTargetId ?? '' : '')
   const selectedActor = aliveKillers.find((player) => player.id === effectiveActorId)
   const selectedPlayer = targets.find((player) => player.id === selectedTargetId)

@@ -198,8 +198,8 @@ describe('G7 Cidade Dorme LAN — roles, private actions and team competition', 
   it('keeps multiple killers in one team while only the elected living killer can attack',()=>{
     const s=sim(11)
     s.begin()
-    const killers=s.players.filter(p=>s.priv(p).role==='killer')
-    expect(killers).toHaveLength(3)
+    const killers=s.players.filter(p=>['killer','traitor'].includes(s.priv(p).role))
+    expect(killers.map(p=>s.priv(p).role)).toEqual(['killer','traitor','traitor'])
     expect(s.priv(killers[0]).killerTeammates).toHaveLength(2)
     s.night()
     const citizen=s.role('citizen')

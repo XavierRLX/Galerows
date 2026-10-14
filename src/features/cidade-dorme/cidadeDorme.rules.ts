@@ -4,7 +4,7 @@ import type { CidadeDormePlayerInput, GameSettings, ManualVotingOutcome, NightAc
 
 export function createRoleDeck(settings: GameSettings): RoleKey[] {
   assertSettings(settings)
-  const roleDeck: RoleKey[] = Array.from({ length: settings.killersCount }, () => 'killer')
+  const roleDeck: RoleKey[] = ['killer', ...Array.from({ length: settings.killersCount - 1 }, () => 'traitor' as const)]
   if (settings.enableDoctor) roleDeck.push('doctor')
   if (settings.enableDetective) roleDeck.push('detective')
   if (settings.enableJester) roleDeck.push('jester')
@@ -45,12 +45,27 @@ export function getAlivePlayers(players: readonly Player[]) {
   return players.filter((player) => player.status === 'alive')
 }
 
+/** All surviving members of the killer team, whether active or still dormant. */
 export function getAliveKillers(players: readonly Player[]) {
-  return getAlivePlayers(players).filter((player) => player.roleKey === 'killer')
+  return getAlivePlayers(players).filter(player => player.roleKey === 'killer' || player.roleKey === 'traitor')
+}
+
+/** Immutable succession priority for this GameSession, never exposed in public projections. */
+export function getMurderOrder(players: readonly Player[], random: () => number = Math.random): string[] {
+  const leader = players.find(player => player.roleKey === 'killer')
+  if (!leader) return []
+  return [leader.id, ...shuffle(players.filter(player => player.roleKey === 'traitor')
+    .map(player => player.id), random)]
+}
+
+/** Disconnects never change priority; only player elimination does. */
+export function getActiveKiller(players: readonly Player[], priority: readonly string[]): Player | undefined {
+  return priority.map(id => players.find(player => player.id === id && player.status === 'alive'))
+    .find((player): player is Player => player !== undefined)
 }
 
 export function getAliveInnocents(players: readonly Player[]) {
-  return getAlivePlayers(players).filter((player) => player.roleKey !== 'killer')
+  return getAlivePlayers(players).filter((player) => player.roleKey !== 'killer' && player.roleKey !== 'traitor')
 }
 
 export function canDoctorProtect(doctorId: string, protectedPlayerId: string, settings: GameSettings, previousProtectedPlayerId?: string, selfProtectCount = 0) {
@@ -66,7 +81,9 @@ export function resolveNight(players: readonly Player[], action: NightAction): N
   const detectiveTarget = findAlivePlayer(players, action.detectiveTargetId)
   const wasProtected = Boolean(killerTarget && protectedPlayer && killerTarget.id === protectedPlayer.id)
   const eliminatedPlayerId = killerTarget && !wasProtected ? killerTarget.id : undefined
-  const detectiveResult = detectiveTarget ? (detectiveTarget.roleKey === 'killer' ? 'suspect' : 'innocent') : undefined
+  const detectiveResult = detectiveTarget
+    ? ((detectiveTarget.roleKey === 'killer' || (detectiveTarget.roleKey === 'traitor' && detectiveTarget.id === action.killerActorId)) ? 'suspect' : 'innocent')
+    : undefined
   return {
     players: players.map((player) => eliminatedPlayerId === player.id ? eliminatePlayer(player, action.round, 'night') : { ...player }),
     action: {

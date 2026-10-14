@@ -41,6 +41,11 @@
       "name": "Coringa",
       "shortDescription": "Tenta ser eliminado pela votação da cidade.",
       "objective": "Vencer se for eliminado por votação."
+    },
+    "traitor": {
+      "name": "Traidor",
+      "shortDescription": "Conhece os aliados e só mata quando assumir a liderança.",
+      "objective": "Ajudar a equipe assassina a vencer sem revelar sua identidade."
     }
   },
   "home": {

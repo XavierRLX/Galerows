@@ -41,6 +41,14 @@ export const CLASSIC_CIDADE_DORME_THEME: CidadeDormeTheme = {
       mediatorScript: 'Assassinos, acordem e escolham uma vitima em silencio.',
       colorClassName: 'text-rose-300',
     },
+    traitor: {
+      roleKey: 'traitor',
+      displayName: 'Traidor',
+      revealTitle: 'Voce e Traidor',
+      description: 'Conheca seus aliados. Apos a morte do assassino ativo, o primeiro traidor vivo na ordem assume o ataque da noite.',
+      mediatorScript: 'O Traidor permanece dormindo ate sua vez de agir.',
+      colorClassName: 'text-orange-300',
+    },
     doctor: {
       roleKey: 'doctor',
       displayName: 'Medico',

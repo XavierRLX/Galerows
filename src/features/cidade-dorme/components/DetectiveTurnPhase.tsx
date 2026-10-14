@@ -21,7 +21,9 @@ export function DetectiveTurnPhase({ session, onConfirmInvestigation, onSkipTurn
   const [selectedTargetId, setSelectedTargetId] = useState(targets.some((player) => player.id === session.currentNightAction.detectiveTargetId) ? session.currentNightAction.detectiveTargetId ?? '' : '')
   const [showResult, setShowResult] = useState(false)
   const selectedPlayer = targets.find((player) => player.id === selectedTargetId)
-  const detectiveResult = selectedPlayer?.roleKey === 'killer' ? 'suspect' : 'innocent'
+  const detectiveResult = selectedPlayer?.roleKey === 'killer'
+    || (selectedPlayer?.roleKey === 'traitor' && selectedPlayer.id === session.currentNightAction.killerActorId)
+    ? 'suspect' : 'innocent'
 
   return <>
     <div className="text-center">

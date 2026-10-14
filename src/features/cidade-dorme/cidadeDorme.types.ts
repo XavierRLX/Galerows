@@ -1,4 +1,4 @@
-export type RoleKey = 'citizen' | 'killer' | 'detective' | 'doctor' | 'jester'
+export type RoleKey = 'citizen' | 'killer' | 'traitor' | 'detective' | 'doctor' | 'jester'
 
 export type GamePhase =
   | 'setup'
@@ -117,6 +117,8 @@ export type GameState = {
   phase: GamePhase
   round: number
   players: Player[]
+  /** Immutable order in which surviving members of the killer team gain the night action. */
+  murderOrder?: string[]
   settings: GameSettings
   currentRevealIndex: number
   currentNightAction: NightAction

@@ -54,14 +54,12 @@ describe('Cidade Dorme session', () => {
     })
   })
 
-  it('allows one killer to target another killer when they are not the actor', () => {
+  it('prevents a killer targeting a teammate, including dormant traitors', () => {
     const settings = { ...createDefaultCidadeDormeSettings(playersWithDoctor.length), killersCount: 2 }
     const session = createCidadeDormeSession(playersWithDoctor, settings, () => 0.999999)
     const killerTurn = { ...session, phase: 'killerTurn' as const }
 
-    expect(recordKillerTarget(killerTurn, 'ana', 'bia')).toMatchObject({
-      currentNightAction: { killerActorId: 'ana', killerTargetId: 'bia' },
-    })
+    expect(recordKillerTarget(killerTurn, 'ana', 'bia')).toBe(killerTurn)
   })
 
   it('records doctor protection only for valid targets during the doctor turn', () => {

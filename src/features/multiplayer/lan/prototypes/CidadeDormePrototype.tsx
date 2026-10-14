@@ -16,11 +16,12 @@ const initialConfig: CidadeDormeLanConfig = {
   enableJester: defaults.enableJester, revealRoleOnDeath: defaults.revealRoleOnDeath,
 }
 const roleName: Record<RoleKey, string> = {
-  citizen: 'Cidadão', killer: 'Assassino', doctor: 'Médico', detective: 'Detetive', jester: 'Coringa',
+  citizen: 'Cidadão', killer: 'Assassino', traitor: 'Traidor', doctor: 'Médico', detective: 'Detetive', jester: 'Coringa',
 }
 const roleDescription: Record<RoleKey, string> = {
   citizen: 'Você não acorda à noite. Observe, converse e vote para encontrar os assassinos.',
   killer: 'Acorde na sua vez e escolha uma vítima em segredo. Convença a cidade de que é inocente.',
+  traitor: 'Conheça seus aliados; você só escolhe vítimas quando assumir após a morte do assassino ativo.',
   doctor: 'Acorde à noite e escolha uma pessoa para proteger. Você não pode proteger a si mesmo.',
   detective: 'Investigue uma pessoa à noite. A resposta aparece somente neste celular.',
   jester: 'Seu objetivo é convencer a cidade a eliminar você pela votação.',

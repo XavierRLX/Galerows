@@ -40,7 +40,8 @@ export function getCidadeDormeRoleCounts(settings: GameSettings): CidadeDormeRol
     + Number(settings.enableJester)
   return {
     citizen: Math.max(0, settings.playerCount - specialRoles),
-    killer: settings.killersCount,
+    killer: 1,
+    traitor: settings.killersCount - 1,
     detective: settings.enableDetective ? 1 : 0,
     doctor: settings.enableDoctor ? 1 : 0,
     jester: settings.enableJester ? 1 : 0,

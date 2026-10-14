@@ -74,6 +74,7 @@ describe('Cidade Dorme store', () => {
       session: {
         ...session,
         phase: 'killerTurn',
+        murderOrder: ['ana'],
         players: session.players.map((player) => player.id === 'ana' ? { ...player, roleKey: 'killer' } : { ...player, roleKey: 'citizen' }),
       },
     })

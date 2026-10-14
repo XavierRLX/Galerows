@@ -1,5 +1,5 @@
 import {
-  assignRolesToPlayers, canDoctorProtect, checkWinCondition, resolveNight, resolveVotingOutcome,
+  assignRolesToPlayers, canDoctorProtect, checkWinCondition, getActiveKiller, getMurderOrder, resolveNight, resolveVotingOutcome,
 } from '../cidade-dorme/cidadeDorme.rules'
 import { createDefaultCidadeDormeSettings, getRecommendedKillersCount } from '../cidade-dorme/cidadeDorme.setup'
 import type { GameSettings, GameWinner, Player, RoleKey, WinReason } from '../cidade-dorme/cidadeDorme.types'
@@ -34,6 +34,8 @@ export interface CidadeDormeLanPrivate {
   alive: boolean
   acknowledged: boolean
   killerTeammates?: string[]
+  successionOrder?: string[]
+  activeKiller?: boolean
   investigation?: { targetId: string; result: 'suspect' | 'innocent' }
   voted: boolean
   canAct: boolean
@@ -42,6 +44,7 @@ interface LanState {
   config: CidadeDormeLanConfig
   settings: GameSettings
   players: Player[]
+  murderOrder: string[]
   step: CidadeDormeLanStep
   round: number
   seen: string[]
@@ -65,7 +68,7 @@ function validateConfig(raw: unknown): raw is CidadeDormeLanConfig {
 const find = (state: LanState, id: string): Player | undefined => state.players.find(p => p.id === id)
 const alive = (state: LanState) => state.players.filter(p => p.status === 'alive')
 const livingRole = (state: LanState, role: RoleKey) => alive(state).filter(p => p.roleKey === role)
-const killerActor = (state: LanState) => livingRole(state, 'killer')[0]
+const killerActor = (state: LanState) => getActiveKiller(state.players, state.murderOrder)
 function error(code: 'unauthorized' | 'invalid_payload' | 'invalid_phase' | 'not_participant' | 'not_ready') {
   return { accepted: false as const, error: code }
 }
@@ -113,7 +116,8 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     const players = assignRolesToPlayers(participantIds.map((id, i) => ({
       id, name: `Jogador ${i + 1}`,
     })), settings, ctx.random)
-    return { config, settings, players, step: 'reveal', round: 1, seen: [], night: {},
+    return { config, settings, players, murderOrder: getMurderOrder(players, ctx.random),
+      step: 'reveal', round: 1, seen: [], night: {},
       investigation: null, previousProtectedTarget: null, nightResult: null, votes: {},
       voteResult: null, winner: null, winReason: null, winnerPlayerId: null }
   },
@@ -139,7 +143,7 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     if (action.type === 'KILL') {
       if (state.step !== 'killer-turn') return error('invalid_phase')
       if (killerActor(state)?.id !== own.id) return error('unauthorized')
-      if (!validTarget(state, p) || p === own.id || find(state, p)?.roleKey === 'killer') return error('invalid_payload')
+      if (!validTarget(state, p) || p === own.id || state.murderOrder.includes(p)) return error('invalid_payload')
       const next: LanState = { ...state, night: { ...state.night, killerTarget: p } }
       return { accepted: true, changed: true, state: postNightRoleStep(next) }
     }
@@ -210,8 +214,8 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
   awardPoints: state => state.step === 'summary'
     ? Object.fromEntries(state.players.map(player => [player.id,
       state.winner === 'jester' ? (player.id === state.winnerPlayerId ? 2 : 0)
-        : state.winner === 'killers' ? (player.roleKey === 'killer' ? 2 : 0)
-          : (player.roleKey !== 'killer' && player.roleKey !== 'jester' ? 2 : 0)])) : null,
+        : state.winner === 'killers' ? (state.murderOrder.includes(player.id) ? 2 : 0)
+          : (!state.murderOrder.includes(player.id) && player.roleKey !== 'jester' ? 2 : 0)])) : null,
   projectPublic: (state): CidadeDormeLanPublic => ({
     step: state.step, round: state.round, seenCount: state.seen.length,
     totalPlayers: state.players.length,
@@ -234,8 +238,11 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     if (!own) return null
     return { role: own.roleKey!, alive: own.status === 'alive',
       acknowledged: state.seen.includes(playerId),
-      ...(own.roleKey === 'killer' ? { killerTeammates: state.players
-        .filter(p => p.roleKey === 'killer' && p.id !== playerId).map(p => p.id) } : {}),
+      ...(state.murderOrder.includes(playerId) ? {
+        killerTeammates: state.murderOrder.filter(id => id !== playerId),
+        successionOrder: [...state.murderOrder],
+        activeKiller: killerActor(state)?.id === playerId,
+      } : {}),
       ...(own.roleKey === 'detective' && state.investigation && state.step !== 'summary'
         ? { investigation: { ...state.investigation } } : {}),
       voted: Object.hasOwn(state.votes, playerId),

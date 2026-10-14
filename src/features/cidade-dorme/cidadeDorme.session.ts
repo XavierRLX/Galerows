@@ -1,5 +1,5 @@
 import { createId } from '../../lib/utils/createId'
-import { assignRolesToPlayers, canDoctorProtect, checkWinCondition, getAlivePlayers, resolveNight, resolveVotingOutcome } from './cidadeDorme.rules'
+import { assignRolesToPlayers, canDoctorProtect, checkWinCondition, getActiveKiller, getMurderOrder, getAlivePlayers, resolveNight, resolveVotingOutcome } from './cidadeDorme.rules'
 import { isSupportedCidadeDormePlayerCount } from './cidadeDorme.setup'
 import { advancePhase, CIDADE_DORME_PHASES } from './cidadeDorme.stateMachine'
 import type { CidadeDormePlayerInput, DoctorSelfProtectLimit, GamePhase, GameSettings, GameState, ManualVotingOutcome, NightAction, Player, RoundHistory, VotingHistoryResult, VotingResolution } from './cidadeDorme.types'
@@ -14,6 +14,7 @@ export function createCidadeDormeSession(players: CidadeDormePlayerInput[], sett
     phase: 'revealRoles',
     round: 1,
     players: assignedPlayers,
+    murderOrder: getMurderOrder(assignedPlayers, random),
     settings: { ...settings },
     currentRevealIndex: 0,
     currentNightAction: createEmptyNightAction(1),
@@ -32,7 +33,9 @@ export function advanceRoleReveal(session: GameState): GameState {
 export function recordKillerTarget(session: GameState, actorId: string, targetId: string): GameState {
   if (session.phase !== 'killerTurn') return session
   const alivePlayers = getAlivePlayers(session.players)
-  if (!alivePlayers.some((player) => player.id === actorId && player.roleKey === 'killer')) return session
+  const order = session.murderOrder ?? getMurderOrder(session.players, () => .99999)
+  if (getActiveKiller(session.players, order)?.id !== actorId) return session
+  if (order.includes(targetId)) return session
   if (actorId === targetId) return session
   if (!alivePlayers.some((player) => player.id === targetId)) return session
   return touch({
@@ -154,6 +157,8 @@ export function migrateCidadeDormeSession(value: unknown): GameState | null {
     phase,
     round,
     players: session.players,
+    murderOrder: isValidMurderOrder(session.murderOrder, session.players)
+      ? [...session.murderOrder] : restoreMurderOrder(session.players),
     settings,
     currentRevealIndex,
     currentNightAction,
@@ -167,6 +172,21 @@ export function migrateCidadeDormeSession(value: unknown): GameState | null {
 
 export function isCidadeDormeSessionCompatible(value: unknown): value is GameState {
   return migrateCidadeDormeSession(value) !== null
+}
+
+/** Legacy games could contain several original killer cards; keep them able to resume. */
+function restoreMurderOrder(players: readonly Player[]): string[] {
+  const oldKillers = players.filter(p => p.roleKey === 'killer').map(p => p.id)
+  if (oldKillers.length > 1 && !players.some(p => p.roleKey === 'traitor')) return oldKillers
+  return getMurderOrder(players, () => .99999)
+}
+
+function isValidMurderOrder(value: unknown, players: readonly Player[]): value is string[] {
+  if (!Array.isArray(value) || value.length < 1 || value.length > 3 || value.some(id => typeof id !== 'string')
+    || new Set(value).size !== value.length) return false
+  const expected = players.filter(p => p.roleKey === 'killer' || p.roleKey === 'traitor').map(p => p.id)
+  return value.length === expected.length && expected.every(id => value.includes(id))
+    && players.find(p => p.id === value[0])?.roleKey === 'killer'
 }
 
 function getPreviousProtectedPlayerId(session: GameState) {
@@ -266,7 +286,7 @@ function isPlayer(value: unknown): value is Player {
     && typeof value.name === 'string'
     && (value.sourcePlayerId === undefined || typeof value.sourcePlayerId === 'string')
     && (value.isGuest === undefined || typeof value.isGuest === 'boolean')
-    && ['citizen', 'killer', 'detective', 'doctor', 'jester'].includes(String(value.roleKey))
+    && ['citizen', 'killer', 'traitor', 'detective', 'doctor', 'jester'].includes(String(value.roleKey))
     && ['alive', 'eliminated'].includes(String(value.status))
 }
 

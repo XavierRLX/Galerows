@@ -1,6 +1,6 @@
 import type { RoleDefinition, RoleKey } from './cidadeDorme.types'
 
-export const ROLE_KEYS: RoleKey[] = ['citizen', 'killer', 'detective', 'doctor', 'jester']
+export const ROLE_KEYS: RoleKey[] = ['citizen', 'killer', 'traitor', 'detective', 'doctor', 'jester']
 
 export const CIDADE_DORME_ROLES: Record<RoleKey, RoleDefinition> = {
   citizen: {
@@ -18,6 +18,14 @@ export const CIDADE_DORME_ROLES: Record<RoleKey, RoleDefinition> = {
     objective: 'Igualar ou superar o numero de inocentes vivos.',
     wakesAtNight: true,
     nightOrder: 1,
+    team: 'killers',
+  },
+  traitor: {
+    key: 'traitor',
+    name: 'Traidor',
+    shortDescription: 'Conhece seus aliados e assume o assassinato quando chegar sua vez.',
+    objective: 'Manter sua identidade oculta e ajudar a equipe assassina a vencer.',
+    wakesAtNight: false,
     team: 'killers',
   },
   doctor: {
