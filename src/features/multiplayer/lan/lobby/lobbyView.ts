@@ -27,8 +27,12 @@ export function lobbySummary(snapshot: RoomSnapshotV2, role: LobbyRole, ownId: s
     isYou: member.playerId === ownId,
   }))
   const connected = members.filter(member => member.connected)
-  const readyCount = connected.filter(member => member.ready).length
-  const allReady = connected.length >= 2 && readyCount === connected.length
+  const dedicatedMayor = state.selectedGameId === 'cidade-dorme'
+    && Boolean(state.selectedConfig && typeof state.selectedConfig === 'object'
+      && 'conductionMode' in state.selectedConfig && state.selectedConfig.conductionMode === 'mayor')
+  const playable = connected.filter(member => !dedicatedMayor || member.role !== 'host')
+  const readyCount = playable.filter(member => member.ready).length
+  const allReady = playable.length >= 2 && readyCount === playable.length
   const gameId: LobbyGameId | null = state.selectedGameId === 'toy' || state.selectedGameId === 'counter' || state.selectedGameId === 'impostor-da-palavra' || state.selectedGameId === 'pista-unica' || state.selectedGameId === 'cidade-dorme'
     ? state.selectedGameId : null
   const ownMember = members.find(member => member.isYou)
@@ -36,13 +40,16 @@ export function lobbySummary(snapshot: RoomSnapshotV2, role: LobbyRole, ownId: s
     members,
     connectedCount: connected.length,
     readyCount,
+    readyTargetCount: playable.length,
+    dedicatedMayor,
     gameId,
     game: gameId ? lobbyGameCatalog[gameId] : null,
     ownReady: Boolean(ownMember?.ready),
-    canReady: Boolean(ownMember?.connected) && (state.phase === 'lobby' || state.phase === 'configuring'),
+    canReady: Boolean(ownMember?.connected) && (!dedicatedMayor || ownMember?.role !== 'host')
+      && (state.phase === 'lobby' || state.phase === 'configuring'),
     canStart: role === 'host' && state.phase === 'configuring' && gameId !== null
       && state.selectedConfig !== null && allReady
-      && connected.length >= lobbyGameCatalog[gameId].minPlayers,
+      && playable.length >= lobbyGameCatalog[gameId].minPlayers,
     phase: state.phase,
     phaseLabel: state.phase === 'lobby' ? 'Na sala' : state.phase === 'configuring'
       ? 'Preparando a rodada' : state.phase === 'playing' ? 'Partida em andamento' : 'Fim de rodada',

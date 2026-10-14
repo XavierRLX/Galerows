@@ -124,6 +124,8 @@ export function LobbyRoomView({
     saved?.timerSeconds === 120 || saved?.timerSeconds === 180 || saved?.timerSeconds === 300
       ? saved.timerSeconds : 0)
   const [pistaCategories, setPistaCategories] = useState<PistaUnicaCategory[]>(() => (saved?.categories as PistaUnicaCategory[]) ?? ['words', 'movies', 'series'])
+  const [cidadeMode, setCidadeMode] = useState<'automatic' | 'mayor'>(() =>
+    saved?.conductionMode === 'mayor' ? 'mayor' : 'automatic')
   const [cidadeRoles, setCidadeRoles] = useState({
     enableDoctor: typeof saved?.enableDoctor === 'boolean' ? saved.enableDoctor : true,
     enableDetective: typeof saved?.enableDetective === 'boolean' ? saved.enableDetective : true,
@@ -236,7 +238,7 @@ export function LobbyRoomView({
 
       <nav className="pl03-compact-tools" aria-label="Painéis da sala">
         <button type="button" aria-expanded={showPlayers} onClick={() => showPlayers ? closePanels() : openPlayers()}>
-          <Users size={18} /> Jogadores · {summary.connectedCount} <small>{summary.readyCount} / {summary.connectedCount} prontos</small>
+          <Users size={18} /> Jogadores · {summary.connectedCount} <small>{summary.readyCount} / {summary.readyTargetCount} prontos</small>
           <ChevronRight size={16} />
         </button>
         {onRename && <button type="button" aria-label="Editar meu nome" onClick={() => { openPlayers(); setEditingName(true) }}>
@@ -268,7 +270,7 @@ export function LobbyRoomView({
             </div>}
             <div className="pl03-section-heading">
               <h2 id="pl03-players-title">Jogadores</h2>
-              <span className="pl03-count"><Users size={15} aria-hidden="true" /> {summary.connectedCount}/12</span>
+              <span className="pl03-count"><Users size={15} aria-hidden="true" /> {summary.connectedCount}/{summary.dedicatedMayor ? 13 : 12}</span>
             </div>
             <div className="pl03-people-list">
               {summary.members.map((member, index) => <div className={`pl03-player ${!member.connected ? 'is-offline' : ''}`} key={member.playerId}>
@@ -282,7 +284,7 @@ export function LobbyRoomView({
                 </span>
               </div>)}
             </div>
-            <footer className="pl03-players-foot"><span><CircleCheck size={16} aria-hidden="true" /> {summary.readyCount} / {summary.connectedCount} prontos</span>
+            <footer className="pl03-players-foot"><span><CircleCheck size={16} aria-hidden="true" /> {summary.readyCount} / {summary.readyTargetCount} prontos</span>
 </footer>
           </section></div>}
 
@@ -378,6 +380,17 @@ export function LobbyRoomView({
                   <Check size={17} /> Salvar categorias da Pista Única
                 </button>
               </div> : isHost && summary.gameId === 'cidade-dorme' ? <div className="pl03-impostor-config">
+                <strong>Quem vai conduzir a partida?</strong>
+                <div className="pl03-impostor-choices" role="group" aria-label="Modo de condução do Cidade Dorme">
+                  {([['automatic', 'Todos jogam — narrador automático'],
+                    ['mayor', 'Com prefeito — narração humana']] as const).map(([mode, label]) =>
+                    <button key={mode} type="button" className={cidadeMode === mode ? 'is-selected' : ''}
+                      aria-pressed={cidadeMode === mode} disabled={busy || !connected}
+                      onClick={() => setCidadeMode(mode)}>{label}</button>)}
+                </div>
+                <p>{cidadeMode === 'mayor'
+                  ? 'O anfitrião conduz, mas não recebe papel nem vota. São necessários 4 a 12 jogadores além do prefeito.'
+                  : 'Todos participam, inclusive o anfitrião. O aplicativo conduzirá as fases.'}</p>
                 <strong>Configure os papéis da galera</strong>
                 <div className="pl03-cidade-settings" aria-label="Papéis do Cidade Dorme">
                   {([
@@ -392,9 +405,10 @@ export function LobbyRoomView({
                     <Check size={15} aria-hidden="true" /> {label}
                   </button>)}
                 </div>
-                <p>4 a 12 celulares. Cada pessoa recebe seu papel secreto; a noite e os votos são resolvidos pela rede local. Assassinos proporcionais à quantidade de jogadores.</p>
+                <p>{cidadeMode === 'mayor' ? '4 a 12 celulares de jogadores, além do prefeito, que não recebe papel.'
+                  : '4 a 12 celulares. Todos recebem um papel secreto. A noite e os votos são resolvidos pela rede local.'}</p>
                 <button type="button" className="pl03-secondary-btn" disabled={busy || !connected}
-                  onClick={() => void onConfigure(cidadeRoles)}>
+                  onClick={() => void onConfigure({ ...cidadeRoles, conductionMode: cidadeMode })}>
                   <Check size={17} aria-hidden="true" /> Salvar papéis da Cidade Dorme
                 </button>
               </div> : isHost ? <div className="pl03-settings">

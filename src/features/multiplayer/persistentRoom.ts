@@ -9,6 +9,12 @@ import type { RoomCommandV2, RoomCommandError, RoomCommandResultV2, RoomEventV2,
   RoomCompetitionV2, RoomPhase, RoomSnapshotV2, RoomStatePublicV2 } from './persistentProtocol'
 
 type Receipt = { command: RoomCommandV2; result: RoomCommandResultV2 }
+/** Authoritative, game-specific separation of host moderator from playable participants. */
+function isDedicatedCityMayor(gameId: string | null, config: unknown): boolean {
+  return gameId === 'cidade-dorme' && field(config, 'conductionMode') === 'mayor'
+}
+const MAYOR_GAME_COMMANDS = new Set(['START_NIGHT', 'START_DISCUSSION', 'START_VOTE', 'RESOLVE_VOTE', 'NEXT_NIGHT'])
+
 const RECENT_COMMAND_ID_LIMIT = 64
 interface Membership {
   playerId: string
@@ -124,6 +130,8 @@ export class RoomLifecycleAdapter {
       return { ok: true, candidate: { state, members, changed } }
     }
     if (command.type === 'READY') {
+      if (actor.role === 'host' && isDedicatedCityMayor(state.selectedGameId, state.selectedConfig))
+        return { ok: false, error: 'not_participant' }
       if (state.phase !== 'lobby' && state.phase !== 'configuring') return { ok: false, error: 'invalid_phase' }
       const ready = field(command.payload, 'ready')
       if (typeof ready !== 'boolean') return { ok: false, error: 'invalid_payload' }
@@ -138,7 +146,9 @@ export class RoomLifecycleAdapter {
       const game = this.games.get(state.selectedGameId)!
       const validated = game.validateConfig(state.selectedConfig)
       if (!validated.ok) return { ok: false, error: 'invalid_config' }
-      const connected = [...members.values()].filter(member => member.connectionId !== null)
+      const isMayor = isDedicatedCityMayor(state.selectedGameId, validated.config)
+      const connected = [...members.values()].filter(member => member.connectionId !== null
+        && (!isMayor || member.role !== 'host'))
       if (!actor.connectionId || connected.some(member => !member.ready)) return { ok: false, error: 'not_ready' }
       if (connected.length < game.minPlayers || connected.length > game.maxPlayers) {
         return { ok: false, error: 'invalid_player_count' }
@@ -212,7 +222,11 @@ export class RoomLifecycleAdapter {
     members: Map<string, Membership>, context: MultiplayerGameContext): Reduction {
     if (command.gameSessionId !== state.session?.gameSessionId) return { ok: false, error: 'stale_game_session' }
     if (state.phase !== 'playing' || !state.session) return { ok: false, error: 'invalid_phase' }
-    if (!state.session.participantIds.includes(command.playerId)) return { ok: false, error: 'not_participant' }
+    const moderator = isDedicatedCityMayor(state.session?.gameId ?? null, state.session?.config)
+      && members.get(command.playerId)?.role === 'host' && MAYOR_GAME_COMMANDS.has(command.type)
+    if (!state.session.participantIds.includes(command.playerId) && !moderator) {
+      return { ok: false, error: 'not_participant' }
+    }
     const game = this.games.get(state.session.gameId)!
     const transition = game.applyCommand(state.session.gameState,
       { playerId: command.playerId, role: members.get(command.playerId)!.role,
@@ -267,7 +281,8 @@ export class AuthoritativeRoomRuntimeV2 {
   joinGuest(connectionId: string, displayName?: string): RoomJoinV2 {
     if (this.state.competition.status === 'finished') return { ok: false, error: 'invalid_phase' }
     if (!connectionId || this.memberForConnection(connectionId)) return { ok: false, error: 'unauthorized' }
-    if (this.members.size >= 12) return { ok: false, error: 'room_full' }
+    const mayorCapacity = isDedicatedCityMayor(this.state.selectedGameId, this.state.selectedConfig)
+    if (this.members.size >= (mayorCapacity ? 13 : 12)) return { ok: false, error: 'room_full' }
     let playerId = this.createPlayerId()
     while (!playerId || this.members.has(playerId)) playerId = this.createPlayerId()
     const members = cloneMembers(this.members)

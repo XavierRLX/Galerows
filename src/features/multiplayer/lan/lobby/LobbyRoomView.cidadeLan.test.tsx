@@ -33,7 +33,19 @@ describe('G7 Cidade Dorme persistent lobby integration',()=>{
     expect(screen.getByText(/4 a 12 celulares/i)).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button',{name:'Salvar papéis da Cidade Dorme'}))
     expect(cb.onConfigure).toHaveBeenCalledWith({
-      enableDoctor:true,enableDetective:true,enableJester:false,revealRoleOnDeath:false})
+      enableDoctor:true,enableDetective:true,enableJester:false,revealRoleOnDeath:false,conductionMode:'automatic'})
+  })
+  it('lets the host choose mayor mode while leaving the same lobby and saving the authorized config',()=>{
+    const cb=actions()
+    render(<LobbyRoomView snapshot={scene('configuring')} role="host" playerId="host"
+      busy={false} status="Conectado" {...cb}/>)
+    fireEvent.click(screen.getByRole('button',{name:'Com prefeito — narração humana'}))
+    fireEvent.click(screen.getByRole('button',{name:'Salvar papéis da Cidade Dorme'}))
+    expect(cb.onConfigure).toHaveBeenCalledWith({
+      enableDoctor:true,enableDetective:true,enableJester:false,revealRoleOnDeath:false,
+      conductionMode:'mayor',
+    })
+    expect(screen.getByText(/não recebe papel nem vota/i)).toBeInTheDocument()
   })
   it('renders personal role screen, not synthetic probe, in game phase',()=>{
     const cb=actions()

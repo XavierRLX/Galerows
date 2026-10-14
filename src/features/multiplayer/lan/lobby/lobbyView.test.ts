@@ -51,6 +51,26 @@ describe('PL-03 lobby presentation model', () => {
     expect(lobbySummary(sample('results'), 'host', 'h').phaseLabel).toBe('Fim de rodada')
     expect(lobbySummary(sample('playing'), 'guest', 'g').canReady).toBe(false)
   })
+  it('counts only actual players in dedicated mayor mode, not the host moderator', () => {
+    const dedicated = sample()
+    dedicated.roomState.selectedGameId = 'cidade-dorme'
+    dedicated.roomState.selectedConfig = { enableDoctor: false, enableDetective: false,
+      enableJester: false, revealRoleOnDeath: false, conductionMode: 'mayor' }
+    dedicated.roomState.members = [
+      { playerId:'h', role:'host', connected:true, ready:false, participation:'active' },
+      ...['a','b','c','d'].map(playerId=>({ playerId, role:'guest' as const,
+        connected:true, ready:true, participation:'active' as const })),
+    ]
+    const host = lobbySummary(dedicated,'host','h')
+    expect(host.canStart).toBe(true)
+    expect(host.canReady).toBe(false)
+    expect(host.readyCount).toBe(4)
+    expect(host.readyTargetCount).toBe(4)
+    expect(lobbySummary(dedicated,'guest','a').canReady).toBe(true)
+    dedicated.roomState.members = dedicated.roomState.members.map((member,index)=>
+      index===2 ? {...member,ready:false} : member)
+    expect(lobbySummary(dedicated,'host','h').canStart).toBe(false)
+  })
   it('validates only synthetic game configurations', () => {
     expect(gameConfig('toy', 2)).toEqual({ rounds: 2 })
     expect(gameConfig('counter', 3)).toEqual({ target: 3 })

@@ -11,6 +11,8 @@ export interface CidadeDormeLanConfig {
   enableDetective: boolean
   enableJester: boolean
   revealRoleOnDeath: boolean
+  /** Optional for legacy LAN room configs: absent means everyone plays. */
+  conductionMode?: 'automatic' | 'mayor'
 }
 export type CidadeDormeLanStep = 'reveal' | 'killer-turn' | 'doctor-turn' | 'detective-turn'
   | 'morning' | 'discussion' | 'voting' | 'vote-result' | 'summary'
@@ -61,9 +63,13 @@ interface LanState {
 const isRecord = (x: unknown): x is Record<string, unknown> =>
   x !== null && typeof x === 'object' && !Array.isArray(x)
 function validateConfig(raw: unknown): raw is CidadeDormeLanConfig {
-  return isRecord(raw) && Object.keys(raw).length === 4
+  return isRecord(raw)
+    && Object.keys(raw).every(field => ['enableDoctor', 'enableDetective', 'enableJester',
+      'revealRoleOnDeath', 'conductionMode'].includes(field))
+    && (Object.keys(raw).length === 4 || Object.keys(raw).length === 5)
     && ['enableDoctor', 'enableDetective', 'enableJester', 'revealRoleOnDeath']
       .every(field => typeof raw[field] === 'boolean')
+    && (raw.conductionMode === undefined || raw.conductionMode === 'mayor' || raw.conductionMode === 'automatic')
 }
 const find = (state: LanState, id: string): Player | undefined => state.players.find(p => p.id === id)
 const alive = (state: LanState) => state.players.filter(p => p.status === 'alive')
@@ -108,6 +114,7 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
   validateConfig: raw => validateConfig(raw) ? { ok: true, config: {
     enableDoctor: raw.enableDoctor, enableDetective: raw.enableDetective,
     enableJester: raw.enableJester, revealRoleOnDeath: raw.revealRoleOnDeath,
+    ...(raw.conductionMode ? { conductionMode: raw.conductionMode } : {}),
   } } : { ok: false },
   createInitialState: (config, participantIds, ctx) => {
     const recommended = createDefaultCidadeDormeSettings(participantIds.length)
@@ -123,14 +130,17 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
   },
   applyCommand: (state, action) => {
     const own = find(state, action.playerId)
-    if (!own) return error('not_participant')
     const host = action.role === 'host'
+    const dedicatedMayor = host && state.config.conductionMode === 'mayor' && !own
+    const mayorCommands = ['START_NIGHT', 'START_DISCUSSION', 'START_VOTE', 'RESOLVE_VOTE', 'NEXT_NIGHT']
+    if (!own && (!dedicatedMayor || !mayorCommands.includes(action.type))) return error('not_participant')
+    const player = own ?? { id: action.playerId, roleKey: null, status: 'eliminated' as const }
     const payload = action.payload
     const p = isRecord(payload) ? payload.playerId : undefined
     if (action.type === 'ACK_ROLE') {
       if (state.step !== 'reveal' || payload !== null) return error('invalid_phase')
-      if (state.seen.includes(own.id)) return { accepted: true, changed: false }
-      return { accepted: true, changed: true, state: { ...state, seen: [...state.seen, own.id] } }
+      if (state.seen.includes(player.id)) return { accepted: true, changed: false }
+      return { accepted: true, changed: true, state: { ...state, seen: [...state.seen, player.id] } }
     }
     if (action.type === 'START_NIGHT') {
       if (!host) return error('unauthorized')
@@ -142,15 +152,15 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     }
     if (action.type === 'KILL') {
       if (state.step !== 'killer-turn') return error('invalid_phase')
-      if (killerActor(state)?.id !== own.id) return error('unauthorized')
-      if (!validTarget(state, p) || p === own.id || state.murderOrder.includes(p)) return error('invalid_payload')
+      if (killerActor(state)?.id !== player.id) return error('unauthorized')
+      if (!validTarget(state, p) || p === player.id || state.murderOrder.includes(p)) return error('invalid_payload')
       const next: LanState = { ...state, night: { ...state.night, killerTarget: p } }
       return { accepted: true, changed: true, state: postNightRoleStep(next) }
     }
     if (action.type === 'PROTECT') {
       if (state.step !== 'doctor-turn') return error('invalid_phase')
-      if (own.status !== 'alive' || own.roleKey !== 'doctor') return error('unauthorized')
-      if (!validTarget(state, p) || !canDoctorProtect(own.id, p, state.settings,
+      if (player.status !== 'alive' || player.roleKey !== 'doctor') return error('unauthorized')
+      if (!validTarget(state, p) || !canDoctorProtect(player.id, p, state.settings,
         state.previousProtectedTarget ?? undefined)) return error('invalid_payload')
       const next: LanState = { ...state, night: { ...state.night, protectedTarget: p } }
       return { accepted: true, changed: true,
@@ -159,8 +169,8 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     }
     if (action.type === 'INVESTIGATE') {
       if (state.step !== 'detective-turn') return error('invalid_phase')
-      if (own.status !== 'alive' || own.roleKey !== 'detective') return error('unauthorized')
-      if (!validTarget(state, p) || p === own.id) return error('invalid_payload')
+      if (player.status !== 'alive' || player.roleKey !== 'detective') return error('unauthorized')
+      if (!validTarget(state, p) || p === player.id) return error('invalid_payload')
       return { accepted: true, changed: true,
         state: resolveCurrentNight({ ...state, night: { ...state.night, detectiveTarget: p } }) }
     }
@@ -176,11 +186,11 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     }
     if (action.type === 'CAST_VOTE') {
       if (state.step !== 'voting') return error('invalid_phase')
-      if (own.status !== 'alive') return error('unauthorized')
-      if (Object.hasOwn(state.votes, own.id)) return error('invalid_phase')
+      if (player.status !== 'alive') return error('unauthorized')
+      if (Object.hasOwn(state.votes, player.id)) return error('invalid_phase')
       if (!validTarget(state, p)) return error('invalid_payload')
       return { accepted: true, changed: true, state: {
-        ...state, votes: { ...state.votes, [own.id]: p },
+        ...state, votes: { ...state.votes, [player.id]: p },
       } }
     }
     if (action.type === 'RESOLVE_VOTE') {

@@ -21,6 +21,7 @@ export function LobbyRulesSummary({ gameId, config }: { gameId: LobbyGameId | nu
     if (typeof rules.timerSeconds === 'number') lines.push(rules.timerSeconds === 0
       ? 'Sem cronômetro' : `${Math.round(rules.timerSeconds / 60)} min para conversar`)
   } else if (gameId === 'cidade-dorme') {
+    lines.push(rules.conductionMode === 'mayor' ? 'Prefeito humano (não joga)' : 'Todos jogam — narrador automático')
     lines.push(`Médico: ${rules.enableDoctor ? 'sim' : 'não'} · Detetive: ${rules.enableDetective ? 'sim' : 'não'}`)
     lines.push(`Coringa: ${rules.enableJester ? 'sim' : 'não'} · Revelar ao morrer: ${rules.revealRoleOnDeath ? 'sim' : 'não'}`)
   }
