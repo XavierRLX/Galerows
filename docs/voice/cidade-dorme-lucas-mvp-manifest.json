@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "project": "Galerows Cidade Dorme",
+  "voice": {
+    "name": "Lucas - Deep & Profound Narrator",
+    "voice_id": "GIuLCSVfgJaUuh7hYOY8",
+    "language": "pt-BR",
+    "model": "eleven_v4"
+  },
+  "source_flow": "https://elevenlabs.io/app/flows/9nSwjjhMncIeGPGLL9Iv",
+  "sample_flow": "https://elevenlabs.io/app/flows/9irol3L1pem3Ba653ks7",
+  "commercial_license": "pending verification before launch",
+  "purpose": "offline host-only narration; integration not yet applied",
+  "clips": [
+    {
+      "id": "01_identidade",
+      "text": "A partida começou. Confira seu papel em segredo e confirme quando estiver pronto.",
+      "event": "reveal",
+      "rule": "Abrir identidade",
+      "file": "audios/01_identidade.mp3",
+      "status": "ready",
+      "duration_seconds": 5.486,
+      "bytes": 105358,
+      "sha256": "b0181c7ef899d022f9d5edd1df485d86a31ba2426d6bdd81e0940c1dab3a8087"
+    },
+    {
+      "id": "02_cidade_dorme",
+      "text": "A cidade adormece. Todos fechem os olhos.",
+      "event": "night_start",
+      "rule": "Início de cada noite",
+      "file": "audios/02_cidade_dorme.mp3",
+      "status": "ready",
+      "duration_seconds": 3.239,
+      "bytes": 69413,
+      "sha256": "5922885cd1d595f9cfbbf3cd71b0328affb13d6393d3e94d368c7b3319577deb"
+    },
+    {
+      "id": "03_assassino",
+      "text": "Assassino, acorde. Escolha sua vítima em segredo.",
+      "event": "killer_turn",
+      "rule": "Abrir ação Assassino",
+      "file": "audios/03_assassino.mp3",
+      "status": "ready",
+      "duration_seconds": 4.284,
+      "bytes": 86132,
+      "sha256": "370e4c64bce3fbcde0ccace092f99ce8e0beb6acd117b2245828d1a30b9dad1b"
+    },
+    {
+      "id": "04_volte_dormir",
+      "text": "Sua escolha foi registrada. Agora, volte a dormir.",
+      "event": "role_action_confirmed",
+      "rule": "Após confirmação de escolha secreta",
+      "file": "audios/04_volte_dormir.mp3",
+      "status": "ready",
+      "duration_seconds": 3.631,
+      "bytes": 75683,
+      "sha256": "a0e589df81522b7a4465aefd4dbcbc04a599d480eaffa35f5fd3538d19d427ca"
+    },
+    {
+      "id": "05_medico",
+      "text": "Médico, acorde. Escolha uma pessoa para proteger esta noite.",
+      "event": "doctor_turn",
+      "rule": "Chamar Médico sem vazar papel oculto",
+      "file": "audios/05_medico.mp3",
+      "status": "ready",
+      "duration_seconds": 4.441,
+      "bytes": 88640,
+      "sha256": "799d9449280f1ee5d35323faa2e9b2515a287f7d6af05db0f8eae323ccd3ccea"
+    },
+    {
+      "id": "06_detetive",
+      "text": "Detetive, acorde. Escolha uma pessoa para investigar.",
+      "event": "detective_turn",
+      "rule": "Chamar Detetive sem vazar papel oculto",
+      "file": "audios/06_detetive.mp3",
+      "status": "ready",
+      "duration_seconds": 3.788,
+      "bytes": 61065,
+      "sha256": "6d82814b91d294df1afa95d7225335c7cb980ff0b1643a860fd77e676d74fc36"
+    },
+    {
+      "id": "07_pista",
+      "text": "Detetive, confira o resultado no seu celular. Confirme quando terminar.",
+      "event": "detective_result",
+      "rule": "Apenas resultado privado do detetive na tela",
+      "file": "audios/07_pista.mp3",
+      "status": "ready",
+      "duration_seconds": 4.598,
+      "bytes": 91147,
+      "sha256": "f8e5c1cc19e40c77d017534eb32c1f6d32d1143354ae601c749c91bbb1ddc995"
+    },
+    {
+      "id": "08_amanhecer",
+      "text": "A noite terminou. A cidade acorda. Todos podem abrir os olhos.",
+      "event": "morning_open",
+      "rule": "Antes do resultado da noite",
+      "file": "audios/08_amanhecer.mp3",
+      "status": "ready",
+      "duration_seconds": 4.598,
+      "bytes": 91147,
+      "sha256": "177f06111c71a8900e3467418194428e6ed1480a99fae5f897d053545ed4376d"
+    },
+    {
+      "id": "09_ninguem_morreu",
+      "text": "Todos sobreviveram. Ninguém morreu esta noite.",
+      "event": "night_survived",
+      "rule": "Somente quando ninguém morreu",
+      "file": "audios/09_ninguem_morreu.mp3",
+      "status": "ready",
+      "duration_seconds": 3.004,
+      "bytes": 65652,
+      "sha256": "37bbd3eafe4da5d8b833942d576eaa0bec5207ebf93a70882b6a4a19f677c4ba"
+    },
+    {
+      "id": "10_alguem_morreu",
+      "text": "Uma pessoa morreu durante a noite. Veja na tela quem foi.",
+      "event": "night_death",
+      "rule": "Somente quando alguém morreu",
+      "file": "audios/10_alguem_morreu.mp3",
+      "status": "ready",
+      "duration_seconds": 4.362,
+      "bytes": 87386,
+      "sha256": "2c198caa2ee3cf929a82cbdfc94397f036c97138d8de535785cdac709568a3f9"
+    },
+    {
+      "id": "11_discussao",
+      "text": "Hora de discutir. Conversem, compartilhem suas suspeitas e tentem descobrir o assassino.",
+      "event": "discussion",
+      "rule": "Começar discussão",
+      "file": "audios/11_discussao.mp3",
+      "status": "ready",
+      "duration_seconds": 6.191,
+      "bytes": 116643,
+      "sha256": "c80945e0da79044d54a300bf4af7ae3046fc014940d4285a28ea8d1ebdfc0836"
+    },
+    {
+      "id": "12_votacao",
+      "text": "A discussão terminou. Escolha em segredo quem você acredita ser o assassino.",
+      "event": "voting",
+      "rule": "Começar votação",
+      "file": "audios/12_votacao.mp3",
+      "status": "ready",
+      "duration_seconds": 5.407,
+      "bytes": 104104,
+      "sha256": "4bf3d615113efa56f309cf05ffdbe7fdc4c91a8443f86e2c15b4fdca974403e5"
+    },
+    {
+      "id": "13_empate",
+      "text": "Houve um empate. Ninguém foi eliminado pela votação.",
+      "event": "vote_tie",
+      "rule": "Resultado empate",
+      "file": "audios/13_empate.mp3",
+      "status": "ready",
+      "duration_seconds": 3.631,
+      "bytes": 75683,
+      "sha256": "1ca5d01f72cd2512421a50d5b488f7ef1ef93e4445cf7108e5e93b44109aca0c"
+    },
+    {
+      "id": "14_eliminacao",
+      "text": "Uma pessoa foi eliminada pela votação. Confira o resultado.",
+      "event": "vote_eliminated",
+      "rule": "Resultado eliminação",
+      "file": "audios/14_eliminacao.mp3",
+      "status": "ready",
+      "duration_seconds": 4.049,
+      "bytes": 82370,
+      "sha256": "41935edcaf36b6d2b16b2a2977664440944604fddee388294913f425f54d4f9d"
+    },
+    {
+      "id": "15_fim",
+      "text": "A partida chegou ao fim. Descubram os papéis e vejam quem venceu.",
+      "event": "summary",
+      "rule": "Encerrar partida",
+      "file": "audios/15_fim.mp3",
+      "status": "ready",
+      "duration_seconds": 4.598,
+      "bytes": 91147,
+      "sha256": "51db08c2513ac3dcdea459fe0bd9e86b1c5d20948d0bc4ac42180392c6a2d05a"
+    }
+  ],
+  "source_status": "All 15 clips exported locally and validated. No new ElevenLabs generation.",
+  "release_gate": "Commercial rights and 4-device physical audio synchronization unverified. Do not publish."
+}

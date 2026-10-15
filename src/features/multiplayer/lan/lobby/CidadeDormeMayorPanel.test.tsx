@@ -28,7 +28,7 @@ const actions=()=>({onGameCommand:vi.fn(),onRoomCommand:vi.fn(),onEnd:vi.fn()})
 describe('CITY-MAYOR-02 — confidential orchestration panel',()=>{
   it('shows the common public narration as subtitles while retaining human-only voice',()=>{
     render(<CidadeDormeMayorPanel snapshot={frame('killer-turn')} connected busy={false} {...actions()}/>)
-    expect(screen.getByText(/A cidade dorme\. Todos fecham os olhos/)).toBeInTheDocument()
+    expect(screen.getByText(/A cidade adormece\. Todos fechem os olhos/)).toBeInTheDocument()
     expect(screen.queryByRole('button',{name:'Ativar narração no anfitrião'})).not.toBeInTheDocument()
   })
   it('shows phase and progress by default without any sensitive role or target',()=>{

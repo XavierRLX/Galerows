@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Moon, Sun, Volume2, VolumeX } from 'lucide-react'
 import type { CidadeDormeLanStep, CidadeDormeLanPublic } from '../../cidadeDormeLanGame'
-import { createCityNarrationGate, getCityNarrationCue, getCityNarrationSubtitle } from './cidadeNarration'
+import { createCityNarrationGate, getCityNarrationSubtitle } from './cidadeNarration'
+import { getCityLucasNarrationSequence } from './cidadeLucasNarration'
 import type { CityNarrationFrame } from './cidadeNarration'
 import {armCityAutomaticNarrator,isCityAutomaticNarratorArmed,isCityAutomaticNarratorInterrupted,
   interruptCityAutomaticNarrator,observeCityAutomaticNarration,playCityAutomaticNarration,stopCityAutomaticNarrator} from './cidadeAutomaticAudio'
@@ -42,25 +43,21 @@ export function CidadeDormeAtmosphere({step,sessionId,phaseEventId,host,mayorMod
     if(audio){audio.pause();audio.currentTime=0;audioRef.current=null}
     if(autoMode)stopCityAutomaticNarrator()
   },[autoMode])
-  const publicNameFor=useCallback((phase:CidadeDormeLanStep)=>{
-    return phase==='morning' && publicState?.nightResult?.eliminatedId
-      ? (nameOf?.(publicState.nightResult.eliminatedId) ?? '')+' morreu.'
-      : phase==='vote-result' && publicState?.voteResult?.kind==='eliminated'
-        ? (nameOf?.(publicState.voteResult.eliminatedId ?? '') ?? '')+' foi eliminado.'
-        : undefined
-  },[publicState,nameOf])
   const playCue=useCallback((phase:CidadeDormeLanStep)=>{
-    stop()
-    if(typeof Audio==='undefined'){setAudioError(true);return}
-    if(autoMode && isCityAutomaticNarratorArmed()){
-      if(!playCityAutomaticNarration(getCityNarrationCue(phase,publicState),
-        ()=>onNarrationDone?.(phaseEventId),publicNameFor(phase)))setAudioError(true)
+    const sequence=getCityLucasNarrationSequence(phase,publicState)
+    if(!sequence.length){setAudioError(true);return}
+    if(autoMode){
+      if(!isCityAutomaticNarratorArmed()){setAudioError(true);return}
+      if(!playCityAutomaticNarration(sequence,()=>onNarrationDone?.(phaseEventId),undefined,
+        ()=>setAudioError(true)))setAudioError(true)
       return
     }
-    const player=new Audio(getCityNarrationCue(phase,publicState))
+    stop()
+    if(typeof Audio==='undefined'){setAudioError(true);return}
+    const player=new Audio(sequence[0])
     audioRef.current=player
     void player.play().catch(()=>{if(audioRef.current===player)setAudioError(true)})
-  },[stop,autoMode,publicState,phaseEventId,onNarrationDone,publicNameFor])
+  },[stop,autoMode,publicState,phaseEventId,onNarrationDone])
   const frame:CityNarrationFrame={eventId:phaseEventId,sessionId,step,
     narratorHost:host,mayor:mayorMode,connected,paused,
     visible:typeof document!=='undefined'&&document.visibilityState!=='hidden'}
@@ -107,8 +104,8 @@ export function CidadeDormeAtmosphere({step,sessionId,phaseEventId,host,mayorMod
   const activate=()=>{
     setAudioError(false)
     if(autoMode){
-      const started=armCityAutomaticNarrator(getCityNarrationCue(step,publicState),
-        ()=>onNarrationDone?.(phaseEventId),publicNameFor(step))
+      const started=armCityAutomaticNarrator(getCityLucasNarrationSequence(step,publicState),
+        ()=>onNarrationDone?.(phaseEventId))
       if(started){
         setAudioInterrupted(false)
         gate.current.activate(frame)

@@ -151,7 +151,7 @@ describe('Cidade Dorme — approved game flow contracts after START_GAME', () =>
   it('night/day public subtitles use the canonical event without extra voice controls for guest or mayor', () => {
     const guest = frame('killer-turn', 'citizen')
     show(guest, 'guest')
-    expect(screen.getByText(/A cidade dorme\. Todos fecham os olhos/i)).toBeInTheDocument()
+    expect(screen.getByText(/A cidade adormece\. Todos fechem os olhos/i)).toBeInTheDocument()
     expect(screen.queryByRole('button',{name:'Ativar narração no anfitrião'})).not.toBeInTheDocument()
     cleanup()
     show(frame('killer-turn', 'killer'))
@@ -185,13 +185,13 @@ describe('Narration persists across secure scene remounts',()=>{
       pause(){}
     }
     vi.stubGlobal('Audio',AudioMock)
-    const first=frame('morning','citizen')
+    const first=frame('reveal','citizen')
     const view=show(first)
     fireEvent.click(screen.getByRole('button',{name:'Ativar narração no anfitrião'}))
-    expect(played).toEqual([expect.stringContaining('morning.m4a')])
+    expect(played).toEqual([expect.stringContaining('01_identidade.mp3')])
     const next=frame('discussion','citizen')
     view.rerender(<LobbyRoomView {...view.props} snapshot={next}/>)
-    expect(played).toEqual([expect.stringContaining('morning.m4a'),expect.stringContaining('discussion.m4a')])
+    expect(played).toEqual([expect.stringContaining('01_identidade.mp3'),expect.stringContaining('11_discussao.mp3')])
     view.rerender(<LobbyRoomView {...view.props} snapshot={next}/>)
     expect(played).toHaveLength(2)
   })

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createCityNarrationGate, getCityNarrationCue, getCityNarrationSubtitle } from './cidadeNarration'
+import { createCityNarrationGate, getCityNarrationSubtitle } from './cidadeNarration'
 const frame=(id:string,step:'reveal'|'killer-turn'|'doctor-turn'|'morning'='reveal',options:Partial<{
   connected:boolean;host:boolean;mayor:boolean;paused:boolean;visible:boolean;sessionId:string}>={})=>({
   eventId:id,step,sessionId:options.sessionId??'session1',connected:options.connected??true,
@@ -10,7 +10,6 @@ describe('CITY-ORCHESTRATION-01 — offline host narrator gate',()=>{
   it('maps only public canonical phases into bundled local pt-BR cues',()=>{
     for(const step of ['reveal','killer-turn','doctor-turn','detective-turn',
       'morning','discussion','voting','vote-result','summary'] as const){
-      expect(getCityNarrationCue(step)).toBe('/assets/cidade-dorme/narracao/'+step+'.m4a')
       expect(getCityNarrationSubtitle(step).length).toBeGreaterThan(15)
       expect(getCityNarrationSubtitle(step)).not.toMatch(/jogador .* é assassino|vítima é/i)
     }

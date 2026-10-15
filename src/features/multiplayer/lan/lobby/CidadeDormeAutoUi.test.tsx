@@ -22,13 +22,13 @@ const callbacks=()=>({onAction:vi.fn(),onEnd:vi.fn(),onBackToLobby:vi.fn(),onRec
  onLeave:vi.fn(),onClose:vi.fn(),busy:false,connected:true,error:''})
 afterEach(()=>{cleanup();vi.useRealTimers();vi.unstubAllGlobals()})
 describe('Cidade Dorme automatic post-lobby orchestration',()=>{
- it('host automatically resolves all ballots after minimum delay, guest never does',()=>{
+ it('never auto-resolves ballots before the host narrator finishes, nor on a guest',()=>{
   vi.useFakeTimers();vi.setSystemTime(1700000010000)
   const props=callbacks()
   render(<CidadeDormeImmersiveRound snapshot={frame('voting',{phaseReady:true,votedCount:4})}
     playerId='host' isHost {...props}/>)
   act(()=>{vi.advanceTimersByTime(500)})
-  expect(props.onAction).toHaveBeenCalledWith('RESOLVE_VOTE',null)
+  expect(props.onAction).not.toHaveBeenCalledWith('RESOLVE_VOTE',null)
   const guest=callbacks()
   cleanup()
   render(<CidadeDormeImmersiveRound snapshot={frame('voting',{phaseReady:true,votedCount:4})}
@@ -146,7 +146,7 @@ describe('Host audible narration and phase timing',()=>{
    const voting=frame('voting',{seenCount:4,phaseEventId:'voting-evt',phaseRevision:2,
      phaseReady:true,votedCount:4})
    rerender(<CidadeDormeImmersiveRound snapshot={voting} playerId='host' isHost {...props}/>)
-   expect(sounds).toEqual([expect.stringContaining('reveal.m4a'),expect.stringContaining('voting.m4a')])
+   expect(sounds).toEqual([expect.stringContaining('01_identidade.mp3'),expect.stringContaining('12_votacao.mp3')])
    act(()=>vi.advanceTimersByTime(500))
    expect(props.onAction).not.toHaveBeenCalledWith('RESOLVE_VOTE',null)
    act(()=>instances.at(-1)?.onended?.())

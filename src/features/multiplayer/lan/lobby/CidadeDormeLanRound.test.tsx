@@ -35,7 +35,7 @@ describe('G7 Cidade Dorme LAN — privacy and phases',()=>{
       phaseRevision:2,phaseEventId:'city:phase:2:1:killer-turn',phaseStartedAt:1000}
     show(snap)
     expect(screen.getByTestId('city-ambience')).toHaveAttribute('data-time','night')
-    expect(screen.getByText(/A cidade dorme\. Todos fecham os olhos/)).toBeInTheDocument()
+    expect(screen.getByText(/A cidade adormece\. Todos fechem os olhos/)).toBeInTheDocument()
     expect(screen.queryByRole('button',{name:'Ativar narração no anfitrião'})).not.toBeInTheDocument()
   })
   it('does not show role until tap, hides on blur and lets only owner confirm',()=>{

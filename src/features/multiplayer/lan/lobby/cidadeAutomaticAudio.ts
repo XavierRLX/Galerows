@@ -1,83 +1,80 @@
-/** Single shared host audio element, unlocked by the genuine Start Game touch event.
- * The remaining LAN clients receive only captions; only host calls this module. */
+/** One host audio element. The Start Game gesture unlocks local prerecorded speech.
+ * The game never invokes network TTS or the Android/macOS system narrator. */
 let player:HTMLAudioElement|null=null
 let armed=false
 let interrupted=false
-let speechCleanup:(()=>void)|null=null
-/** Offline-only supplement for dynamic public names. Without a local Portuguese
- * voice we keep the prerecorded general announcement and the named subtitle. */
-function finishWithLocalPublicName(text:string|undefined,done?:()=>void){
-  if(!text||typeof speechSynthesis==='undefined'||typeof SpeechSynthesisUtterance==='undefined'){
-    done?.();return
-  }
-  const voice=speechSynthesis.getVoices().find(v=>v.localService && v.lang.toLowerCase().startsWith('pt'))
-  if(!voice){done?.();return}
-  let completed=false
-  const finish=()=>{
-    if(completed)return
-    completed=true
-    window.clearTimeout(timer)
-    speechCleanup=null
-    done?.()
-  }
-  const utterance=new SpeechSynthesisUtterance(text)
-  utterance.lang='pt-BR'
-  utterance.voice=voice
-  utterance.onend=finish
-  utterance.onerror=finish
-  const timer=window.setTimeout(finish,4500)
-  speechCleanup=()=>{
-    if(completed)return
-    completed=true
-    window.clearTimeout(timer)
-    speechSynthesis.cancel()
-    speechCleanup=null
-  }
-  try{speechSynthesis.speak(utterance)}catch{finish()}
-}
+let revision=0
+const defaultCue='/assets/cidade-dorme/narracao-lucas/01_identidade.mp3'
+
 export function isCityAutomaticNarratorArmed(){return armed}
 export function isCityAutomaticNarratorInterrupted(){return interrupted}
-export function armCityAutomaticNarrator(src='/assets/cidade-dorme/narracao/reveal.m4a',
-  onEnded?:()=>void,publicName?:string):boolean{
-  if(typeof Audio==='undefined')return false
-  try {
-    if(player)player.pause()
-    player=new Audio(src)
-    player.onended=()=>finishWithLocalPublicName(publicName,onEnded)
-    player.preload='auto'
-    armed=true
-    interrupted=false
-    const attempt=player.play()
-    void attempt?.catch(()=>{armed=false})
-    return true
-  } catch {
-    armed=false
-    return false
-  }
+export function stopCityAutomaticNarrator(){
+  revision++
+  if(player){player.pause();player.currentTime=0;player.onended=null}
 }
-export function observeCityAutomaticNarration(onEnded:()=>void){
-  if(player)player.onended=onEnded
-}
-export function playCityAutomaticNarration(src:string,onEnded?:()=>void,publicName?:string):boolean{
-  if(!armed||!player)return false
-  try {
-    player.pause()
-    player.currentTime=0
-    player.src=src
-    player.onended=()=>finishWithLocalPublicName(publicName,onEnded)
-    void player.play().catch(()=>{armed=false})
-    return true
-  }catch{armed=false;return false}
-}
-export function interruptCityAutomaticNarrator(){
-  if(!armed)return
+function markInterrupted(expectedRevision:number,onError?:()=>void){
+  if(revision!==expectedRevision)return
   stopCityAutomaticNarrator()
   armed=false
   interrupted=true
+  onError?.()
 }
-export function stopCityAutomaticNarrator(){
-  if(speechCleanup){const close=speechCleanup;speechCleanup=null;close()}
-  if(player){player.pause();player.currentTime=0;player.onended=null}
+function begin(sources:string[],onEnded?:()=>void,onError?:()=>void):boolean{
+  if(!player || !sources.length)return false
+  stopCityAutomaticNarrator()
+  const current=revision
+  let index=0
+  const advance=()=>{
+    if(current!==revision || !armed || !player)return
+    index++
+    if(index===sources.length){onEnded?.();return}
+    playCurrent()
+  }
+  const playCurrent=()=>{
+    if(current!==revision || !armed || !player)return
+    try{
+      player.src=sources[index]
+      player.onended=advance
+      const attempt=player.play()
+      void attempt?.catch(()=>markInterrupted(current,onError))
+    }catch{markInterrupted(current,onError)}
+  }
+  playCurrent()
+  return armed
+}
+/** Must be called synchronously inside a genuine host tap gesture. */
+export function armCityAutomaticNarrator(src:string|string[]=defaultCue,
+  onEnded?:()=>void):boolean{
+  if(typeof Audio==='undefined')return false
+  const sources=Array.isArray(src)?src:[src]
+  if(!sources.length)return false
+  stopCityAutomaticNarrator()
+  try{
+    player=new Audio(sources[0])
+    player.preload='auto'
+    armed=true
+    interrupted=false
+    return begin(sources,onEnded)
+  }catch{
+    armed=false
+    interrupted=true
+    return false
+  }
+}
+/** Used by the initial Start Game cue, which begins before the route mounts. */
+export function observeCityAutomaticNarration(onEnded:()=>void){
+  if(player && armed)player.onended=onEnded
+}
+export function playCityAutomaticNarration(src:string|string[],onEnded?:()=>void,
+  _publicName?:string,onError?:()=>void):boolean{
+  if(!armed || !player)return false
+  return begin(Array.isArray(src)?src:[src],onEnded,onError)
+}
+export function interruptCityAutomaticNarrator(){
+  if(!armed && !interrupted)return
+  stopCityAutomaticNarrator()
+  armed=false
+  interrupted=true
 }
 export function resetCityAutomaticNarratorForTests(){
   stopCityAutomaticNarrator()

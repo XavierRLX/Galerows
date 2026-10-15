@@ -9,7 +9,6 @@ import type { RoleKey } from '../../../cidade-dorme/cidadeDorme.types'
 import { CidadeDormeAtmosphere } from './CidadeDormeAtmosphere'
 import { createCityNarrationGate } from './cidadeNarration'
 import { decideCityAutopilot } from './cidadeAutopilot'
-import { isCityAutomaticNarratorArmed,isCityAutomaticNarratorInterrupted } from './cidadeAutomaticAudio'
 import './cidadeDormeImmersive.css'
 
 type Props = {
@@ -81,8 +80,7 @@ export function CidadeDormeImmersiveRound(props: Props) {
       const command=decideCityAutopilot({
         game:data,now:Date.now(),host:isHost,connected,
         playing:roomPhase==='playing',busy,
-        audioDone:completedAudioEvent===sessionId+':'+data.phaseEventId ||
-          (!isCityAutomaticNarratorArmed()&&!isCityAutomaticNarratorInterrupted())})
+        audioDone:completedAudioEvent===sessionId+':'+data.phaseEventId})
       if(!command)return
       const key=sessionId+':'+data.phaseRevision+':'+command
       const last=commandAttempts.current.get(key)
@@ -234,7 +232,7 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
         {mine && data.step !== 'summary' && <button type="button" className="cdg-role-access" disabled={!connected}
           onClick={() => { setRevealed(false); setRoleOpen(true) }}><LockKeyhole size={15}/> Meu papel</button>}
       </header>
-      <main className="cdg-scene" key={`${data.round}:${data.step}:${resultView}`}>
+      <main className="cdg-scene" key={`${data.round}:${data.step}`}>
         <div className="cdg-chapter"><p className="cdg-eyebrow">{chapter[data.step].eyebrow}</p>
           <h1 ref={heading} tabIndex={-1}>{chapter[data.step].title}</h1>
           <div className="cdg-atmosphere-slot"><CidadeDormeAtmosphere step={data.step}

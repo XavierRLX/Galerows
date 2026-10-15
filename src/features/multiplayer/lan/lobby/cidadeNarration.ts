@@ -2,38 +2,30 @@ import type { CidadeDormeLanPublic, CidadeDormeLanStep } from '../../cidadeDorme
 
 /** These pre-recorded clips are shipped in /public. No TTS/network call runs on players' phones. */
 const texts: Record<CidadeDormeLanStep,string> = {
-  reveal:'A cidade está pronta. Descubram seus papéis em segredo.',
-  'killer-turn':'A cidade dorme. Todos fecham os olhos. Assassino, acorde e escolha a sua vítima.',
-  'doctor-turn':'Assassino, volte a dormir. Médico, acorde e escolha quem deseja proteger.',
-  'detective-turn':'Médico, volte a dormir. Detetive, acorde e investigue uma pessoa.',
-  'detective-result':'Detetive, confira a pista no seu celular. Depois confirme e volte a dormir.',
-  morning:'A cidade acorda. Abram os olhos. A noite terminou.',
-  discussion:'A cidade desperta para o mistério. Conversem e descubram quem pode ser o assassino.',
-  voting:'A discussão acabou. É hora de votar. Cada jogador escolhe uma pessoa em segredo.',
-  'vote-result':'Os votos foram apurados. A cidade conhece o resultado.',
-  summary:'O jogo terminou. A cidade revela seus segredos.',
+  reveal:'A partida começou. Confira seu papel em segredo e confirme quando estiver pronto.',
+  'killer-turn':'A cidade adormece. Todos fechem os olhos. Assassino, acorde. Escolha sua vítima em segredo.',
+  'doctor-turn':'Sua escolha foi registrada. Agora, volte a dormir. Médico, acorde. Escolha uma pessoa para proteger esta noite.',
+  'detective-turn':'Sua escolha foi registrada. Agora, volte a dormir. Detetive, acorde. Escolha uma pessoa para investigar.',
+  'detective-result':'Detetive, confira o resultado no seu celular. Confirme quando terminar.',
+  morning:'A noite terminou. A cidade acorda. Todos podem abrir os olhos.',
+  discussion:'Hora de discutir. Conversem, compartilhem suas suspeitas e tentem descobrir o assassino.',
+  voting:'A discussão terminou. Escolha em segredo quem você acredita ser o assassino.',
+  'vote-result':'A votação terminou. Confira o resultado.',
+  summary:'A partida chegou ao fim. Descubram os papéis e vejam quem venceu.',
 }
 type Outcome=Partial<Pick<CidadeDormeLanPublic,'nightResult'|'voteResult'>>
 export function getCityNarrationSubtitle(step:CidadeDormeLanStep,outcome?:Outcome,
   name:(id:string)=>string=id=>id):string {
   if(step==='morning' && outcome?.nightResult){
     return outcome.nightResult.eliminatedId
-      ? 'A cidade acorda. '+name(outcome.nightResult.eliminatedId)+' morreu durante a noite.'
-      : 'A cidade acorda. Todos sobreviveram. Ninguém morreu esta noite.'
+      ? 'A noite terminou. A cidade acorda. Todos podem abrir os olhos. '+name(outcome.nightResult.eliminatedId)+' morreu durante a noite.'
+      : 'A noite terminou. A cidade acorda. Todos podem abrir os olhos. Todos sobreviveram. Ninguém morreu esta noite.'
   }
   if(step==='vote-result' && outcome?.voteResult){
     return outcome.voteResult.kind==='tie'?'Houve empate na votação. Ninguém foi eliminado.':
       'A votação terminou. '+name(outcome.voteResult.eliminatedId??'')+' foi eliminado.'
   }
   return texts[step]
-}
-export function getCityNarrationCue(step:CidadeDormeLanStep,outcome?:Outcome):string {
-  const cue=step==='morning'&&outcome?.nightResult
-    ? outcome.nightResult.eliminatedId?'morning-death':'morning-survived'
-    :step==='vote-result'&&outcome?.voteResult
-      ? outcome.voteResult.kind==='tie'?'vote-tie':'vote-eliminated'
-      :step
-  return '/assets/cidade-dorme/narracao/'+cue+'.m4a'
 }
 export interface CityNarrationFrame {
   eventId:string
