@@ -75,7 +75,8 @@ describe('Cidade Dorme session', () => {
   })
 
   it('blocks repeated doctor protection when the setting is disabled', () => {
-    const session = createCidadeDormeSession(playersWithDoctor, createDefaultCidadeDormeSettings(playersWithDoctor.length), () => 0.999999)
+    const settings={...createDefaultCidadeDormeSettings(playersWithDoctor.length),doctorCanRepeatProtection:false}
+    const session = createCidadeDormeSession(playersWithDoctor, settings, () => 0.999999)
     const doctorTurn = {
       ...session,
       phase: 'doctorTurn' as const,

@@ -34,7 +34,7 @@ describe('G7 Cidade Dorme persistent lobby integration',()=>{
     fireEvent.click(screen.getByRole('button',{name:'Salvar papéis da Cidade Dorme'}))
     expect(cb.onConfigure).toHaveBeenCalledWith({
       enableDoctor:true,enableDetective:true,enableJester:false,revealRoleOnDeath:false,conductionMode:'automatic',
-      killersCount:1,doctorCanSelfProtect:false,doctorSelfProtectLimit:1,doctorCanRepeatProtection:false})
+      killersCount:1,doctorCanSelfProtect:false,doctorSelfProtectLimit:1,doctorCanRepeatProtection:true})
   })
   it('saves custom killer count, self-protection count and consecutive protection policy',()=>{
     const cb=actions()
@@ -48,7 +48,7 @@ describe('G7 Cidade Dorme persistent lobby integration',()=>{
     expect(cb.onConfigure).toHaveBeenCalledWith({
       enableDoctor:true,enableDetective:true,enableJester:false,revealRoleOnDeath:false,
       conductionMode:'automatic',killersCount:2,doctorCanSelfProtect:true,
-      doctorSelfProtectLimit:2,doctorCanRepeatProtection:true,
+      doctorSelfProtectLimit:2,doctorCanRepeatProtection:false,
     })
   })
   it('blocks configurations with more special roles than participants, then allows correction',()=>{
@@ -70,7 +70,7 @@ describe('G7 Cidade Dorme persistent lobby integration',()=>{
     expect(cb.onConfigure).toHaveBeenCalledWith({
       enableDoctor:true,enableDetective:true,enableJester:false,revealRoleOnDeath:false,
       conductionMode:'mayor',killersCount:1,doctorCanSelfProtect:false,
-      doctorSelfProtectLimit:1,doctorCanRepeatProtection:false,
+      doctorSelfProtectLimit:1,doctorCanRepeatProtection:true,
     })
     expect(screen.getByText(/não recebe papel nem vota/i)).toBeInTheDocument()
   })

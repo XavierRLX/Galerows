@@ -17,10 +17,15 @@ reveal|A cidade está pronta. Descubram seus papéis em segredo.
 killer-turn|A cidade dorme. Todos fecham os olhos. Assassino, acorde e escolha a sua vítima.
 doctor-turn|Assassino, volte a dormir. Médico, acorde e escolha quem deseja proteger.
 detective-turn|Médico, volte a dormir. Detetive, acorde e investigue uma pessoa.
+detective-result|Detetive, confira a pista somente no seu celular. Confirme quando terminar de ler.
 morning|A cidade acorda. Abram os olhos. A noite terminou.
+morning-survived|A cidade acorda. Todos sobreviveram. Ninguém morreu esta noite.
+morning-death|A cidade acorda. Uma pessoa morreu durante a noite. Veja na tela quem foi.
 discussion|A cidade desperta para o mistério. Conversem e descubram quem pode ser o assassino.
 voting|A discussão acabou. É hora de votar. Cada jogador escolhe uma pessoa em segredo.
 vote-result|Os votos foram apurados. A cidade conhece o resultado.
+vote-tie|Houve empate na votação. Ninguém foi eliminado. Preparem-se para a próxima noite.
+vote-eliminated|Os votos foram apurados. Uma pessoa foi eliminada. Veja o nome na tela.
 summary|O jogo terminou. A cidade revela seus segredos.
 NARRATION
 echo "Gerei $(find "$OUT" -name '*.m4a' | wc -l | tr -d ' ') arquivos de narração offline em $OUT"

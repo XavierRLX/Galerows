@@ -26,6 +26,7 @@ const descriptions:Record<CidadeDormeLanStep,{title:string,script:string}> = {
   reveal:{title:'Distribuição dos papéis',script:'Peça para todos visualizarem e confirmarem o papel secreto.'},
   'killer-turn':{title:'A cidade dorme',script:'Todos dormem. Assassino, acorde e faça sua escolha no próprio celular.'},
   'doctor-turn':{title:'O médico acorda',script:'Assassino, durma. Médico, acorde e escolha quem proteger.'},
+  'detective-result':{title:'Pista do Detetive',script:'O Detetive lê a resposta secreta e confirma quando terminar.'},
   'detective-turn':{title:'O detetive acorda',script:'Médico, durma. Detetive, acorde e escolha quem investigar.'},
   morning:{title:'A cidade acorda',script:'Todos acordam. Anuncie o resultado público da noite.'},
   discussion:{title:'Discussão da cidade',script:'A cidade conversa livremente. Você pode iniciar a votação quando todos terminarem.'},
@@ -103,7 +104,8 @@ export function CidadeDormeMayorPanel({snapshot,connected,busy,onRoomCommand,onG
       <p>Rodada {pub.round} · {pub.players.filter(p=>p.alive).length} jogadores vivos.</p>
     </header>
     <CidadeDormeAtmosphere step={pub.step} sessionId={sessionId || ''}
-      phaseEventId={pub.phaseEventId || ''} host mayorMode connected={connected} paused={Boolean(pub.paused)}/>
+      phaseEventId={pub.phaseEventId || ''} host mayorMode connected={connected} paused={Boolean(pub.paused)}
+      publicState={pub} nameOf={name}/>
     <div className="pl03-impostor-step">
       <h4>{item.title}</h4>
       <p>{item.script}</p>

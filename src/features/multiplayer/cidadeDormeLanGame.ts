@@ -21,13 +21,27 @@ export interface CidadeDormeLanConfig {
   conductionMode?: 'automatic' | 'mayor'
 }
 export type CidadeDormeLanStep = 'reveal' | 'killer-turn' | 'doctor-turn' | 'detective-turn'
-  | 'morning' | 'discussion' | 'voting' | 'vote-result' | 'summary'
+  | 'detective-result' | 'morning' | 'discussion' | 'voting' | 'vote-result' | 'summary'
+export interface CidadeDormeRoundHistory {
+  round: number
+  night: { killerId: string | null; killerTargetId: string | null; doctorId: string | null;
+    doctorTargetId: string | null; detectiveId: string | null; detectiveTargetId: string | null;
+    detectiveResult: 'suspect' | 'innocent' | null; savedByDoctor: boolean;
+    eliminatedId: string | null }
+  vote: { kind: 'tie' | 'eliminated'; eliminatedId: string | null;
+    votes: { voterId: string; targetId: string }[] } | null
+}
 export interface CidadeDormeLanPublic {
   step: CidadeDormeLanStep
   round: number
   phaseRevision: number
   phaseEventId: string
   phaseStartedAt: number
+  phaseReady?: boolean
+  /** Only revealed after victory, never in snapshots while playing. */
+  history?: CidadeDormeRoundHistory[] | null
+  /** Oldest completed rounds omitted from the 16 KB Room projection. */
+  historyOmittedRounds?: number
   paused?: boolean
   seenCount: number
   totalPlayers: number
@@ -60,6 +74,7 @@ interface LanState {
   players: Player[]
   murderOrder: string[]
   step: CidadeDormeLanStep
+  phaseReady: boolean
   paused: boolean
   phaseRevision: number
   phaseStartedAt: number
@@ -72,6 +87,7 @@ interface LanState {
   nightResult: { eliminatedId: string | null } | null
   votes: Record<string, string>
   voteResult: { kind: 'tie' | 'eliminated'; eliminatedId?: string } | null
+  history: CidadeDormeRoundHistory[]
   winner: GameWinner | null
   winReason: WinReason | null
   winnerPlayerId: string | null
@@ -115,6 +131,7 @@ function stampPhase(before: LanState, result: MultiplayerGameTransition<LanState
   const after = result.state
   if (after.step === before.step && after.round === before.round) return result
   return { ...result, state: { ...after,
+    phaseReady: after.config.conductionMode !== 'automatic',
     phaseRevision: before.phaseRevision + 1, phaseStartedAt: context.clock.now(),
   } }
 }
@@ -128,12 +145,25 @@ function resolveCurrentNight(state: LanState): LanState {
     killerTargetId: state.night.killerTarget, protectedPlayerId: state.night.protectedTarget,
     detectiveTargetId: state.night.detectiveTarget,
   })
-  const next: LanState = { ...state, players: resolution.players, step: 'morning',
+  const night: CidadeDormeRoundHistory['night'] = {
+    killerId: killerActor(state)?.id ?? null,
+    killerTargetId: state.night.killerTarget ?? null,
+    doctorId: livingRole(state,'doctor')[0]?.id ?? null,
+    doctorTargetId: state.night.protectedTarget ?? null,
+    detectiveId: livingRole(state,'detective')[0]?.id ?? null,
+    detectiveTargetId: state.night.detectiveTarget ?? null,
+    detectiveResult: resolution.action.detectiveResult ?? null,
+    savedByDoctor: Boolean(resolution.action.wasProtected),
+    eliminatedId: resolution.action.eliminatedPlayerId ?? null,
+  }
+  const history = [...state.history.filter(entry=>entry.round!==state.round),
+    { round:state.round, night, vote:null }].slice(-40)
+  const next: LanState = { ...state, players: resolution.players, step: 'morning', history,
     nightResult: { eliminatedId: resolution.action.eliminatedPlayerId ?? null },
     investigation: state.night.detectiveTarget && resolution.action.detectiveResult
       ? { targetId: state.night.detectiveTarget, result: resolution.action.detectiveResult } : null }
   const win = checkWinCondition(next.players, next.settings)
-  return win.isGameOver ? { ...next, step: 'summary', winner: win.winner, winReason: win.reason,
+  return win.isGameOver ? { ...next, step: state.config.conductionMode === 'automatic' ? 'morning' : 'summary', winner: win.winner, winReason: win.reason,
     winnerPlayerId: win.winnerPlayerId ?? null } : next
 }
 function postNightRoleStep(state: LanState): LanState {
@@ -169,11 +199,11 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       id, name: `Jogador ${i + 1}`,
     })), settings, ctx.random)
     return { config, settings, players, murderOrder: getMurderOrder(players, ctx.random),
-      step: 'reveal', paused: false, phaseRevision: 1, phaseStartedAt: ctx.clock.now(),
+      step: 'reveal', paused: false, phaseReady: false, phaseRevision: 1, phaseStartedAt: ctx.clock.now(),
       round: 1, seen: [], night: {},
       investigation: null, previousProtectedTarget: null, doctorSelfProtectCount: 0,
       nightResult: null, votes: {},
-      voteResult: null, winner: null, winReason: null, winnerPlayerId: null }
+      voteResult: null, history: [], winner: null, winReason: null, winnerPlayerId: null }
   },
   applyCommand: (state, action, context) => {
     const decision = ((): MultiplayerGameTransition<LanState> => {
@@ -194,6 +224,23 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
         : { accepted: true, changed: true, state: { ...state, paused } }
     }
     if (state.paused) return error('invalid_phase')
+    const automatic = state.config.conductionMode === 'automatic'
+    const elapsed = context.clock.now() - state.phaseStartedAt
+    const autoWait = (minMs:number) => automatic && elapsed < minMs
+    const actionWait = automatic && !state.phaseReady
+    if (action.type === 'OPEN_PHASE') {
+      if (!automatic || !host) return error('unauthorized')
+      const minimum: Partial<Record<CidadeDormeLanStep,number>> = {
+        'killer-turn':7000, 'doctor-turn':6300, 'detective-turn':5500,
+        'detective-result':7000, voting:6700,
+      }
+      const min = minimum[state.step]
+      if (!min) return error('invalid_phase')
+      if (payload !== null) return error('invalid_payload')
+      if (state.phaseReady) return { accepted:true, changed:false }
+      if (elapsed < min) return error('not_ready')
+      return {accepted:true,changed:true,state:{...state,phaseReady:true}}
+    }
     if (action.type === 'ACK_ROLE') {
       if (state.step !== 'reveal' || payload !== null) return error('invalid_phase')
       if (state.seen.includes(player.id)) return { accepted: true, changed: false }
@@ -203,12 +250,14 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       if (!host) return error('unauthorized')
       if (state.step !== 'reveal' || payload !== null || state.seen.length !== state.players.length)
         return error('invalid_phase')
+      if (autoWait(5000)) return error('not_ready')
       if (!action.connectedParticipantIds || state.players.some(x => !action.connectedParticipantIds!.includes(x.id)))
         return error('not_ready')
       return { accepted: true, changed: true, state: { ...state, step: 'killer-turn' as const } }
     }
     if (action.type === 'KILL') {
       if (state.step !== 'killer-turn') return error('invalid_phase')
+      if (actionWait) return error('not_ready')
       if (killerActor(state)?.id !== player.id) return error('unauthorized')
       if (!validTarget(state, p) || p === player.id || state.murderOrder.includes(p)) return error('invalid_payload')
       const next: LanState = { ...state, night: { ...state.night, killerTarget: p } }
@@ -216,6 +265,7 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     }
     if (action.type === 'PROTECT') {
       if (state.step !== 'doctor-turn') return error('invalid_phase')
+      if (actionWait) return error('not_ready')
       if (player.status !== 'alive' || player.roleKey !== 'doctor') return error('unauthorized')
       if (!validTarget(state, p) || !canDoctorProtect(player.id, p, state.settings,
         state.previousProtectedTarget ?? undefined, state.doctorSelfProtectCount)) return error('invalid_payload')
@@ -227,23 +277,42 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     }
     if (action.type === 'INVESTIGATE') {
       if (state.step !== 'detective-turn') return error('invalid_phase')
+      if (actionWait) return error('not_ready')
       if (player.status !== 'alive' || player.roleKey !== 'detective') return error('unauthorized')
       if (!validTarget(state, p) || p === player.id) return error('invalid_payload')
-      return { accepted: true, changed: true,
-        state: resolveCurrentNight({ ...state, night: { ...state.night, detectiveTarget: p } }) }
+      const next = { ...state, night:{ ...state.night, detectiveTarget:p } }
+      if (automatic) {
+        const verdict = resolveNight(state.players,{
+          round:state.round,killerActorId:killerActor(state)?.id,killerTargetId:state.night.killerTarget,
+          protectedPlayerId:state.night.protectedTarget,detectiveTargetId:p,
+        }).action.detectiveResult
+        return {accepted:true,changed:true,state:{...next,step:'detective-result' as const,
+          investigation:{targetId:p,result:verdict ?? 'innocent'}}}
+      }
+      return { accepted:true,changed:true,state:resolveCurrentNight(next) }
+    }
+    if (action.type === 'ACK_INVESTIGATION') {
+      if (!automatic || state.step !== 'detective-result' || payload !== null) return error('invalid_phase')
+      if (player.status !== 'alive' || player.roleKey !== 'detective') return error('unauthorized')
+      if (!state.phaseReady || elapsed < 6500) return error('not_ready')
+      return {accepted:true,changed:true,state:resolveCurrentNight(state)}
     }
     if (action.type === 'START_DISCUSSION') {
       if (!host) return error('unauthorized')
       if (state.step !== 'morning' || payload !== null) return error('invalid_phase')
-      return { accepted: true, changed: true, state: { ...state, step: 'discussion' as const } }
+      if (autoWait(7000)) return error('not_ready')
+      return { accepted:true,changed:true,state:{...state,
+        step:state.winner && automatic ? 'summary' as const : 'discussion' as const} }
     }
     if (action.type === 'START_VOTE') {
       if (!host) return error('unauthorized')
       if (state.step !== 'discussion' || payload !== null) return error('invalid_phase')
+      if (autoWait(35000)) return error('not_ready')
       return { accepted: true, changed: true, state: { ...state, step: 'voting' as const, votes: {} } }
     }
     if (action.type === 'CAST_VOTE') {
       if (state.step !== 'voting') return error('invalid_phase')
+      if (actionWait) return error('not_ready')
       if (player.status !== 'alive') return error('unauthorized')
       if (Object.hasOwn(state.votes, player.id)) return error('invalid_phase')
       if (!validTarget(state, p)) return error('invalid_payload')
@@ -254,6 +323,7 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     if (action.type === 'RESOLVE_VOTE') {
       if (!host) return error('unauthorized')
       if (state.step !== 'voting' || payload !== null) return error('invalid_phase')
+      if (autoWait(7000)) return error('not_ready')
       if (Object.keys(state.votes).length !== alive(state).length) return error('not_ready')
       const totals: Record<string, number> = {}
       for (const target of Object.values(state.votes)) totals[target] = (totals[target] ?? 0) + 1
@@ -263,19 +333,26 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
         ? { kind: 'eliminated' as const, playerId: leaders[0] }
         : { kind: 'tie' as const }
       const result = resolveVotingOutcome(state.players, outcome, state.round)
-      const next: LanState = { ...state, players: result.players, step: 'vote-result',
+      const history = state.history.map(entry=>entry.round !== state.round ? entry : {
+        ...entry,vote:{kind:result.kind === 'tie'?'tie' as const:'eliminated' as const,
+          eliminatedId:result.eliminatedPlayerId ?? null,
+          votes:Object.entries(state.votes).map(([voterId,targetId])=>({voterId,targetId}))},
+      })
+      const next: LanState = { ...state, players: result.players, step: 'vote-result', history,
         voteResult: result.kind === 'tie' ? { kind: 'tie' } : {
           kind: 'eliminated', eliminatedId: result.eliminatedPlayerId },
         votes: {} }
       const win = checkWinCondition(next.players, next.settings)
       return { accepted: true, changed: true, state: win.isGameOver
-        ? { ...next, step: 'summary', winner: win.winner, winReason: win.reason,
+        ? { ...next, step: automatic ? 'vote-result' : 'summary', winner: win.winner, winReason: win.reason,
           winnerPlayerId: win.winnerPlayerId ?? null } : next }
     }
     if (action.type === 'NEXT_NIGHT') {
       if (!host) return error('unauthorized')
       if (state.step !== 'vote-result' || payload !== null) return error('invalid_phase')
-      return { accepted: true, changed: true, state: nextRound(state) }
+      if (autoWait(9000)) return error('not_ready')
+      return {accepted:true,changed:true,state:state.winner && automatic
+        ? {...state,step:'summary' as const} : nextRound(state)}
     }
     return error('invalid_phase')
     })()
@@ -289,6 +366,8 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
   projectPublic: (state): CidadeDormeLanPublic => ({
     step: state.step, paused: state.paused, round: state.round,
     phaseRevision: state.phaseRevision, phaseStartedAt: state.phaseStartedAt,
+    phaseReady: state.phaseReady, history: state.step === 'summary' ? state.history.slice(-12) : null,
+    historyOmittedRounds: state.step === 'summary' ? Math.max(0,state.history.length-12) : 0,
     phaseEventId: `city:phase:${state.phaseRevision}:${state.round}:${state.step}`,
     seenCount: state.seen.length,
     totalPlayers: state.players.length,
@@ -302,7 +381,9 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     nightResult: ['morning', 'discussion', 'voting', 'vote-result', 'summary'].includes(state.step)
       ? state.nightResult : null,
     voteResult: ['vote-result', 'summary'].includes(state.step) ? state.voteResult : null,
-    winner: state.winner, winReason: state.winReason, winnerPlayerId: state.winnerPlayerId,
+    winner: state.step==='summary'?state.winner:null,
+    winReason: state.step==='summary'?state.winReason:null,
+    winnerPlayerId: state.step==='summary'?state.winnerPlayerId:null,
     finalRoles: state.step === 'summary'
       ? state.players.map(player => ({ id: player.id, role: player.roleKey! })) : null,
   }),
@@ -335,7 +416,8 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       ...(own.roleKey === 'detective' && state.investigation && state.step !== 'summary'
         ? { investigation: { ...state.investigation } } : {}),
       voted: Object.hasOwn(state.votes, playerId),
-      canAct: !state.paused && own.status === 'alive' && (
+      canAct: !state.paused && (state.config.conductionMode!=='automatic' || state.phaseReady)
+        && own.status === 'alive' && (
         (state.step === 'killer-turn' && killerActor(state)?.id === playerId)
         || (state.step === 'doctor-turn' && own.roleKey === 'doctor')
         || (state.step === 'detective-turn' && own.roleKey === 'detective')

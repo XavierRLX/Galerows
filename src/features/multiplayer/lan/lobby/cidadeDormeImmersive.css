@@ -171,3 +171,7 @@ body:has(.cdg-root) { overflow: hidden; overscroll-behavior: none; }
 .cdg-atmosphere-slot .pl03-cidade-narration-enabled{font-size:10px}
 .cdg-pause{position:absolute;inset:0;z-index:11;display:grid;place-items:center;padding:30px;background:#07131fe8;color:var(--cdg-cream);font-size:18px;text-align:center}
 .cdg-short .cdg-atmosphere-slot .pl03-cidade-atmosphere-caption p{font-size:10px!important;line-height:1.2!important}
+
+.cdg-history-round{padding:8px 0;display:grid;gap:5px;text-align:left}.cdg-history-round p{font-size:12px;line-height:1.35;margin:0}.cdg-history-round strong{color:#e9c89d}
+
+.cdg-auto-note{color:#e6d6bb;font-size:12px;text-align:center;line-height:1.5;margin:0 6px 7px}

@@ -135,7 +135,7 @@ export function LobbyRoomView({
     enableDetective: typeof saved?.enableDetective === 'boolean' ? saved.enableDetective : true,
     enableJester: saved?.enableJester === true, revealRoleOnDeath: saved?.revealRoleOnDeath === true,
     doctorCanSelfProtect: saved?.doctorCanSelfProtect === true,
-    doctorCanRepeatProtection: saved?.doctorCanRepeatProtection === true,
+    doctorCanRepeatProtection: saved?.doctorCanRepeatProtection !== false,
   })
   const [cidadeKillersOverride, setCidadeKillersOverride] = useState<1|2|3|null>(()=>
     saved?.killersCount===1||saved?.killersCount===2||saved?.killersCount===3

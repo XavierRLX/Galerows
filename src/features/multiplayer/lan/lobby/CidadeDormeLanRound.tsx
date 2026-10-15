@@ -21,6 +21,7 @@ const roleLabels: Record<RoleKey, string> = {
 const titleFor: Record<CidadeDormeLanStep, string> = {
   reveal: 'Descubra seu papel', 'killer-turn': 'A cidade adormeceu',
   'doctor-turn': 'A noite continua', 'detective-turn': 'O mistério aumenta',
+  'detective-result': 'Pista confidencial',
   morning: 'A cidade acordou', discussion: 'Hora da discussão',
   voting: 'Votação da galera', 'vote-result': 'Resultado da votação', summary: 'Fim de partida',
 }

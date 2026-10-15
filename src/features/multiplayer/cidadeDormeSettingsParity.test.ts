@@ -5,7 +5,7 @@ import { createDefaultCidadeDormeSettings } from '../cidade-dorme/cidadeDorme.se
 
 const legacy={enableDoctor:true,enableDetective:true,enableJester:false,revealRoleOnDeath:false}
 const full={...legacy,killersCount:2,doctorCanSelfProtect:true,
-  doctorSelfProtectLimit:2 as const,doctorCanRepeatProtection:true,conductionMode:'automatic' as const}
+  doctorSelfProtectLimit:2 as const,doctorCanRepeatProtection:true}
 function room(count=6,config:Record<string,unknown>=full) {
   let counter=0
   const runtime=new AuthoritativeRoomRuntimeV2({roomId:'city-settings',hostPlayerId:'host',hostConnectionId:'host-conn',

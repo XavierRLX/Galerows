@@ -4,6 +4,7 @@ import { ArrowRight, LoaderCircle, QrCode, Users, WifiOff } from 'lucide-react'
 import { LanScreenHeader } from './LanScreenHeader'
 import { LanQrScanner } from '../LanQrScanner'
 import { LobbyRoomView } from './LobbyRoomView'
+import { armCityAutomaticNarrator } from './cidadeAutomaticAudio'
 import { LanRoomDiscoveryList } from './LanRoomDiscoveryList'
 import type { LobbyGameId } from './lobbyView'
 import { RoomSessionProvider } from './RoomSessionProvider'
@@ -51,7 +52,13 @@ function LanPersistentLobbyView({ initialMode }: { initialMode: 'entry' | 'join'
       onSelect={(game: LobbyGameId) => action('SELECT_GAME', { gameId: game })}
       onConfigure={config => action('CONFIGURE_GAME', config)}
       onReady={ready => action('READY', { ready })}
-      onStart={() => action('START_GAME', null)}
+      onStart={() => {
+        if(snapshot.roomState.selectedGameId==='cidade-dorme'
+          && (snapshot.roomState.selectedConfig as {conductionMode?:string}|null)?.conductionMode==='automatic') {
+          armCityAutomaticNarrator()
+        }
+        action('START_GAME',null)
+      }}
       onGameAction={() => action(snapshot.roomState.selectedGameId === 'counter' ? 'INCREMENT' : 'TOY_CLUE', null, 'game')}
       onGameCommand={(type, payload) => action(type, payload, 'game')}
       onRoomCommand={(type, payload) => action(type, payload)}

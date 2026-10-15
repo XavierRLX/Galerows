@@ -20,7 +20,7 @@ export function createDefaultCidadeDormeSettings(playerCount: number): GameSetti
     revealRoleOnDeath: false,
     doctorCanSelfProtect: false,
     doctorSelfProtectLimit: 1,
-    doctorCanRepeatProtection: false,
+    doctorCanRepeatProtection: true,
     themeId: 'classic',
   }
 }

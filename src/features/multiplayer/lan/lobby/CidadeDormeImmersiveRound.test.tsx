@@ -46,7 +46,7 @@ describe('Cidade Dorme LAN como jogo mobile', () => {
     const { cb } = show(frame('reveal', 'killer'))
     expect(screen.getByTestId('cidade-immersive')).toBeInTheDocument()
     expect(screen.queryByText('Sala da galera')).not.toBeInTheDocument()
-    act(() => vi.advanceTimersByTime(1800))
+    act(() => vi.advanceTimersByTime(3400))
     expect(screen.queryByText('Assassino')).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /revelar meu papel/i }))
     expect(screen.getByText('Assassino')).toBeInTheDocument()

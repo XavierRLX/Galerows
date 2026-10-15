@@ -8,6 +8,8 @@ import type { CidadeDormeLanPrivate, CidadeDormeLanPublic, CidadeDormeLanStep } 
 import type { RoleKey } from '../../../cidade-dorme/cidadeDorme.types'
 import { CidadeDormeAtmosphere } from './CidadeDormeAtmosphere'
 import { createCityNarrationGate } from './cidadeNarration'
+import { decideCityAutopilot } from './cidadeAutopilot'
+import { isCityAutomaticNarratorArmed,isCityAutomaticNarratorInterrupted } from './cidadeAutomaticAudio'
 import './cidadeDormeImmersive.css'
 
 type Props = {
@@ -32,6 +34,7 @@ const chapter: Record<CidadeDormeLanStep, { eyebrow: string; title: string; prom
   reveal: { eyebrow: 'PRÓLOGO · O SEGREDO', title: 'Descubra seu papel.', prompt: 'Veja sua identidade longe dos olhares da galera.' },
   'killer-turn': { eyebrow: 'NOITE · A SOMBRA', title: 'A cidade dorme.', prompt: 'O Assassino ativo escolhe em silêncio.' },
   'doctor-turn': { eyebrow: 'NOITE · A PROTEÇÃO', title: 'Uma chance de salvar.', prompt: 'O médico pode proteger alguém nesta noite.' },
+  'detective-result': { eyebrow: 'NOITE · A PISTA', title: 'Você encontrou uma pista.', prompt: 'O Detetive deve ler a resposta em segredo antes de amanhecer.' },
   'detective-turn': { eyebrow: 'NOITE · A INVESTIGAÇÃO', title: 'Uma pista na escuridão.', prompt: 'O detetive investiga uma pessoa em segredo.' },
   morning: { eyebrow: 'AMANHECER · A REVELAÇÃO', title: 'A cidade acordou.', prompt: 'Descubram o que aconteceu enquanto dormiam.' },
   discussion: { eyebrow: 'DIA · O DEBATE', title: 'Quem parece suspeito?', prompt: 'Conversem frente a frente antes de decidir.' },
@@ -59,6 +62,7 @@ type ImmersiveBodyProps = Props & {
   narrationGate: ReturnType<typeof createCityNarrationGate>
   narratorEnabled: boolean
   onNarratorEnabled: () => void
+  onNarrationDone: (eventId:string) => void
 }
 export function CidadeDormeImmersiveRound(props: Props) {
   const state = props.snapshot.gamePublicState
@@ -66,15 +70,41 @@ export function CidadeDormeImmersiveRound(props: Props) {
   const sessionId = props.snapshot.roomState.currentGameSessionId
   const narration = useMemo(()=>({sessionId,gate:createCityNarrationGate()}),[sessionId])
   const [audioActivation,setAudioActivation]=useState<string|null>(null)
+  const [completedAudioEvent,setCompletedAudioEvent]=useState<string|null>(null)
+  const commandAttempts=useRef(new Map<string,number>())
+  const automatic=(props.snapshot.roomState.selectedConfig as {conductionMode?:string}|null)?.conductionMode==='automatic'
+  const {isHost,connected,busy,onEnd,onAction}=props
+  const roomPhase=props.snapshot.roomState.phase
+  useEffect(()=>{
+    if (!automatic || !isHost || !data || !sessionId) return
+    const tick=()=>{
+      const command=decideCityAutopilot({
+        game:data,now:Date.now(),host:isHost,connected,
+        playing:roomPhase==='playing',busy,
+        audioDone:completedAudioEvent===sessionId+':'+data.phaseEventId ||
+          (!isCityAutomaticNarratorArmed()&&!isCityAutomaticNarratorInterrupted())})
+      if(!command)return
+      const key=sessionId+':'+data.phaseRevision+':'+command
+      const last=commandAttempts.current.get(key)
+      if(last!==undefined && Date.now()-last<5000)return
+      commandAttempts.current.set(key,Date.now())
+      if(command==='END_GAME')void onEnd()
+      else void onAction(command,null)
+    }
+    tick()
+    const interval=window.setInterval(tick,350)
+    return ()=>window.clearInterval(interval)
+  },[automatic,isHost,connected,busy,roomPhase,onEnd,onAction,sessionId,data,completedAudioEvent])
   // Remount private action UI on phase change, but keep a single narration gate per GameSession.
   const key = [props.playerId, sessionId, data?.round, data?.step, props.connected].join(':')
   return <CidadeDormeImmersiveBody key={key} {...props} narrationGate={narration.gate}
     narratorEnabled={audioActivation===sessionId}
-    onNarratorEnabled={()=>setAudioActivation(sessionId)}/>
+    onNarratorEnabled={()=>setAudioActivation(sessionId)}
+    onNarrationDone={eventId=>setCompletedAudioEvent(sessionId+':'+eventId)}/>
 }
 function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected, onAction,
   onEnd, onBackToLobby, onReplay, onReconnect, onLeave, onClose, error,
-  narrationGate,narratorEnabled,onNarratorEnabled }: ImmersiveBodyProps) {
+  narrationGate,narratorEnabled,onNarratorEnabled,onNarrationDone }: ImmersiveBodyProps) {
   const root = useRef<HTMLDivElement>(null)
   const heading = useRef<HTMLHeadingElement>(null)
   const session = snapshot.roomState.currentGameSessionId
@@ -94,7 +124,8 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
   const [resultPage, setResultPage] = useState(0)
   const [menu, setMenu] = useState(false)
   const [confirmExit, setConfirmExit] = useState(false)
-  const [resultView, setResultView] = useState<'roles' | 'points'>('roles')
+  const [resultView, setResultView] = useState<'roles' | 'points' | 'history'>('roles')
+  const [clueVisible,setClueVisible]=useState(false)
   const blocked = busy || !connected || Boolean(data?.paused)
   const canSend = !blocked && (!sent || Boolean(error))
   const name = (id: string) => {
@@ -123,7 +154,7 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
   }, [])
   useEffect(() => {
     if (!intro) return
-    const timer = window.setTimeout(() => setIntro(false), 1600)
+    const timer = window.setTimeout(() => setIntro(false), 3200)
     return () => window.clearTimeout(timer)
   }, [intro])
   useEffect(() => { if (!intro && !roleOpen) heading.current?.focus({ preventScroll: true }) }, [intro, roleOpen, data?.step])
@@ -153,13 +184,15 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
     return () => { window.removeEventListener('galerows:back', back); document.removeEventListener('keydown', key) }
   }, [roleOpen, menu])
   if (!data) return <div ref={root} className="cdg-root" data-testid="cidade-immersive"><p role="status">Retomando a partida…</p></div>
+  const autoGame=(snapshot.roomState.selectedConfig as {conductionMode?:string}|null)?.conductionMode==='automatic'
   const alive = data.players.filter(player => player.alive)
   const night = ['reveal', 'killer-turn', 'doctor-turn', 'detective-turn'].includes(data.step)
   const activeTurn = ['killer-turn', 'doctor-turn', 'detective-turn', 'voting'].includes(data.step)
   const correctRole = data.step === 'killer-turn' ? Boolean(mine?.activeKiller ?? (mine?.role === 'killer'))
     : data.step === 'doctor-turn' ? mine?.role === 'doctor'
       : data.step === 'detective-turn' ? mine?.role === 'detective' : data.step === 'voting'
-  const canAct = Boolean(mine?.canAct && correctRole && mine.alive && !mine.voted && canSend)
+  const canAct = Boolean(mine?.canAct && correctRole && mine.alive && !mine.voted && canSend
+    && (!autoGame || data.phaseReady !== false))
   const targets = alive.filter(player => {
     if (!mine) return false
     if (data.step === 'killer-turn' && (player.id === playerId || mine.killerTeammates?.includes(player.id))) return false
@@ -186,7 +219,8 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
   }
   const roleRows = data.finalRoles ?? []
   const scoreRows = snapshot.roomState.competition?.standings ?? []
-  const rowsCount = resultView === 'roles' ? roleRows.length : scoreRows.length
+  const rowsCount = resultView === 'roles' ? roleRows.length : resultView === 'history'
+    ? data.history?.length ?? 0 : scoreRows.length
   const resultPages = Math.max(1, Math.ceil(rowsCount / pageSize))
   const currentResultPage = Math.min(resultPage, resultPages - 1)
   const outcome = data.winner === 'city' ? 'A cidade resistiu.'
@@ -206,6 +240,8 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
           <div className="cdg-atmosphere-slot"><CidadeDormeAtmosphere step={data.step}
             sessionId={session || ''} phaseEventId={data.phaseEventId || ''} host={isHost}
             mayorMode={false} connected={connected} paused={Boolean(data.paused)}
+            autoMode={(snapshot.roomState.selectedConfig as {conductionMode?:string}|null)?.conductionMode==='automatic'}
+            publicState={data} nameOf={name} onNarrationDone={onNarrationDone}
             narrationGate={narrationGate} narratorEnabled={narratorEnabled}
             onNarratorEnabled={onNarratorEnabled}/></div></div>
         {data.step === 'reveal' && <section className="cdg-center" aria-label="Confirmar identidade">
@@ -232,8 +268,25 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
             {night ? <Moon className="cdg-scene-icon" size={64} strokeWidth={1.1}/> : <Vote className="cdg-scene-icon" size={60} strokeWidth={1.1}/>}
             <h2>{mine?.voted ? 'Seu voto foi registrado.' : !mine?.alive ? 'Você acompanha a cidade.' : 'Aguarde em silêncio.'}</h2>
             <p>{data.step === 'voting' ? `${data.votedCount} de ${data.eligibleVoters} votos recebidos.`
-              : 'A próxima etapa começa após a ação secreta.'}</p></section>}
+              : autoGame && data.phaseReady===false
+                ? 'Aguarde o narrador terminar a instrução antes de agir.'
+                : 'A próxima etapa começa após a ação secreta.'}</p></section>}
         </>}
+        {data.step === 'detective-result' && <section className="cdg-center" aria-label="Resultado confidencial da investigação">
+          <Eye className="cdg-scene-icon" size={58} strokeWidth={1.1}/>
+          {mine?.role==='detective' && mine?.investigation && connected
+            ? <><h2>Resultado da investigação</h2>
+              {clueVisible ? <><p role="status">{name(mine.investigation.targetId)} é
+                <strong> {mine.investigation.result==='suspect'?'suspeito':'inocente'}</strong>.</p>
+                <p>Guarde a informação. Não mostre sua tela para a cidade.</p>
+                {!data.phaseReady && <p role="status">Aguarde o narrador terminar antes de voltar a dormir.</p>}
+                <ActionButton disabled={blocked||!data.phaseReady} onClick={()=>send('ACK_INVESTIGATION',null,true)}>
+                  Entendi, vou dormir <Check size={17}/></ActionButton>
+              </> : <><p>Esta pista é só sua. Confira longe dos outros jogadores.</p>
+                <ActionButton onClick={()=>setClueVisible(true)}>Ver minha pista <Eye size={17}/></ActionButton></>}
+              </>
+            : <><h2>A cidade ainda dorme.</h2><p>O Detetive está lendo uma pista confidencial.</p></>}
+        </section>}
         {data.step === 'morning' && <section className="cdg-center"><Sun className="cdg-scene-icon" size={64} strokeWidth={1.1}/>
           <h2>{data.nightResult?.eliminatedId ? `${name(data.nightResult.eliminatedId)} não resistiu à noite.` : 'Todos sobreviveram à noite.'}</h2>
           <p>A escolha dos assassinos e a proteção continuam em segredo.</p></section>}
@@ -247,31 +300,62 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
           <div className="cdg-result-switch" role="group" aria-label="Detalhes do resultado">
             <button type="button" aria-pressed={resultView === 'roles'} onClick={() => { setResultView('roles'); setResultPage(0) }}>Papéis</button>
             <button type="button" aria-pressed={resultView === 'points'} onClick={() => { setResultView('points'); setResultPage(0) }}>Placar da sala</button>
+            <button type="button" aria-pressed={resultView === 'history'} onClick={() => { setResultView('history'); setResultPage(0) }}>Histórico das rodadas</button>
           </div>
-          <div className="cdg-result-list" aria-label={resultView === 'roles' ? 'Papéis revelados' : 'Placar da sala'}>
-            {resultView === 'roles' ? roleRows.slice(currentResultPage * pageSize, (currentResultPage + 1) * pageSize)
+          {resultView==='history' && Boolean(data.historyOmittedRounds) &&
+            <p className="cdg-history-disclaimer" role="note">Mostrando as últimas {data.history?.length} rodadas.
+              {` ${data.historyOmittedRounds} rodada(s) antiga(s) não aparecem neste resumo para preservar a conexão local.`}</p>}
+          {resultView==='history' && Boolean(data.historyOmittedRounds) &&
+            <p className="cdg-auto-note" role="status">{data.historyOmittedRounds} rodadas anteriores não exibidas por limite de rede.</p>}
+          <div className="cdg-result-list" aria-label={resultView === 'roles' ? 'Papéis revelados' : resultView==='history'?'Histórico das rodadas':'Placar da sala'}>
+            {resultView==='history' ? (data.history ?? []).slice(currentResultPage * pageSize,(currentResultPage+1)*pageSize)
+              .map(entry=><section key={entry.round} className="cdg-history-round">
+                <strong>Rodada {entry.round}</strong>
+                <p>Assassino tentou matar: {entry.night.killerTargetId?name(entry.night.killerTargetId):'sem tentativa'}</p>
+                <p>Médico protegeu: {entry.night.doctorTargetId?name(entry.night.doctorTargetId):'não participou'}</p>
+                <p>{entry.night.savedByDoctor?'O Médico salvou a vítima. Ninguém morreu.':
+                  entry.night.eliminatedId?name(entry.night.eliminatedId)+' morreu durante a noite.':'Todos sobreviveram à noite.'}</p>
+                <p>Detetive investigou: {entry.night.detectiveTargetId?name(entry.night.detectiveTargetId):'não participou'}
+                  {entry.night.detectiveResult?' — '+(entry.night.detectiveResult==='suspect'?'suspeito':'inocente'):''}</p>
+                <p>{entry.vote?.kind==='tie'?'Votação: empate. Ninguém foi eliminado.':
+                  entry.vote?.eliminatedId?'Votação eliminou '+name(entry.vote.eliminatedId):'Sem votação nesta rodada.'}</p>
+                {entry.vote?.votes.map(v=><p key={v.voterId}>{name(v.voterId)} votou em {name(v.targetId)}</p>)}
+              </section>)
+              : resultView === 'roles' ? roleRows.slice(currentResultPage * pageSize, (currentResultPage + 1) * pageSize)
               .map(player => <div key={player.id}><span>{name(player.id)}</span><strong>{roleNames[player.role]}</strong></div>)
               : scoreRows.slice(currentResultPage * pageSize, (currentResultPage + 1) * pageSize)
                 .map(player => <div key={player.playerId}><span>{player.displayName}</span><strong>{player.points} pts</strong></div>)}
-          </div><Pager label={resultView === 'roles' ? 'Papéis' : 'Placar'} page={currentResultPage} pages={resultPages} onPage={setResultPage}/>
+          </div><Pager label={resultView === 'roles' ? 'Papéis' : resultView==='history'?'Rodadas':'Placar'}
+            page={currentResultPage} pages={resultPages} onPage={setResultPage}/>
         </>}
         {data.step !== 'summary' && data.players.some(player => !player.alive) &&
           <p className="cdg-fallen"><Shield size={14}/> Fora da partida: {data.players.filter(player => !player.alive)
             .map(player => `${name(player.id)}${player.revealedRole ? ` (${roleNames[player.revealedRole]})` : ''}`).join(', ')}</p>}
         <div className="cdg-actions">
-          {data.step === 'reveal' && isHost && <ActionButton disabled={blocked || data.seenCount !== data.totalPlayers}
+          {autoGame && isHost && snapshot.roomState.phase==='playing' &&
+            <p role="status" className="cdg-auto-note">{data.step==='reveal'
+              ? 'A primeira noite começará automaticamente quando todos confirmarem seus papéis.'
+              :data.step==='morning'?'A discussão começará automaticamente após a narração.'
+              :data.step==='discussion'?'O jogo abrirá a votação após o tempo de discussão.'
+              :data.step==='voting'?'Os votos serão apurados automaticamente quando todos votarem.'
+              :data.step==='vote-result'?'O resultado será anunciado antes da próxima noite.'
+              :data.step==='summary'?'O placar será atualizado automaticamente.'
+              :'O narrador está conduzindo a próxima etapa.'}</p>}
+          {data.step === 'reveal' && isHost && !autoGame && <ActionButton disabled={blocked || data.seenCount !== data.totalPlayers}
             onClick={() => send('START_NIGHT')}>Começar a primeira noite <ArrowRight size={17}/></ActionButton>}
           {canAct && <ActionButton disabled={!targetId || !targets.some(player => player.id === targetId)} onClick={submit}>
             {action.text} <ArrowRight size={17}/></ActionButton>}
-          {data.step === 'morning' && isHost && <ActionButton disabled={blocked} onClick={() => send('START_DISCUSSION')}>
+          {data.step === 'morning' && isHost && !autoGame && <ActionButton disabled={blocked} onClick={() => send('START_DISCUSSION')}>
             Abrir discussão <ArrowRight size={17}/></ActionButton>}
-          {data.step === 'discussion' && isHost && <ActionButton disabled={blocked} onClick={() => send('START_VOTE')}>
+          {data.step === 'discussion' && isHost && !autoGame && <ActionButton disabled={blocked} onClick={() => send('START_VOTE')}>
             Abrir votação <Vote size={17}/></ActionButton>}
-          {data.step === 'voting' && isHost && <ActionButton secondary disabled={blocked || data.votedCount !== data.eligibleVoters}
+          {data.step === 'voting' && isHost && !autoGame && <ActionButton secondary disabled={blocked || data.votedCount !== data.eligibleVoters}
             onClick={() => send('RESOLVE_VOTE')}>Apurar votação <ArrowRight size={17}/></ActionButton>}
-          {data.step === 'vote-result' && isHost && <ActionButton disabled={blocked} onClick={() => send('NEXT_NIGHT')}>
+          {data.step === 'vote-result' && isHost && !autoGame && <ActionButton disabled={blocked} onClick={() => send('NEXT_NIGHT')}>
             Próxima noite <Moon size={17}/></ActionButton>}
-          {data.step === 'summary' && (isHost ? snapshot.roomState.phase === 'playing'
+          {data.step === 'summary' && (isHost && autoGame && snapshot.roomState.phase==='playing'
+            ? <p role="status">O narrador está encerrando a partida e registrando a pontuação.</p>
+            : isHost ? snapshot.roomState.phase === 'playing'
             ? <ActionButton disabled={blocked} onClick={() => void onEnd()}>Finalizar partida e pontuar <ArrowRight size={17}/></ActionButton>
             : <><ActionButton disabled={blocked || !onReplay} onClick={() => void onReplay?.()}>Jogar novamente <ArrowRight size={17}/></ActionButton>
               <ActionButton secondary disabled={blocked} onClick={() => void onBackToLobby()}>Voltar com todos ao lobby <ArrowLeft size={17}/></ActionButton></>

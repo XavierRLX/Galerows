@@ -30,6 +30,7 @@ const stepCopy: Record<CidadeDormeLanPublic['step'], { overline: string; title: 
   reveal: { overline: 'PRÓLOGO · O SEGREDO', title: 'Descubra seu papel', intro: 'A cidade ainda está acordada. Veja sua identidade sem mostrar a ninguém.' },
   'killer-turn': { overline: 'NOITE · A SOMBRA', title: 'A cidade dorme.', intro: 'Os assassinos escolhem em silêncio quem será a vítima.' },
   'doctor-turn': { overline: 'NOITE · A PROTEÇÃO', title: 'Uma chance de salvar.', intro: 'O médico pode proteger uma pessoa nesta noite.' },
+  'detective-result': { overline: 'NOITE · PISTA', title: 'Resultado do Detetive', intro: 'Confirme a pista no próprio celular.' },
   'detective-turn': { overline: 'NOITE · A INVESTIGAÇÃO', title: 'Uma pista na escuridão.', intro: 'O detetive investiga uma pessoa. A resposta é só dele.' },
   morning: { overline: 'AMANHECER · A REVELAÇÃO', title: 'A cidade acordou.', intro: 'A noite terminou. Descubram o que aconteceu antes de conversar.' },
   discussion: { overline: 'DIA · O DEBATE', title: 'Quem parece suspeito?', intro: 'Conversem frente a frente. Observem cada história antes do voto.' },

@@ -3,7 +3,7 @@ import { cidadeDormeLanGame, type CidadeDormeLanPublic, type CidadeDormeLanPriva
 import { AuthoritativeRoomRuntimeV2, RoomLifecycleAdapter } from './persistentRoom'
 
 const config={enableDoctor:true,enableDetective:true,enableJester:false,revealRoleOnDeath:false,
-  conductionMode:'automatic' as const,killersCount:1}
+  killersCount:1}
 function session(overrides:Partial<typeof config>={}){
   let time=1700000000000, next=0
   const runtime=new AuthoritativeRoomRuntimeV2({roomId:'night-stage',hostPlayerId:'host',hostConnectionId:'conn-host',
