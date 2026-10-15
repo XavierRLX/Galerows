@@ -65,7 +65,8 @@ function CidadeDormeLanBody({ snapshot, playerId, isHost, busy, connected, onAct
   const options = alive.filter(player => {
     if (!mine) return false
     if (data.step === 'killer-turn' && (player.id === playerId || mine.killerTeammates?.includes(player.id))) return false
-    if (data.step === 'doctor-turn' && player.id === playerId) return false
+    if (data.step === 'doctor-turn') return mine.doctorEligibleTargetIds
+      ? mine.doctorEligibleTargetIds.includes(player.id) : player.id !== playerId
     if (data.step === 'detective-turn' && player.id === playerId) return false
     return true
   })

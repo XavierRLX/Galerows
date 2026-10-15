@@ -173,6 +173,9 @@ export class RoomLifecycleAdapter {
       if (connected.length < game.minPlayers || connected.length > game.maxPlayers) {
         return { ok: false, error: 'invalid_player_count' }
       }
+      if (game.validateForParticipants && !game.validateForParticipants(validated.config, connected.length)) {
+        return { ok: false, error: 'invalid_config' }
+      }
       const participants = connected.map(member => member.playerId)
       const ordinal = state.sessionOrdinal + 1
       const gameSessionId = `${roomId}:game-${ordinal}`

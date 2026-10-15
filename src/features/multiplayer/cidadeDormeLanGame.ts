@@ -1,8 +1,8 @@
 import {
   assignRolesToPlayers, canDoctorProtect, checkWinCondition, getActiveKiller, getMurderOrder, resolveNight, resolveVotingOutcome,
 } from '../cidade-dorme/cidadeDorme.rules'
-import { createDefaultCidadeDormeSettings, getRecommendedKillersCount } from '../cidade-dorme/cidadeDorme.setup'
-import type { GameSettings, GameWinner, Player, RoleKey, WinReason } from '../cidade-dorme/cidadeDorme.types'
+import { createDefaultCidadeDormeSettings } from '../cidade-dorme/cidadeDorme.setup'
+import type { DoctorSelfProtectLimit, GameSettings, GameWinner, Player, RoleKey, WinReason } from '../cidade-dorme/cidadeDorme.types'
 import { defineMultiplayerGame } from './multiplayerGames'
 
 export const CIDADE_DORME_LAN_GAME_ID = 'cidade-dorme'
@@ -11,6 +11,11 @@ export interface CidadeDormeLanConfig {
   enableDetective: boolean
   enableJester: boolean
   revealRoleOnDeath: boolean
+  /** Same editable options as the single-device game; absent values retain legacy defaults. */
+  killersCount?: number
+  doctorCanSelfProtect?: boolean
+  doctorSelfProtectLimit?: DoctorSelfProtectLimit
+  doctorCanRepeatProtection?: boolean
   /** Optional for legacy LAN room configs: absent means everyone plays. */
   conductionMode?: 'automatic' | 'mayor'
 }
@@ -39,6 +44,8 @@ export interface CidadeDormeLanPrivate {
   killerTeammates?: string[]
   successionOrder?: string[]
   activeKiller?: boolean
+  /** Server-validated options for the doctor, including permitted self-protection. */
+  doctorEligibleTargetIds?: string[]
   investigation?: { targetId: string; result: 'suspect' | 'innocent' }
   voted: boolean
   canAct: boolean
@@ -55,6 +62,7 @@ interface LanState {
   night: { killerTarget?: string; protectedTarget?: string; detectiveTarget?: string }
   investigation: { targetId: string; result: 'suspect' | 'innocent' } | null
   previousProtectedTarget: string | null
+  doctorSelfProtectCount: number
   nightResult: { eliminatedId: string | null } | null
   votes: Record<string, string>
   voteResult: { kind: 'tie' | 'eliminated'; eliminatedId?: string } | null
@@ -64,14 +72,28 @@ interface LanState {
 }
 const isRecord = (x: unknown): x is Record<string, unknown> =>
   x !== null && typeof x === 'object' && !Array.isArray(x)
+const requiredBooleans = ['enableDoctor','enableDetective','enableJester','revealRoleOnDeath'] as const
+const optionalFields = ['conductionMode','killersCount','doctorCanSelfProtect',
+  'doctorSelfProtectLimit','doctorCanRepeatProtection']
 function validateConfig(raw: unknown): raw is CidadeDormeLanConfig {
   return isRecord(raw)
-    && Object.keys(raw).every(field => ['enableDoctor', 'enableDetective', 'enableJester',
-      'revealRoleOnDeath', 'conductionMode'].includes(field))
-    && (Object.keys(raw).length === 4 || Object.keys(raw).length === 5)
-    && ['enableDoctor', 'enableDetective', 'enableJester', 'revealRoleOnDeath']
-      .every(field => typeof raw[field] === 'boolean')
+    && Object.keys(raw).every(field => [...requiredBooleans,...optionalFields].includes(field))
+    && requiredBooleans.every(field => typeof raw[field] === 'boolean')
     && (raw.conductionMode === undefined || raw.conductionMode === 'mayor' || raw.conductionMode === 'automatic')
+    && (raw.killersCount === undefined || (Number.isInteger(raw.killersCount)
+      && (raw.killersCount as number) >= 1 && (raw.killersCount as number) <= 3))
+    && (raw.doctorCanSelfProtect === undefined || typeof raw.doctorCanSelfProtect === 'boolean')
+    && (raw.doctorCanRepeatProtection === undefined || typeof raw.doctorCanRepeatProtection === 'boolean')
+    && (raw.doctorSelfProtectLimit === undefined || raw.doctorSelfProtectLimit === 'unlimited'
+      || raw.doctorSelfProtectLimit === 1 || raw.doctorSelfProtectLimit === 2
+      || raw.doctorSelfProtectLimit === 3)
+}
+/** Validate the actual set of participants, never just the room membership count. */
+function validComposition(config: CidadeDormeLanConfig, playerCount: number) {
+  const defaults = createDefaultCidadeDormeSettings(playerCount)
+  const killers = config.killersCount ?? defaults.killersCount
+  return killers + Number(config.enableDoctor) + Number(config.enableDetective)
+    + Number(config.enableJester) <= playerCount
 }
 const find = (state: LanState, id: string): Player | undefined => state.players.find(p => p.id === id)
 const alive = (state: LanState) => state.players.filter(p => p.status === 'alive')
@@ -113,21 +135,27 @@ function validTarget(state: LanState, targetId: unknown): targetId is string {
 }
 export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, LanState>({
   gameId: CIDADE_DORME_LAN_GAME_ID, minPlayers: 4, maxPlayers: 12,
+  validateForParticipants: (config, n) => validComposition(config,n),
   validateConfig: raw => validateConfig(raw) ? { ok: true, config: {
     enableDoctor: raw.enableDoctor, enableDetective: raw.enableDetective,
     enableJester: raw.enableJester, revealRoleOnDeath: raw.revealRoleOnDeath,
     ...(raw.conductionMode ? { conductionMode: raw.conductionMode } : {}),
+    ...(raw.killersCount !== undefined ? { killersCount: raw.killersCount } : {}),
+    ...(raw.doctorCanSelfProtect !== undefined ? { doctorCanSelfProtect: raw.doctorCanSelfProtect } : {}),
+    ...(raw.doctorSelfProtectLimit !== undefined ? { doctorSelfProtectLimit: raw.doctorSelfProtectLimit } : {}),
+    ...(raw.doctorCanRepeatProtection !== undefined ? { doctorCanRepeatProtection: raw.doctorCanRepeatProtection } : {}),
   } } : { ok: false },
   createInitialState: (config, participantIds, ctx) => {
     const recommended = createDefaultCidadeDormeSettings(participantIds.length)
     const settings: GameSettings = { ...recommended, ...config,
-      killersCount: getRecommendedKillersCount(participantIds.length) }
+      playerCount: participantIds.length, themeId: recommended.themeId }
     const players = assignRolesToPlayers(participantIds.map((id, i) => ({
       id, name: `Jogador ${i + 1}`,
     })), settings, ctx.random)
     return { config, settings, players, murderOrder: getMurderOrder(players, ctx.random),
       step: 'reveal', paused: false, round: 1, seen: [], night: {},
-      investigation: null, previousProtectedTarget: null, nightResult: null, votes: {},
+      investigation: null, previousProtectedTarget: null, doctorSelfProtectCount: 0,
+      nightResult: null, votes: {},
       voteResult: null, winner: null, winReason: null, winnerPlayerId: null }
   },
   applyCommand: (state, action) => {
@@ -172,8 +200,9 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       if (state.step !== 'doctor-turn') return error('invalid_phase')
       if (player.status !== 'alive' || player.roleKey !== 'doctor') return error('unauthorized')
       if (!validTarget(state, p) || !canDoctorProtect(player.id, p, state.settings,
-        state.previousProtectedTarget ?? undefined)) return error('invalid_payload')
-      const next: LanState = { ...state, night: { ...state.night, protectedTarget: p } }
+        state.previousProtectedTarget ?? undefined, state.doctorSelfProtectCount)) return error('invalid_payload')
+      const next: LanState = { ...state, night: { ...state.night, protectedTarget: p },
+        doctorSelfProtectCount: state.doctorSelfProtectCount + Number(p === player.id) }
       return { accepted: true, changed: true,
         state: livingRole(state, 'detective').length ? { ...next, step: 'detective-turn' as const }
           : resolveCurrentNight(next) }
@@ -276,6 +305,10 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
         successionOrder: [...state.murderOrder],
         activeKiller: killerActor(state)?.id === playerId,
       } : {}),
+      ...(own.roleKey === 'doctor' && own.status === 'alive' && state.step === 'doctor-turn'
+        ? { doctorEligibleTargetIds: alive(state).filter(target=>canDoctorProtect(own.id,target.id,
+          state.settings,state.previousProtectedTarget??undefined,state.doctorSelfProtectCount))
+          .map(target=>target.id) } : {}),
       ...(own.roleKey === 'detective' && state.investigation && state.step !== 'summary'
         ? { investigation: { ...state.investigation } } : {}),
       voted: Object.hasOwn(state.votes, playerId),

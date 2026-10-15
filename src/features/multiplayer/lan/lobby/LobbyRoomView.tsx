@@ -12,6 +12,8 @@ import { PistaUnicaLanRound } from './PistaUnicaLanRound'
 import { CidadeDormeLanRound } from './CidadeDormeLanRound'
 import { CidadeDormeMayorPanel } from './CidadeDormeMayorPanel'
 import type { PistaUnicaCategory } from '../../../pista-unica/pistaUnica.types'
+import type { DoctorSelfProtectLimit } from '../../../cidade-dorme/cidadeDorme.types'
+import { getRecommendedKillersCount } from '../../../cidade-dorme/cidadeDorme.setup'
 import type { ImpostorMode, ConversationMode } from '../../../impostor-da-palavra/impostorDaPalavra.types'
 import type { LobbyGameId, LobbyRole } from './lobbyView'
 import { LanScreenHeader } from './LanScreenHeader'
@@ -132,7 +134,23 @@ export function LobbyRoomView({
     enableDoctor: typeof saved?.enableDoctor === 'boolean' ? saved.enableDoctor : true,
     enableDetective: typeof saved?.enableDetective === 'boolean' ? saved.enableDetective : true,
     enableJester: saved?.enableJester === true, revealRoleOnDeath: saved?.revealRoleOnDeath === true,
+    doctorCanSelfProtect: saved?.doctorCanSelfProtect === true,
+    doctorCanRepeatProtection: saved?.doctorCanRepeatProtection === true,
   })
+  const [cidadeKillersOverride, setCidadeKillersOverride] = useState<1|2|3|null>(()=>
+    saved?.killersCount===1||saved?.killersCount===2||saved?.killersCount===3
+      ? saved.killersCount as 1|2|3 : null)
+  const [cidadeSelfLimit,setCidadeSelfLimit]=useState<DoctorSelfProtectLimit>(()=>
+    saved?.doctorSelfProtectLimit===2||saved?.doctorSelfProtectLimit===3
+      ||saved?.doctorSelfProtectLimit==='unlimited'
+      ? saved.doctorSelfProtectLimit : 1)
+  const cityParticipantCount=summary.members.filter(m=>m.connected &&
+    (cidadeMode!=='mayor'||m.role!=='host')).length
+  const cityDefaultKillers=getRecommendedKillersCount(Math.max(4,cityParticipantCount))
+  const cityKillers=cidadeKillersOverride??cityDefaultKillers
+  const citySpecialRoles=cityKillers+Number(cidadeRoles.enableDoctor)
+    +Number(cidadeRoles.enableDetective)+Number(cidadeRoles.enableJester)
+  const cityCompositionInvalid=cityParticipantCount>=4 && citySpecialRoles>cityParticipantCount
   const [showCatalog, setShowCatalog] = useState(false)
   const [showPlayers, setShowPlayers] = useState(false)
   const [showStandings, setShowStandings] = useState(false)
@@ -393,6 +411,16 @@ export function LobbyRoomView({
                 <p>{cidadeMode === 'mayor'
                   ? 'O anfitrião conduz, mas não recebe papel nem vota. São necessários 4 a 12 jogadores além do prefeito.'
                   : 'Todos participam, inclusive o anfitrião. O aplicativo conduzirá as fases.'}</p>
+                <strong>Equipe assassina</strong>
+                <p>Escolha de 1 a 3 integrantes. Somente um assassino age por noite; os Traidores assumem na ordem secreta.</p>
+                <div className="pl03-cidade-settings" role="group" aria-label="Quantidade de integrantes assassinos">
+                  {([1,2,3] as const).map(count=><button type="button" key={count}
+                    aria-label={String(count)+' integrantes assassinos'}
+                    aria-pressed={cityKillers===count} className={cityKillers===count?'is-selected':''}
+                    disabled={busy||!connected} onClick={()=>setCidadeKillersOverride(count)}>
+                    {count===1?'1 Assassino':count+' integrantes: 1 Assassino + '+(count-1)+' Traidor'+(count===3?'es':'')}
+                  </button>)}
+                </div>
                 <strong>Configure os papéis da galera</strong>
                 <div className="pl03-cidade-settings" aria-label="Papéis do Cidade Dorme">
                   {([
@@ -407,10 +435,40 @@ export function LobbyRoomView({
                     <Check size={15} aria-hidden="true" /> {label}
                   </button>)}
                 </div>
+                <details className="pl03-cidade-advanced">
+                  <summary>Regras do médico (opcionais)</summary>
+                  <p>Defina autoproteção e se o médico pode proteger a mesma pessoa em noites seguidas.</p>
+                  <div className="pl03-cidade-settings">
+                    {([['doctorCanSelfProtect','Médico pode se proteger'],
+                      ['doctorCanRepeatProtection','Médico pode repetir proteção']] as const).map(([field,label])=>
+                      <button type="button" key={field} disabled={busy||!connected||!cidadeRoles.enableDoctor}
+                        aria-pressed={cidadeRoles[field]} className={cidadeRoles[field]?'is-selected':''}
+                        onClick={()=>setCidadeRoles(current=>({...current,[field]:!current[field]}))}>
+                        {label}
+                      </button>)}
+                  </div>
+                  {cidadeRoles.enableDoctor && cidadeRoles.doctorCanSelfProtect && <>
+                    <p>Limite de autoproteção</p>
+                    <div className="pl03-cidade-settings" role="group" aria-label="Limite de autoproteção">
+                      {([1,2,3,'unlimited'] as const).map(limit=><button key={limit} type="button"
+                        aria-label={'Limite de autoproteção: '+(limit==='unlimited'?'sem limite':limit)}
+                        aria-pressed={cidadeSelfLimit===limit}
+                        className={cidadeSelfLimit===limit?'is-selected':''}
+                        disabled={busy||!connected} onClick={()=>setCidadeSelfLimit(limit)}>
+                        {limit==='unlimited'?'Sem limite':String(limit)+' vez'+(limit===1?'':'es')}
+                      </button>)}
+                    </div>
+                  </>}
+                </details>
                 <p>{cidadeMode === 'mayor' ? '4 a 12 celulares de jogadores, além do prefeito, que não recebe papel.'
                   : '4 a 12 celulares. Todos recebem um papel secreto. A noite e os votos são resolvidos pela rede local.'}</p>
-                <button type="button" className="pl03-secondary-btn" disabled={busy || !connected}
-                  onClick={() => void onConfigure({ ...cidadeRoles, conductionMode: cidadeMode })}>
+                <p>{cityKillers===1?'1 Assassino':'1 Assassino + '+(cityKillers-1)+' Traidor'+(cityKillers===3?'es':'')}.
+                  Total de papéis especiais: {citySpecialRoles} de {cityParticipantCount} jogadores conectados.</p>
+                {cityCompositionInvalid && <p className="pl03-pista-alert" role="alert">Os papéis especiais excedem os jogadores. Reduza a equipe assassina ou desative um papel opcional.</p>}
+                <button type="button" className="pl03-secondary-btn"
+                  disabled={busy || !connected || cityCompositionInvalid}
+                  onClick={() => void onConfigure({ ...cidadeRoles, conductionMode: cidadeMode,
+                    killersCount:cityKillers,doctorSelfProtectLimit:cidadeSelfLimit })}>
                   <Check size={17} aria-hidden="true" /> Salvar papéis da Cidade Dorme
                 </button>
               </div> : isHost ? <div className="pl03-settings">

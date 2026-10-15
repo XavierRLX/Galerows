@@ -64,6 +64,18 @@ describe('G7 Cidade Dorme LAN — privacy and phases',()=>{
     expect(screen.getByText('Suspeito')).toBeInTheDocument()
     expect(detective.onAction).not.toHaveBeenCalled()
   })
+  it('allows the doctor to choose themselves only when the server-authorized target list includes them',()=>{
+    const allowed=frame('doctor-turn','doctor')
+    allowed.privateState!.data={...(allowed.privateState!.data as Record<string,unknown>),
+      doctorEligibleTargetIds:['guest','third']}
+    const scene=show(allowed)
+    expect(screen.getByRole('button',{name:'Selecionar Jogador 2'})).toBeInTheDocument()
+    expect(screen.getByRole('button',{name:'Selecionar Jogador 3'})).toBeInTheDocument()
+    expect(screen.queryByRole('button',{name:'Selecionar Jogador 4'})).toBeNull()
+    fireEvent.click(screen.getByRole('button',{name:'Selecionar Jogador 2'}))
+    fireEvent.click(screen.getByRole('button',{name:'Proteger pessoa'}))
+    expect(scene.onAction).toHaveBeenCalledWith('PROTECT',{playerId:'guest'})
+  })
   it('lets host advance after acknowledging own role without waiting for another remount',()=>{
     const initial=frame('reveal','citizen')
     const host=show(initial,true)

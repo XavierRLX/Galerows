@@ -22,6 +22,11 @@ export function LobbyRulesSummary({ gameId, config }: { gameId: LobbyGameId | nu
       ? 'Sem cronômetro' : `${Math.round(rules.timerSeconds / 60)} min para conversar`)
   } else if (gameId === 'cidade-dorme') {
     lines.push(rules.conductionMode === 'mayor' ? 'Prefeito humano (não joga)' : 'Todos jogam — narrador automático')
+    if (typeof rules.killersCount === 'number') lines.push(rules.killersCount===1?'1 Assassino':
+      '1 Assassino + '+(Number(rules.killersCount)-1)+' Traidor'+(rules.killersCount===3?'es':''))
+    lines.push('Médico pode se proteger: '+(rules.doctorCanSelfProtect?'sim':'não'))
+    if (rules.doctorCanSelfProtect) lines.push('Autoproteções: '+(rules.doctorSelfProtectLimit==='unlimited'?'sem limite':rules.doctorSelfProtectLimit??1))
+    lines.push('Proteção consecutiva: '+(rules.doctorCanRepeatProtection?'permitida':'não permitida'))
     lines.push(`Médico: ${rules.enableDoctor ? 'sim' : 'não'} · Detetive: ${rules.enableDetective ? 'sim' : 'não'}`)
     lines.push(`Coringa: ${rules.enableJester ? 'sim' : 'não'} · Revelar ao morrer: ${rules.revealRoleOnDeath ? 'sim' : 'não'}`)
   }

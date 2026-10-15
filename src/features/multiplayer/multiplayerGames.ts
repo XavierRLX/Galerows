@@ -15,6 +15,8 @@ export interface MultiplayerGameDefinition<TConfig, TState> {
   minPlayers: number
   maxPlayers: number
   validateConfig(input: unknown): { ok: true; config: TConfig } | { ok: false }
+  /** Verify the role composition against the exact playable participant count before starting. */
+  validateForParticipants?(config: TConfig, participantCount: number): boolean
   createInitialState(config: TConfig, participantIds: readonly string[], context: MultiplayerGameContext): TState
   applyCommand(state: Readonly<TState>, action: MultiplayerGameAction,
     context: MultiplayerGameContext): MultiplayerGameTransition<TState>
@@ -32,6 +34,7 @@ export interface RegisteredMultiplayerGame {
   minPlayers: number
   maxPlayers: number
   validateConfig(input: unknown): { ok: true; config: unknown } | { ok: false }
+  validateForParticipants?: (config: unknown, participantCount: number) => boolean
   createInitialState(config: unknown, participantIds: readonly string[], context: MultiplayerGameContext): unknown
   applyCommand(state: unknown, action: MultiplayerGameAction,
     context: MultiplayerGameContext): MultiplayerGameTransition<unknown>
@@ -45,6 +48,8 @@ export function defineMultiplayerGame<TConfig, TState>(definition: MultiplayerGa
   return {
     gameId: definition.gameId, minPlayers: definition.minPlayers, maxPlayers: definition.maxPlayers,
     validateConfig: input => definition.validateConfig(input),
+    ...(definition.validateForParticipants ? { validateForParticipants: (config: unknown, count: number) =>
+      definition.validateForParticipants!(config as TConfig,count) } : {}),
     createInitialState: (config, participants, context) => definition.createInitialState(config as TConfig, participants, context),
     applyCommand: (state, action, context) => definition.applyCommand(state as TState, action, context),
     projectPublic: state => definition.projectPublic(state as TState),
