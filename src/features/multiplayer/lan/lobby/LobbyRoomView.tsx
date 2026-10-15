@@ -10,6 +10,7 @@ import { ImpostorLanRound } from './ImpostorLanRound'
 import { ImpostorImmersiveRound } from './ImpostorImmersiveRound'
 import { PistaUnicaLanRound } from './PistaUnicaLanRound'
 import { CidadeDormeLanRound } from './CidadeDormeLanRound'
+import { CidadeDormeMayorPanel } from './CidadeDormeMayorPanel'
 import type { PistaUnicaCategory } from '../../../pista-unica/pistaUnica.types'
 import type { ImpostorMode, ConversationMode } from '../../../impostor-da-palavra/impostorDaPalavra.types'
 import type { LobbyGameId, LobbyRole } from './lobbyView'
@@ -38,6 +39,7 @@ export interface LobbyRoomViewProps {
   onStart: Action
   onGameAction: Action
   onGameCommand?: (type: string, payload: unknown) => void | Promise<void>
+  onRoomCommand?: (type: string, payload: unknown) => void | Promise<void>
   onEnd: Action
   onBackToLobby: Action
   onFinishSession?: Action
@@ -108,7 +110,7 @@ function RoomCompetitionPanel({ competition, isHost, canFinish, onFinishSession 
 
 export function LobbyRoomView({
   snapshot, role, playerId, busy, connected = true, error, roomCode, inviteQr,
-  onSelect, onConfigure, onReady, onStart, onGameAction, onGameCommand, onEnd, onBackToLobby,
+  onSelect, onConfigure, onReady, onStart, onGameAction, onGameCommand, onRoomCommand, onEnd, onBackToLobby,
   onFinishSession, onReconnect, onLeave, onClose, onRefreshInvite, onBrowseGames, onBack, onRename, onReplay,
 }: LobbyRoomViewProps) {
   const summary = lobbySummary(snapshot, role, playerId)
@@ -456,9 +458,15 @@ export function LobbyRoomView({
                 busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
                 onEnd={() => void onEnd()} />}
             {summary.phase === 'playing' && summary.gameId === 'cidade-dorme' && onGameCommand &&
-              <CidadeDormeLanRound snapshot={snapshot} playerId={playerId} isHost={isHost}
-                busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
-                onEnd={() => void onEnd()} />}
+              (summary.dedicatedMayor && isHost && onRoomCommand
+                ? <CidadeDormeMayorPanel key={`${snapshot.roomState.currentGameSessionId}:${connected}`}
+                    snapshot={snapshot} busy={busy} connected={connected}
+                    onGameCommand={(type,payload)=>void onGameCommand(type,payload)}
+                    onRoomCommand={(type,payload)=>void onRoomCommand(type,payload)}
+                    onEnd={()=>void onEnd()}/>
+                : <CidadeDormeLanRound snapshot={snapshot} playerId={playerId} isHost={isHost}
+                    busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
+                    onEnd={() => void onEnd()} />)}
             {summary.phase === 'playing' && summary.gameId !== 'impostor-da-palavra'
               && summary.gameId !== 'pista-unica' && summary.gameId !== 'cidade-dorme' && <div className="pl03-in-game">
               {summary.gameId === 'counter' ? <div className="pl03-score"><span>CONTAGEM DA GALERA</span>

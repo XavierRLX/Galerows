@@ -13,7 +13,7 @@ type Receipt = { command: RoomCommandV2; result: RoomCommandResultV2 }
 function isDedicatedCityMayor(gameId: string | null, config: unknown): boolean {
   return gameId === 'cidade-dorme' && field(config, 'conductionMode') === 'mayor'
 }
-const MAYOR_GAME_COMMANDS = new Set(['START_NIGHT', 'START_DISCUSSION', 'START_VOTE', 'RESOLVE_VOTE', 'NEXT_NIGHT'])
+const MAYOR_GAME_COMMANDS = new Set(['START_NIGHT', 'START_DISCUSSION', 'START_VOTE', 'RESOLVE_VOTE', 'NEXT_NIGHT', 'PAUSE_CITY', 'RESUME_CITY'])
 
 const RECENT_COMMAND_ID_LIMIT = 64
 interface Membership {
@@ -23,6 +23,9 @@ interface Membership {
   ready: boolean
   participation: 'active' | 'waiting'
   displayName?: string
+  /** Restricted to the host of a live City mayor GameSession; cleared on disconnect. */
+  mayorConsultationSessionId?: string
+  mayorConsultationExpiresAt?: number
   nextClientSeq: number
   recentCommandIds: string[]
   lastReceipt?: Receipt
@@ -88,6 +91,23 @@ export class RoomLifecycleAdapter {
     // The champion ceremony is terminal for this tournament, not for the WSS
     // connection: existing members can still see standings and exit gracefully.
     if (state.competition.status === 'finished') return { ok: false, error: 'invalid_phase' }
+    if (command.type === 'OPEN_MAYOR_SECRETS' || command.type === 'CLOSE_MAYOR_SECRETS') {
+      if (command.payload !== null) return { ok: false, error: 'invalid_payload' }
+      if (state.phase !== 'playing' || !state.session) return { ok: false, error: 'invalid_phase' }
+      if (actor.role !== 'host'
+        || !isDedicatedCityMayor(state.session.gameId, state.session.config)) {
+        return { ok: false, error: 'unauthorized' }
+      }
+      if (command.type === 'OPEN_MAYOR_SECRETS'
+        && !this.games.get(state.session.gameId)?.projectModerator) {
+        return { ok: false, error: 'unauthorized' }
+      }
+      const next = command.type === 'OPEN_MAYOR_SECRETS' ? state.session.gameSessionId : undefined
+      const changed = command.type === 'OPEN_MAYOR_SECRETS' || actor.mayorConsultationSessionId !== next
+      actor.mayorConsultationSessionId = next
+      actor.mayorConsultationExpiresAt = next ? context.clock.now()+30_000 : undefined
+      return { ok: true, candidate: { state, members, changed } }
+    }
     if (command.type === 'SET_DISPLAY_NAME') {
       const name = field(command.payload, 'name')
       if (typeof name !== 'string' || !name.trim() || name.trim().length > 32
@@ -318,6 +338,8 @@ export class AuthoritativeRoomRuntimeV2 {
     if (!member) return { ok: false, error: 'unauthorized' }
     const members = cloneMembers(this.members)
     members.get(member.playerId)!.connectionId = null
+    members.get(member.playerId)!.mayorConsultationSessionId = undefined
+    members.get(member.playerId)!.mayorConsultationExpiresAt = undefined
     const prepared = this.preflight(this.state, members, this.revision + 1)
     if (!prepared.ok) return { ok: false, error: prepared.error }
     this.members = members; this.revision++
@@ -435,8 +457,16 @@ export class AuthoritativeRoomRuntimeV2 {
     const game = session ? this.adapter.game(session.gameId)! : null
     const gamePublicState = session && game ? { gameSessionId: session.gameSessionId, gameId: session.gameId,
       data: game.projectPublic(clone(session.gameState)) } : null
-    const privateData = session && game && session.participantIds.includes(playerId)
+    const guestRole = session && game && session.participantIds.includes(playerId)
       ? game.projectPrivate(clone(session.gameState), playerId) : null
+    const authorizedMayor = session && game && state.phase === 'playing'
+      && isDedicatedCityMayor(session.gameId, session.config)
+      && members.get(playerId)?.role === 'host'
+      && members.get(playerId)?.connectionId !== null
+      && members.get(playerId)?.mayorConsultationSessionId === session.gameSessionId
+      && (members.get(playerId)?.mayorConsultationExpiresAt ?? 0) > this.context.clock.now()
+    const privateData = authorizedMayor && game.projectModerator
+      ? game.projectModerator(clone(session.gameState)) : guestRole
     return { protocolVersion: PERSISTENT_ROOM_PROTOCOL_VERSION, roomId: this.roomId, revision,
       roomState, gamePublicState, privateState: privateData === null || !session ? null
         : { gameSessionId: session.gameSessionId, gameId: session.gameId, data: privateData },

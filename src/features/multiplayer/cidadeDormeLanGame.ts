@@ -19,6 +19,7 @@ export type CidadeDormeLanStep = 'reveal' | 'killer-turn' | 'doctor-turn' | 'det
 export interface CidadeDormeLanPublic {
   step: CidadeDormeLanStep
   round: number
+  paused?: boolean
   seenCount: number
   totalPlayers: number
   players: { id: string; alive: boolean; revealedRole?: RoleKey }[]
@@ -48,6 +49,7 @@ interface LanState {
   players: Player[]
   murderOrder: string[]
   step: CidadeDormeLanStep
+  paused: boolean
   round: number
   seen: string[]
   night: { killerTarget?: string; protectedTarget?: string; detectiveTarget?: string }
@@ -124,7 +126,7 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       id, name: `Jogador ${i + 1}`,
     })), settings, ctx.random)
     return { config, settings, players, murderOrder: getMurderOrder(players, ctx.random),
-      step: 'reveal', round: 1, seen: [], night: {},
+      step: 'reveal', paused: false, round: 1, seen: [], night: {},
       investigation: null, previousProtectedTarget: null, nightResult: null, votes: {},
       voteResult: null, winner: null, winReason: null, winnerPlayerId: null }
   },
@@ -132,11 +134,20 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     const own = find(state, action.playerId)
     const host = action.role === 'host'
     const dedicatedMayor = host && state.config.conductionMode === 'mayor' && !own
-    const mayorCommands = ['START_NIGHT', 'START_DISCUSSION', 'START_VOTE', 'RESOLVE_VOTE', 'NEXT_NIGHT']
+    const mayorCommands = ['START_NIGHT', 'START_DISCUSSION', 'START_VOTE', 'RESOLVE_VOTE', 'NEXT_NIGHT',
+      'PAUSE_CITY', 'RESUME_CITY']
     if (!own && (!dedicatedMayor || !mayorCommands.includes(action.type))) return error('not_participant')
     const player = own ?? { id: action.playerId, roleKey: null, status: 'eliminated' as const }
     const payload = action.payload
     const p = isRecord(payload) ? payload.playerId : undefined
+    if (action.type === 'PAUSE_CITY' || action.type === 'RESUME_CITY') {
+      if (!host || state.config.conductionMode !== 'mayor') return error('unauthorized')
+      if (payload !== null || state.step === 'summary') return error('invalid_phase')
+      const paused = action.type === 'PAUSE_CITY'
+      return paused === state.paused ? { accepted: true, changed: false }
+        : { accepted: true, changed: true, state: { ...state, paused } }
+    }
+    if (state.paused) return error('invalid_phase')
     if (action.type === 'ACK_ROLE') {
       if (state.step !== 'reveal' || payload !== null) return error('invalid_phase')
       if (state.seen.includes(player.id)) return { accepted: true, changed: false }
@@ -227,7 +238,7 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
         : state.winner === 'killers' ? (state.murderOrder.includes(player.id) ? 2 : 0)
           : (!state.murderOrder.includes(player.id) && player.roleKey !== 'jester' ? 2 : 0)])) : null,
   projectPublic: (state): CidadeDormeLanPublic => ({
-    step: state.step, round: state.round, seenCount: state.seen.length,
+    step: state.step, paused: state.paused, round: state.round, seenCount: state.seen.length,
     totalPlayers: state.players.length,
     players: state.players.map(player => ({
       id: player.id, alive: player.status === 'alive',
@@ -243,6 +254,18 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     finalRoles: state.step === 'summary'
       ? state.players.map(player => ({ id: player.id, role: player.roleKey! })) : null,
   }),
+  projectModerator: (state) => ({
+    kind: 'mayor-consultation' as const,
+    roles: state.players.map(player => ({ playerId: player.id, role: player.roleKey!,
+      alive: player.status === 'alive' })),
+    successionOrder: [...state.murderOrder],
+    actions: {
+      ...(state.night.killerTarget ? { killerTarget: state.night.killerTarget } : {}),
+      ...(state.night.protectedTarget ? { protectedTarget: state.night.protectedTarget } : {}),
+      ...(state.night.detectiveTarget ? { detectiveTarget: state.night.detectiveTarget } : {}),
+      ...(state.investigation ? { investigation: { ...state.investigation } } : {}),
+    },
+  }),
   projectPrivate: (state, playerId): CidadeDormeLanPrivate | null => {
     const own = find(state, playerId)
     if (!own) return null
@@ -256,7 +279,7 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       ...(own.roleKey === 'detective' && state.investigation && state.step !== 'summary'
         ? { investigation: { ...state.investigation } } : {}),
       voted: Object.hasOwn(state.votes, playerId),
-      canAct: own.status === 'alive' && (
+      canAct: !state.paused && own.status === 'alive' && (
         (state.step === 'killer-turn' && killerActor(state)?.id === playerId)
         || (state.step === 'doctor-turn' && own.roleKey === 'doctor')
         || (state.step === 'detective-turn' && own.roleKey === 'detective')

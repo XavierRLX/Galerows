@@ -47,6 +47,17 @@ describe('G7 Cidade Dorme persistent lobby integration',()=>{
     })
     expect(screen.getByText(/não recebe papel nem vota/i)).toBeInTheDocument()
   })
+  it('renders the dedicated mayor screen in the Room without showing a player role',()=>{
+    const cb={...actions(),onRoomCommand:vi.fn()}
+    const snapshot=scene('playing')
+    snapshot.roomState.selectedConfig={...snapshot.roomState.selectedConfig as object,conductionMode:'mayor'}
+    snapshot.privateState=null
+    render(<LobbyRoomView snapshot={snapshot} role="host" playerId="host" busy={false}
+      connected status="Conectado" {...cb}/>)
+    expect(screen.getByRole('region',{name:'Painel do Prefeito'})).toBeInTheDocument()
+    expect(screen.queryByRole('button',{name:'Ver meu papel'})).not.toBeInTheDocument()
+    expect(screen.getByRole('button',{name:'Consultar papéis e ações'})).toBeInTheDocument()
+  })
   it('renders personal role screen, not synthetic probe, in game phase',()=>{
     const cb=actions()
     render(<LobbyRoomView snapshot={scene('playing')} role="guest" playerId="guest"

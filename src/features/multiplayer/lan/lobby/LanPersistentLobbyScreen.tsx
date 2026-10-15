@@ -54,6 +54,7 @@ function LanPersistentLobbyView({ initialMode }: { initialMode: 'entry' | 'join'
       onStart={() => action('START_GAME', null)}
       onGameAction={() => action(snapshot.roomState.selectedGameId === 'counter' ? 'INCREMENT' : 'TOY_CLUE', null, 'game')}
       onGameCommand={(type, payload) => action(type, payload, 'game')}
+      onRoomCommand={(type, payload) => action(type, payload)}
       onEnd={() => action('END_GAME', null)}
       onBackToLobby={() => action('RETURN_TO_LOBBY', null)}
       onFinishSession={() => action('FINISH_SESSION', null)}

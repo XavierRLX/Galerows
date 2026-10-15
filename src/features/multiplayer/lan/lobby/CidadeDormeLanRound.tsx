@@ -49,8 +49,8 @@ function CidadeDormeLanBody({ snapshot, playerId, isHost, busy, connected, onAct
   const mine = connected && personalFrame?.gameSessionId === sessionId
     && personalFrame.gameId === 'cidade-dorme'
     ? personalFrame.data as CidadeDormeLanPrivate : null
-  const blocked = busy || !connected || sent
-  const hostBlocked = busy || !connected
+  const blocked = busy || !connected || sent || Boolean(data.paused)
+  const hostBlocked = busy || !connected || Boolean(data.paused)
   const label = (id: string) => {
     const index = snapshot.roomState.members.findIndex(member => member.playerId === id)
     const member = snapshot.roomState.members[index]
@@ -87,6 +87,7 @@ function CidadeDormeLanBody({ snapshot, playerId, isHost, busy, connected, onAct
       <p>Rodada {data.round} · {alive.length} de {data.players.length} jogadores vivos.</p>
     </div>
     {!connected && <p className="pl03-pista-alert" role="status"><WifiOff size={16}/> Conexão interrompida. Aguarde a reconexão.</p>}
+    {data.paused && <p className="pl03-pista-alert" role="status">Partida pausada pelo prefeito. Aguarde.</p>}
     {mine && data.step !== 'summary' && <div className="pl03-cidade-secret">
       <div className="pl03-impostor-help"><LockKeyhole size={17}/> Seu papel pertence apenas a este celular.</div>
       {revealed && <div className="pl03-impostor-private" data-testid="cidade-private-role">
