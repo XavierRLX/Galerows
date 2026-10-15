@@ -4,6 +4,7 @@ import {
 import { createDefaultCidadeDormeSettings } from '../cidade-dorme/cidadeDorme.setup'
 import type { DoctorSelfProtectLimit, GameSettings, GameWinner, Player, RoleKey, WinReason } from '../cidade-dorme/cidadeDorme.types'
 import { defineMultiplayerGame } from './multiplayerGames'
+import type { MultiplayerGameContext, MultiplayerGameTransition } from './multiplayerGames'
 
 export const CIDADE_DORME_LAN_GAME_ID = 'cidade-dorme'
 export interface CidadeDormeLanConfig {
@@ -24,6 +25,9 @@ export type CidadeDormeLanStep = 'reveal' | 'killer-turn' | 'doctor-turn' | 'det
 export interface CidadeDormeLanPublic {
   step: CidadeDormeLanStep
   round: number
+  phaseRevision: number
+  phaseEventId: string
+  phaseStartedAt: number
   paused?: boolean
   seenCount: number
   totalPlayers: number
@@ -57,6 +61,8 @@ interface LanState {
   murderOrder: string[]
   step: CidadeDormeLanStep
   paused: boolean
+  phaseRevision: number
+  phaseStartedAt: number
   round: number
   seen: string[]
   night: { killerTarget?: string; protectedTarget?: string; detectiveTarget?: string }
@@ -101,6 +107,16 @@ const livingRole = (state: LanState, role: RoleKey) => alive(state).filter(p => 
 const killerActor = (state: LanState) => getActiveKiller(state.players, state.murderOrder)
 function error(code: 'unauthorized' | 'invalid_payload' | 'invalid_phase' | 'not_participant' | 'not_ready') {
   return { accepted: false as const, error: code }
+}
+/** Only host-authoritative canonical phase changes increment the cue identity. */
+function stampPhase(before: LanState, result: MultiplayerGameTransition<LanState>,
+  context: MultiplayerGameContext): MultiplayerGameTransition<LanState> {
+  if (!result.accepted || !result.changed) return result
+  const after = result.state
+  if (after.step === before.step && after.round === before.round) return result
+  return { ...result, state: { ...after,
+    phaseRevision: before.phaseRevision + 1, phaseStartedAt: context.clock.now(),
+  } }
 }
 function nextNightStep(state: LanState): CidadeDormeLanStep {
   return livingRole(state, 'doctor').length > 0 ? 'doctor-turn'
@@ -153,12 +169,14 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       id, name: `Jogador ${i + 1}`,
     })), settings, ctx.random)
     return { config, settings, players, murderOrder: getMurderOrder(players, ctx.random),
-      step: 'reveal', paused: false, round: 1, seen: [], night: {},
+      step: 'reveal', paused: false, phaseRevision: 1, phaseStartedAt: ctx.clock.now(),
+      round: 1, seen: [], night: {},
       investigation: null, previousProtectedTarget: null, doctorSelfProtectCount: 0,
       nightResult: null, votes: {},
       voteResult: null, winner: null, winReason: null, winnerPlayerId: null }
   },
-  applyCommand: (state, action) => {
+  applyCommand: (state, action, context) => {
+    const decision = ((): MultiplayerGameTransition<LanState> => {
     const own = find(state, action.playerId)
     const host = action.role === 'host'
     const dedicatedMayor = host && state.config.conductionMode === 'mayor' && !own
@@ -260,6 +278,8 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       return { accepted: true, changed: true, state: nextRound(state) }
     }
     return error('invalid_phase')
+    })()
+    return stampPhase(state, decision, context)
   },
   awardPoints: state => state.step === 'summary'
     ? Object.fromEntries(state.players.map(player => [player.id,
@@ -267,7 +287,10 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
         : state.winner === 'killers' ? (state.murderOrder.includes(player.id) ? 2 : 0)
           : (!state.murderOrder.includes(player.id) && player.roleKey !== 'jester' ? 2 : 0)])) : null,
   projectPublic: (state): CidadeDormeLanPublic => ({
-    step: state.step, paused: state.paused, round: state.round, seenCount: state.seen.length,
+    step: state.step, paused: state.paused, round: state.round,
+    phaseRevision: state.phaseRevision, phaseStartedAt: state.phaseStartedAt,
+    phaseEventId: `city:phase:${state.phaseRevision}:${state.round}:${state.step}`,
+    seenCount: state.seen.length,
     totalPlayers: state.players.length,
     players: state.players.map(player => ({
       id: player.id, alive: player.status === 'alive',

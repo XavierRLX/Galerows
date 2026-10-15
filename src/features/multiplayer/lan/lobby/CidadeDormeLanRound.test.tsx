@@ -29,6 +29,15 @@ const show=(snapshot=frame(), host=false, connected=true) => {
   return {...render(<CidadeDormeLanRound {...props}/>),props,onAction,onEnd}
 }
 describe('G7 Cidade Dorme LAN — privacy and phases',()=>{
+  it('shows canonical themed narration captions to guests without autoplay controls',()=>{
+    const snap=frame('killer-turn','citizen')
+    snap.gamePublicState!.data={...(snap.gamePublicState!.data as object),
+      phaseRevision:2,phaseEventId:'city:phase:2:1:killer-turn',phaseStartedAt:1000}
+    show(snap)
+    expect(screen.getByTestId('city-ambience')).toHaveAttribute('data-time','night')
+    expect(screen.getByText(/A cidade dorme\. Todos fecham os olhos/)).toBeInTheDocument()
+    expect(screen.queryByRole('button',{name:'Ativar narração no anfitrião'})).not.toBeInTheDocument()
+  })
   it('does not show role until tap, hides on blur and lets only owner confirm',()=>{
     const s=show()
     expect(screen.queryByText('Assassino')).not.toBeInTheDocument()

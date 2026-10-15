@@ -3,6 +3,7 @@ import { Eye, EyeOff, LockKeyhole, Moon, Shield, Skull, Sun, Trophy, Users, Vote
 import type { RoomSnapshotV2 } from '../../persistentProtocol'
 import type { CidadeDormeLanPrivate, CidadeDormeLanPublic, CidadeDormeLanStep } from '../../cidadeDormeLanGame'
 import type { RoleKey } from '../../../cidade-dorme/cidadeDorme.types'
+import { CidadeDormeAtmosphere } from './CidadeDormeAtmosphere'
 
 type Props = {
   snapshot: RoomSnapshotV2
@@ -87,6 +88,9 @@ function CidadeDormeLanBody({ snapshot, playerId, isHost, busy, connected, onAct
       <h3>{titleFor[data.step]}</h3>
       <p>Rodada {data.round} · {alive.length} de {data.players.length} jogadores vivos.</p>
     </div>
+    <CidadeDormeAtmosphere step={data.step}
+      sessionId={sessionId} phaseEventId={data.phaseEventId || ''}
+      host={isHost} mayorMode={false} connected={connected} paused={Boolean(data.paused)}/>
     {!connected && <p className="pl03-pista-alert" role="status"><WifiOff size={16}/> Conexão interrompida. Aguarde a reconexão.</p>}
     {data.paused && <p className="pl03-pista-alert" role="status">Partida pausada pelo prefeito. Aguarde.</p>}
     {mine && data.step !== 'summary' && <div className="pl03-cidade-secret">

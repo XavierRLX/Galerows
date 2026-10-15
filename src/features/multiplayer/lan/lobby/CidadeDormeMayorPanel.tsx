@@ -3,6 +3,7 @@ import { BookOpen, Eye, EyeOff, Lock, Shield, Users } from 'lucide-react'
 import type { RoomSnapshotV2 } from '../../persistentProtocol'
 import type { CidadeDormeLanPublic, CidadeDormeLanStep } from '../../cidadeDormeLanGame'
 import type { RoleKey } from '../../../cidade-dorme/cidadeDorme.types'
+import { CidadeDormeAtmosphere } from './CidadeDormeAtmosphere'
 
 interface MayorConsultation {
   kind: 'mayor-consultation'
@@ -98,6 +99,8 @@ export function CidadeDormeMayorPanel({snapshot,connected,busy,onRoomCommand,onG
       <h3>Prefeito da cidade</h3>
       <p>Rodada {pub.round} · {pub.players.filter(p=>p.alive).length} jogadores vivos.</p>
     </header>
+    <CidadeDormeAtmosphere step={pub.step} sessionId={sessionId || ''}
+      phaseEventId={pub.phaseEventId || ''} host mayorMode connected={connected} paused={Boolean(pub.paused)}/>
     <div className="pl03-impostor-step">
       <h4>{item.title}</h4>
       <p>{item.script}</p>
