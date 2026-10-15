@@ -41,9 +41,9 @@ function room(count: number) {
     const result = send(member, type, payload, scope)
     expect(result.status, JSON.stringify(result)).toBe('accepted')
   }
-  function setup(mode: 'mayor' | 'automatic' = 'mayor') {
+  function setup(mode: 'mayor' | 'automatic' = 'mayor', overrides:Record<string,unknown>={}) {
     ok(mayor, 'SELECT_GAME', { gameId: 'cidade-dorme' }, 'room')
-    ok(mayor, 'CONFIGURE_GAME', { ...rules, conductionMode: mode }, 'room')
+    ok(mayor, 'CONFIGURE_GAME', { ...rules, conductionMode: mode, ...overrides }, 'room')
   }
   function start() {
     players.forEach(p => ok(p, 'READY', { ready: true }, 'room'))
@@ -197,4 +197,42 @@ describe('CITY-MAYOR-01 — authoritative dedicated moderator', () => {
     const normal = room(11)
     expect(normal.join()).toHaveProperty('error', 'room_full')
   })
+
+  it('the dedicated mayor preserves dead-doctor narration before a live detective acts',()=>{
+    const s=room(6)
+    s.setup('mayor',{enableDoctor:true,enableDetective:true})
+    s.start()
+    const role=(r:string)=>s.players.find(p=>(s.view(p).privateState?.data as CidadeDormeLanPrivate).role===r)!
+    const killer=role('killer'),doctor=role('doctor'),detective=role('detective'),citizen=role('citizen')
+    s.players.forEach(p=>s.ok(p,'ACK_ROLE'))
+    s.ok(s.mayor,'START_NIGHT')
+    s.ok(killer,'KILL',{playerId:doctor.id})
+    expect((s.view().gamePublicState?.data as CidadeDormeLanPublic).step).toBe('doctor-turn')
+    s.advanceClock(15000)
+    // The command must not skip a living actor's legal turn.
+    s.ok(s.mayor,'SIMULATE_NIGHT_ROLE')
+    expect((s.view().gamePublicState?.data as CidadeDormeLanPublic).step).toBe('doctor-turn')
+    s.ok(doctor,'PROTECT',{playerId:citizen.id})
+    s.ok(detective,'INVESTIGATE',{playerId:killer.id})
+    expect((s.view().gamePublicState?.data as CidadeDormeLanPublic).nightResult?.eliminatedId).toBe(doctor.id)
+    s.ok(s.mayor,'START_DISCUSSION')
+    s.ok(s.mayor,'START_VOTE')
+    const voters=s.players.filter(p=>(s.view().gamePublicState?.data as CidadeDormeLanPublic).players
+      .some(x=>x.id===p.id&&x.alive))
+    voters.forEach((p,i)=>s.ok(p,'CAST_VOTE',{playerId:voters[i%3].id}))
+    s.ok(s.mayor,'RESOLVE_VOTE')
+    s.ok(s.mayor,'NEXT_NIGHT')
+    s.ok(killer,'KILL',{playerId:citizen.id})
+    const waiting=s.view(s.mayor).gamePublicState?.data as CidadeDormeLanPublic
+    expect(waiting.step).toBe('doctor-turn')
+    expect(waiting.players.find(p=>p.id===doctor.id)?.revealedRole).toBeUndefined()
+    expect(s.send(s.players[0],'SIMULATE_NIGHT_ROLE').error).toBe('unauthorized')
+    expect(s.send(s.mayor,'SIMULATE_NIGHT_ROLE').error).toBe('not_ready')
+    s.advanceClock(15000)
+    s.ok(s.mayor,'SIMULATE_NIGHT_ROLE')
+    expect((s.view().gamePublicState?.data as CidadeDormeLanPublic).step).toBe('detective-turn')
+    s.ok(detective,'INVESTIGATE',{playerId:killer.id})
+    expect((s.view().gamePublicState?.data as CidadeDormeLanPublic).step).toBe('morning')
+  })
+
 })

@@ -31,6 +31,21 @@ describe('CITY-MAYOR-02 — confidential orchestration panel',()=>{
     expect(screen.getByText(/A cidade adormece\. Todos fechem os olhos/)).toBeInTheDocument()
     expect(screen.queryByRole('button',{name:'Ativar narração no anfitrião'})).not.toBeInTheDocument()
   })
+  it('lets the moderator preserve a night role slot when no living actor can respond',()=>{
+    const callbacks=actions()
+    const {rerender}=render(<CidadeDormeMayorPanel snapshot={frame('doctor-turn')}
+      connected busy={false} {...callbacks}/>)
+    const button=screen.getByRole('button',{name:'Continuar após turno sem ação'})
+    expect(button).toBeEnabled()
+    fireEvent.click(button)
+    expect(callbacks.onGameCommand).toHaveBeenCalledWith('SIMULATE_NIGHT_ROLE',null)
+    rerender(<CidadeDormeMayorPanel snapshot={frame('detective-turn')}
+      connected busy={false} {...callbacks}/>)
+    expect(screen.getByRole('button',{name:'Continuar após turno sem ação'})).toBeInTheDocument()
+    rerender(<CidadeDormeMayorPanel snapshot={frame('morning')}
+      connected busy={false} {...callbacks}/>)
+    expect(screen.queryByRole('button',{name:'Continuar após turno sem ação'})).toBeNull()
+  })
   it('shows phase and progress by default without any sensitive role or target',()=>{
     render(<CidadeDormeMayorPanel snapshot={frame()} connected busy={false} {...actions()}/>)
     expect(screen.getByRole('heading',{name:'Prefeito da cidade'})).toBeInTheDocument()

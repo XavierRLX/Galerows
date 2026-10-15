@@ -44,4 +44,15 @@ describe('CITY-AUTOPILOT-01 phase planner',()=>{
    expect(decision('detective-result',9500,{phaseReady:true})).toBeNull()
    expect(decision('summary',9000)).toBe('END_GAME')
  })
+
+ it('keeps an apparently normal timed turn for configured roles even when no player acts',()=>{
+   expect(decision('doctor-turn',14500,{phaseReady:true})).toBe('SIMULATE_NIGHT_ROLE')
+   expect(decision('detective-turn',14500,{phaseReady:true})).toBe('SIMULATE_NIGHT_ROLE')
+   expect(decision('detective-result',14500,{phaseReady:true})).toBe('SIMULATE_NIGHT_ROLE')
+   expect(decision('doctor-turn',11000,{phaseReady:true})).toBeNull()
+   expect(decision('doctor-turn',14500,{phaseReady:false})).toBe('OPEN_PHASE')
+   expect(decideCityAutopilot({game:scene('doctor-turn',{phaseReady:true}),
+     now:1700000016000,host:true,connected:true,playing:true,busy:false,audioDone:false})).toBeNull()
+ })
+
 })

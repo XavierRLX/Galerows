@@ -1,7 +1,7 @@
 import type { CidadeDormeLanPublic } from '../../cidadeDormeLanGame'
 
 export type CityAutoGameCommand =
-  'START_NIGHT' | 'OPEN_PHASE' | 'START_DISCUSSION' | 'START_VOTE' |
+  'START_NIGHT' | 'OPEN_PHASE' | 'SIMULATE_NIGHT_ROLE' | 'START_DISCUSSION' | 'START_VOTE' |
   'RESOLVE_VOTE' | 'NEXT_NIGHT' | 'END_GAME'
 
 export interface CityAutopilotInput {
@@ -25,9 +25,12 @@ export function decideCityAutopilot(input:CityAutopilotInput):CityAutoGameComman
   switch(game.step){
     case 'reveal':return game.seenCount===game.totalPlayers && elapsed>=5500?'START_NIGHT':null
     case 'killer-turn':return !game.phaseReady && elapsed>=8000?'OPEN_PHASE':null
-    case 'doctor-turn':return !game.phaseReady && elapsed>=7500?'OPEN_PHASE':null
-    case 'detective-turn':return !game.phaseReady && elapsed>=6700?'OPEN_PHASE':null
-    case 'detective-result':return !game.phaseReady && elapsed>=8500?'OPEN_PHASE':null
+    case 'doctor-turn':return !game.phaseReady ? elapsed>=7500?'OPEN_PHASE':null
+      : elapsed>=14000?'SIMULATE_NIGHT_ROLE':null
+    case 'detective-turn':return !game.phaseReady ? elapsed>=6700?'OPEN_PHASE':null
+      : elapsed>=14000?'SIMULATE_NIGHT_ROLE':null
+    case 'detective-result':return !game.phaseReady ? elapsed>=8500?'OPEN_PHASE':null
+      : elapsed>=14000?'SIMULATE_NIGHT_ROLE':null
     case 'morning':return elapsed>=8500?'START_DISCUSSION':null
     case 'discussion':return elapsed>=36000?'START_VOTE':null
     case 'voting':

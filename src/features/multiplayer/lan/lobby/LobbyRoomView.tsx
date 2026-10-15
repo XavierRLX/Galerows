@@ -456,6 +456,9 @@ export function LobbyRoomView({
                     <Check size={15} aria-hidden="true" /> {label}
                   </button>)}
                 </div>
+                <p>Para preservar o mistério dos papéis eliminados, deixe
+                  “Revelar papel ao morrer” desativado. Médico e Detetive continuam
+                  tendo turnos simulados quando não podem mais agir.</p>
                 <details className="pl03-cidade-advanced">
                   <summary>Regras do médico (opcionais)</summary>
                   <p>Defina autoproteção e se o médico pode proteger a mesma pessoa em noites seguidas.</p>

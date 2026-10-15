@@ -13,7 +13,7 @@ type Receipt = { command: RoomCommandV2; result: RoomCommandResultV2 }
 function isDedicatedCityMayor(gameId: string | null, config: unknown): boolean {
   return gameId === 'cidade-dorme' && field(config, 'conductionMode') === 'mayor'
 }
-const MAYOR_GAME_COMMANDS = new Set(['START_NIGHT', 'START_DISCUSSION', 'START_VOTE', 'RESOLVE_VOTE', 'NEXT_NIGHT', 'PAUSE_CITY', 'RESUME_CITY'])
+const MAYOR_GAME_COMMANDS = new Set(['START_NIGHT', 'START_DISCUSSION', 'START_VOTE', 'RESOLVE_VOTE', 'NEXT_NIGHT', 'PAUSE_CITY', 'RESUME_CITY', 'SIMULATE_NIGHT_ROLE'])
 
 const RECENT_COMMAND_ID_LIMIT = 64
 interface Membership {

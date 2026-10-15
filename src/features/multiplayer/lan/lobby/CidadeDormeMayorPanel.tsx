@@ -119,6 +119,16 @@ export function CidadeDormeMayorPanel({snapshot,connected,busy,onRoomCommand,onG
       {next && <button type="button" className="pl03-primary-btn"
         disabled={busy||!connected||!canContinue||Boolean(pub.paused)}
         onClick={()=>void onGameCommand(next.type,null)}>{next.label}</button>}
+      {(['doctor-turn','detective-turn'].includes(pub.step)) &&
+        <div>
+          <p>Se o papel não puder agir, mantenha a narração e aguarde pelo menos 14 segundos antes de continuar.
+            Os outros jogadores não devem perceber a ausência.</p>
+          <button type="button" className="pl03-secondary-btn"
+            disabled={busy||!connected||Boolean(pub.paused)}
+            onClick={()=>void onGameCommand('SIMULATE_NIGHT_ROLE',null)}>
+            Continuar após turno sem ação
+          </button>
+        </div>}
       {pub.step==='summary' && (snapshot.roomState.phase==='playing'
         ? <button type="button" className="pl03-primary-btn"
             disabled={busy||!connected} onClick={()=>void onEnd()}>Finalizar e pontuar</button>

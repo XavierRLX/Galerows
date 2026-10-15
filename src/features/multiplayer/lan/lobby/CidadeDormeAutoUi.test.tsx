@@ -126,6 +126,39 @@ describe('Host audible narration and phase timing',()=>{
    expect(props.onAction).toHaveBeenCalledWith('RESOLVE_VOTE',null)
    resetCityAutomaticNarratorForTests()
  })
+ it('does not auto-advance a simulated doctor phase until ALL its Lucas clips finish',()=>{
+   vi.useFakeTimers()
+   vi.setSystemTime(1700000015000)
+   const played:string[]=[]
+   const instances:AudioMock[]=[]
+   class AudioMock {
+     src:string;currentTime=0;preload='';onended:(()=>void)|null=null
+     constructor(src:string){this.src=src;instances.push(this)}
+     pause(){}
+     play(){played.push(this.src);return Promise.resolve()}
+   }
+   vi.stubGlobal('Audio',AudioMock)
+   resetCityAutomaticNarratorForTests()
+   armCityAutomaticNarrator()
+   const props=callbacks()
+   const first=frame('reveal',{seenCount:0,phaseEventId:'prelude'})
+   const {rerender}=render(<CidadeDormeImmersiveRound snapshot={first}
+     playerId='host' isHost {...props}/>)
+   rerender(<CidadeDormeImmersiveRound snapshot={frame('doctor-turn',{
+       phaseReady:true,phaseEventId:'doctor-decoy',phaseRevision:2})}
+     playerId='host' isHost {...props}/>)
+   expect(played.at(-1)).toContain('04_volte_dormir.mp3')
+   act(()=>vi.advanceTimersByTime(500))
+   expect(props.onAction).not.toHaveBeenCalledWith('SIMULATE_NIGHT_ROLE',null)
+   act(()=>instances.at(-1)?.onended?.())
+   expect(played.at(-1)).toContain('05_medico.mp3')
+   act(()=>vi.advanceTimersByTime(500))
+   expect(props.onAction).not.toHaveBeenCalledWith('SIMULATE_NIGHT_ROLE',null)
+   act(()=>instances.at(-1)?.onended?.())
+   act(()=>vi.advanceTimersByTime(500))
+   expect(props.onAction).toHaveBeenCalledWith('SIMULATE_NIGHT_ROLE',null)
+   resetCityAutomaticNarratorForTests()
+ })
  it('does not unlock voting before spoken cue ends, and plays the next phase on the same host device',()=>{
    vi.useFakeTimers();vi.setSystemTime(1700000015000)
    const sounds:string[]=[]

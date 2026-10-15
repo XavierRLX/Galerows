@@ -135,9 +135,16 @@ function stampPhase(before: LanState, result: MultiplayerGameTransition<LanState
     phaseRevision: before.phaseRevision + 1, phaseStartedAt: context.clock.now(),
   } }
 }
+/** All configured LAN roles retain their public night slot after death, even with
+ * a human mayor. No player should infer a secret role from a skipped turn. */
+function configuredNightRole(state:LanState,role:'doctor'|'detective'):boolean{
+  return state.config.conductionMode==='automatic' || state.config.conductionMode==='mayor'
+    ? (role==='doctor'?state.config.enableDoctor:state.config.enableDetective)
+    : livingRole(state,role).length>0
+}
 function nextNightStep(state: LanState): CidadeDormeLanStep {
-  return livingRole(state, 'doctor').length > 0 ? 'doctor-turn'
-    : livingRole(state, 'detective').length > 0 ? 'detective-turn' : 'morning'
+  return configuredNightRole(state,'doctor') ? 'doctor-turn'
+    : configuredNightRole(state,'detective') ? 'detective-turn' : 'morning'
 }
 function resolveCurrentNight(state: LanState): LanState {
   const resolution = resolveNight(state.players, {
@@ -211,7 +218,7 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     const host = action.role === 'host'
     const dedicatedMayor = host && state.config.conductionMode === 'mayor' && !own
     const mayorCommands = ['START_NIGHT', 'START_DISCUSSION', 'START_VOTE', 'RESOLVE_VOTE', 'NEXT_NIGHT',
-      'PAUSE_CITY', 'RESUME_CITY']
+      'PAUSE_CITY', 'RESUME_CITY', 'SIMULATE_NIGHT_ROLE']
     if (!own && (!dedicatedMayor || !mayorCommands.includes(action.type))) return error('not_participant')
     const player = own ?? { id: action.playerId, roleKey: null, status: 'eliminated' as const }
     const payload = action.payload
@@ -240,6 +247,34 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       if (state.phaseReady) return { accepted:true, changed:false }
       if (elapsed < min) return error('not_ready')
       return {accepted:true,changed:true,state:{...state,phaseReady:true}}
+    }
+    if (action.type === 'SIMULATE_NIGHT_ROLE') {
+      // A roleless night turn sounds and looks identical to an active one.
+      // Every automatic host sends the same generic command after the public
+      // announcement + waiting period. If someone is alive, it is a no-op.
+      // Crucially, the public snapshot never includes role-presence metadata.
+      if (!host || (state.config.conductionMode !== 'automatic'
+        && state.config.conductionMode !== 'mayor')) return error('unauthorized')
+      if (payload !== null) return error('invalid_payload')
+      const role = state.step === 'doctor-turn' ? 'doctor'
+        : state.step === 'detective-turn' || state.step === 'detective-result'
+          ? 'detective' : null
+      if (!role || !configuredNightRole(state,role)) return error('invalid_phase')
+      if (!state.phaseReady || elapsed < 14000) return error('not_ready')
+      if (livingRole(state,role).length) return { accepted:true, changed:false }
+      if (state.step === 'doctor-turn') {
+        return {accepted:true,changed:true,state:state.config.enableDetective
+          ? {...state,step:'detective-turn' as const}
+          : resolveCurrentNight(state)}
+      }
+      if (state.step === 'detective-turn') {
+        // Automatic sessions already give living detectives a clue-reading phase,
+        // so simulate it too. A human mayor usually resolves night immediately.
+        return {accepted:true,changed:true,state:automatic
+          ? {...state,step:'detective-result' as const}
+          : resolveCurrentNight(state)}
+      }
+      return {accepted:true,changed:true,state:resolveCurrentNight(state)}
     }
     if (action.type === 'ACK_ROLE') {
       if (state.step !== 'reveal' || payload !== null) return error('invalid_phase')
@@ -272,7 +307,7 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       const next: LanState = { ...state, night: { ...state.night, protectedTarget: p },
         doctorSelfProtectCount: state.doctorSelfProtectCount + Number(p === player.id) }
       return { accepted: true, changed: true,
-        state: livingRole(state, 'detective').length ? { ...next, step: 'detective-turn' as const }
+        state: configuredNightRole(state,'detective') ? { ...next, step: 'detective-turn' as const }
           : resolveCurrentNight(next) }
     }
     if (action.type === 'INVESTIGATE') {
