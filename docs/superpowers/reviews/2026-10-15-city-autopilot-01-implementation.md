@@ -25,10 +25,10 @@
 Foram observadas falhas RED antes de cada implementação nos testes de redutor/autopilot, interface de voto e pista do Detetive, continuidade de áudio, reprodução com voz local, bloqueio da tela enquanto a narração não termina, retomada após blur, e tamanho de snapshot (40 rodadas, 12 participantes, até 12 votos/rodada). Os cenários passaram a GREEN após ajustes.
 
 **Gates completos finais (última execução):**
-- npm test: **829/829 aprovados; 141/141 arquivos** — /tmp/city-autopilot-final2-tests.log
-- npm run typecheck: **PASS** — /tmp/city-autopilot-final2-ts.log
-- npm run lint: **PASS sem erros/avisos** — /tmp/city-autopilot-final2-lint.log
-- VITE_GAMES_FIRST_LAN_ENTRY=1 VITE_LAN_PERSISTENT_LOBBY_UI=1 npm run build: **PASS** — /tmp/city-autopilot-final2-build.log
+- npm test: **830/830 aprovados; 141/141 arquivos** — /tmp/city-auto-final-tests.log (revalidação posterior ao commit)
+- npm run typecheck: **PASS** — /tmp/city-auto-final-type.log
+- npm run lint: **PASS sem erros/avisos** — /tmp/city-auto-final-lint.log
+- VITE_GAMES_FIRST_LAN_ENTRY=1 VITE_LAN_PERSISTENT_LOBBY_UI=1 npm run build: **PASS** — /tmp/city-auto-final-build.log
 - git diff --check: **PASS** — todos com exit code 0
 
 O motor de outros jogos, incluindo Impostor, foi coberto pela regressão e seus arquivos de implementação não foram modificados.
