@@ -19,6 +19,8 @@ interface Props {
   onRoomCommand:(type:string,payload:unknown)=>void|Promise<void>
   onGameCommand:(type:string,payload:unknown)=>void|Promise<void>
   onEnd:()=>void|Promise<void>
+  onReplay?:()=>void|Promise<void>
+  onBackToLobby?:()=>void|Promise<void>
 }
 const descriptions:Record<CidadeDormeLanStep,{title:string,script:string}> = {
   reveal:{title:'Distribuição dos papéis',script:'Peça para todos visualizarem e confirmarem o papel secreto.'},
@@ -40,7 +42,8 @@ const nextCommands:Partial<Record<CidadeDormeLanStep,{label:string,type:string,r
   voting:{label:'Apurar votação',type:'RESOLVE_VOTE',ready:true},
   'vote-result':{label:'Próxima noite',type:'NEXT_NIGHT',ready:true},
 }
-export function CidadeDormeMayorPanel({snapshot,connected,busy,onRoomCommand,onGameCommand,onEnd}:Props) {
+export function CidadeDormeMayorPanel({snapshot,connected,busy,onRoomCommand,onGameCommand,onEnd,
+  onReplay,onBackToLobby}:Props) {
   const [confirming,setConfirming]=useState(false)
   const [showScript,setShowScript]=useState(false)
   const [viewing,setViewing]=useState(false)
@@ -114,14 +117,19 @@ export function CidadeDormeMayorPanel({snapshot,connected,busy,onRoomCommand,onG
       {next && <button type="button" className="pl03-primary-btn"
         disabled={busy||!connected||!canContinue||Boolean(pub.paused)}
         onClick={()=>void onGameCommand(next.type,null)}>{next.label}</button>}
-      {pub.step==='summary' && <button type="button" className="pl03-primary-btn"
-        disabled={busy||!connected} onClick={()=>void onEnd()}>Finalizar e pontuar</button>}
+      {pub.step==='summary' && (snapshot.roomState.phase==='playing'
+        ? <button type="button" className="pl03-primary-btn"
+            disabled={busy||!connected} onClick={()=>void onEnd()}>Finalizar e pontuar</button>
+        : <><button type="button" className="pl03-primary-btn" disabled={busy||!connected||!onReplay}
+            onClick={()=>void onReplay?.()}>Jogar novamente</button>
+          <button type="button" className="pl03-secondary-btn" disabled={busy||!connected||!onBackToLobby}
+            onClick={()=>void onBackToLobby?.()}>Voltar ao lobby</button></>)}
     </div>
-    <div className="pl03-impostor-step">
+    {snapshot.roomState.phase==='playing' && <div className="pl03-impostor-step">
       <p><Lock size={16} aria-hidden="true"/> As identidades permanecem secretas até você abrir uma consulta privada.</p>
       <button type="button" className="pl03-secondary-btn" disabled={!connected||busy}
         onClick={()=>setConfirming(true)}><Eye size={18}/> Consultar papéis e ações</button>
-    </div>
+    </div>}
     {showScript && <div className="pl03-modal-backdrop" role="presentation">
       <section role="dialog" aria-modal="true" aria-label="Roteiro da fase"
         className="pl03-panel" style={{maxWidth:460,width:'100%',margin:'auto'}}>

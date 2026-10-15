@@ -312,3 +312,7 @@
 .pl03-cidade-speaker{grid-column:1/-1;display:grid;gap:8px}.pl03-cidade-speaker button{max-width:100%;min-height:44px}
 .pl03-cidade-narration-enabled{display:flex;align-items:center;gap:8px;color:#d2f86a;font-size:12px;font-weight:800}
 @media(prefers-reduced-motion:reduce){.pl03-cidade-atmosphere{transition:none}}
+
+/* City mayor starts directly in their dedicated game panel, never a second lobby. */
+.pl03-mayor-game{min-height:100dvh;display:flex;justify-content:center;align-items:flex-start;padding:max(18px,env(safe-area-inset-top)) 12px max(18px,env(safe-area-inset-bottom));background:radial-gradient(circle at 70% 0%,#2d3f59,#0b1727 72%);color:#f5f0e8}
+.pl03-mayor-game .pl03-cidade-mayor{width:min(100%,480px);display:grid;gap:14px}

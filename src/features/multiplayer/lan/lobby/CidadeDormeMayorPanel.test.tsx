@@ -83,6 +83,17 @@ describe('CITY-MAYOR-02 — confidential orchestration panel',()=>{
     fireEvent.click(screen.getByRole('button',{name:'Retomar partida'}))
     expect(a.onGameCommand).toHaveBeenCalledWith('RESUME_CITY',null)
   })
+  it('keeps the human mayor inside the game result with replay and explicit lobby return',()=>{
+    const result=frame('summary')
+    result.roomState.phase='results'
+    const cb={...actions(),onReplay:vi.fn(),onBackToLobby:vi.fn()}
+    render(<CidadeDormeMayorPanel snapshot={result} connected busy={false} {...cb}/>)
+    expect(screen.queryByRole('button',{name:'Finalizar e pontuar'})).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button',{name:'Jogar novamente'}))
+    expect(cb.onReplay).toHaveBeenCalledOnce()
+    fireEvent.click(screen.getByRole('button',{name:'Voltar ao lobby'}))
+    expect(cb.onBackToLobby).toHaveBeenCalledOnce()
+  })
   it('conveys valid phase controls and never offers players secret commands',()=>{
     const a=actions()
     render(<CidadeDormeMayorPanel snapshot={frame('discussion')} connected busy={false} {...a}/>)

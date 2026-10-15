@@ -89,7 +89,9 @@ describe('G7 Cidade Dorme persistent lobby integration',()=>{
     const cb=actions()
     render(<LobbyRoomView snapshot={scene('playing')} role="guest" playerId="guest"
       busy={false} status="Conectado" {...cb}/>)
-    expect(screen.getByRole('button',{name:'Ver meu papel'})).toBeInTheDocument()
+    expect(screen.getByTestId('cidade-immersive')).toBeInTheDocument()
+    expect(screen.getByRole('button',{name:'Meu papel'})).toBeInTheDocument()
+    expect(screen.queryByText('Sala da galera')).not.toBeInTheDocument()
     expect(screen.queryByText(/Partida sintética para validar a sala/i)).not.toBeInTheDocument()
   })
 })

@@ -9,7 +9,7 @@ import { gameConfig, lobbyGameCatalog, lobbySummary } from './lobbyView'
 import { ImpostorLanRound } from './ImpostorLanRound'
 import { ImpostorImmersiveRound } from './ImpostorImmersiveRound'
 import { PistaUnicaLanRound } from './PistaUnicaLanRound'
-import { CidadeDormeLanRound } from './CidadeDormeLanRound'
+import { CidadeDormeImmersiveRound } from './CidadeDormeImmersiveRound'
 import { CidadeDormeMayorPanel } from './CidadeDormeMayorPanel'
 import type { PistaUnicaCategory } from '../../../pista-unica/pistaUnica.types'
 import type { DoctorSelfProtectLimit } from '../../../cidade-dorme/cidadeDorme.types'
@@ -216,6 +216,27 @@ export function LobbyRoomView({
   // renders the same authoritative GameSession phase; only its own card is private.
   const currentImpostor = snapshot.gamePublicState?.gameId === 'impostor-da-palavra'
     ? snapshot.gamePublicState.data as { flow?: string } : null
+  // CITY-IMMERSIVE-01: after START_GAME, leave the existing lobby directly for the game.
+  // A human mayor is not a player, and uses the separate authorized moderation panel.
+  if ((summary.phase === 'playing' || summary.phase === 'results')
+    && summary.gameId === 'cidade-dorme' && onGameCommand) {
+    if (isHost && saved?.conductionMode === 'mayor' && onRoomCommand) {
+      return <main className="pl03 pl03-in-room pl03-mayor-game" aria-label="Cidade Dorme com prefeito">
+        <CidadeDormeMayorPanel key={`${currentSession}:${connected}`}
+          snapshot={snapshot} busy={busy} connected={connected}
+          onGameCommand={(type,payload)=>void onGameCommand(type,payload)}
+          onRoomCommand={(type,payload)=>void onRoomCommand(type,payload)} onEnd={()=>void onEnd()}
+          onReplay={onReplay ? ()=>void onReplay() : undefined}
+          onBackToLobby={()=>void onBackToLobby()}/>
+      </main>
+    }
+    return <CidadeDormeImmersiveRound snapshot={snapshot} playerId={playerId} isHost={isHost}
+      busy={busy} connected={connected} onAction={(type,payload)=>void onGameCommand(type,payload)}
+      onEnd={()=>void onEnd()} onBackToLobby={()=>void onBackToLobby()}
+      onReplay={onReplay ? ()=>void onReplay() : undefined} onReconnect={()=>void onReconnect()}
+      onLeave={()=>void onLeave()} onClose={()=>void onClose()} error={error}/>
+  }
+
   if ((summary.phase === 'playing' || summary.phase === 'results')
     && summary.gameId === 'impostor-da-palavra'
     && currentImpostor?.flow === 'individual-vote' && onGameCommand) {
@@ -515,16 +536,6 @@ export function LobbyRoomView({
               <PistaUnicaLanRound snapshot={snapshot} playerId={playerId} isHost={isHost}
                 busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
                 onEnd={() => void onEnd()} />}
-            {summary.phase === 'playing' && summary.gameId === 'cidade-dorme' && onGameCommand &&
-              (summary.dedicatedMayor && isHost && onRoomCommand
-                ? <CidadeDormeMayorPanel key={`${snapshot.roomState.currentGameSessionId}:${connected}`}
-                    snapshot={snapshot} busy={busy} connected={connected}
-                    onGameCommand={(type,payload)=>void onGameCommand(type,payload)}
-                    onRoomCommand={(type,payload)=>void onRoomCommand(type,payload)}
-                    onEnd={()=>void onEnd()}/>
-                : <CidadeDormeLanRound snapshot={snapshot} playerId={playerId} isHost={isHost}
-                    busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
-                    onEnd={() => void onEnd()} />)}
             {summary.phase === 'playing' && summary.gameId !== 'impostor-da-palavra'
               && summary.gameId !== 'pista-unica' && summary.gameId !== 'cidade-dorme' && <div className="pl03-in-game">
               {summary.gameId === 'counter' ? <div className="pl03-score"><span>CONTAGEM DA GALERA</span>

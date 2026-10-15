@@ -12,6 +12,9 @@ interface Props {
   mayorMode:boolean
   connected:boolean
   paused:boolean
+  narrationGate?: ReturnType<typeof createCityNarrationGate>
+  narratorEnabled?: boolean
+  onNarratorEnabled?: () => void
 }
 const nightPhases:CidadeDormeLanStep[]=['killer-turn','doctor-turn','detective-turn']
 const isNight=(step:CidadeDormeLanStep)=>nightPhases.includes(step)
@@ -21,10 +24,11 @@ function getTime(step:CidadeDormeLanStep) {
   return 'day'
 }
 /** Visible on all phones; only the automatic-mode host can opt into playing the bundled files. */
-export function CidadeDormeAtmosphere({step,sessionId,phaseEventId,host,mayorMode,connected,paused}:Props){
+export function CidadeDormeAtmosphere({step,sessionId,phaseEventId,host,mayorMode,connected,paused,
+  narrationGate,narratorEnabled=false,onNarratorEnabled}:Props){
   const [audioEnabled,setAudioEnabled]=useState(false)
   const [audioError,setAudioError]=useState(false)
-  const gate=useRef(createCityNarrationGate())
+  const gate=useRef(narrationGate ?? createCityNarrationGate())
   const audioRef=useRef<HTMLAudioElement|null>(null)
   const stop=useCallback(()=>{
     const audio=audioRef.current
@@ -63,6 +67,7 @@ export function CidadeDormeAtmosphere({step,sessionId,phaseEventId,host,mayorMod
     if(gate.current.activate(frame)){
       playCue(step)
       setAudioEnabled(true)
+      onNarratorEnabled?.()
     }
   }
   const time=getTime(step)
@@ -75,7 +80,7 @@ export function CidadeDormeAtmosphere({step,sessionId,phaseEventId,host,mayorMod
       <p role="status" aria-live="polite">{getCityNarrationSubtitle(step)}</p>
     </div>
     {host && !mayorMode && <div className="pl03-cidade-speaker">
-      {!audioEnabled
+      {!(audioEnabled || narratorEnabled)
         ? <button type="button" className="pl03-secondary-btn" onClick={activate}
             disabled={!connected||paused}>
             <Volume2 size={16} aria-hidden="true"/> Ativar narração no anfitrião
