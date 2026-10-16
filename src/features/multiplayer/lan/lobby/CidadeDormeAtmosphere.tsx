@@ -5,7 +5,7 @@ import { createCityNarrationGate, getCityNarrationSubtitle } from './cidadeNarra
 import { getCityLucasNarrationSequence } from './cidadeLucasNarration'
 import type { CityNarrationFrame } from './cidadeNarration'
 import {armCityAutomaticNarrator,isCityAutomaticNarratorArmed,isCityAutomaticNarratorInterrupted,
-  interruptCityAutomaticNarrator,observeCityAutomaticNarration,playCityAutomaticNarration,stopCityAutomaticNarrator} from './cidadeAutomaticAudio'
+  interruptCityAutomaticNarrator,observeCityAutomaticNarration,playCityAutomaticNarration,stopCityAutomaticNarrator,getCityAutomaticNarratorGeneration} from './cidadeAutomaticAudio'
 
 interface Props {
   step:CidadeDormeLanStep
@@ -37,11 +37,12 @@ export function CidadeDormeAtmosphere({step,sessionId,phaseEventId,host,mayorMod
   const [audioInterrupted,setAudioInterrupted]=useState(false)
   const [audioError,setAudioError]=useState(false)
   const gate=useRef(narrationGate ?? createCityNarrationGate())
+  const audioGeneration=useRef(getCityAutomaticNarratorGeneration())
   const audioRef=useRef<HTMLAudioElement|null>(null)
   const stop=useCallback(()=>{
     const audio=audioRef.current
     if(audio){audio.pause();audio.currentTime=0;audioRef.current=null}
-    if(autoMode)stopCityAutomaticNarrator()
+    if(autoMode)stopCityAutomaticNarrator(audioGeneration.current)
   },[autoMode])
   const playCue=useCallback((phase:CidadeDormeLanStep)=>{
     const sequence=getCityLucasNarrationSequence(phase,publicState)
@@ -107,6 +108,7 @@ export function CidadeDormeAtmosphere({step,sessionId,phaseEventId,host,mayorMod
       const started=armCityAutomaticNarrator(getCityLucasNarrationSequence(step,publicState),
         ()=>onNarrationDone?.(phaseEventId))
       if(started){
+        audioGeneration.current=getCityAutomaticNarratorGeneration()
         setAudioInterrupted(false)
         gate.current.activate(frame)
         setAudioEnabled(true)

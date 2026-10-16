@@ -188,3 +188,40 @@ describe('Host audible narration and phase timing',()=>{
    resetCityAutomaticNarratorForTests()
  })
 })
+
+
+describe('Cidade Dorme automatic replay regression',()=>{
+ it('rearms Lucas from Jogar novamente and releases the next night only after the NEW cue ends',()=>{
+  vi.useFakeTimers();vi.setSystemTime(1700000015000)
+  const sounds: {src:string;paused:boolean;onended:(()=>void)|null}[]=[]
+  class AudioMock {
+   src:string;currentTime=0;preload='';onended:(()=>void)|null=null;paused=false
+   constructor(src:string){this.src=src;sounds.push(this)}
+   play(){this.paused=false;return Promise.resolve()}
+   pause(){this.paused=true}
+  }
+  vi.stubGlobal('Audio',AudioMock)
+  resetCityAutomaticNarratorForTests()
+  expect(armCityAutomaticNarrator()).toBe(true)
+  const first=frame('summary',{phaseEventId:'old-summary',seenCount:4})
+  first.roomState.phase='results'
+  const props={...callbacks(),onReplay:vi.fn()}
+  const {rerender}=render(<CidadeDormeImmersiveRound snapshot={first} playerId='host' isHost {...props}/>)
+  fireEvent.click(screen.getByRole('button',{name:/jogar novamente/i}))
+  expect(props.onReplay).toHaveBeenCalledOnce()
+  expect(sounds).toHaveLength(2)
+  expect(sounds[1].src).toContain('01_identidade.mp3')
+  const next=frame('reveal',{phaseEventId:'new-reveal',seenCount:4})
+  next.roomState.currentGameSessionId='game02'
+  if(next.gamePublicState)next.gamePublicState.gameSessionId='game02'
+  if(next.privateState)next.privateState.gameSessionId='game02'
+  rerender(<CidadeDormeImmersiveRound snapshot={next} playerId='host' isHost {...props}/>)
+  expect(sounds[1].paused).toBe(false)
+  act(()=>{vi.advanceTimersByTime(600)})
+  expect(props.onAction).not.toHaveBeenCalledWith('START_NIGHT',null)
+  act(()=>{sounds[1].onended?.()})
+  act(()=>{vi.advanceTimersByTime(600)})
+  expect(props.onAction).toHaveBeenCalledWith('START_NIGHT',null)
+  resetCityAutomaticNarratorForTests()
+ })
+})

@@ -4,11 +4,16 @@ let player:HTMLAudioElement|null=null
 let armed=false
 let interrupted=false
 let revision=0
+// A new user-gesture arm owns a new playback generation; stale scenes must not stop it.
+let armGeneration=0
 const defaultCue='/assets/cidade-dorme/narracao-lucas/01_identidade.mp3'
 
 export function isCityAutomaticNarratorArmed(){return armed}
 export function isCityAutomaticNarratorInterrupted(){return interrupted}
-export function stopCityAutomaticNarrator(){
+export function getCityAutomaticNarratorGeneration(){return armGeneration}
+/** A scene may stop only the narrator generation that it mounted with. */
+export function stopCityAutomaticNarrator(expectedGeneration?:number){
+  if(expectedGeneration!==undefined && expectedGeneration!==armGeneration)return
   revision++
   if(player){player.pause();player.currentTime=0;player.onended=null}
 }
@@ -51,6 +56,7 @@ export function armCityAutomaticNarrator(src:string|string[]=defaultCue,
   stopCityAutomaticNarrator()
   try{
     player=new Audio(sources[0])
+    armGeneration++
     player.preload='auto'
     armed=true
     interrupted=false
@@ -79,6 +85,7 @@ export function interruptCityAutomaticNarrator(){
 export function resetCityAutomaticNarratorForTests(){
   stopCityAutomaticNarrator()
   player=null
+  armGeneration++
   armed=false
   interrupted=false
 }

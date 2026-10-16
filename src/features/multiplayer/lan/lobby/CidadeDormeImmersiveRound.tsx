@@ -9,6 +9,7 @@ import type { RoleKey } from '../../../cidade-dorme/cidadeDorme.types'
 import { CidadeDormeAtmosphere } from './CidadeDormeAtmosphere'
 import { createCityNarrationGate } from './cidadeNarration'
 import { decideCityAutopilot } from './cidadeAutopilot'
+import { armCityAutomaticNarrator } from './cidadeAutomaticAudio'
 import './cidadeDormeImmersive.css'
 
 type Props = {
@@ -355,7 +356,10 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
             ? <p role="status">O narrador está encerrando a partida e registrando a pontuação.</p>
             : isHost ? snapshot.roomState.phase === 'playing'
             ? <ActionButton disabled={blocked} onClick={() => void onEnd()}>Finalizar partida e pontuar <ArrowRight size={17}/></ActionButton>
-            : <><ActionButton disabled={blocked || !onReplay} onClick={() => void onReplay?.()}>Jogar novamente <ArrowRight size={17}/></ActionButton>
+            : <><ActionButton disabled={blocked || !onReplay} onClick={() => {
+                if(autoGame)armCityAutomaticNarrator()
+                void onReplay?.()
+              }}>Jogar novamente <ArrowRight size={17}/></ActionButton>
               <ActionButton secondary disabled={blocked} onClick={() => void onBackToLobby()}>Voltar com todos ao lobby <ArrowLeft size={17}/></ActionButton></>
             : <p role="status">O anfitrião conduz a próxima partida na mesma sala.</p>)}
         </div>
