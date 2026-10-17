@@ -24,7 +24,7 @@ export interface MultiplayerGameDefinition<TConfig, TState> {
   projectPrivate(state: Readonly<TState>, playerId: string): unknown | null
   /** Privileged moderator-only projection, never part of public state or guest snapshots. */
   projectModerator?(state: Readonly<TState>): unknown | null
-  /** Trusted game-authoritative award at completion. Exactly one 0–2 value per participant. */
+  /** Trusted game-authoritative award at completion. Pista Única can exceed 2 across rounds. */
   awardPoints?(state: Readonly<TState>): Readonly<Record<string, number>> | null
 }
 

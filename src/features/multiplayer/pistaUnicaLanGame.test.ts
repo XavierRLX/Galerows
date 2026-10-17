@@ -46,7 +46,9 @@ function sim(guestCount = 2) {
     ok(players[0], 'START_GAME')
   }
   const clues = (values: string[]) => writers().forEach((p, i) => ok(p, 'SUBMIT_CLUE', { text: values[i] }, 'game'))
-  return { runtime, players, view, send, ok, pub, priv, guesser, writers, begin, clues }
+  const reviewer = () => players.find(p => p.id === pub().reviewerId)!
+  const review = () => ok(reviewer(), 'CONFIRM_CLUES', null, 'game')
+  return { runtime, players, view, send, ok, pub, priv, guesser, writers, reviewer, review, begin, clues }
 }
 
 describe('G6 — Pista Única LAN with private targets and authoritative rounds', () => {
@@ -93,7 +95,9 @@ describe('G6 — Pista Única LAN with private targets and authoritative rounds'
     s.ok(b,'SUBMIT_CLUE',{text:'maca'},'game')
     expect(s.pub().clues).toEqual([])
     s.ok(c,'SUBMIT_CLUE',{text:'Fruta'},'game')
-    expect(s.pub()).toMatchObject({step:'guessing',clues:['Maçã','Fruta'],excludedCount:1})
+    expect(s.pub()).toMatchObject({step:'review',clues:[],excludedCount:0})
+    s.review()
+    expect(s.pub()).toMatchObject({step:'guessing',clues:['Fruta'],excludedCount:2})
     expect(s.send(a,'SUBMIT_GUESS',{text:'apple'},'game').result.error).toBe('unauthorized')
   })
 
@@ -103,6 +107,8 @@ describe('G6 — Pista Única LAN with private targets and authoritative rounds'
     const target = s.priv(s.writers()[0]).target!
     expect(s.send(s.guesser(),'SUBMIT_GUESS',{text:target},'game').result.error).toBe('invalid_phase')
     s.clues(['uma','duas'])
+    expect(s.pub().step).toBe('review')
+    s.review()
     const answer = target.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     s.ok(s.guesser(),'SUBMIT_GUESS',{text:answer},'game')
     expect(s.pub()).toMatchObject({step:'round-result',lastResult:{correct:true,target,guessedText:answer}})
@@ -111,12 +117,12 @@ describe('G6 — Pista Única LAN with private targets and authoritative rounds'
     expect(s.view(s.players[0]).revision).toBe(before)
     expect(s.send(s.players[1],'NEXT_ROUND',null,'game').result.error).toBe('unauthorized')
     s.ok(s.players[0],'NEXT_ROUND',null,'game')
-    expect(s.pub()).toMatchObject({step:'writing',round:2,submittedCount:0,clues:[]})
+    expect(s.pub()).toMatchObject({step:'writing',round:2,submittedCount:0,clues:[],reviewerId:'host'})
     expect(s.pub().guesserId).not.toBe(s.players[0].id)
     expect(JSON.stringify(s.view(s.players[0]).gamePublicState)).not.toContain(s.priv(s.writers()[0]).target!)
   })
 
-  it('plays every round and accumulates one point per correct guess in G5E, only on END_GAME', () => {
+  it('plays every round and transfers all earned points in G5E only on END_GAME', () => {
     const s = sim()
     s.begin()
     const first = s.view(s.players[0]).roomState.currentGameSessionId
@@ -124,20 +130,21 @@ describe('G6 — Pista Única LAN with private targets and authoritative rounds'
       const actor = s.guesser()
       const target = s.priv(s.writers()[0]).target!
       s.clues(['um','dois'])
+      s.review()
       s.ok(actor,'SUBMIT_GUESS',{text:round===1?'uma resposta errada':target},'game')
       expect(s.pub().lastResult?.correct).toBe(round !== 1)
       s.ok(s.players[0],'NEXT_ROUND',null,'game')
     }
-    expect(s.pub()).toMatchObject({step:'summary',scores:{host:1,'guest-1':0,'guest-2':1}})
+    expect(s.pub()).toMatchObject({step:'summary',scores:{host:3,'guest-1':2,'guest-2':3}})
     expect(s.send(s.players[0],'NEXT_ROUND',null,'game').result.error).toBe('invalid_phase')
     s.ok(s.players[0],'END_GAME')
-    expect(s.view(s.players[0]).roomState.competition?.standings.map(p=>p.points)).toEqual([1,0,1])
+    expect(s.view(s.players[0]).roomState.competition?.standings.map(p=>p.points)).toEqual([3,2,3])
     expect(s.send(s.players[0],'END_GAME').result.error).toBe('invalid_phase')
     s.ok(s.players[0],'RETURN_TO_LOBBY')
     expect(s.view(s.players[1]).privateState).toBeNull()
     s.begin(['movies'])
     expect(s.view(s.players[0]).roomState.currentGameSessionId).not.toBe(first)
-    expect(s.view(s.players[0]).roomState.competition?.standings.map(p=>p.points)).toEqual([1,0,1])
+    expect(s.view(s.players[0]).roomState.competition?.standings.map(p=>p.points)).toEqual([3,2,3])
   })
 
   it('rejects early ending, late entrants and malformed clue input', () => {
@@ -151,7 +158,7 @@ describe('G6 — Pista Única LAN with private targets and authoritative rounds'
     const later = {id:late.playerId,conn:'later'}
     expect(s.send(later,'SUBMIT_CLUE',{text:'forged'},'game').result.error).toBe('not_participant')
     const writer = s.writers()[0]
-    for (const value of ['', ' '.repeat(20), 'x'.repeat(49), 123]) {
+    for (const value of ['', ' '.repeat(20), '!!!', 'x'.repeat(49), 123]) {
       expect(s.send(writer,'SUBMIT_CLUE',{text:value},'game').result.status).toBe('rejected')
     }
     expect(s.pub().submittedCount).toBe(0)
@@ -163,7 +170,84 @@ describe('G6 — Pista Única LAN with private targets and authoritative rounds'
     s.writers().forEach((p,i)=>s.ok(p,'SUBMIT_CLUE',{text:`Pista ${i}`},'game'))
     for (const p of s.players) {
       expect(roomFrameFits({kind:'snapshotV2',protocolVersion:2,snapshot:s.view(p)})).toBe(true)
-      expect(s.pub().clues).toHaveLength(11)
+      expect(s.pub().clues).toHaveLength(0)
+      expect(s.priv(s.reviewer()).reviewClues).toHaveLength(11)
     }
   })
+})
+
+
+describe('Pista Única LAN — revisão restrita e distribuição de pontos', () => {
+  it('keeps all unapproved hints private, then awards +2/+1 only for eligible authors', () => {
+    const s = sim(3)
+    s.begin()
+    const target = s.priv(s.writers()[0]).target!
+    const [a,b,c] = s.writers()
+    s.clues(['  MAÇÃ ', 'maca!', 'Fruta'])
+    expect(s.pub().step).toBe('review')
+    expect(s.pub().clues).toEqual([])
+    expect(s.priv(s.guesser()).reviewClues).toBeUndefined()
+    expect(s.priv(b).reviewClues).toBeUndefined()
+    expect(s.pub().reviewerId).toBe(a.id) // host is guesser, first writer reviews
+    expect(s.priv(a).reviewClues).toMatchObject([
+      { playerId: a.id, reason:'duplicate', included:false },
+      { playerId: b.id, reason:'duplicate', included:false },
+      { playerId: c.id, reason:null, included:true },
+    ])
+    expect(JSON.stringify(s.view(s.guesser()))).not.toContain('Fruta')
+    expect(s.send(s.guesser(), 'CONFIRM_CLUES', null, 'game').result.status).toBe('rejected')
+    expect(s.send(b,'SET_CLUE_INCLUDED',{playerId:c.id,included:false},'game').result.status).toBe('rejected')
+    expect(s.send(a,'SET_CLUE_INCLUDED',{playerId:b.id,included:true},'game').result.status).toBe('rejected')
+    s.review()
+    expect(s.pub()).toMatchObject({step:'guessing',clues:['Fruta'],excludedCount:2})
+    s.ok(s.guesser(),'SUBMIT_GUESS',{text:target},'game')
+    expect(s.pub().scores).toMatchObject({host:2,[a.id]:0,[b.id]:0,[c.id]:1})
+    expect(s.pub().lastResult).toMatchObject({correct:true,creditedPlayerIds:[c.id],awardedPoints:{host:2,[c.id]:1}})
+  })
+  it('rejects the target itself and permits authorized manual exclusion before guessing', () => {
+    const s = sim(3)
+    s.begin()
+    const target = s.priv(s.writers()[0]).target!
+    const [a,b,c] = s.writers()
+    s.clues([`   ${target.toUpperCase()}!!!  `,'Pista autorizada','Outra pista'])
+    expect(s.pub().step).toBe('review')
+    expect(s.priv(s.reviewer()).reviewClues?.[0]).toMatchObject({playerId:a.id,included:false,reason:'answer'})
+    s.ok(s.reviewer(),'SET_CLUE_INCLUDED',{playerId:b.id,included:false},'game')
+    expect(s.priv(s.reviewer()).reviewClues?.[1]).toMatchObject({playerId:b.id,included:false,reason:'manual'})
+    s.review()
+    expect(s.pub()).toMatchObject({step:'guessing',clues:['Outra pista'],excludedCount:2})
+    s.ok(s.guesser(),'SUBMIT_GUESS',{text:target},'game')
+    expect(s.pub().scores).toMatchObject({host:2,[a.id]:0,[b.id]:0,[c.id]:1})
+  })
+  it('finishes automatically when all clues are invalid, and scores zero for missed guesses', () => {
+    const zero = sim()
+    zero.begin()
+    zero.clues(['  IGUAL', 'igual!'])
+    expect(zero.pub()).toMatchObject({step:'round-result',clues:[],scores:{host:0,'guest-1':0,'guest-2':0}})
+    const miss = sim()
+    miss.begin()
+    miss.clues(['Primeira','Segunda'])
+    miss.review()
+    miss.ok(miss.guesser(),'SUBMIT_GUESS',{text:'definitivamente errado'},'game')
+    expect(miss.pub().scores).toEqual({host:0,'guest-1':0,'guest-2':0})
+  })
+})
+
+it('allows the host to review when writing and ends a fully excluded round without points', () => {
+  const s = sim()
+  s.begin()
+  s.clues(['Uma','Outra'])
+  s.review()
+  s.ok(s.guesser(),'SUBMIT_GUESS',{text:'resposta incorreta'},'game')
+  s.ok(s.players[0],'NEXT_ROUND',null,'game')
+  expect(s.pub()).toMatchObject({ step:'writing',reviewerId:'host' })
+  const [a,b] = s.writers()
+  s.clues(['Azul','Amarelo'])
+  expect(s.pub().reviewerId).toBe('host')
+  expect(s.priv(s.players[0]).reviewClues).toHaveLength(2)
+  s.ok(s.reviewer(),'SET_CLUE_INCLUDED',{playerId:a.id,included:false},'game')
+  s.ok(s.reviewer(),'SET_CLUE_INCLUDED',{playerId:b.id,included:false},'game')
+  s.review()
+  expect(s.pub()).toMatchObject({step:'round-result',scores:{host:0,'guest-1':0,'guest-2':0}})
+  expect(s.pub().lastResult).toMatchObject({correct:false,clueCount:0,excludedCount:2,awardedPoints:{}})
 })

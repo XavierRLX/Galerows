@@ -23,6 +23,7 @@ export type PistaUnicaRoundResult = {
   targetId: string
   correct: boolean
   clueCount: number
+  creditedPlayerIds?: string[]
 }
 
 export type PistaUnicaSession = {

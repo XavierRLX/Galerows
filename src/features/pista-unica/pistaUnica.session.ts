@@ -66,7 +66,12 @@ export function togglePistaUnicaClue(session: PistaUnicaSession, clueId: string)
 }
 
 export function beginPistaUnicaGuess(session: PistaUnicaSession) {
-  if (session.phase !== 'review' || getVisiblePistaUnicaClues(session.clues).length === 0) return session
+  if (session.phase !== 'review') return session
+  const word = getPistaUnicaTarget(session.currentTargetId)!.title
+  if (getVisiblePistaUnicaClues(session.clues, word).length === 0) {
+    // No playable clues: close the round with zero points rather than trap the session.
+    return finishPistaUnicaRound({ ...session, phase: 'guess' }, false)
+  }
   return touch({ ...session, phase: 'guess' })
 }
 
@@ -74,8 +79,16 @@ export function finishPistaUnicaRound(session: PistaUnicaSession, correct: boole
   if (session.phase !== 'guess') return session
   const guesser = session.participants[session.currentGuesserIndex]
   if (!guesser) return session
-  const result: PistaUnicaRoundResult = { round: session.round, guesserId: guesser.id, targetId: session.currentTargetId, correct, clueCount: getVisiblePistaUnicaClues(session.clues).length }
-  const scores = correct ? { ...session.scores, [guesser.id]: (session.scores[guesser.id] ?? 0) + 1 } : session.scores
+  const word = getPistaUnicaTarget(session.currentTargetId)!.title
+  const valid = getVisiblePistaUnicaClues(session.clues, word)
+  const creditedPlayerIds = correct ? valid.map(clue => clue.participantId) : []
+  const result: PistaUnicaRoundResult = { round: session.round, guesserId: guesser.id,
+    targetId: session.currentTargetId, correct, clueCount: valid.length, creditedPlayerIds }
+  const scores = { ...session.scores }
+  if (correct) {
+    scores[guesser.id] = (scores[guesser.id] ?? 0) + 2
+    for (const id of creditedPlayerIds) scores[id] = (scores[id] ?? 0) + 1
+  }
   return touch({ ...session, scores, phase: 'round-result', lastRoundResult: result, roundResults: [...session.roundResults, result] })
 }
 
@@ -100,14 +113,16 @@ export function continuePistaUnicaSession(session: PistaUnicaSession) {
   })
 }
 
-export function getVisiblePistaUnicaClues(clues: PistaUnicaClue[]) {
-  const seen = new Set<string>()
-  return clues.filter((clue) => {
-    if (!clue.included) return false
-    const normalized = normalizeClue(clue.text)
-    if (!normalized || seen.has(normalized)) return false
-    seen.add(normalized)
-    return true
+export function getVisiblePistaUnicaClues(clues: PistaUnicaClue[], target = '') {
+  const frequencies = new Map<string, number>()
+  for (const clue of clues) {
+    const key = normalizeClue(clue.text)
+    if (key) frequencies.set(key, (frequencies.get(key) ?? 0) + 1)
+  }
+  const normalizedTarget = normalizeClue(target)
+  return clues.filter(clue => {
+    const key = normalizeClue(clue.text)
+    return clue.included && Boolean(key) && key !== normalizedTarget && frequencies.get(key) === 1
   })
 }
 

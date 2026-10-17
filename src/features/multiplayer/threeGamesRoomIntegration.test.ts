@@ -98,6 +98,9 @@ describe('MVP G8 — three distinct LAN games, one Room and one champion', () =>
       const word = (s.snapshot(writers[0]).privateState!.data as PistaUnicaLanPrivate).target!
       expect(JSON.stringify(s.snapshot(guesser).privateState)).not.toContain(word)
       writers.forEach((p, index) => s.ok(p, 'SUBMIT_CLUE', { text: `Pista ${round} ${index}` }))
+      const reviewerId = (s.snapshot(s.clients[0]).gamePublicState!.data as PistaUnicaLanPublic).reviewerId
+      const reviewer = s.clients.find(p => p.id === reviewerId)!
+      s.ok(reviewer, 'CONFIRM_CLUES')
       expect((s.snapshot(s.clients[0]).gamePublicState!.data as PistaUnicaLanPublic).step).toBe('guessing')
       s.ok(guesser, 'SUBMIT_GUESS', { text: word })
       s.ok(s.clients[0], 'NEXT_ROUND')
@@ -143,7 +146,7 @@ describe('MVP G8 — three distinct LAN games, one Room and one champion', () =>
       expect(roomFrameFits({ kind: 'snapshotV2', protocolVersion: 2, snapshot: item })).toBe(true)
     }
     expect(scores.standings.map(entry => entry.played)).toEqual([3, 3, 3, 3])
-    expect(scores.standings.map(entry => entry.points).reduce((a, b) => a + b, 0)).toBe(13)
+    expect(scores.standings.map(entry => entry.points).reduce((a, b) => a + b, 0)).toBe(29) // new Pista scoring adds +2 to the guesser, +1 to each valid author per successful round
     expect(s.send(s.clients[1], 'FINISH_SESSION', null, 'room').result.error).toBe('unauthorized')
     s.ok(s.clients[0], 'FINISH_SESSION', null, 'room')
     expect(s.snapshot(s.clients[0]).roomState.competition?.status).toBe('finished')

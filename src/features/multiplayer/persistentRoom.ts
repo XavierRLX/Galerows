@@ -200,7 +200,7 @@ export class RoomLifecycleAdapter {
       // create or alter points, and an invalid adapter cannot commit partial changes.
       if (game.awardPoints) {
         const awards = game.awardPoints(state.session.gameState)
-        if (!validAwards(awards, state.session.participantIds)) {
+        if (!validAwards(awards, state.session.participantIds, state.session.gameId)) {
           return { ok: false, error: 'invalid_payload' }
         }
         state.competition = applyRoundAwards(state.competition, awards, state.session.participantIds)
@@ -510,11 +510,14 @@ export class RoomCoordinatorV2 {
 }
 
 function validAwards(awards: Readonly<Record<string, number>> | null,
-  participantIds: readonly string[]): awards is Readonly<Record<string, number>> {
+  participantIds: readonly string[], gameId: string): awards is Readonly<Record<string, number>> {
   if (!record(awards)) return false
   const keys = Object.keys(awards)
   return keys.length === participantIds.length && keys.every(id => participantIds.includes(id))
-    && participantIds.every(id => Number.isSafeInteger(awards[id]) && awards[id] >= 0 && awards[id] <= 2)
+    // Pista Única: each player can guess correctly once (+2) and help in
+    // each of the other N-1 rounds (+1 each). Other games keep the 0–2 cap.
+    && participantIds.every(id => Number.isSafeInteger(awards[id]) && awards[id] >= 0
+      && awards[id] <= (gameId === 'pista-unica' ? participantIds.length + 1 : 2))
 }
 
 function applyRoundAwards(competition: RoomCompetitionV2, awards: Readonly<Record<string, number>>,

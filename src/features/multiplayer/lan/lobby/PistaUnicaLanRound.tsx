@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CheckCircle2, Eye, EyeOff, Lightbulb, LockKeyhole, Pencil, Trophy, Users, WifiOff } from 'lucide-react'
+import { CheckCircle2, Eye, EyeOff, Lightbulb, LockKeyhole, Pencil, Trophy, Users, WifiOff, XCircle } from 'lucide-react'
 import type { RoomSnapshotV2 } from '../../persistentProtocol'
 import type { PistaUnicaLanPrivate, PistaUnicaLanPublic } from '../../pistaUnicaLanGame'
 
@@ -99,6 +99,32 @@ function PistaUnicaLanBody({ snapshot, playerId, isHost, busy, connected, onActi
           : <p className="pl03-configured"><CheckCircle2 size={17} /> Sua pista foi enviada. Aguarde o restante da galera.</p>}
     </div>}
 
+    {data.step === 'review' && <div className="pl03-impostor-step">
+      <LockKeyhole size={28} aria-hidden="true" />
+      <strong>Revisão das pistas</strong>
+      {mine?.reviewClues && data.reviewerId === playerId ? <>
+        <p>Você é o revisor desta rodada. Elimine pistas inadequadas antes de liberar o palpite.</p>
+        <div className="pl03-pista-writer" aria-label="Revisão privada das pistas">
+          {mine.reviewClues.map(item => <div key={item.playerId} className="pl03-pista-review-item">
+            <span><strong>{label(item.playerId)}</strong>: <span>{item.text}</span></span>
+            {item.reason === 'duplicate' ? <small>Repetida — removida automaticamente</small>
+              : item.reason === 'answer' ? <small>Dica igual à palavra secreta — removida automaticamente</small>
+              : item.reason === 'manual' ? <small>Removida pelo revisor</small>
+              : <small>Pista válida</small>}
+            {item.reason !== 'duplicate' && item.reason !== 'answer' &&
+              <button type="button" className="pl03-secondary-btn" disabled={!connected || busy}
+                aria-label={item.included ? `Remover pista de ${label(item.playerId)}` : `Reincluir pista de ${label(item.playerId)}`}
+                onClick={() => void onAction('SET_CLUE_INCLUDED',{playerId:item.playerId,included:!item.included})}>
+                {item.included ? <XCircle size={17} /> : <CheckCircle2 size={17} />}
+                {item.included ? 'Remover pista' : 'Reincluir pista'}
+              </button>}
+          </div>)}
+        </div>
+        <button className="pl03-primary-btn" type="button" disabled={!connected || busy}
+          onClick={() => void onAction('CONFIRM_CLUES',null)}>Confirmar pistas</button>
+      </> : <p className="pl03-configured">Aguardando {label(data.reviewerId)} revisar as pistas. A palavra e as pistas continuam privadas.</p>}
+    </div>}
+
     {data.step === 'guessing' && <div className="pl03-impostor-step">
       <Lightbulb size={30} aria-hidden="true" />
       <strong>{isGuesser ? 'Agora é sua vez de adivinhar!' : `${label(data.guesserId)} está pensando...`}</strong>
@@ -119,10 +145,14 @@ function PistaUnicaLanBody({ snapshot, playerId, isHost, busy, connected, onActi
 
     {data.step === 'round-result' && data.lastResult && <div className="pl03-impostor-step">
       <Trophy size={30} aria-hidden="true" />
-      <strong>{data.lastResult.correct ? 'Acertou! +1 ponto' : 'Não foi dessa vez!'}</strong>
+      <strong>{data.lastResult.correct ? 'Acertou! +2 pontos' : 'Não foi dessa vez!'}</strong>
       <p>A resposta era: <b>{data.lastResult.target}</b></p>
       <p>Palpite de {label(data.lastResult.guesserId)}: {data.lastResult.guessedText || 'Sem pistas válidas'}</p>
-      <p>{data.lastResult.clueCount} pistas únicas · {data.lastResult.excludedCount} repetidas removidas</p>
+      <p>{data.lastResult.clueCount} pistas válidas · {data.lastResult.excludedCount} removidas</p>
+      {data.lastResult.correct && <div aria-label="Pontuação da rodada">
+        <p>{label(data.lastResult.guesserId)}: +2 pontos</p>
+        {(data.lastResult.creditedPlayerIds ?? []).map(id => <p key={id}>{label(id)}: +1 ponto pela pista válida</p>)}
+      </div>}
       {isHost && <button type="button" className="pl03-primary-btn"
         disabled={blocked} onClick={() => void onAction('NEXT_ROUND', null)}>
         {data.round >= data.totalRounds ? 'Concluir partida' : 'Próxima rodada'}
