@@ -8,7 +8,7 @@
 
 **Tech Stack:** React 19, TypeScript, Capacitor 8 Android, Vitest, Testing Library, native LAN WebSocket.
 
-**Spec:** `docs/superpowers/reviews/2026-10-14-impostor-final-closeout-city-handoff.md` (seção Cidade Dorme) e `src/features/cidade-dorme/cidadeDorme.types.ts` / `src/features/multiplayer/cidadeDormeLanGame.ts` (regras existentes).
+**Spec:** `docs/superpowers/reviews/2026-10-14-impostor-final-closeout-city-handoff.md` (seção Cidade Dorme), `docs/superpowers/reviews/2026-10-14-cidade-dorme-traitor-jester-design.md` (novos papéis e questões em aberto) e `src/features/cidade-dorme/cidadeDorme.types.ts` / `src/features/multiplayer/cidadeDormeLanGame.ts` (regras existentes).
 
 ## Global Constraints
 
