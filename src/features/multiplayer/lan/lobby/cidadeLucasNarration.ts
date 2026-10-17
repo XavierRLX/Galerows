@@ -14,6 +14,8 @@ export function getCityLucasNarrationSequence(step:CidadeDormeLanStep,outcome?:O
    case 'doctor-turn': return [clip('04_volte_dormir'),clip('05_medico')]
    case 'detective-turn': return [clip('04_volte_dormir'),clip('06_detetive')]
    case 'detective-result': return [clip('07_pista')]
+   case 'watchman-turn': return [clip('04_volte_dormir'),clip('16_vigia')]
+   case 'watchman-result': return [clip('17_resultado_vigia')]
    case 'morning':
      if(!outcome?.nightResult)return []
      return [clip('04_volte_dormir'),clip('08_amanhecer'),

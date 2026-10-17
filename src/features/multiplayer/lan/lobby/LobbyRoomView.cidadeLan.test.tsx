@@ -6,12 +6,12 @@ afterEach(cleanup)
 const actions=()=>({onSelect:vi.fn(),onConfigure:vi.fn(),onReady:vi.fn(),onStart:vi.fn(),
   onGameAction:vi.fn(),onGameCommand:vi.fn(),onEnd:vi.fn(),onBackToLobby:vi.fn(),
   onReconnect:vi.fn(),onLeave:vi.fn(),onClose:vi.fn(),onRefreshInvite:vi.fn()})
-function scene(phase:'lobby'|'configuring'|'playing'):RoomSnapshotV2 {
+function scene(phase:'lobby'|'configuring'|'playing',count=4):RoomSnapshotV2 {
   return {protocolVersion:2,roomId:'r',revision:1,nextClientSeq:1,
     roomState:{hostPlayerId:'host',phase,selectedGameId:phase==='lobby'?null:'cidade-dorme',
       selectedConfig:phase==='playing'?{enableDoctor:true,enableDetective:true,enableJester:false,revealRoleOnDeath:false}:null,
       currentGameSessionId:phase==='playing'?'s1':null,lastPublicResult:null,barriers:[],
-      members:['host','guest','third','fourth'].map((id,i)=>({playerId:id,role:i===0?'host' as const:'guest' as const,
+      members:Array.from({length:count},(_,i)=>i===0?'host':i===1?'guest':i===2?'third':i===3?'fourth':'guest-'+i).map((id,i)=>({playerId:id,role:i===0?'host' as const:'guest' as const,
         connected:true,ready:true,participation:'active' as const}))},
     gamePublicState:phase==='playing'?{gameSessionId:'s1',gameId:'cidade-dorme',data:{
       step:'reveal',round:1,seenCount:0,totalPlayers:4,
@@ -33,22 +33,23 @@ describe('G7 Cidade Dorme persistent lobby integration',()=>{
     expect(screen.getByText(/4 a 12 celulares/i)).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button',{name:'Salvar papéis da Cidade Dorme'}))
     expect(cb.onConfigure).toHaveBeenCalledWith({
-      enableDoctor:true,enableDetective:true,enableJester:false,revealRoleOnDeath:false,conductionMode:'automatic',
-      killersCount:1,doctorCanSelfProtect:false,doctorSelfProtectLimit:1,doctorCanRepeatProtection:true})
+      enableDoctor:true,enableDetective:true,enableJester:false,jesterCount:0,enableWatchman:false,enableSleepwalker:false,
+      revealRoleOnDeath:false,conductionMode:'automatic',
+      killersCount:1,doctorCanSelfProtect:true,doctorSelfProtectLimit:1,doctorCanRepeatProtection:false})
   })
   it('saves custom killer count, self-protection count and consecutive protection policy',()=>{
     const cb=actions()
-    render(<LobbyRoomView snapshot={scene('configuring')} role="host" playerId="host"
+    render(<LobbyRoomView snapshot={scene('configuring',7)} role="host" playerId="host"
       busy={false} status="Conectado" {...cb}/>)
     fireEvent.click(screen.getByRole('button',{name:'2 integrantes assassinos'}))
-    fireEvent.click(screen.getByRole('button',{name:'Médico pode se proteger'}))
     fireEvent.click(screen.getByRole('button',{name:'Limite de autoproteção: 2'}))
     fireEvent.click(screen.getByRole('button',{name:'Médico pode repetir proteção'}))
     fireEvent.click(screen.getByRole('button',{name:'Salvar papéis da Cidade Dorme'}))
     expect(cb.onConfigure).toHaveBeenCalledWith({
-      enableDoctor:true,enableDetective:true,enableJester:false,revealRoleOnDeath:false,
+      enableDoctor:true,enableDetective:true,enableJester:false,jesterCount:0,
+      enableWatchman:true,enableSleepwalker:true,revealRoleOnDeath:false,
       conductionMode:'automatic',killersCount:2,doctorCanSelfProtect:true,
-      doctorSelfProtectLimit:2,doctorCanRepeatProtection:false,
+      doctorSelfProtectLimit:2,doctorCanRepeatProtection:true,
     })
   })
   it('blocks configurations with more special roles than participants, then allows correction',()=>{
@@ -56,9 +57,9 @@ describe('G7 Cidade Dorme persistent lobby integration',()=>{
     render(<LobbyRoomView snapshot={scene('configuring')} role="host" playerId="host"
       busy={false} status="Conectado" {...cb}/>)
     fireEvent.click(screen.getByRole('button',{name:'3 integrantes assassinos'}))
-    expect(screen.getByText(/papéis especiais excedem os jogadores/i)).toBeInTheDocument()
+    expect(screen.getByText(/composição inválida/i)).toBeInTheDocument()
     expect(screen.getByRole('button',{name:'Salvar papéis da Cidade Dorme'})).toBeDisabled()
-    fireEvent.click(screen.getByRole('button',{name:/^Médico$/}))
+    fireEvent.click(screen.getByRole('button',{name:'1 integrantes assassinos'}))
     expect(screen.getByRole('button',{name:'Salvar papéis da Cidade Dorme'})).toBeEnabled()
   })
   it('lets the host choose mayor mode while leaving the same lobby and saving the authorized config',()=>{
@@ -68,9 +69,10 @@ describe('G7 Cidade Dorme persistent lobby integration',()=>{
     fireEvent.click(screen.getByRole('button',{name:'Com prefeito — narração humana'}))
     fireEvent.click(screen.getByRole('button',{name:'Salvar papéis da Cidade Dorme'}))
     expect(cb.onConfigure).toHaveBeenCalledWith({
-      enableDoctor:true,enableDetective:true,enableJester:false,revealRoleOnDeath:false,
-      conductionMode:'mayor',killersCount:1,doctorCanSelfProtect:false,
-      doctorSelfProtectLimit:1,doctorCanRepeatProtection:true,
+      enableDoctor:true,enableDetective:true,enableJester:false,jesterCount:0,
+      enableWatchman:false,enableSleepwalker:false,revealRoleOnDeath:false,
+      conductionMode:'mayor',killersCount:1,doctorCanSelfProtect:true,
+      doctorSelfProtectLimit:1,doctorCanRepeatProtection:false,
     })
     expect(screen.getByText(/não recebe papel nem vota/i)).toBeInTheDocument()
   })

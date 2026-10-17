@@ -46,6 +46,18 @@ describe('CITY-MAYOR-02 — confidential orchestration panel',()=>{
       connected busy={false} {...callbacks}/>)
     expect(screen.queryByRole('button',{name:'Continuar após turno sem ação'})).toBeNull()
   })
+  it('lets the human mayor advance the Watchman decoy and result without revealing whether the role is alive', () => {
+    const callbacks = actions()
+    const { rerender } = render(<CidadeDormeMayorPanel snapshot={frame('watchman-turn')}
+      connected busy={false} {...callbacks} />)
+    const action = screen.getByRole('button', { name: 'Continuar após turno sem ação' })
+    fireEvent.click(action)
+    expect(callbacks.onGameCommand).toHaveBeenCalledWith('SIMULATE_NIGHT_ROLE', null)
+    rerender(<CidadeDormeMayorPanel snapshot={frame('watchman-result')}
+      connected busy={false} {...callbacks} />)
+    expect(screen.getByRole('button', { name: 'Continuar após turno sem ação' })).toBeInTheDocument()
+    expect(screen.queryByText(/vigia eliminado/i)).not.toBeInTheDocument()
+  })
   it('shows phase and progress by default without any sensitive role or target',()=>{
     render(<CidadeDormeMayorPanel snapshot={frame()} connected busy={false} {...actions()}/>)
     expect(screen.getByRole('heading',{name:'Prefeito da cidade'})).toBeInTheDocument()

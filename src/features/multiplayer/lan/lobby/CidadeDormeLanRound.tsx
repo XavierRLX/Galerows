@@ -16,12 +16,13 @@ type Props = {
 }
 const roleLabels: Record<RoleKey, string> = {
   killer: 'Assassino', traitor: 'Traidor', doctor: 'Médico', detective: 'Detetive',
-  citizen: 'Cidadão', jester: 'Coringa',
+  citizen: 'Cidadão', jester: 'Coringa', watchman: 'Vigia', sleepwalker: 'Sonâmbulo',
 }
 const titleFor: Record<CidadeDormeLanStep, string> = {
   reveal: 'Descubra seu papel', 'killer-turn': 'A cidade adormeceu',
   'doctor-turn': 'A noite continua', 'detective-turn': 'O mistério aumenta',
   'detective-result': 'Pista confidencial',
+  'watchman-turn': 'O Vigia observa', 'watchman-result': 'O Vigia recebe a pista',
   morning: 'A cidade acordou', discussion: 'Hora da discussão',
   voting: 'Votação da galera', 'vote-result': 'Resultado da votação', summary: 'Fim de partida',
 }

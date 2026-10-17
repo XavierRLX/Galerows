@@ -31,6 +31,10 @@ export function decideCityAutopilot(input:CityAutopilotInput):CityAutoGameComman
       : elapsed>=14000?'SIMULATE_NIGHT_ROLE':null
     case 'detective-result':return !game.phaseReady ? elapsed>=8500?'OPEN_PHASE':null
       : elapsed>=14000?'SIMULATE_NIGHT_ROLE':null
+    case 'watchman-turn':return !game.phaseReady ? elapsed>=8000?'OPEN_PHASE':null
+      : elapsed>=14000?'SIMULATE_NIGHT_ROLE':null
+    case 'watchman-result':return !game.phaseReady ? elapsed>=8000?'OPEN_PHASE':null
+      : elapsed>=14000?'SIMULATE_NIGHT_ROLE':null
     case 'morning':return elapsed>=8500?'START_DISCUSSION':null
     case 'discussion':return elapsed>=36000?'START_VOTE':null
     case 'voting':

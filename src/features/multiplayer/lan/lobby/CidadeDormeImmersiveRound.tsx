@@ -6,6 +6,7 @@ import {
 import type { RoomSnapshotV2 } from '../../persistentProtocol'
 import type { CidadeDormeLanPrivate, CidadeDormeLanPublic, CidadeDormeLanStep } from '../../cidadeDormeLanGame'
 import type { RoleKey } from '../../../cidade-dorme/cidadeDorme.types'
+import { CIDADE_DORME_ROLES } from '../../../cidade-dorme/cidadeDorme.roles'
 import { CidadeDormeAtmosphere } from './CidadeDormeAtmosphere'
 import { createCityNarrationGate } from './cidadeNarration'
 import { decideCityAutopilot } from './cidadeAutopilot'
@@ -21,6 +22,7 @@ type Props = {
 }
 const roleNames: Record<RoleKey, string> = {
   citizen: 'Cidadão', killer: 'Assassino', traitor: 'Traidor', doctor: 'Médico', detective: 'Detetive', jester: 'Coringa',
+  watchman: 'Vigia', sleepwalker: 'Sonâmbulo',
 }
 const roleDescriptions: Record<RoleKey, string> = {
   citizen: 'Observe, converse e vote. Você não acorda para agir à noite.',
@@ -29,13 +31,21 @@ const roleDescriptions: Record<RoleKey, string> = {
   doctor: 'Proteja uma pessoa. A autoproteção depende das regras escolhidas pelo anfitrião.',
   detective: 'Investigue uma pessoa. O resultado aparece somente neste celular.',
   jester: 'Você vence se a cidade eliminar você pela votação.',
+  watchman: 'Observe uma pessoa durante a noite. Só você descobrirá se ela passou pela rua.',
+  sleepwalker: 'Você anda pela cidade durante a noite sem precisar agir.',
+}
+const roleArtwork: Record<RoleKey, string> = {
+  killer:'assassino',traitor:'traidor',detective:'detetive',doctor:'medico',
+  watchman:'vigia-v2',sleepwalker:'sonambulo-v2',jester:'coringa',citizen:'cidadao',
 }
 const chapter: Record<CidadeDormeLanStep, { eyebrow: string; title: string; prompt: string }> = {
-  reveal: { eyebrow: 'PRÓLOGO · O SEGREDO', title: 'Descubra seu papel.', prompt: 'Veja sua identidade longe dos olhares da galera.' },
+  reveal: { eyebrow: 'PRÓLOGO · O SEGREDO', title: 'Pegue sua carta no monte.', prompt: 'Veja sua identidade longe dos olhares da galera.' },
   'killer-turn': { eyebrow: 'NOITE · A SOMBRA', title: 'A cidade dorme.', prompt: 'O Assassino ativo escolhe em silêncio.' },
   'doctor-turn': { eyebrow: 'NOITE · A PROTEÇÃO', title: 'Uma chance de salvar.', prompt: 'O médico pode proteger alguém nesta noite.' },
   'detective-result': { eyebrow: 'NOITE · A PISTA', title: 'Você encontrou uma pista.', prompt: 'O Detetive deve ler a resposta em segredo antes de amanhecer.' },
   'detective-turn': { eyebrow: 'NOITE · A INVESTIGAÇÃO', title: 'Uma pista na escuridão.', prompt: 'O detetive investiga uma pessoa em segredo.' },
+  'watchman-turn': { eyebrow: 'NOITE · VIGIA', title: 'Observe em silêncio.', prompt: 'O Vigia pode observar uma pessoa.' },
+  'watchman-result': { eyebrow: 'NOITE · O QUE VIU', title: 'Uma sombra passou?', prompt: 'O Vigia consulta a pista secreta.' },
   morning: { eyebrow: 'AMANHECER · A REVELAÇÃO', title: 'A cidade acordou.', prompt: 'Descubram o que aconteceu enquanto dormiam.' },
   discussion: { eyebrow: 'DIA · O DEBATE', title: 'Quem parece suspeito?', prompt: 'Conversem frente a frente antes de decidir.' },
   voting: { eyebrow: 'DIA · O JULGAMENTO', title: 'A cidade decide.', prompt: 'Cada pessoa viva vota no próprio celular.' },
@@ -185,11 +195,12 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
   if (!data) return <div ref={root} className="cdg-root" data-testid="cidade-immersive"><p role="status">Retomando a partida…</p></div>
   const autoGame=(snapshot.roomState.selectedConfig as {conductionMode?:string}|null)?.conductionMode==='automatic'
   const alive = data.players.filter(player => player.alive)
-  const night = ['reveal', 'killer-turn', 'doctor-turn', 'detective-turn'].includes(data.step)
-  const activeTurn = ['killer-turn', 'doctor-turn', 'detective-turn', 'voting'].includes(data.step)
+  const night = ['reveal', 'killer-turn', 'doctor-turn', 'detective-turn', 'detective-result', 'watchman-turn', 'watchman-result'].includes(data.step)
+  const activeTurn = ['killer-turn', 'doctor-turn', 'detective-turn', 'watchman-turn', 'voting'].includes(data.step)
   const correctRole = data.step === 'killer-turn' ? Boolean(mine?.activeKiller ?? (mine?.role === 'killer'))
     : data.step === 'doctor-turn' ? mine?.role === 'doctor'
-      : data.step === 'detective-turn' ? mine?.role === 'detective' : data.step === 'voting'
+      : data.step === 'detective-turn' ? mine?.role === 'detective'
+        : data.step === 'watchman-turn' ? mine?.role === 'watchman' : data.step === 'voting'
   const canAct = Boolean(mine?.canAct && correctRole && mine.alive && !mine.voted && canSend
     && (!autoGame || data.phaseReady !== false))
   const targets = alive.filter(player => {
@@ -205,7 +216,8 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
   const action = data.step === 'killer-turn' ? { type: 'KILL', text: 'Escolher vítima' }
     : data.step === 'doctor-turn' ? { type: 'PROTECT', text: 'Proteger pessoa' }
       : data.step === 'detective-turn' ? { type: 'INVESTIGATE', text: 'Investigar pessoa' }
-        : { type: 'CAST_VOTE', text: 'Confirmar meu voto' }
+        : data.step === 'watchman-turn' ? { type: 'WATCH', text: 'Observar pessoa' }
+          : { type: 'CAST_VOTE', text: 'Confirmar meu voto' }
   const send = (type: string, payload: unknown = null, personal = false) => {
     if (blocked || (personal && !canSend)) return
     setRevealed(false); setRoleOpen(false)
@@ -248,12 +260,13 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
           <h2>Todos têm um segredo.</h2><p>{data.seenCount} de {data.totalPlayers} pessoas confirmaram seu papel.</p>
           {!mine && <p role="status">Aguardando sua informação privada.</p>}
           {mine?.acknowledged ? <p role="status" className="cdg-confirmed"><Check size={17}/> Seu papel foi confirmado.</p>
-            : <p>Abra a carta, descubra quem você é e confirme.</p>}
+            : <p>Toque numa carta do monte, veja seu papel e confirme.</p>}
         </section>}
         {activeTurn && <>
           {canAct ? <><p className="cdg-instruction">{data.step === 'voting' ? 'Seu voto é secreto. Escolha uma pessoa.'
             : data.step === 'killer-turn' ? 'Escolha uma vítima sem mostrar aos outros.'
-              : data.step === 'doctor-turn' ? 'Escolha quem proteger nesta noite.' : 'Investigue uma pessoa em segredo.'}</p>
+              : data.step === 'doctor-turn' ? 'Escolha quem proteger nesta noite.'
+                : data.step === 'watchman-turn' ? 'Escolha uma pessoa para observar esta noite.' : 'Investigue uma pessoa em segredo.'}</p>
             <div className="cdg-targets" role="group" aria-label="Escolher pessoa">
               {targets.slice(currentPage * pageSize, (currentPage + 1) * pageSize).map((player, index) =>
                 <button type="button" key={player.id} aria-label={`Selecionar ${name(player.id)}`}
@@ -285,6 +298,17 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
                 <ActionButton onClick={()=>setClueVisible(true)}>Ver minha pista <Eye size={17}/></ActionButton></>}
               </>
             : <><h2>A cidade ainda dorme.</h2><p>O Detetive está lendo uma pista confidencial.</p></>}
+        </section>}
+        {data.step === 'watchman-result' && <section className="cdg-center" aria-label="Resultado confidencial do Vigia">
+          <Eye className="cdg-scene-icon" size={58} strokeWidth={1.1}/>
+          {mine?.role === 'watchman' && mine.watchmanObservation && connected
+            ? <><h2>O que o Vigia viu</h2>
+              {clueVisible ? <><p role="status">{name(mine.watchmanObservation.targetId)}: <strong>{mine.watchmanObservation.result === 'passed' ? 'Passou pela rua.' : 'Não passou pela rua.'}</strong></p>
+                <p>A observação não revela papel, destino ou ação.</p>
+                <ActionButton disabled={blocked || (autoGame && !data.phaseReady)} onClick={() => send('ACK_WATCHMAN_RESULT', null, true)}>Entendi, vou dormir <Check size={17}/></ActionButton>
+              </> : <><p>A pista é apenas sua. Guarde segredo.</p>
+                <ActionButton onClick={() => setClueVisible(true)}>Conferir observação <Eye size={17}/></ActionButton></>}
+              </> : <><h2>A cidade ainda dorme.</h2><p>O Vigia observa em silêncio.</p></>}
         </section>}
         {data.step === 'morning' && <section className="cdg-center"><Sun className="cdg-scene-icon" size={64} strokeWidth={1.1}/>
           <h2>{data.nightResult?.eliminatedId ? `${name(data.nightResult.eliminatedId)} não resistiu à noite.` : 'Todos sobreviveram à noite.'}</h2>
@@ -374,14 +398,31 @@ function CidadeDormeImmersiveBody({ snapshot, playerId, isHost, busy, connected,
         <div className="cdg-role-top"><LockKeyhole size={16}/> APENAS PARA SEUS OLHOS
           <button type="button" aria-label="Fechar papel secreto" onClick={() => { setRevealed(false); setRoleOpen(false) }}><X size={20}/></button></div>
         <div className="cdg-role-face" key={revealed ? 'open' : 'closed'}>
-          {revealed ? <><p>SEU PAPEL</p><h2 data-testid="cidade-private-role">{roleNames[mine.role]}</h2>
+          {revealed ? <div className="cdg-illustrated-card" data-testid="cidade-illustrated-card">
+            <img className="cdg-card-art"
+              src={'/assets/games/cidade-dorme/cards/'+roleArtwork[mine.role]+'.webp'}
+              alt={'Carta ilustrada: '+roleNames[mine.role]}/>
+            <p className="cdg-card-name">SEU PAPEL</p><h2 data-testid="cidade-private-role">{roleNames[mine.role]}</h2>
             <span>{roleDescriptions[mine.role]}</span>
-            {mine.killerTeammates && mine.killerTeammates.length > 0 && <small>Seus aliados: {mine.killerTeammates.map(name).join(', ')}</small>}
-            {mine.investigation && <small>Investigação: {name(mine.investigation.targetId)} é {mine.investigation.result === 'suspect' ? 'suspeito' : 'inocente'}.</small>}</>
-            : <><Moon size={58} strokeWidth={1.1}/><h2>Identidade protegida</h2><span>Confira sem ninguém olhar. A carta se oculta após 5 segundos.</span></>}
+            <small>Objetivo: {CIDADE_DORME_ROLES[mine.role].objective}</small>
+            {mine.successionOrder && <small>A equipe assassina:
+              {mine.successionOrder.map((id,index)=>
+                <span key={id}> {index?' → ':''}{name(id)} ({index===0?'Assassino':'Traidor'})
+                  {id===mine.activeKillerId?' · ativo':''}</span>)}</small>}
+            {mine.investigation && <small>Investigação: {name(mine.investigation.targetId)} é
+              {mine.investigation.result === 'suspect' ? ' suspeito' : ' inocente'}.</small>}
+          </div>
+          : <button type="button" className="cdg-card-deck" disabled={blocked}
+              onClick={() => setRevealed(true)} aria-label="Pegue sua carta no monte">
+              <span className="cdg-card-back cdg-card-back-left" aria-hidden="true"/>
+              <span className="cdg-card-back cdg-card-back-right" aria-hidden="true"/>
+              <span className="cdg-card-back cdg-card-back-center" aria-hidden="true"><Moon size={48} strokeWidth={1.1}/></span>
+              <strong>Pegue sua carta no monte</strong>
+              <small>A escolha não altera seu papel, já distribuído em segredo.</small>
+            </button>}
         </div>
-        <ActionButton secondary disabled={blocked} onClick={() => setRevealed(value => !value)}>
-          {revealed ? <EyeOff size={17}/> : <Eye size={17}/>} {revealed ? 'Ocultar meu papel' : 'Revelar meu papel'}</ActionButton>
+        {revealed && <ActionButton secondary disabled={blocked} onClick={() => setRevealed(false)}>
+          <EyeOff size={17}/> Ocultar carta</ActionButton>}
         {data.step === 'reveal' && !mine.acknowledged && <ActionButton disabled={!revealed || !canSend}
           onClick={() => send('ACK_ROLE', null, true)}><Check size={17}/> Confirmar meu papel</ActionButton>}
       </section></div>}

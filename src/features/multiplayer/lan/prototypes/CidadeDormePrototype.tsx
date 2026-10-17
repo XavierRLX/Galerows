@@ -16,7 +16,7 @@ const initialConfig: CidadeDormeLanConfig = {
   enableJester: defaults.enableJester, revealRoleOnDeath: defaults.revealRoleOnDeath,
 }
 const roleName: Record<RoleKey, string> = {
-  citizen: 'Cidadão', killer: 'Assassino', traitor: 'Traidor', doctor: 'Médico', detective: 'Detetive', jester: 'Coringa',
+  citizen: 'Cidadão', killer: 'Assassino', traitor: 'Traidor', doctor: 'Médico', detective: 'Detetive', jester: 'Coringa', watchman: 'Vigia', sleepwalker: 'Sonâmbulo',
 }
 const roleDescription: Record<RoleKey, string> = {
   citizen: 'Você não acorda à noite. Observe, converse e vote para encontrar os assassinos.',
@@ -25,6 +25,8 @@ const roleDescription: Record<RoleKey, string> = {
   doctor: 'Acorde à noite e escolha uma pessoa para proteger. Você não pode proteger a si mesmo.',
   detective: 'Investigue uma pessoa à noite. A resposta aparece somente neste celular.',
   jester: 'Seu objetivo é convencer a cidade a eliminar você pela votação.',
+  watchman: 'Observe uma pessoa à noite e descubra se passou pela rua.',
+  sleepwalker: 'Você sai durante a noite sem precisar escolher ações.',
 }
 const stepCopy: Record<CidadeDormeLanPublic['step'], { overline: string; title: string; intro: string }> = {
   reveal: { overline: 'PRÓLOGO · O SEGREDO', title: 'Descubra seu papel', intro: 'A cidade ainda está acordada. Veja sua identidade sem mostrar a ninguém.' },
@@ -32,6 +34,8 @@ const stepCopy: Record<CidadeDormeLanPublic['step'], { overline: string; title: 
   'doctor-turn': { overline: 'NOITE · A PROTEÇÃO', title: 'Uma chance de salvar.', intro: 'O médico pode proteger uma pessoa nesta noite.' },
   'detective-result': { overline: 'NOITE · PISTA', title: 'Resultado do Detetive', intro: 'Confirme a pista no próprio celular.' },
   'detective-turn': { overline: 'NOITE · A INVESTIGAÇÃO', title: 'Uma pista na escuridão.', intro: 'O detetive investiga uma pessoa. A resposta é só dele.' },
+  'watchman-turn': { overline: 'NOITE · VIGIA', title: 'O Vigia observa.', intro: 'Um jogador é observado em segredo.' },
+  'watchman-result': { overline: 'NOITE · PISTA DO VIGIA', title: 'O Vigia recebe a pista.', intro: 'Guarde a pista em segredo.' },
   morning: { overline: 'AMANHECER · A REVELAÇÃO', title: 'A cidade acordou.', intro: 'A noite terminou. Descubram o que aconteceu antes de conversar.' },
   discussion: { overline: 'DIA · O DEBATE', title: 'Quem parece suspeito?', intro: 'Conversem frente a frente. Observem cada história antes do voto.' },
   voting: { overline: 'DIA · O JULGAMENTO', title: 'A cidade decide.', intro: 'Cada pessoa viva vota no próprio celular. O voto permanece secreto.' },

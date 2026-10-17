@@ -133,10 +133,14 @@ export function LobbyRoomView({
   const [cidadeRoles, setCidadeRoles] = useState({
     enableDoctor: typeof saved?.enableDoctor === 'boolean' ? saved.enableDoctor : true,
     enableDetective: typeof saved?.enableDetective === 'boolean' ? saved.enableDetective : true,
-    enableJester: saved?.enableJester === true, revealRoleOnDeath: saved?.revealRoleOnDeath === true,
-    doctorCanSelfProtect: saved?.doctorCanSelfProtect === true,
-    doctorCanRepeatProtection: saved?.doctorCanRepeatProtection !== false,
+    enableWatchman: typeof saved?.enableWatchman === 'boolean' ? saved.enableWatchman : undefined,
+    enableSleepwalker: typeof saved?.enableSleepwalker === 'boolean' ? saved.enableSleepwalker : undefined,
+    revealRoleOnDeath: saved?.revealRoleOnDeath === true,
+    doctorCanSelfProtect: saved?.doctorCanSelfProtect !== false,
+    doctorCanRepeatProtection: saved?.doctorCanRepeatProtection === true,
   })
+  const [cidadeJesterCount,setCidadeJesterCount]=useState<0|1|2>(()=>
+    saved?.jesterCount===1||saved?.jesterCount===2 ? saved.jesterCount : saved?.enableJester===true ? 1 : 0)
   const [cidadeKillersOverride, setCidadeKillersOverride] = useState<1|2|3|null>(()=>
     saved?.killersCount===1||saved?.killersCount===2||saved?.killersCount===3
       ? saved.killersCount as 1|2|3 : null)
@@ -148,9 +152,11 @@ export function LobbyRoomView({
     (cidadeMode!=='mayor'||m.role!=='host')).length
   const cityDefaultKillers=getRecommendedKillersCount(Math.max(4,cityParticipantCount))
   const cityKillers=cidadeKillersOverride??cityDefaultKillers
-  const citySpecialRoles=cityKillers+Number(cidadeRoles.enableDoctor)
-    +Number(cidadeRoles.enableDetective)+Number(cidadeRoles.enableJester)
-  const cityCompositionInvalid=cityParticipantCount>=4 && citySpecialRoles>cityParticipantCount
+  const cityWatchman=cityParticipantCount>=7 && (cidadeRoles.enableWatchman ?? true)
+  const citySleepwalker=cityParticipantCount>=7 && (cidadeRoles.enableSleepwalker ?? true)
+  const citySpecialRoles=cityKillers+2+Number(cityWatchman)+Number(citySleepwalker)+cidadeJesterCount
+  const cityCompositionInvalid=cityParticipantCount>=4 && (citySpecialRoles>=cityParticipantCount
+    || cityKillers>=cityParticipantCount/2)
   const [showCatalog, setShowCatalog] = useState(false)
   const [showPlayers, setShowPlayers] = useState(false)
   const [showStandings, setShowStandings] = useState(false)
@@ -443,17 +449,37 @@ export function LobbyRoomView({
                   </button>)}
                 </div>
                 <strong>Configure os papéis da galera</strong>
+                <p>Médico e Detetive são obrigatórios. Vigia e Sonâmbulo estão disponíveis a partir de 7 jogadores.</p>
                 <div className="pl03-cidade-settings" aria-label="Papéis do Cidade Dorme">
                   {([
-                    ['enableDoctor', 'Médico'],
-                    ['enableDetective', 'Detetive'],
-                    ['enableJester', 'Coringa'],
                     ['revealRoleOnDeath', 'Revelar papel ao morrer'],
                   ] as const).map(([key, label]) => <button type="button" key={key}
                     className={cidadeRoles[key] ? 'is-selected' : ''}
                     aria-pressed={cidadeRoles[key]} disabled={busy || !connected}
                     onClick={() => setCidadeRoles(value => ({ ...value, [key]: !value[key] }))}>
                     <Check size={15} aria-hidden="true" /> {label}
+                  </button>)}
+                </div>
+                <div className="pl03-cidade-settings" aria-label="Papéis opcionais da cidade">
+                  <button type="button" disabled={busy || !connected || cityParticipantCount < 7}
+                    aria-pressed={cityWatchman} className={cityWatchman ? 'is-selected' : ''}
+                    onClick={() => setCidadeRoles(v => ({ ...v, enableWatchman: !cityWatchman }))}>
+                    <Check size={15} aria-hidden="true"/> Vigia
+                  </button>
+                  <button type="button" disabled={busy || !connected || cityParticipantCount < 7}
+                    aria-pressed={citySleepwalker} className={citySleepwalker ? 'is-selected' : ''}
+                    onClick={() => setCidadeRoles(v => ({ ...v, enableSleepwalker: !citySleepwalker }))}>
+                    <Check size={15} aria-hidden="true"/> Sonâmbulo
+                  </button>
+                </div>
+                <strong>Coringas opcionais</strong>
+                <p>De 0 a 2 Coringas. Cada um só vence se for eliminado por votação.</p>
+                <div className="pl03-cidade-settings" role="group" aria-label="Quantidade de Coringas">
+                  {([0,1,2] as const).map(count=><button type="button" key={count}
+                    aria-label={count+' Coringa'+(count===1?'':'s')}
+                    aria-pressed={cidadeJesterCount===count} className={cidadeJesterCount===count?'is-selected':''}
+                    disabled={busy||!connected} onClick={()=>setCidadeJesterCount(count)}>
+                    {count===0?'Sem Coringa':count+' Coringa'+(count===1?'':'s')}
                   </button>)}
                 </div>
                 <p>Para preservar o mistério dos papéis eliminados, deixe
@@ -487,11 +513,14 @@ export function LobbyRoomView({
                 <p>{cidadeMode === 'mayor' ? '4 a 12 celulares de jogadores, além do prefeito, que não recebe papel.'
                   : '4 a 12 celulares. Todos recebem um papel secreto. A noite e os votos são resolvidos pela rede local.'}</p>
                 <p>{cityKillers===1?'1 Assassino':'1 Assassino + '+(cityKillers-1)+' Traidor'+(cityKillers===3?'es':'')}.
-                  Total de papéis especiais: {citySpecialRoles} de {cityParticipantCount} jogadores conectados.</p>
-                {cityCompositionInvalid && <p className="pl03-pista-alert" role="alert">Os papéis especiais excedem os jogadores. Reduza a equipe assassina ou desative um papel opcional.</p>}
+                  Total de papéis especiais: {citySpecialRoles} de {cityParticipantCount} jogadores conectados.
+                  Cidadãos restantes: {Math.max(0,cityParticipantCount-citySpecialRoles)}.</p>
+                {cityCompositionInvalid && <p className="pl03-pista-alert" role="alert">Composição inválida: preserve ao menos 1 Cidadão e não inicie com a equipe assassina em paridade.</p>}
                 <button type="button" className="pl03-secondary-btn"
                   disabled={busy || !connected || cityCompositionInvalid}
                   onClick={() => void onConfigure({ ...cidadeRoles, conductionMode: cidadeMode,
+                    enableDoctor:true,enableDetective:true,enableWatchman:cityWatchman,enableSleepwalker:citySleepwalker,
+                    enableJester:cidadeJesterCount>0,jesterCount:cidadeJesterCount,
                     killersCount:cityKillers,doctorSelfProtectLimit:cidadeSelfLimit })}>
                   <Check size={17} aria-hidden="true" /> Salvar papéis da Cidade Dorme
                 </button>

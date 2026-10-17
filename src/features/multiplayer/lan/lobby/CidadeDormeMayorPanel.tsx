@@ -28,6 +28,8 @@ const descriptions:Record<CidadeDormeLanStep,{title:string,script:string}> = {
   'doctor-turn':{title:'O médico acorda',script:'Assassino, durma. Médico, acorde e escolha quem proteger.'},
   'detective-result':{title:'Pista do Detetive',script:'O Detetive lê a resposta secreta e confirma quando terminar.'},
   'detective-turn':{title:'O detetive acorda',script:'Médico, durma. Detetive, acorde e escolha quem investigar.'},
+  'watchman-turn':{title:'O Vigia observa',script:'Vigia, acorde e escolha uma pessoa para observar.'},
+  'watchman-result':{title:'Resultado do Vigia',script:'Vigia, confira o resultado privado em seu celular.'},
   morning:{title:'A cidade acorda',script:'Todos acordam. Anuncie o resultado público da noite.'},
   discussion:{title:'Discussão da cidade',script:'A cidade conversa livremente. Você pode iniciar a votação quando todos terminarem.'},
   voting:{title:'Votação secreta',script:'Cada jogador vivo escolhe e confirma seu voto no próprio celular. Aguarde todos.'},
@@ -35,7 +37,7 @@ const descriptions:Record<CidadeDormeLanStep,{title:string,script:string}> = {
   summary:{title:'Fim da partida',script:'Anuncie o grupo vencedor. Encerre a partida para registrar a pontuação.'},
 }
 const roleLabels:Record<RoleKey,string>={killer:'Assassino',traitor:'Traidor',doctor:'Médico',
-  detective:'Detetive',citizen:'Cidadão',jester:'Coringa'}
+  detective:'Detetive',citizen:'Cidadão',jester:'Coringa',watchman:'Vigia',sleepwalker:'Sonâmbulo'}
 const nextCommands:Partial<Record<CidadeDormeLanStep,{label:string,type:string,ready:boolean}>> = {
   reveal:{label:'Começar a noite',type:'START_NIGHT',ready:true},
   morning:{label:'Começar discussão',type:'START_DISCUSSION',ready:true},
@@ -91,7 +93,7 @@ export function CidadeDormeMayorPanel({snapshot,connected,busy,onRoomCommand,onG
     ? `${pub.seenCount} de ${pub.totalPlayers} jogadores visualizaram o papel.`
     :pub.step==='voting'
       ? `${pub.votedCount} de ${pub.eligibleVoters} votos registrados.`
-      : ['killer-turn','doctor-turn','detective-turn'].includes(pub.step)
+      : ['killer-turn','doctor-turn','detective-turn','watchman-turn','watchman-result'].includes(pub.step)
         ? 'Aguarde a ação secreta do participante autorizado.'
         : 'Acompanhe a fase e conduza a narração.'
   const next=nextCommands[pub.step]
@@ -119,7 +121,7 @@ export function CidadeDormeMayorPanel({snapshot,connected,busy,onRoomCommand,onG
       {next && <button type="button" className="pl03-primary-btn"
         disabled={busy||!connected||!canContinue||Boolean(pub.paused)}
         onClick={()=>void onGameCommand(next.type,null)}>{next.label}</button>}
-      {(['doctor-turn','detective-turn'].includes(pub.step)) &&
+      {(['doctor-turn','detective-turn','watchman-turn','watchman-result'].includes(pub.step)) &&
         <div>
           <p>Se o papel não puder agir, mantenha a narração e aguarde pelo menos 14 segundos antes de continuar.
             Os outros jogadores não devem perceber a ausência.</p>

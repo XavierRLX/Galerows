@@ -48,7 +48,7 @@ describe('Cidade Dorme LAN como jogo mobile', () => {
     expect(screen.queryByText('Sala da galera')).not.toBeInTheDocument()
     act(() => vi.advanceTimersByTime(3400))
     expect(screen.queryByText('Assassino')).not.toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: /revelar meu papel/i }))
+    fireEvent.click(screen.getByRole('button', { name: /pegue sua carta no monte/i }))
     expect(screen.getByText('Assassino')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /confirmar meu papel/i }))
     expect(cb.onGameCommand).toHaveBeenCalledWith('ACK_ROLE', null)
@@ -68,7 +68,7 @@ describe('Cidade Dorme LAN como jogo mobile', () => {
       investigation: { targetId: 'guest', result: 'suspect' } }
     const view = show(snapshot)
     fireEvent.click(screen.getByRole('button', { name: /meu papel/i }))
-    fireEvent.click(screen.getByRole('button', { name: /revelar meu papel/i }))
+    fireEvent.click(screen.getByRole('button', { name: /pegue sua carta no monte/i }))
     expect(screen.getByText(/ana é suspeito/i)).toBeInTheDocument()
     fireEvent(window, new Event('blur'))
     expect(screen.queryByText(/ana é suspeito/i)).not.toBeInTheDocument()

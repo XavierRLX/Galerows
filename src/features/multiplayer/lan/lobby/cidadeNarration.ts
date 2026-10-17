@@ -7,6 +7,8 @@ const texts: Record<CidadeDormeLanStep,string> = {
   'doctor-turn':'Sua escolha foi registrada. Agora, volte a dormir. Médico, acorde. Escolha uma pessoa para proteger esta noite.',
   'detective-turn':'Sua escolha foi registrada. Agora, volte a dormir. Detetive, acorde. Escolha uma pessoa para investigar.',
   'detective-result':'Detetive, confira o resultado no seu celular. Confirme quando terminar.',
+  'watchman-turn':'Vigia, acorde. A cidade está em silêncio. Observe uma pessoa em segredo.',
+  'watchman-result':'Vigia, confira o que seus olhos testemunharam no seu celular. Guarde a informação em segredo.',
   morning:'A noite terminou. A cidade acorda. Todos podem abrir os olhos.',
   discussion:'Hora de discutir. Conversem, compartilhem suas suspeitas e tentem descobrir o assassino.',
   voting:'A discussão terminou. Escolha em segredo quem você acredita ser o assassino.',
