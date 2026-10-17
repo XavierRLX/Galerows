@@ -24,6 +24,7 @@ describe('Impostor da Palavra complete flow', () => {
   it('creates guests and plays a full game with independent impostor draws', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/games/impostor-da-palavra']}><AppRoutes /></MemoryRouter>)
+    await user.click(await screen.findByRole('button', { name: /^1 celular/i }))
     await user.click(await screen.findByRole('button', { name: /configurar partida/i }))
     const guestInput = await screen.findByRole('textbox', { name: /nome do convidado/i })
     for (const name of ['Ana', 'Bia', 'Caio']) {
