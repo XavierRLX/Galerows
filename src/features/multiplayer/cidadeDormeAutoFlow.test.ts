@@ -129,11 +129,11 @@ describe('CITY-AUTOPILOT-01 server authority and narration barriers',()=>{
     expect(s.pub().step).toBe('summary')
     expect(s.pub().winner).toBe('city')
   })
-  it('allows doctor protecting same person in consecutive nights by default',()=>{
+  it('requires explicit configuration to protect the same person in consecutive nights',()=>{
     const v=cidadeDormeLanGame.validateConfig({...config,doctorCanRepeatProtection:true})
     expect(v.ok).toBe(true)
     const defaults=createDefaultCidadeDormeSettings(6)
-    expect(defaults.doctorCanRepeatProtection).toBe(true)
+    expect(defaults.doctorCanRepeatProtection).toBe(false)
   })
 
   it('keeps the doctor turn after that role is eliminated, but never permits fictitious protection',()=>{
@@ -180,7 +180,7 @@ describe('CITY-AUTOPILOT-01 server authority and narration barriers',()=>{
     expect(JSON.stringify(s.snapshot(citizen))).not.toContain('roleKey')
   })
   it('keeps BOTH detective phases after elimination without producing a fabricated investigation',()=>{
-    const s=game();s.start();s.night()
+    const s=game({doctorCanRepeatProtection:true});s.start();s.night()
     const killer=s.role('killer'),doctor=s.role('doctor'),detective=s.role('detective')
     const citizen=s.role('citizen')
     s.ok(killer,'KILL',{playerId:detective.id})

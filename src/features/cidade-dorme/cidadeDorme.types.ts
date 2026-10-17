@@ -1,4 +1,4 @@
-export type RoleKey = 'citizen' | 'killer' | 'traitor' | 'detective' | 'doctor' | 'jester'
+export type RoleKey = 'citizen' | 'killer' | 'traitor' | 'detective' | 'doctor' | 'watchman' | 'sleepwalker' | 'jester'
 
 export type GamePhase =
   | 'setup'
@@ -17,6 +17,7 @@ export type RoleTeam = 'city' | 'killers' | 'neutral'
 export type EliminationReason = 'night' | 'vote' | 'jester' | 'none'
 export type DoctorSelfProtectLimit = 1 | 2 | 3 | 'unlimited'
 export type DetectiveResult = 'suspect' | 'innocent'
+export type WatchmanResult = 'passed' | 'stayed'
 export type GameWinner = 'city' | 'killers' | 'jester'
 export type WinReason = 'city-eliminated-killers' | 'killers-parity' | 'jester-voted-out' | 'none'
 
@@ -50,6 +51,10 @@ export type GameSettings = {
   enableDoctor: boolean
   enableDetective: boolean
   enableJester: boolean
+  /** A defined count overrides the legacy enableJester boolean. */
+  jesterCount?: number
+  enableWatchman?: boolean
+  enableSleepwalker?: boolean
   revealRoleOnDeath: boolean
   doctorCanSelfProtect: boolean
   doctorSelfProtectLimit: DoctorSelfProtectLimit
@@ -66,6 +71,8 @@ export type NightAction = {
   protectedPlayerId?: string
   detectiveTargetId?: string
   detectiveResult?: DetectiveResult
+  watchmanTargetId?: string
+  watchmanResult?: WatchmanResult
   eliminatedPlayerId?: string
   wasProtected?: boolean
 }

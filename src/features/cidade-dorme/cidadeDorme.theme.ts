@@ -65,6 +65,16 @@ export const CLASSIC_CIDADE_DORME_THEME: CidadeDormeTheme = {
       mediatorScript: 'Detetive, acorde e escolha uma pessoa para investigar.',
       colorClassName: 'text-amber-200',
     },
+    watchman: {
+      roleKey: 'watchman', displayName: 'Vigia', revealTitle: 'Você é Vigia',
+      description: 'Observe uma pessoa à noite e descubra se ela passou pela rua.',
+      mediatorScript: 'Vigia, acorde e observe uma pessoa.', colorClassName: 'text-sky-300',
+    },
+    sleepwalker: {
+      roleKey: 'sleepwalker', displayName: 'Sonâmbulo', revealTitle: 'Você é Sonâmbulo',
+      description: 'Você caminha durante a noite automaticamente, mas não pode agir.',
+      mediatorScript: 'Os demais dormem.', colorClassName: 'text-violet-300',
+    },
     jester: {
       roleKey: 'jester',
       displayName: 'Coringa',

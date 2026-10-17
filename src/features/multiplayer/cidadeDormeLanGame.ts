@@ -1,5 +1,5 @@
 import {
-  assignRolesToPlayers, canDoctorProtect, checkWinCondition, getActiveKiller, getMurderOrder, resolveNight, resolveVotingOutcome,
+  assignRolesToPlayers, canDoctorProtect, checkWinCondition, getActiveKiller, getMurderOrder, getWatchmanObservation, createRoleDeck, resolveNight, resolveVotingOutcome,
 } from '../cidade-dorme/cidadeDorme.rules'
 import { createDefaultCidadeDormeSettings } from '../cidade-dorme/cidadeDorme.setup'
 import type { DoctorSelfProtectLimit, GameSettings, GameWinner, Player, RoleKey, WinReason } from '../cidade-dorme/cidadeDorme.types'
@@ -11,6 +11,9 @@ export interface CidadeDormeLanConfig {
   enableDoctor: boolean
   enableDetective: boolean
   enableJester: boolean
+  jesterCount?: number
+  enableWatchman?: boolean
+  enableSleepwalker?: boolean
   revealRoleOnDeath: boolean
   /** Same editable options as the single-device game; absent values retain legacy defaults. */
   killersCount?: number
@@ -21,7 +24,7 @@ export interface CidadeDormeLanConfig {
   conductionMode?: 'automatic' | 'mayor'
 }
 export type CidadeDormeLanStep = 'reveal' | 'killer-turn' | 'doctor-turn' | 'detective-turn'
-  | 'detective-result' | 'morning' | 'discussion' | 'voting' | 'vote-result' | 'summary'
+  | 'detective-result' | 'watchman-turn' | 'watchman-result' | 'morning' | 'discussion' | 'voting' | 'vote-result' | 'summary'
 export interface CidadeDormeRoundHistory {
   round: number
   night: { killerId: string | null; killerTargetId: string | null; doctorId: string | null;
@@ -62,9 +65,11 @@ export interface CidadeDormeLanPrivate {
   killerTeammates?: string[]
   successionOrder?: string[]
   activeKiller?: boolean
+  activeKillerId?: string
   /** Server-validated options for the doctor, including permitted self-protection. */
   doctorEligibleTargetIds?: string[]
   investigation?: { targetId: string; result: 'suspect' | 'innocent' }
+  watchmanObservation?: { targetId: string; result: 'passed' | 'stayed' }
   voted: boolean
   canAct: boolean
 }
@@ -80,8 +85,9 @@ interface LanState {
   phaseStartedAt: number
   round: number
   seen: string[]
-  night: { killerTarget?: string; protectedTarget?: string; detectiveTarget?: string }
+  night: { killerTarget?: string; protectedTarget?: string; detectiveTarget?: string; watchmanTarget?: string }
   investigation: { targetId: string; result: 'suspect' | 'innocent' } | null
+  watchmanObservation: { targetId: string; result: 'passed' | 'stayed' } | null
   previousProtectedTarget: string | null
   doctorSelfProtectCount: number
   nightResult: { eliminatedId: string | null } | null
@@ -95,13 +101,16 @@ interface LanState {
 const isRecord = (x: unknown): x is Record<string, unknown> =>
   x !== null && typeof x === 'object' && !Array.isArray(x)
 const requiredBooleans = ['enableDoctor','enableDetective','enableJester','revealRoleOnDeath'] as const
-const optionalFields = ['conductionMode','killersCount','doctorCanSelfProtect',
+const optionalFields = ['conductionMode','killersCount','enableWatchman','enableSleepwalker','jesterCount','doctorCanSelfProtect',
   'doctorSelfProtectLimit','doctorCanRepeatProtection']
 function validateConfig(raw: unknown): raw is CidadeDormeLanConfig {
   return isRecord(raw)
     && Object.keys(raw).every(field => [...requiredBooleans,...optionalFields].includes(field))
     && requiredBooleans.every(field => typeof raw[field] === 'boolean')
     && (raw.conductionMode === undefined || raw.conductionMode === 'mayor' || raw.conductionMode === 'automatic')
+    && (raw.enableWatchman === undefined || typeof raw.enableWatchman === 'boolean')
+    && (raw.enableSleepwalker === undefined || typeof raw.enableSleepwalker === 'boolean')
+    && (raw.jesterCount === undefined || (Number.isInteger(raw.jesterCount) && (raw.jesterCount as number) >= 0 && (raw.jesterCount as number) <= 2))
     && (raw.killersCount === undefined || (Number.isInteger(raw.killersCount)
       && (raw.killersCount as number) >= 1 && (raw.killersCount as number) <= 3))
     && (raw.doctorCanSelfProtect === undefined || typeof raw.doctorCanSelfProtect === 'boolean')
@@ -112,10 +121,16 @@ function validateConfig(raw: unknown): raw is CidadeDormeLanConfig {
 }
 /** Validate the actual set of participants, never just the room membership count. */
 function validComposition(config: CidadeDormeLanConfig, playerCount: number) {
+  // Compatibility: an unextended saved Room may still use the legacy role switches.
+  // New/expanded configurations must always include the Doctor and Detective.
+  const expandedConfig = config.enableWatchman !== undefined
+    || config.enableSleepwalker !== undefined || config.jesterCount !== undefined
+  if (expandedConfig && (!config.enableDoctor || !config.enableDetective)) return false
   const defaults = createDefaultCidadeDormeSettings(playerCount)
   const killers = config.killersCount ?? defaults.killersCount
-  return killers + Number(config.enableDoctor) + Number(config.enableDetective)
-    + Number(config.enableJester) <= playerCount
+  const settings = { ...defaults, ...config, killersCount: killers,
+    enableWatchman: config.enableWatchman ?? false, enableSleepwalker: config.enableSleepwalker ?? false }
+  try { return createRoleDeck(settings).length === playerCount } catch { return false }
 }
 const find = (state: LanState, id: string): Player | undefined => state.players.find(p => p.id === id)
 const alive = (state: LanState) => state.players.filter(p => p.status === 'alive')
@@ -137,10 +152,11 @@ function stampPhase(before: LanState, result: MultiplayerGameTransition<LanState
 }
 /** All configured LAN roles retain their public night slot after death, even with
  * a human mayor. No player should infer a secret role from a skipped turn. */
-function configuredNightRole(state:LanState,role:'doctor'|'detective'):boolean{
-  return state.config.conductionMode==='automatic' || state.config.conductionMode==='mayor'
-    ? (role==='doctor'?state.config.enableDoctor:state.config.enableDetective)
-    : livingRole(state,role).length>0
+function configuredNightRole(state: LanState, role: 'doctor' | 'detective' | 'watchman'): boolean {
+  // A configured turn must survive elimination in both modes, including legacy
+  // sessions whose conductionMode was omitted by the original lobby.
+  return role === 'doctor' ? state.config.enableDoctor
+    : role === 'detective' ? state.config.enableDetective : Boolean(state.config.enableWatchman)
 }
 function nextNightStep(state: LanState): CidadeDormeLanStep {
   return configuredNightRole(state,'doctor') ? 'doctor-turn'
@@ -180,7 +196,7 @@ function postNightRoleStep(state: LanState): LanState {
 function nextRound(state: LanState): LanState {
   const next: LanState = { ...state, step: 'killer-turn', round: state.round + 1,
     previousProtectedTarget: state.night.protectedTarget ?? state.previousProtectedTarget,
-    night: {}, nightResult: null, votes: {}, voteResult: null, investigation: null }
+    night: {}, nightResult: null, votes: {}, voteResult: null, investigation: null, watchmanObservation: null }
   return next
 }
 function validTarget(state: LanState, targetId: unknown): targetId is string {
@@ -194,13 +210,16 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     enableJester: raw.enableJester, revealRoleOnDeath: raw.revealRoleOnDeath,
     ...(raw.conductionMode ? { conductionMode: raw.conductionMode } : {}),
     ...(raw.killersCount !== undefined ? { killersCount: raw.killersCount } : {}),
+    ...(raw.enableWatchman !== undefined ? { enableWatchman: raw.enableWatchman } : {}),
+    ...(raw.enableSleepwalker !== undefined ? { enableSleepwalker: raw.enableSleepwalker } : {}),
+    ...(raw.jesterCount !== undefined ? { jesterCount: raw.jesterCount } : {}),
     ...(raw.doctorCanSelfProtect !== undefined ? { doctorCanSelfProtect: raw.doctorCanSelfProtect } : {}),
     ...(raw.doctorSelfProtectLimit !== undefined ? { doctorSelfProtectLimit: raw.doctorSelfProtectLimit } : {}),
     ...(raw.doctorCanRepeatProtection !== undefined ? { doctorCanRepeatProtection: raw.doctorCanRepeatProtection } : {}),
   } } : { ok: false },
   createInitialState: (config, participantIds, ctx) => {
     const recommended = createDefaultCidadeDormeSettings(participantIds.length)
-    const settings: GameSettings = { ...recommended, ...config,
+    const settings: GameSettings = { ...recommended, enableWatchman: false, enableSleepwalker: false, jesterCount: undefined, ...config,
       playerCount: participantIds.length, themeId: recommended.themeId }
     const players = assignRolesToPlayers(participantIds.map((id, i) => ({
       id, name: `Jogador ${i + 1}`,
@@ -208,7 +227,7 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
     return { config, settings, players, murderOrder: getMurderOrder(players, ctx.random),
       step: 'reveal', paused: false, phaseReady: false, phaseRevision: 1, phaseStartedAt: ctx.clock.now(),
       round: 1, seen: [], night: {},
-      investigation: null, previousProtectedTarget: null, doctorSelfProtectCount: 0,
+      investigation: null, watchmanObservation: null, previousProtectedTarget: null, doctorSelfProtectCount: 0,
       nightResult: null, votes: {},
       voteResult: null, history: [], winner: null, winReason: null, winnerPlayerId: null }
   },
@@ -239,7 +258,7 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       if (!automatic || !host) return error('unauthorized')
       const minimum: Partial<Record<CidadeDormeLanStep,number>> = {
         'killer-turn':7000, 'doctor-turn':6300, 'detective-turn':5500,
-        'detective-result':7000, voting:6700,
+        'detective-result':7000, 'watchman-turn':7000, 'watchman-result':7000, voting:6700,
       }
       const min = minimum[state.step]
       if (!min) return error('invalid_phase')
@@ -253,26 +272,29 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       // Every automatic host sends the same generic command after the public
       // announcement + waiting period. If someone is alive, it is a no-op.
       // Crucially, the public snapshot never includes role-presence metadata.
-      if (!host || (state.config.conductionMode !== 'automatic'
-        && state.config.conductionMode !== 'mayor')) return error('unauthorized')
+      if (!host) return error('unauthorized')
       if (payload !== null) return error('invalid_payload')
       const role = state.step === 'doctor-turn' ? 'doctor'
-        : state.step === 'detective-turn' || state.step === 'detective-result'
-          ? 'detective' : null
+        : state.step === 'detective-turn' || state.step === 'detective-result' ? 'detective'
+          : state.step === 'watchman-turn' || state.step === 'watchman-result' ? 'watchman' : null
       if (!role || !configuredNightRole(state,role)) return error('invalid_phase')
       if (!state.phaseReady || elapsed < 14000) return error('not_ready')
       if (livingRole(state,role).length) return { accepted:true, changed:false }
       if (state.step === 'doctor-turn') {
         return {accepted:true,changed:true,state:state.config.enableDetective
           ? {...state,step:'detective-turn' as const}
-          : resolveCurrentNight(state)}
+          : configuredNightRole(state,'watchman') ? {...state,step:'watchman-turn' as const} : resolveCurrentNight(state)}
       }
       if (state.step === 'detective-turn') {
         // Automatic sessions already give living detectives a clue-reading phase,
         // so simulate it too. A human mayor usually resolves night immediately.
         return {accepted:true,changed:true,state:automatic
           ? {...state,step:'detective-result' as const}
-          : resolveCurrentNight(state)}
+          : configuredNightRole(state,'watchman') ? {...state,step:'watchman-turn' as const} : resolveCurrentNight(state)}
+      }
+      if (state.step === 'watchman-turn') return {accepted:true,changed:true,state:{...state,step:'watchman-result' as const}}
+      if (state.step === 'detective-result' && configuredNightRole(state,'watchman')) {
+        return {accepted:true,changed:true,state:{...state,step:'watchman-turn' as const}}
       }
       return {accepted:true,changed:true,state:resolveCurrentNight(state)}
     }
@@ -324,12 +346,29 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
         return {accepted:true,changed:true,state:{...next,step:'detective-result' as const,
           investigation:{targetId:p,result:verdict ?? 'innocent'}}}
       }
-      return { accepted:true,changed:true,state:resolveCurrentNight(next) }
+      return { accepted:true, changed:true, state:configuredNightRole(state,'watchman')
+        ? {...next, step:'watchman-turn' as const} : resolveCurrentNight(next) }
     }
     if (action.type === 'ACK_INVESTIGATION') {
       if (!automatic || state.step !== 'detective-result' || payload !== null) return error('invalid_phase')
       if (player.status !== 'alive' || player.roleKey !== 'detective') return error('unauthorized')
       if (!state.phaseReady || elapsed < 6500) return error('not_ready')
+      return {accepted:true,changed:true,state:configuredNightRole(state,'watchman')
+        ? {...state,step:'watchman-turn' as const} : resolveCurrentNight(state)}
+    }
+    if (action.type === 'WATCH') {
+      if (state.step !== 'watchman-turn') return error('invalid_phase')
+      if (actionWait) return error('not_ready')
+      if (player.status !== 'alive' || player.roleKey !== 'watchman') return error('unauthorized')
+      if (!validTarget(state,p)) return error('invalid_payload')
+      return {accepted:true,changed:true,state:{...state,step:'watchman-result' as const,
+        night:{...state.night,watchmanTarget:p},
+        watchmanObservation:{targetId:p,result:getWatchmanObservation(state.players,p,killerActor(state)?.id)}}}
+    }
+    if (action.type === 'ACK_WATCHMAN_RESULT') {
+      if (state.step !== 'watchman-result' || payload !== null) return error('invalid_phase')
+      if (player.status !== 'alive' || player.roleKey !== 'watchman') return error('unauthorized')
+      if (automatic && (!state.phaseReady || elapsed < 6500)) return error('not_ready')
       return {accepted:true,changed:true,state:resolveCurrentNight(state)}
     }
     if (action.type === 'START_DISCUSSION') {
@@ -443,11 +482,14 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
         killerTeammates: state.murderOrder.filter(id => id !== playerId),
         successionOrder: [...state.murderOrder],
         activeKiller: killerActor(state)?.id === playerId,
+        ...(killerActor(state) ? { activeKillerId: killerActor(state)!.id } : {}),
       } : {}),
       ...(own.roleKey === 'doctor' && own.status === 'alive' && state.step === 'doctor-turn'
         ? { doctorEligibleTargetIds: alive(state).filter(target=>canDoctorProtect(own.id,target.id,
           state.settings,state.previousProtectedTarget??undefined,state.doctorSelfProtectCount))
           .map(target=>target.id) } : {}),
+      ...(own.roleKey === 'watchman' && state.watchmanObservation && state.step === 'watchman-result'
+        ? { watchmanObservation: { ...state.watchmanObservation } } : {}),
       ...(own.roleKey === 'detective' && state.investigation && state.step !== 'summary'
         ? { investigation: { ...state.investigation } } : {}),
       voted: Object.hasOwn(state.votes, playerId),
@@ -456,6 +498,7 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
         (state.step === 'killer-turn' && killerActor(state)?.id === playerId)
         || (state.step === 'doctor-turn' && own.roleKey === 'doctor')
         || (state.step === 'detective-turn' && own.roleKey === 'detective')
+        || (state.step === 'watchman-turn' && own.roleKey === 'watchman')
         || state.step === 'voting'),
     }
   },

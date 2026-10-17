@@ -243,6 +243,9 @@ function normalizeSettings(value: unknown): GameSettings | null {
     enableDoctor: value.enableDoctor,
     enableDetective: value.enableDetective,
     enableJester: value.enableJester,
+    ...(Number.isInteger(value.jesterCount) && (value.jesterCount as number) >= 0 && (value.jesterCount as number) <= 2 ? { jesterCount: value.jesterCount as number } : {}),
+    ...(typeof value.enableWatchman === 'boolean' ? { enableWatchman: value.enableWatchman } : {}),
+    ...(typeof value.enableSleepwalker === 'boolean' ? { enableSleepwalker: value.enableSleepwalker } : {}),
     revealRoleOnDeath: value.revealRoleOnDeath,
     doctorCanSelfProtect: value.doctorCanSelfProtect,
     doctorSelfProtectLimit: normalizeDoctorSelfProtectLimit(value.doctorSelfProtectLimit),
@@ -286,7 +289,7 @@ function isPlayer(value: unknown): value is Player {
     && typeof value.name === 'string'
     && (value.sourcePlayerId === undefined || typeof value.sourcePlayerId === 'string')
     && (value.isGuest === undefined || typeof value.isGuest === 'boolean')
-    && ['citizen', 'killer', 'traitor', 'detective', 'doctor', 'jester'].includes(String(value.roleKey))
+    && ['citizen', 'killer', 'traitor', 'detective', 'doctor', 'watchman', 'sleepwalker', 'jester'].includes(String(value.roleKey))
     && ['alive', 'eliminated'].includes(String(value.status))
 }
 

@@ -27,7 +27,7 @@ describe('Cidade Dorme session', () => {
       currentNightAction: { round: 1 },
       history: [],
     })
-    expect(session.players.map((player) => player.roleKey)).toEqual(['killer', 'detective', 'citizen', 'citizen'])
+    expect(session.players.map((player) => player.roleKey)).toEqual(['killer', 'doctor', 'detective', 'citizen'])
     expect(session.players.every((player) => player.status === 'alive')).toBe(true)
   })
 
@@ -63,7 +63,7 @@ describe('Cidade Dorme session', () => {
   })
 
   it('records doctor protection only for valid targets during the doctor turn', () => {
-    const session = createCidadeDormeSession(playersWithDoctor, createDefaultCidadeDormeSettings(playersWithDoctor.length), () => 0.999999)
+    const session = createCidadeDormeSession(playersWithDoctor, { ...createDefaultCidadeDormeSettings(playersWithDoctor.length), doctorCanSelfProtect: false }, () => 0.999999)
     const doctorTurn = { ...session, phase: 'doctorTurn' as const }
     expect(recordDoctorProtection(session, 'caio')).toBe(session)
     expect(recordDoctorProtection(doctorTurn, 'missing')).toBe(doctorTurn)
@@ -93,7 +93,7 @@ describe('Cidade Dorme session', () => {
     const detectiveTurn = { ...session, phase: 'detectiveTurn' as const }
     expect(recordDetectiveInvestigation(session, 'ana')).toBe(session)
     expect(recordDetectiveInvestigation(detectiveTurn, 'missing')).toBe(detectiveTurn)
-    expect(recordDetectiveInvestigation(detectiveTurn, 'bia')).toBe(detectiveTurn)
+    expect(recordDetectiveInvestigation(detectiveTurn, 'caio')).toBe(detectiveTurn)
     expect(recordDetectiveInvestigation(detectiveTurn, 'ana')).toMatchObject({
       phase: 'detectiveTurn',
       currentNightAction: { round: 1, detectiveTargetId: 'ana' },

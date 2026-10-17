@@ -81,7 +81,7 @@ describe('Cidade Dorme store', () => {
 
     await useCidadeDormeStore.getState().chooseKillerTarget('ana', 'bia')
     const saved = await LocalPreferences.getJson<GameState>(STORAGE_KEYS.cidadeDormeSession)
-    expect(saved?.phase).toBe('detectiveTurn')
+    expect(saved?.phase).toBe('doctorTurn')
     expect(saved?.currentNightAction).toMatchObject({ round: 1, killerActorId: 'ana', killerTargetId: 'bia' })
   })
 
@@ -192,7 +192,7 @@ describe('Cidade Dorme store', () => {
   })
 
   it('does not persist invalid doctor protection', async () => {
-    await useCidadeDormeStore.getState().start(playersWithDoctor, createDefaultCidadeDormeSettings(playersWithDoctor.length))
+    await useCidadeDormeStore.getState().start(playersWithDoctor, { ...createDefaultCidadeDormeSettings(playersWithDoctor.length), doctorCanSelfProtect: false })
     const session = useCidadeDormeStore.getState().session!
     const doctorTurn: GameState = {
       ...session,

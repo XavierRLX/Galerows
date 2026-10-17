@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { AuthoritativeRoomRuntimeV2, RoomLifecycleAdapter } from './persistentRoom'
-import { cidadeDormeLanGame, type CidadeDormeLanPublic, type CidadeDormeLanPrivate } from './cidadeDormeLanGame'
+import { cidadeDormeLanGame, type CidadeDormeLanConfig, type CidadeDormeLanPublic, type CidadeDormeLanPrivate } from './cidadeDormeLanGame'
 import { roomFrameFits } from './persistentProtocol'
 
 type Player = { id: string; conn: string }
-const defaults = { enableDoctor: true, enableDetective: true, enableJester: true, revealRoleOnDeath: false }
+const defaults: CidadeDormeLanConfig = { enableDoctor: true, enableDetective: true, enableJester: true, revealRoleOnDeath: false, doctorCanSelfProtect: false }
 function sim(guests = 5, config = defaults, random: () => number = () => 0.999999) {
   let n = 0
   const runtime = new AuthoritativeRoomRuntimeV2({ roomId: 'g7', hostPlayerId: 'host',

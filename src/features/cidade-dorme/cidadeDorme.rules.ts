@@ -1,5 +1,5 @@
 import { shuffle } from '../../lib/utils/shuffle'
-import { CIDADE_DORME_MAX_PLAYERS, CIDADE_DORME_MIN_PLAYERS } from './cidadeDorme.setup'
+import { CIDADE_DORME_MAX_PLAYERS, CIDADE_DORME_MIN_PLAYERS, getJesterCount } from './cidadeDorme.setup'
 import type { CidadeDormePlayerInput, GameSettings, ManualVotingOutcome, NightAction, NightResolution, Player, RoleKey, VotingResolution, WinConditionResult } from './cidadeDorme.types'
 
 export function createRoleDeck(settings: GameSettings): RoleKey[] {
@@ -7,8 +7,10 @@ export function createRoleDeck(settings: GameSettings): RoleKey[] {
   const roleDeck: RoleKey[] = ['killer', ...Array.from({ length: settings.killersCount - 1 }, () => 'traitor' as const)]
   if (settings.enableDoctor) roleDeck.push('doctor')
   if (settings.enableDetective) roleDeck.push('detective')
-  if (settings.enableJester) roleDeck.push('jester')
-  if (roleDeck.length > settings.playerCount) throw new Error('A composicao de papeis excede a quantidade de jogadores.')
+  if (settings.enableWatchman) roleDeck.push('watchman')
+  if (settings.enableSleepwalker) roleDeck.push('sleepwalker')
+  roleDeck.push(...Array.from({ length: getJesterCount(settings) }, () => 'jester' as const))
+  if (roleDeck.length >= settings.playerCount) throw new Error('A composicao precisa preservar pelo menos 1 Cidadao.')
   return [...roleDeck, ...Array.from({ length: settings.playerCount - roleDeck.length }, () => 'citizen' as const)]
 }
 
@@ -95,6 +97,14 @@ export function resolveNight(players: readonly Player[], action: NightAction): N
   }
 }
 
+/** Movement is calculated from alive identities and active killer at night, never from a simulated turn. */
+export function getWatchmanObservation(players: readonly Player[], targetId: string, activeKillerId: string | undefined): 'passed' | 'stayed' {
+  const target = players.find(player => player.id === targetId && player.status === 'alive')
+  if (!target) return 'stayed'
+  return target.id === activeKillerId || target.roleKey === 'doctor' || target.roleKey === 'detective'
+    || target.roleKey === 'sleepwalker' ? 'passed' : 'stayed'
+}
+
 export function resolveVotingOutcome(players: readonly Player[], outcome: ManualVotingOutcome, round: number): VotingResolution {
   if (outcome.kind === 'tie') {
     return { kind: 'tie', round, players: players.map((player) => ({ ...player })) }
@@ -129,7 +139,10 @@ export function checkWinCondition(players: readonly Player[], _settings: GameSet
 function assertSettings(settings: GameSettings) {
   if (!Number.isInteger(settings.playerCount) || settings.playerCount < CIDADE_DORME_MIN_PLAYERS || settings.playerCount > CIDADE_DORME_MAX_PLAYERS) throw new Error('Cidade Dorme exige entre 4 e 12 jogadores.')
   if (!Number.isInteger(settings.killersCount) || settings.killersCount < 1) throw new Error('A partida precisa ter pelo menos 1 assassino.')
-  if (settings.killersCount >= settings.playerCount) throw new Error('A partida precisa ter jogadores inocentes.')
+  if (settings.killersCount > 3) throw new Error('No maximo 2 Traidores.')
+  if (!Number.isInteger(getJesterCount(settings)) || getJesterCount(settings) < 0 || getJesterCount(settings) > 2) throw new Error('No maximo 2 Coringas.')
+  if (settings.playerCount < 7 && (settings.enableWatchman || settings.enableSleepwalker)) throw new Error('Vigia e Sonambulo exigem pelo menos 7 jogadores.')
+  if (settings.killersCount >= settings.playerCount / 2) throw new Error('A equipe assassina nao pode iniciar em paridade.')
 }
 
 function findAlivePlayer(players: readonly Player[], playerId: string | undefined) {

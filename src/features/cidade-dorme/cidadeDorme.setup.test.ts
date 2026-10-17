@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { canStartGame } from './cidadeDorme.rules'
-import { CIDADE_DORME_MAX_PLAYERS, CIDADE_DORME_MIN_PLAYERS, createDefaultCidadeDormeSettings, getCidadeDormeRoleCounts, getCidadeDormeSetupWarnings, getRecommendedKillersCount, isSupportedCidadeDormePlayerCount } from './cidadeDorme.setup'
+import { CIDADE_DORME_MAX_PLAYERS, CIDADE_DORME_MIN_PLAYERS, createDefaultCidadeDormeSettings, getCidadeDormeRoleCounts, getCidadeDormeSetupWarnings, getRecommendedKillersCount, isSupportedCidadeDormePlayerCount, toggleCidadeDormeJester } from './cidadeDorme.setup'
 import type { CidadeDormePlayerInput, GameSettings } from './cidadeDorme.types'
 
 describe('Cidade Dorme setup presets', () => {
@@ -23,16 +23,16 @@ describe('Cidade Dorme setup presets', () => {
 
   it('recommends more killers only for larger groups', () => {
     expect(getRecommendedKillersCount(4)).toBe(1)
-    expect(getRecommendedKillersCount(7)).toBe(1)
+    expect(getRecommendedKillersCount(7)).toBe(2)
     expect(getRecommendedKillersCount(8)).toBe(2)
-    expect(getRecommendedKillersCount(11)).toBe(2)
+    expect(getRecommendedKillersCount(11)).toBe(3)
     expect(getRecommendedKillersCount(12)).toBe(3)
   })
 
   it('keeps optional roles simple for small groups', () => {
     expect(createDefaultCidadeDormeSettings(4)).toMatchObject({
       killersCount: 1,
-      enableDoctor: false,
+      enableDoctor: true,
       enableDetective: true,
       enableJester: false,
       revealRoleOnDeath: false,
@@ -55,6 +55,7 @@ describe('Cidade Dorme setup presets', () => {
       enableDoctor: true,
       enableDetective: true,
       enableJester: true,
+      jesterCount: 1,
     }
     expect(getCidadeDormeRoleCounts(settings)).toEqual({
       citizen: 0,
@@ -63,11 +64,22 @@ describe('Cidade Dorme setup presets', () => {
       detective: 1,
       doctor: 1,
       jester: 1,
+      watchman: 0, sleepwalker: 0,
     })
     expect(getCidadeDormeSetupWarnings(settings)).toEqual([
       'Inclua pelo menos um Cidadao para manter blefes simples.',
       'O Coringa deixa grupos pequenos muito instaveis.',
     ])
+  })
+
+  it('keeps the single-device Coringa toggle synchronized with the explicit count', () => {
+    const settings = createDefaultCidadeDormeSettings(6)
+    const enabled = { ...settings, ...toggleCidadeDormeJester(settings) }
+    expect(enabled).toMatchObject({ enableJester: true, jesterCount: 1 })
+    expect(getCidadeDormeRoleCounts(enabled).jester).toBe(1)
+    const disabled = { ...enabled, ...toggleCidadeDormeJester(enabled) }
+    expect(disabled).toMatchObject({ enableJester: false, jesterCount: 0 })
+    expect(getCidadeDormeRoleCounts(disabled).jester).toBe(0)
   })
 
   it('rejects unsupported player counts when creating presets', () => {
