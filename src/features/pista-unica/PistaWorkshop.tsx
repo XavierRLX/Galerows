@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core'
 import { ArrowLeft, ArrowRight, Check, ChevronLeft, ChevronRight, DoorOpen, EyeOff, Layers, LockKeyhole, Sparkles } from 'lucide-react'
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import './pistaWorkshop.css'
@@ -6,7 +7,8 @@ export function PistaWorkshop({ children, mode, round, total, stage, onBack, onE
   children: ReactNode; mode: string; round?: number; total?: number; stage?: number
   onBack?: () => void; onExit?: () => void; footer?: ReactNode
 }) {
-  return <main className="pista-workshop">
+  return <main className={Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'android'
+    ? 'pista-workshop pista-workshop--android' : 'pista-workshop'}>
     <div className="pw-shell">
       <header className="pw-header">
         {onBack ? <button className="pw-back" type="button" onClick={onBack} aria-label="Voltar"><ArrowLeft size={20} /></button> : <Layers className="pw-brand-mark" size={24} aria-hidden="true" />}

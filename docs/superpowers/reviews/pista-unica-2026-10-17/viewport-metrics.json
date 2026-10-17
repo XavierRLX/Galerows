@@ -1,0 +1,74 @@
+[
+  {
+    "phase": "guess",
+    "h": 568,
+    "overflow": [],
+    "sh": 568,
+    "sw": 320,
+    "w": 320
+  },
+  {
+    "phase": "guess",
+    "h": 667,
+    "overflow": [],
+    "sh": 667,
+    "sw": 375,
+    "w": 375
+  },
+  {
+    "phase": "guess",
+    "h": 932,
+    "overflow": [],
+    "sh": 932,
+    "sw": 430,
+    "w": 430
+  },
+  {
+    "phase": "round-result",
+    "h": 568,
+    "overflow": [],
+    "sh": 568,
+    "sw": 320,
+    "w": 320
+  },
+  {
+    "phase": "round-result",
+    "h": 667,
+    "overflow": [],
+    "sh": 667,
+    "sw": 375,
+    "w": 375
+  },
+  {
+    "phase": "round-result",
+    "h": 932,
+    "overflow": [],
+    "sh": 932,
+    "sw": 430,
+    "w": 430
+  },
+  {
+    "phase": "ranking",
+    "h": 568,
+    "overflow": [],
+    "sh": 568,
+    "sw": 320,
+    "w": 320
+  },
+  {
+    "phase": "ranking",
+    "h": 667,
+    "overflow": [],
+    "sh": 667,
+    "sw": 375,
+    "w": 375
+  },
+  {
+    "phase": "ranking",
+    "h": 932,
+    "overflow": [],
+    "sh": 932,
+    "sw": 430,
+    "w": 430
+  }
+]

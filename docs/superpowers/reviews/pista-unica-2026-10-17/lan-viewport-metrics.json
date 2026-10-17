@@ -1,0 +1,137 @@
+[
+  {
+    "phase": "review",
+    "role": "guest1",
+    "h": 568,
+    "overflow": [],
+    "sh": 568,
+    "sw": 320,
+    "w": 320
+  },
+  {
+    "phase": "guessing",
+    "role": "host",
+    "h": 568,
+    "overflow": [],
+    "sh": 568,
+    "sw": 320,
+    "w": 320
+  },
+  {
+    "phase": "round-result",
+    "role": "host",
+    "h": 568,
+    "overflow": [],
+    "sh": 568,
+    "sw": 320,
+    "w": 320
+  },
+  {
+    "phase": "summary",
+    "role": "host",
+    "h": 568,
+    "overflow": [],
+    "sh": 568,
+    "sw": 320,
+    "w": 320
+  },
+  {
+    "phase": "results",
+    "role": "host",
+    "h": 568,
+    "overflow": [],
+    "sh": 568,
+    "sw": 320,
+    "w": 320
+  },
+  {
+    "phase": "writing",
+    "role": "guest1",
+    "h": 667,
+    "overflow": [],
+    "sh": 667,
+    "sw": 375,
+    "w": 375
+  },
+  {
+    "phase": "review",
+    "role": "guest1",
+    "h": 667,
+    "overflow": [],
+    "sh": 667,
+    "sw": 375,
+    "w": 375
+  },
+  {
+    "phase": "guessing",
+    "role": "host",
+    "h": 667,
+    "overflow": [],
+    "sh": 667,
+    "sw": 375,
+    "w": 375
+  },
+  {
+    "phase": "round-result",
+    "role": "host",
+    "h": 667,
+    "overflow": [],
+    "sh": 667,
+    "sw": 375,
+    "w": 375
+  },
+  {
+    "phase": "results",
+    "role": "host",
+    "h": 667,
+    "overflow": [],
+    "sh": 667,
+    "sw": 375,
+    "w": 375
+  },
+  {
+    "phase": "writing",
+    "role": "guest1",
+    "h": 932,
+    "overflow": [],
+    "sh": 932,
+    "sw": 430,
+    "w": 430
+  },
+  {
+    "phase": "review",
+    "role": "guest1",
+    "h": 932,
+    "overflow": [],
+    "sh": 932,
+    "sw": 430,
+    "w": 430
+  },
+  {
+    "phase": "guessing",
+    "role": "host",
+    "h": 932,
+    "overflow": [],
+    "sh": 932,
+    "sw": 430,
+    "w": 430
+  },
+  {
+    "phase": "round-result",
+    "role": "host",
+    "h": 932,
+    "overflow": [],
+    "sh": 932,
+    "sw": 430,
+    "w": 430
+  },
+  {
+    "phase": "results",
+    "role": "host",
+    "h": 932,
+    "overflow": [],
+    "sh": 932,
+    "sw": 430,
+    "w": 430
+  }
+]

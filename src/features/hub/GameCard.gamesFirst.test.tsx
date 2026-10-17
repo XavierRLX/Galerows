@@ -34,7 +34,7 @@ describe('games-first card navigation', () => {
       </Routes>
     </MemoryRouter>)
     await user.click(screen.getByRole('button', { name: 'Jogar agora Impostor da Palavra' }))
-    expect(screen.getByRole('heading', { name: 'Informações do Impostor' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Informações do Impostor' })).toBeInTheDocument()
   })
 
   it('keeps unimplemented games unplayable', () => {

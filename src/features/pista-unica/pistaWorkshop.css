@@ -111,3 +111,9 @@ body:has(.pista-workshop) { min-width: 0; background: #072d30; }
   .pista-workshop:has(.pw-result-card) .pw-award { padding: 3px 0; }
   .pista-workshop:has(.pw-result-card) .pw-award b { font-size: 18px; }
 }
+
+/* Android native StatusBar overlays the WebView. On some devices
+   env(safe-area-inset-top) reports 0 even while the 24dp system bar is visible. */
+.pista-workshop--android .pw-shell {
+  padding-top: max(36px, calc(env(safe-area-inset-top, 0px) + 12px));
+}
