@@ -1,0 +1,80 @@
+from pathlib import Path
+p=Path('src/features/multiplayer/cidadeDormeWatchmanLan.test.ts')
+s=p.read_text()
+def x(a,b):
+ global s
+ if a not in s: raise ValueError(a[:90])
+ s=s.replace(a,b,1)
+x("type CidadeDormeLanPrivate, type CidadeDormeLanPublic",
+  "type CidadeDormeLanConfig, type CidadeDormeLanPrivate, type CidadeDormeLanPublic")
+x("function createRoom() {","function createRoom(count=8, configOverrides: Partial<CidadeDormeLanConfig>={}) {")
+x("for(let n=1;n<8;n++){","for(let n=1;n<count;n++){")
+x("      killersCount:2,revealRoleOnDeath:false,",
+  "      killersCount:count>=11?3:2,revealRoleOnDeath:false,...configOverrides,")
+start=s.rindex('\n})\n')
+s=s[:start]+"""
+  it('preserves the 7-player successor and changes both private investigations only after promotion',()=>{
+    const r=createRoom(7);r.start()
+    const killer=r.role('killer'),traitor=r.role('traitor'),doctor=r.role('doctor'),
+      detective=r.role('detective'),watchman=r.role('watchman'),citizen=r.role('citizen')
+    expect(r.priv(killer).successionOrder).toEqual([killer.id,traitor.id])
+    expect(r.priv(traitor).successionOrder).toEqual([killer.id,traitor.id])
+    expect(r.priv(citizen).successionOrder).toBeUndefined()
+    r.ok(killer,'KILL',{playerId:citizen.id})
+    r.ok(doctor,'PROTECT',{playerId:citizen.id})
+    r.ok(detective,'INVESTIGATE',{playerId:traitor.id})
+    r.ok(watchman,'WATCH',{playerId:traitor.id})
+    expect(r.priv(watchman).watchmanObservation?.result).toBe('stayed')
+    r.ok(watchman,'ACK_WATCHMAN_RESULT')
+    expect(r.priv(detective).investigation?.result).toBe('innocent')
+    r.ok(r.players[0],'START_DISCUSSION')
+    r.ok(r.players[0],'START_VOTE')
+    r.players.forEach(p=>r.ok(p,'CAST_VOTE',{playerId:killer.id}))
+    r.ok(r.players[0],'RESOLVE_VOTE')
+    expect(r.pub().winner).toBeNull()
+    r.ok(r.players[0],'NEXT_NIGHT')
+    expect(r.priv(traitor).activeKiller).toBe(true)
+    expect(r.send(killer,'KILL',{playerId:citizen.id}).error).toBe('unauthorized')
+    r.ok(traitor,'KILL',{playerId:citizen.id})
+    r.ok(doctor,'PROTECT',{playerId:doctor.id})
+    r.ok(detective,'INVESTIGATE',{playerId:traitor.id})
+    r.ok(watchman,'WATCH',{playerId:traitor.id})
+    expect(r.priv(watchman).watchmanObservation?.result).toBe('passed')
+    r.ok(watchman,'ACK_WATCHMAN_RESULT')
+    expect(r.priv(detective).investigation?.result).toBe('suspect')
+    r.ok(r.players[0],'START_DISCUSSION')
+    r.ok(r.players[0],'START_VOTE')
+    r.players.filter(p=>r.pub().players.some(x=>x.id===p.id&&x.alive))
+      .forEach(p=>r.ok(p,'CAST_VOTE',{playerId:traitor.id}))
+    r.ok(r.players[0],'RESOLVE_VOTE')
+    expect(r.pub()).toMatchObject({step:'summary',winner:'city'})
+  })
+
+  it('has two Coringas at 12; night death never wins and only the voted Coringa wins',()=>{
+    const r=createRoom(12,{jesterCount:2,enableJester:true});r.start()
+    expect(r.players.filter(p=>r.priv(p).role==='traitor')).toHaveLength(2)
+    const jokers=r.players.filter(p=>r.priv(p).role==='jester')
+    expect(jokers).toHaveLength(2)
+    const killer=r.role('killer'),doctor=r.role('doctor'),detective=r.role('detective'),
+      watchman=r.role('watchman')
+    r.ok(killer,'KILL',{playerId:jokers[0].id})
+    r.ok(doctor,'PROTECT',{playerId:doctor.id})
+    r.ok(detective,'INVESTIGATE',{playerId:killer.id})
+    r.ok(watchman,'WATCH',{playerId:jokers[1].id})
+    r.ok(watchman,'ACK_WATCHMAN_RESULT')
+    expect(r.pub().nightResult?.eliminatedId).toBe(jokers[0].id)
+    expect(r.pub().winner).toBeNull()
+    r.ok(r.players[0],'START_DISCUSSION')
+    r.ok(r.players[0],'START_VOTE')
+    r.players.filter(p=>r.pub().players.some(x=>x.id===p.id&&x.alive))
+      .forEach(p=>r.ok(p,'CAST_VOTE',{playerId:jokers[1].id}))
+    r.ok(r.players[0],'RESOLVE_VOTE')
+    expect(r.pub()).toMatchObject({
+      step:'summary',winner:'jester',winnerPlayerId:jokers[1].id,
+      winReason:'jester-voted-out',
+    })
+    expect(r.pub().winnerPlayerId).not.toBe(jokers[0].id)
+  })
+"""+s[start:]
+p.write_text(s)
+print('added deterministic simulations 7 and 12')
