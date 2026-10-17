@@ -1,4 +1,4 @@
-import { ChevronDown, Settings, Smartphone, Spade, Trophy, Users, Wifi } from 'lucide-react'
+import { ChevronDown, Settings, Smartphone, Spade, Users, Wifi } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
@@ -27,7 +27,6 @@ export function HubHeader() {
       <p className="hub-concept">{t('welcome.description')}</p>
       <nav className="hub-shortcuts" aria-label={t('shortcuts')}>
         <button type="button" onClick={() => navigate('/players')}><Users aria-hidden="true" size={17} />{t('myGroup')}</button>
-        <button type="button" onClick={() => navigate('/players/ranking')}><Trophy aria-hidden="true" size={17} />{t('ranking')}</button>
       </nav>
       <details className="hub-mode-guide">
         <summary><span><Smartphone aria-hidden="true" size={16} />{t('modes.guide')}</span><ChevronDown aria-hidden="true" size={16} /></summary>

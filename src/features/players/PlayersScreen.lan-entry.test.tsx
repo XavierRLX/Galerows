@@ -34,12 +34,16 @@ describe('G5D — acesso à LAN dentro de Minha Galera', () => {
       </Routes>
     </MemoryRouter>)
 
-    expect(screen.getAllByRole('button', { name: /^Conhecer / })).toHaveLength(10)
+    expect(screen.getByRole('button', { name: 'Minha Galera' })).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Jogar com a galera' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Criar sala' })).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Minha Galera' }))
-    expect(await screen.findByRole('heading', { name: 'Seu grupo de jogadores' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Como vocês vão jogar?' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '1 celular' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByLabelText('Nome da galera')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Criar sala' })).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Multiplayer local' }))
+    expect(screen.queryByLabelText('Nome da galera')).not.toBeInTheDocument()
     expect(await screen.findByRole('button', { name: 'Criar sala' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Entrar em sala' })).toBeInTheDocument()
 
@@ -60,6 +64,8 @@ describe('G5D — acesso à LAN dentro de Minha Galera', () => {
         <Route path="/__lan-lobby-v2/entrar" element={<p>Rota de entrar na sala</p>} />
       </Routes>
     </MemoryRouter>)
+    await user.click(await screen.findByRole('button', { name: 'Multiplayer local' }))
+    expect(screen.getByText(/cada pessoa joga no próprio celular/i)).toBeInTheDocument()
     await user.click(await screen.findByRole('button', { name: 'Entrar em sala' }))
     expect(screen.getByText('Rota de entrar na sala')).toBeInTheDocument()
   })

@@ -1,7 +1,7 @@
 import type { PointerEvent } from 'react'
 import { lazy, Suspense } from 'react'
 import { lanNativeMvpAvailable } from '../multiplayer/lan/lanPlatform'
-import { GripVertical, Pencil, Plus, Trash2, Trophy, Users } from 'lucide-react'
+import { GripVertical, Pencil, Plus, Smartphone, Trash2, Trophy, Users, Wifi } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Header } from '../../components/layout/Header'
@@ -21,6 +21,7 @@ const PlayersLanRoomActions = import.meta.env.VITE_GAMES_FIRST_LAN_ENTRY === '1'
 export function PlayersScreen() {
   const navigate = useNavigate()
   const { group, hydrated, error, load, setGroupName, add, rename, remove, moveTo } = usePlayersStore()
+  const [playMode, setPlayMode] = useState<'local' | 'lan'>('local')
   const [newName, setNewName] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingName, setEditingName] = useState('')
@@ -78,9 +79,37 @@ export function PlayersScreen() {
     <div className="min-h-dvh pb-10">
       <Header action={<Button aria-label="Abrir ranking" size="icon" variant="secondary" onClick={() => navigate('/players/ranking')}><Trophy size={18} /></Button>} backTo="/" title="Minha Galera" />
       <section className="px-5 py-7">
-        <div className="flex items-center gap-3"><div className="rounded-2xl bg-violet-400 p-3 text-slate-950"><Users /></div><div><h1 className="text-2xl font-black">Seu grupo de jogadores</h1><p className="text-sm text-slate-400">Salve uma vez e reutilize em qualquer jogo.</p></div></div>
-        {PlayersLanRoomActions && <Suspense fallback={null}><PlayersLanRoomActions /></Suspense>}
-
+        <div className="flex items-center gap-3">
+          <div className="rounded-2xl bg-[#B8A0FF] p-3 text-[#101014]"><Users aria-hidden="true" /></div>
+          <div><h1 className="text-2xl font-black">Como vocês vão jogar?</h1>
+            <p className="text-sm text-slate-300">Escolha um modo para reunir a galera.</p></div>
+        </div>
+        <div className="mt-6 grid grid-cols-2 gap-3" role="group" aria-label="Escolha como jogar">
+          <button type="button" aria-label="1 celular" aria-pressed={playMode === 'local'} onClick={() => setPlayMode('local')}
+            className={cn('min-h-28 rounded-2xl border p-3 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D2F86A]',
+              playMode === 'local' ? 'border-[#D2F86A] bg-[#D2F86A]/10' : 'border-white/15 bg-white/5')}>
+            <Smartphone className={playMode === 'local' ? 'text-[#D2F86A]' : 'text-[#B8A0FF]'} size={22} aria-hidden="true" />
+            <strong className="mt-2 block text-sm">1 celular</strong>
+            <span className="mt-1 block text-xs text-slate-300">Uma tela para o grupo</span>
+          </button>
+          <button type="button" aria-label="Multiplayer local" aria-pressed={playMode === 'lan'} onClick={() => setPlayMode('lan')}
+            className={cn('min-h-28 rounded-2xl border p-3 text-left transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#D2F86A]',
+              playMode === 'lan' ? 'border-[#D2F86A] bg-[#D2F86A]/10' : 'border-white/15 bg-white/5')}>
+            <Wifi className={playMode === 'lan' ? 'text-[#D2F86A]' : 'text-[#B8A0FF]'} size={22} aria-hidden="true" />
+            <strong className="mt-2 block text-sm">Multiplayer local</strong>
+            <span className="mt-1 block text-xs text-slate-300">Um celular por pessoa</span>
+          </button>
+        </div>
+        {playMode === 'lan' ? (PlayersLanRoomActions
+          ? <Suspense fallback={<p role="status" className="mt-5 text-sm text-slate-300">Carregando salas…</p>}><PlayersLanRoomActions /></Suspense>
+          : <section aria-label="Sala multiplayer" className="mt-5 rounded-2xl border border-[#B8A0FF]/25 bg-white/5 p-4">
+              <h2 className="font-black">Sala multiplayer</h2>
+              <p className="mt-2 text-sm text-slate-300">Cada pessoa joga no próprio celular, na mesma rede Wi-Fi.</p>
+              <p className="mt-2 text-sm text-slate-300">Disponível no Android com o modo multiplayer habilitado.</p>
+            </section>
+        ) : <section aria-label="Jogadores salvos para 1 celular" className="mt-6">
+          <h2 className="text-lg font-black">Jogadores salvos</h2>
+          <p className="mt-1 text-sm text-slate-300">Cadastre os nomes aqui e escolha um jogo no catálogo. Não precisa criar sala.</p>
         <label className="mt-7 block text-sm font-bold text-slate-300" htmlFor="group-name">Nome da galera</label>
         <div className="mt-2 flex gap-2">
           <input id="group-name" className="min-h-12 min-w-0 flex-1 rounded-2xl border border-white/15 bg-white/5 px-4 outline-none focus:border-lime-400" maxLength={40} value={groupNameDraft ?? group.name} onChange={(event) => setGroupNameDraft(event.target.value)} />
@@ -108,6 +137,8 @@ export function PlayersScreen() {
             </div>
           ))}
         </Card>
+        <Button className="mt-5 w-full" onClick={() => navigate('/')}>Escolher um jogo</Button>
+        </section>}
       </section>
     </div>
   )

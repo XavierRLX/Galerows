@@ -26,9 +26,9 @@ export function HomeRoomActions() {
   return <section aria-labelledby="galera-lan-title" className="mt-5 rounded-2xl bg-[linear-gradient(115deg,#261b38,#14132a)] p-4">
     <div className="flex items-center gap-2">
       <Wifi aria-hidden="true" className="text-lime-300" size={18} />
-      <h2 id="galera-lan-title" className="text-base font-black">Jogar em rede local</h2>
+      <h2 id="galera-lan-title" className="text-base font-black">Sala multiplayer</h2>
     </div>
-    <p className="mt-1 text-sm text-slate-300">Cada pessoa no seu celular. Todos no mesmo Wi-Fi.</p>
+    <p className="mt-1 text-sm text-slate-300">Cada pessoa joga no próprio celular. Todos na mesma rede Wi-Fi.</p>
     <div className="mt-3 grid grid-cols-2 gap-2">
       <button className="flex min-h-12 items-center justify-center gap-2 rounded-xl border border-violet-300/40 bg-violet-300/10 px-3 text-sm font-bold text-white hover:bg-violet-300/20"
         type="button" onClick={() => navigate('/__lan-lobby-v2/entrar')}>

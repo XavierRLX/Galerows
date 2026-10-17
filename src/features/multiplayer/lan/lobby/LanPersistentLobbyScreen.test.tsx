@@ -107,6 +107,23 @@ describe('PL-03 Android lobby journey', () => {
   })
 })
 
+it('keeps the game chosen on the catalog when creating a new Room', async () => {
+  render(<MemoryRouter initialEntries={['/__lan-lobby-v2/criar?game=cidade-dorme']}>
+    <LanPersistentLobbyScreen initialMode="create" />
+  </MemoryRouter>)
+  await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
+  await waitFor(() => expect(screen.getByRole('group', { name: 'Modo de condução do Cidade Dorme' })).toBeInTheDocument())
+  expect(screen.queryByRole('button', { name: 'Selecionar Cidade Dorme' })).not.toBeInTheDocument()
+})
+
+it('ignores unknown game intents and keeps the manual game catalog', async () => {
+  render(<MemoryRouter initialEntries={['/__lan-lobby-v2/criar?game=toy']}>
+    <LanPersistentLobbyScreen initialMode="create" />
+  </MemoryRouter>)
+  await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())
+  expect(screen.getByRole('button', { name: 'Selecionar Cidade Dorme' })).toBeInTheDocument()
+})
+
 it('creates directly and does not recreate a room after explicit closure on the create route', async () => {
   render(<MemoryRouter><LanPersistentLobbyScreen initialMode="create" /></MemoryRouter>)
   await waitFor(() => expect(screen.getByTestId('pl03-lobby')).toBeInTheDocument())

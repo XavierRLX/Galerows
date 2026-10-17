@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ArrowRight, LoaderCircle, QrCode, Users, WifiOff } from 'lucide-react'
 import { LanScreenHeader } from './LanScreenHeader'
 import { LanQrScanner } from '../LanQrScanner'
@@ -23,6 +23,7 @@ export function LanPersistentLobbyScreen({ initialMode = 'entry' }: { initialMod
 
 function LanPersistentLobbyView({ initialMode }: { initialMode: 'entry' | 'join' | 'create' }) {
   const navigate = useNavigate()
+  const location = useLocation()
   const session = useRoomSession()
   const {
     mode: sessionMode, preferHotspot, setPreferHotspot, role,
@@ -31,13 +32,27 @@ function LanPersistentLobbyView({ initialMode }: { initialMode: 'entry' | 'join'
     startHost, joinScannedInvite, joinDiscoveredRoom, resumeGuest, action, leave, closeRoom, refreshInvite,
   } = session
   const creationRequested = useRef(false)
+  const requestedGame = useRef<LobbyGameId | null>(null)
   const mode = sessionMode === 'active' ? 'active' : initialMode
   useEffect(() => {
     if (initialMode === 'create' && sessionMode !== 'active' && !creationRequested.current) {
       creationRequested.current = true
-      startHost()
+      const game = new URLSearchParams(location.search).get('game')
+      // Only real supported games may be preselected; never override an existing Room.
+      requestedGame.current = game === 'cidade-dorme' || game === 'impostor-da-palavra' || game === 'pista-unica'
+        ? game : null
+      void startHost()
     }
-  }, [initialMode, sessionMode, startHost])
+  }, [initialMode, sessionMode, startHost, location.search])
+  useEffect(() => {
+    if (!requestedGame.current || sessionMode !== 'active' || role !== 'host'
+      || !connected || !snapshot) return
+    if (snapshot.roomState.selectedGameId) { requestedGame.current = null; return }
+    if (snapshot.roomState.phase !== 'lobby') return
+    const gameId = requestedGame.current
+    requestedGame.current = null
+    void action('SELECT_GAME', { gameId })
+  }, [sessionMode, role, connected, snapshot, action])
   useEffect(() => () => setScannerOpen(false), [setScannerOpen])
 
   const intro = mode !== 'active' || !snapshot

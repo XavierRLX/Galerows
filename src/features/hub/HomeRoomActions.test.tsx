@@ -39,8 +39,8 @@ describe('experimental LAN entry actions', () => {
   it('does not advertise an active Room before a persistent owner exists', () => {
     render(<MemoryRouter><HomeRoomActions /></MemoryRouter>)
     expect(screen.queryByRole('button', { name: /Voltar à sala/i })).not.toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Jogar em rede local' })).toBeInTheDocument()
-    expect(screen.getByText(/cada pessoa no seu celular/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Sala multiplayer' })).toBeInTheDocument()
+    expect(screen.getByText(/cada pessoa joga no próprio celular/i)).toBeInTheDocument()
   })
 })
 

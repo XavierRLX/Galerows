@@ -24,8 +24,8 @@
 .hub-concept { max-width: 340px; font-size: 12px; line-height: 1.6; color: #b6b0c0; margin: 13px 0 16px; }
 .hub-shortcuts { display: flex; gap: 10px; }
 .hub-shortcuts button { display: flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; flex: 1; font-size: 12px; font-weight: 700; border: 1px solid #ffffff12; border-radius: 13px; background: #ffffff04; }
-.hub-shortcuts button:first-child svg { color: var(--hub-purple); }
-.hub-shortcuts button:last-child svg { color: var(--hub-lime); }
+.hub-shortcuts button { flex: 0 1 auto; min-width: 160px; padding-inline: 16px; }
+.hub-shortcuts button svg { color: var(--hub-lime); }
 .hub-mode-guide { border-bottom: 1px solid #ffffff12; margin-top: 5px; }
 .hub-mode-guide summary { display: flex; justify-content: space-between; gap: 10px; align-items: center; list-style: none; min-height: 46px; color: #c1b7d2; font-size: 11px; }
 .hub-mode-guide summary::-webkit-details-marker { display: none; }

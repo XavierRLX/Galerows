@@ -30,12 +30,19 @@ describe('Hub header — landing-page brand identity', () => {
 
   it.each([
     ['Minha Galera', 'Grupo aberto'],
-    ['Ranking da Galera', 'Ranking aberto'],
     ['Abrir configurações', 'Configurações abertas'],
   ])('keeps the accessible %s navigation action', async (label, destination) => {
     renderHeader()
     await userEvent.setup().click(screen.getByRole('button', { name: label }))
     expect(screen.getByText(destination)).toBeInTheDocument()
+  })
+
+  it('keeps Minha Galera as the only group shortcut on the home', () => {
+    renderHeader()
+    const shortcuts = screen.getByRole('navigation', { name: 'Atalhos do Galerows' })
+    expect(shortcuts.querySelectorAll('button')).toHaveLength(1)
+    expect(screen.getByRole('button', { name: 'Minha Galera' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Ranking da Galera' })).not.toBeInTheDocument()
   })
 
   it('reveals the difference between a shared phone, personal sheets and local multiplayer', async () => {
