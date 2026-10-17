@@ -5,7 +5,14 @@
     "offlineNote": "Your language choice is saved on this device and the app continues to work offline.",
     "privacyCenter": "Privacy and data",
     "rateApp": "Rate on Play Store",
-    "version": "Version {{version}}"
+    "version": "Version {{version}}",
+    "aboutSupport": "About and support",
+    "tagline": "Games to bring friends together",
+    "connectivity": "Single-phone games work offline. For local multiplayer, each participant uses their own phone on the same Wi-Fi or hotspot, with no internet required.",
+    "versionLabel": "Installed version",
+    "buildLabel": "Build number",
+    "platformLabel": "Platform",
+    "reportProblem": "Send feedback or report an issue"
   },
   "privacyNotice": {
     "title": "Privacy at Galerows",

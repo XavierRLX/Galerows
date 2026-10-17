@@ -5,7 +5,14 @@
     "offlineNote": "A escolha de idioma fica salva neste dispositivo e o app continua funcionando offline.",
     "privacyCenter": "Privacidade e dados",
     "rateApp": "Avaliar na Play Store",
-    "version": "Versão {{version}}"
+    "version": "Versão {{version}}",
+    "aboutSupport": "Sobre e suporte",
+    "tagline": "Jogos para reunir a galera",
+    "connectivity": "Jogos em 1 celular funcionam offline. No multiplayer local, cada participante usa seu aparelho na mesma rede Wi-Fi ou hotspot, sem precisar de internet.",
+    "versionLabel": "Versão instalada",
+    "buildLabel": "Número do build",
+    "platformLabel": "Plataforma",
+    "reportProblem": "Enviar feedback ou relatar problema"
   },
   "privacyNotice": {
     "title": "Privacidade no Galerows",

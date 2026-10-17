@@ -5,7 +5,14 @@
     "offlineNote": "Tu idioma queda guardado en este dispositivo y la app sigue funcionando sin conexión.",
     "privacyCenter": "Privacidad y datos",
     "rateApp": "Calificar en Play Store",
-    "version": "Versión {{version}}"
+    "version": "Versión {{version}}",
+    "aboutSupport": "Acerca de y soporte",
+    "tagline": "Juegos para reunir a tus amigos",
+    "connectivity": "Los juegos de un solo celular funcionan sin conexión. En multijugador local, cada persona usa su teléfono en la misma red Wi-Fi o punto de acceso, sin internet.",
+    "versionLabel": "Versión instalada",
+    "buildLabel": "Número de compilación",
+    "platformLabel": "Plataforma",
+    "reportProblem": "Enviar comentarios o reportar un problema"
   },
   "privacyNotice": {
     "title": "Privacidad en Galerows",
