@@ -2,7 +2,7 @@
   "brand": "Galerows",
   "subtitle": "Jogos da Galera",
   "description": "Junte sua galera. Que vença o melhor.",
-  "gamesTitle": "Qual vai ser o jogo da vez?",
+  "gamesTitle": "Escolha seu jogo",
   "settings": "Abrir configurações",
   "playNow": "Jogar agora",
   "comingSoon": "Em breve",
@@ -46,11 +46,11 @@
     },
     "top-10": {
       "name": "Top 10",
-      "shortDescription": "Descubra listas ranqueadas e some mais pontos nas primeiras posições."
+      "shortDescription": "Acerte os primeiros lugares de rankings secretos."
     },
     "nem-ferrando": {
       "name": "Nem Ferrando",
-      "shortDescription": "Curiosidades numéricas, palpites absurdos e muitos Ferros para quem errar feio."
+      "shortDescription": "Dê seu palpite. Quanto mais longe, mais Ferros!"
     },
     "impostor-da-palavra": {
       "name": "Impostor da Palavra",
@@ -58,7 +58,7 @@
     },
     "quem-sou-eu": {
       "name": "Quem Sou Eu",
-      "shortDescription": "Escreva até 5 palavras, coloque o celular na testa e tente adivinhar."
+      "shortDescription": "Celular na testa. Quem acerta a palavra primeiro?"
     },
     "cidade-dorme": {
       "name": "Cidade Dorme",
@@ -67,7 +67,7 @@
     },
     "adedonha": {
       "name": "Adedonha",
-      "shortDescription": "Crie temas, compartilhe por QR e preencha respostas no próprio celular."
+      "shortDescription": "Uma letra, vários temas. Sua folha agora é digital."
     },
     "mimica": {
       "name": "Mímica",
@@ -89,5 +89,48 @@
       "name": "Ludo",
       "shortDescription": "Leve todas as suas peças até a chegada."
     }
+  },
+  "play": "Jogar",
+  "opening": "Abrindo…",
+  "myGroup": "Minha Galera",
+  "ranking": "Ranking da Galera",
+  "shortcuts": "Atalhos do Galerows",
+  "playerRange": "{{range}} pessoas",
+  "gameCount_one": "{{count}} jogo",
+  "gameCount_other": "{{count}} jogos",
+  "filterLabel": "Filtrar por modo de jogo",
+  "filters": {
+    "all": "Todos",
+    "personal": "Por pessoa"
+  },
+  "upcomingTitle": "Vem mais jogo por aí",
+  "endnote": "Bom mesmo é jogar junto.",
+  "welcome": {
+    "eyebrow": "Jogos presenciais com amigos",
+    "title": "Junte a galera.",
+    "accent": "O jogo é aqui.",
+    "description": "Cartas, papéis e tabuleiros no celular. Escolha um jogo e deixe o app guiar a diversão."
+  },
+  "modes": {
+    "guide": "Como vocês vão jogar?",
+    "shared": "1 celular",
+    "sharedDescription": "Um celular guia a partida. A galera joga junto, no mesmo lugar.",
+    "personal": "1 por pessoa",
+    "personalDescription": "Na Adedonha, cada pessoa usa sua folha digital. Compartilhem os temas por QR e confiram as respostas juntos.",
+    "lan": "Multiplayer local",
+    "lanDescription": "Cada pessoa no seu celular, todos no mesmo Wi-Fi. Joguem Impostor da Palavra, Cidade Dorme ou Pista Única em uma sala local.",
+    "preparing": "Multiplayer em breve"
+  },
+  "categories": {
+    "pista-unica": "Pistas em grupo",
+    "ultima-pista": "Enigmas e dedução",
+    "nem-ferrando": "Palpites absurdos",
+    "impostor-da-palavra": "Encontre o impostor",
+    "top-10": "Rankings e palpites",
+    "quem-sou-eu": "Adivinhação",
+    "adedonha": "Folha digital",
+    "mimica": "Sem dizer uma palavra",
+    "taboo": "Palavras proibidas",
+    "cidade-dorme": "Blefe e dedução"
   }
 }

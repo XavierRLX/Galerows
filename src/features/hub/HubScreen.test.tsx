@@ -1,4 +1,5 @@
 import { cleanup, render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { initializeI18n } from '../../i18n'
@@ -20,10 +21,30 @@ afterEach(async () => {
 describe('HubScreen usage badges', () => {
   it('shows the complete catalog to a newcomer without LAN setup', () => {
     render(<MemoryRouter initialEntries={['/']}><HubScreen /></MemoryRouter>)
-    expect(screen.getAllByRole('button', { name: /^Conhecer / })).toHaveLength(10)
+    expect(screen.getAllByRole('button', { name: /^Jogar agora / })).toHaveLength(10)
     expect(screen.getAllByRole('button', { name: /^Em breve / })).toHaveLength(3)
     expect(screen.getByRole('heading', { name: 'Impostor da Palavra' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /Voltar à sala/ })).not.toBeInTheDocument()
+  })
+
+  it('filters by the actual device mode and restores the available catalog', async () => {
+    render(<MemoryRouter><HubScreen /></MemoryRouter>)
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', { name: 'Por pessoa' }))
+    expect(screen.getByRole('status')).toHaveTextContent('1 jogo')
+    expect(screen.getByRole('button', { name: 'Jogar agora Adedonha' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Jogar agora Cidade Dorme' })).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: '1 celular' }))
+    expect(screen.getByRole('status')).toHaveTextContent('9 jogos')
+    expect(screen.queryByRole('button', { name: 'Jogar agora Adedonha' })).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Multiplayer local' }))
+    expect(screen.getByRole('status')).toHaveTextContent('3 jogos')
+    for (const name of ['Cidade Dorme', 'Impostor da Palavra', 'Pista Única']) {
+      expect(screen.getByRole('button', { name: `Jogar agora ${name}` })).toBeInTheDocument()
+    }
+    expect(screen.getAllByRole('button', { name: /^Jogar agora / })).toHaveLength(3)
+    await user.click(screen.getByRole('button', { name: 'Todos' }))
+    expect(screen.getAllByRole('button', { name: /^Jogar agora / })).toHaveLength(10)
   })
 
   it('keeps the featured badge and shows a discovery badge for an unplayed game', async () => {

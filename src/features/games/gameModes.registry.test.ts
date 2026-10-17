@@ -8,15 +8,15 @@ describe('game mode capabilities', () => {
     for (const game of gamesRegistry) {
       const capabilities = getGameModeCapabilities(game)
       expect(capabilities.local.label.length).toBeGreaterThan(0)
-      expect(capabilities.lan).not.toBe('available')
+      expect(capabilities.lan === 'available').toBe(['impostor-da-palavra', 'cidade-dorme', 'pista-unica'].includes(game.id))
     }
   })
 
-  it('marks Impostor as a shared-device game with future LAN only', () => {
-    const game = gamesRegistry.find(item => item.id === 'impostor-da-palavra')!
+  it.each(['impostor-da-palavra', 'cidade-dorme', 'pista-unica'])('marks %s as supporting a shared device and local multiplayer', (id) => {
+    const game = gamesRegistry.find(item => item.id === id)!
     expect(getGameModeCapabilities(game)).toEqual({
       local: { kind: 'sharedDevice', label: 'Jogar neste celular' },
-      lan: 'comingSoon',
+      lan: 'available',
     })
   })
 

@@ -2,7 +2,7 @@
   "brand": "Galerows",
   "subtitle": "Party Games",
   "description": "Gather your crew. May the best player win.",
-  "gamesTitle": "What's the game this round?",
+  "gamesTitle": "Ready to play?",
   "settings": "Open settings",
   "playNow": "Play now",
   "comingSoon": "Coming soon",
@@ -85,5 +85,48 @@
       "name": "Ludo",
       "shortDescription": "Bring all your pieces to the finish."
     }
+  },
+  "play": "Play",
+  "opening": "Opening…",
+  "myGroup": "My group",
+  "ranking": "Group ranking",
+  "shortcuts": "Galerows shortcuts",
+  "playerRange": "{{range}} people",
+  "gameCount_one": "{{count}} game",
+  "gameCount_other": "{{count}} games",
+  "filterLabel": "Filter by play mode",
+  "filters": {
+    "all": "All",
+    "personal": "Per person"
+  },
+  "upcomingTitle": "More games on the way",
+  "endnote": "Better when we play together.",
+  "welcome": {
+    "eyebrow": "In-person games with friends",
+    "title": "Get together.",
+    "accent": "Start a round.",
+    "description": "Cards, paper and boards on your phone. Pick a game and let the app guide the fun."
+  },
+  "modes": {
+    "guide": "How will you play together?",
+    "shared": "1 phone",
+    "sharedDescription": "One phone guides the game. Everyone plays together in the same place.",
+    "personal": "1 per person",
+    "personalDescription": "In Categories, everyone uses their own digital sheet. Share categories by QR and compare answers together.",
+    "lan": "Local multiplayer",
+    "lanDescription": "Everyone on their own phone, on the same Wi-Fi. Play Word Impostor, City Sleeps or Unique Clue in a local room.",
+    "preparing": "Multiplayer coming soon"
+  },
+  "categories": {
+    "pista-unica": "Group clues",
+    "ultima-pista": "Riddles and deduction",
+    "nem-ferrando": "Wild guesses",
+    "impostor-da-palavra": "Find the impostor",
+    "top-10": "Rankings and guesses",
+    "quem-sou-eu": "Guessing game",
+    "adedonha": "Digital answer sheet",
+    "mimica": "Without a word",
+    "taboo": "Forbidden words",
+    "cidade-dorme": "Bluff and deduction"
   }
 }
