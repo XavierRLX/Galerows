@@ -158,3 +158,46 @@ it('requires host confirmation before ending and distinguishes totals from round
   fireEvent.click(screen.getByRole('button', { name: 'Confirmar encerramento' }))
   expect(s.onEnd).toHaveBeenCalledOnce()
 })
+
+it.each([false, true])('allows retry after void-callback review failure (empty review: %s)', empty => {
+  const snapshot = scene('review')
+  if (empty) snapshot.privateState!.data = { kind: 'writer', target: 'Dinossauro', submitted: true, reviewClues: [
+    { playerId: 'guest', text: 'Gigante', included: false, reason: 'manual' },
+  ] }
+  const s = show(snapshot)
+  const confirm = () => {
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir revisão privada' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Confirmar pistas' }))
+    if (empty) fireEvent.click(screen.getByRole('button', { name: 'Concluir rodada' }))
+  }
+  confirm()
+  expect(s.onAction).toHaveBeenCalledTimes(1)
+  s.rerender(<PistaUnicaLanRound {...s.props} busy />)
+  expect(screen.getByRole('button', { name: 'Abrir revisão privada' })).toBeDisabled()
+  fireEvent.click(screen.getByRole('button', { name: 'Abrir revisão privada' }))
+  expect(s.onAction).toHaveBeenCalledTimes(1)
+  s.rerender(<PistaUnicaLanRound {...s.props} busy={false} error="Não foi possível enviar o comando." />)
+  expect(screen.getByRole('alert')).toHaveTextContent('Não foi possível enviar o comando.')
+  expect(screen.getByRole('button', { name: 'Abrir revisão privada' })).toBeEnabled()
+  confirm()
+  expect(s.onAction).toHaveBeenCalledTimes(2)
+  expect(s.onAction).toHaveBeenLastCalledWith('CONFIRM_CLUES', null)
+  expect(screen.getByRole('button', { name: 'Abrir revisão privada' })).toBeDisabled()
+  s.rerender(<PistaUnicaLanRound {...s.props} busy error="Não foi possível enviar o comando." />)
+  s.rerender(<PistaUnicaLanRound {...s.props} busy={false} error="Não foi possível enviar o comando." />)
+  expect(screen.getByRole('button', { name: 'Abrir revisão privada' })).toBeEnabled()
+})
+
+it.each(['clue', 'guess'] as const)('retains the %s draft and allows retry after provider failure', kind => {
+  const s = show(kind === 'guess' ? scene('guessing', 'guest') : scene())
+  if (kind === 'clue') fireEvent.click(screen.getByRole('button', { name: 'Ver desafio secreto' }))
+  fireEvent.change(screen.getByLabelText(kind === 'clue' ? 'Minha pista' : 'Meu palpite'), { target: { value: 'Animal' } })
+  fireEvent.click(screen.getByRole('button', { name: kind === 'clue' ? 'Enviar minha pista' : 'Enviar palpite' }))
+  s.rerender(<PistaUnicaLanRound {...s.props} busy />)
+  s.rerender(<PistaUnicaLanRound {...s.props} busy={false} error="Falha de envio" />)
+  if (kind === 'clue') fireEvent.click(screen.getByRole('button', { name: 'Ver desafio secreto' }))
+  expect(screen.getByDisplayValue('Animal')).toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: kind === 'clue' ? 'Enviar minha pista' : 'Enviar palpite' }))
+  expect(s.onAction).toHaveBeenCalledTimes(2)
+  expect(s.onAction).toHaveBeenLastCalledWith(kind === 'clue' ? 'SUBMIT_CLUE' : 'SUBMIT_GUESS', { text: 'Animal' })
+})

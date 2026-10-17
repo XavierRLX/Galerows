@@ -34,6 +34,7 @@ function PistaUnicaLanBody({ snapshot, playerId, isHost, busy, connected, onActi
   const [clue, setClue] = useState('')
   const [answer, setAnswer] = useState('')
   const [sent, setSent] = useState(false)
+  const [providerStatus, setProviderStatus] = useState({ busy, error })
   const [confirmation, setConfirmation] = useState<'end' | 'empty' | 'leave' | null>(null)
   const [actionError, setActionError] = useState('')
   useEffect(() => {
@@ -42,6 +43,14 @@ function PistaUnicaLanBody({ snapshot, playerId, isHost, busy, connected, onActi
     window.addEventListener('blur', conceal); document.addEventListener('visibilitychange', hideOnBackground)
     return () => { window.removeEventListener('blur', conceal); document.removeEventListener('visibilitychange', hideOnBackground) }
   }, [])
+
+  // RoomSessionProvider returns void; completion/failure arrives through props.
+  // Keep the duplicate guard until the provider finishes, then allow a failed
+  // command to be retried. The guarded update does not release a retry for an unchanged old error.
+  if (providerStatus.busy !== busy || providerStatus.error !== error) {
+    setProviderStatus({ busy, error })
+    if (!busy && error) setSent(false)
+  }
 
   const sessionId = snapshot.roomState.currentGameSessionId
   const publicState = snapshot.gamePublicState
