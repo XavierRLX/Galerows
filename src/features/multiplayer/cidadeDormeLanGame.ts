@@ -37,6 +37,7 @@ export interface CidadeDormeLanPrivate {
   investigation?: { targetId: string; result: 'suspect' | 'innocent' }
   voted: boolean
   canAct: boolean
+  eligibleTargetIds?: string[]
 }
 interface LanState {
   config: CidadeDormeLanConfig
@@ -239,6 +240,9 @@ export const cidadeDormeLanGame = defineMultiplayerGame<CidadeDormeLanConfig, La
       ...(own.roleKey === 'detective' && state.investigation && state.step !== 'summary'
         ? { investigation: { ...state.investigation } } : {}),
       voted: Object.hasOwn(state.votes, playerId),
+      ...(state.step === 'doctor-turn' && own.status === 'alive' && own.roleKey === 'doctor'
+        ? { eligibleTargetIds: alive(state).filter(target => canDoctorProtect(own.id, target.id,
+          state.settings, state.previousProtectedTarget ?? undefined)).map(target => target.id) } : {}),
       canAct: own.status === 'alive' && (
         (state.step === 'killer-turn' && killerActor(state)?.id === playerId)
         || (state.step === 'doctor-turn' && own.roleKey === 'doctor')

@@ -69,8 +69,14 @@ const LanRoomScreen = import.meta.env.VITE_LAN_ROOM_UI === '1' && lanNativeMvpAv
 const ImpostorPrototype = import.meta.env.DEV
   ? lazy(() => import('../features/multiplayer/lan/prototypes/ImpostorPrototype'))
   : null
+const ImpostorLivePreview = import.meta.env.DEV
+  ? lazy(() => import('../features/multiplayer/lan/prototypes/ImpostorLivePreview'))
+  : null
 const CidadeDormePrototype = import.meta.env.DEV
   ? lazy(() => import('../features/multiplayer/lan/prototypes/CidadeDormePrototype'))
+  : null
+const CidadeDormeLivePreview = import.meta.env.DEV
+  ? lazy(() => import('../features/multiplayer/lan/prototypes/CidadeDormeLivePreview'))
   : null
 
 function RouteLoading() {
@@ -86,7 +92,9 @@ export function AppRoutes() {
           <Route path="/__prototype/impostor-game" element={<ImpostorPrototype screen="game" />} />
           <Route path="/__prototype/impostor-result" element={<ImpostorPrototype screen="result" />} />
         </>}
+        {ImpostorLivePreview && <Route path="/__prototype/impostor-live" element={<ImpostorLivePreview />} />}
         {CidadeDormePrototype && <Route path="/__prototype/cidade-dorme" element={<CidadeDormePrototype />} />}
+        {CidadeDormeLivePreview && <Route path="/__prototype/cidade-dorme-live" element={<CidadeDormeLivePreview />} />}
         {LanDiagnosticScreen ? <Route path="/__lan-diagnostic" element={<LanDiagnosticScreen />} /> : null}
         {LanCoreProbeScreen ? <Route path="/__lan-core" element={<LanCoreProbeScreen />} /> : null}
         {LanPersistentRoomProbeScreen ? <Route path="/__lan-room-v2" element={<LanPersistentRoomProbeScreen />} /> : null}

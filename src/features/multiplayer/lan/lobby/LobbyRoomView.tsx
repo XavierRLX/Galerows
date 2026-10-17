@@ -6,10 +6,9 @@ import {
 } from 'lucide-react'
 import type { RoomCompetitionV2, RoomSnapshotV2 } from '../../persistentProtocol'
 import { gameConfig, lobbyGameCatalog, lobbySummary } from './lobbyView'
-import { ImpostorLanRound } from './ImpostorLanRound'
 import { ImpostorImmersiveRound } from './ImpostorImmersiveRound'
 import { PistaUnicaLanRound } from './PistaUnicaLanRound'
-import { CidadeDormeLanRound } from './CidadeDormeLanRound'
+import { CidadeDormeImmersiveRound } from './CidadeDormeImmersiveRound'
 import type { PistaUnicaCategory } from '../../../pista-unica/pistaUnica.types'
 import type { ImpostorMode, ConversationMode } from '../../../impostor-da-palavra/impostorDaPalavra.types'
 import type { LobbyGameId, LobbyRole } from './lobbyView'
@@ -192,17 +191,24 @@ export function LobbyRoomView({
 
   // No extra lobby between START_GAME and personal identity. Every native device
   // renders the same authoritative GameSession phase; only its own card is private.
-  const currentImpostor = snapshot.gamePublicState?.gameId === 'impostor-da-palavra'
-    ? snapshot.gamePublicState.data as { flow?: string } : null
   if ((summary.phase === 'playing' || summary.phase === 'results')
     && summary.gameId === 'impostor-da-palavra'
-    && currentImpostor?.flow === 'individual-vote' && onGameCommand) {
+    && onGameCommand) {
     return <ImpostorImmersiveRound snapshot={snapshot} playerId={playerId} isHost={isHost}
       busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
       onEnd={() => void onEnd()} onBackToLobby={() => void onBackToLobby()}
       onReplay={onReplay ? () => void onReplay() : undefined}
       onReconnect={() => void onReconnect()} onLeave={() => void onLeave()}
-      onClose={() => void onClose()} />
+      onClose={() => void onClose()} error={error} />
+  }
+
+  if ((summary.phase === 'playing' || summary.phase === 'results')
+    && summary.gameId === 'cidade-dorme' && onGameCommand) {
+    return <CidadeDormeImmersiveRound snapshot={snapshot} playerId={playerId} isHost={isHost}
+      busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
+      onEnd={() => void onEnd()} onBackToLobby={() => void onBackToLobby()}
+      onReplay={onReplay ? () => void onReplay() : undefined} onReconnect={() => void onReconnect()}
+      onLeave={() => void onLeave()} onClose={() => void onClose()} error={error}/>
   }
 
   function selectGame(id: LobbyGameId) {
@@ -433,16 +439,8 @@ export function LobbyRoomView({
               {!isHost && <p className="pl03-helper">Marque pronto quando estiver tudo certo. O anfitrião inicia a partida.</p>}
             </>}
 
-            {summary.phase === 'playing' && summary.gameId === 'impostor-da-palavra' && onGameCommand &&
-              <ImpostorLanRound snapshot={snapshot} playerId={playerId} isHost={isHost}
-                busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
-                onEnd={() => void onEnd()} />}
             {summary.phase === 'playing' && summary.gameId === 'pista-unica' && onGameCommand &&
               <PistaUnicaLanRound snapshot={snapshot} playerId={playerId} isHost={isHost}
-                busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
-                onEnd={() => void onEnd()} />}
-            {summary.phase === 'playing' && summary.gameId === 'cidade-dorme' && onGameCommand &&
-              <CidadeDormeLanRound snapshot={snapshot} playerId={playerId} isHost={isHost}
                 busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
                 onEnd={() => void onEnd()} />}
             {summary.phase === 'playing' && summary.gameId !== 'impostor-da-palavra'

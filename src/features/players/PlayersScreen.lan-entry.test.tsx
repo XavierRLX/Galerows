@@ -34,7 +34,7 @@ describe('G5D — acesso à LAN dentro de Minha Galera', () => {
       </Routes>
     </MemoryRouter>)
 
-    expect(screen.getAllByRole('button', { name: /^Conhecer / })).toHaveLength(10)
+    expect(screen.getAllByRole('button', { name: /^Jogar agora / })).toHaveLength(10)
     expect(screen.queryByRole('heading', { name: 'Jogar com a galera' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Criar sala' })).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Minha Galera' }))

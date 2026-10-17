@@ -49,6 +49,8 @@ export default function CidadeDormePrototype() {
   const [room, setRoom] = useState<CidadeDormePreviewRoom | null>(null)
   const [version, setVersion] = useState(0)
   const [stage, setStage] = useState<Stage>('entry')
+  const [roomTab, setRoomTab] = useState<'residents' | 'settings'>('settings')
+  const [rolePanelOpen, setRolePanelOpen] = useState(false)
   const [viewId, setViewId] = useState('host')
   const [config, setConfig] = useState<CidadeDormeLanConfig>(initialConfig)
   const [countdown, setCountdown] = useState<number | null>(null)
@@ -100,16 +102,17 @@ export default function CidadeDormePrototype() {
       preview.roomCommand('host', 'SELECT_GAME', { gameId: 'cidade-dorme' })
       preview.roomCommand('host', 'CONFIGURE_GAME', initialConfig)
     }
-    setRoom(preview); setViewId(asGuest ? 'guest-1' : 'host'); setStage('room'); setNotice('')
+    setRoom(preview); setViewId(asGuest ? 'guest-1' : 'host'); setRoomTab(asGuest ? 'residents' : 'settings')
+    setStage('room'); setNotice('')
   }
   const reset = () => {
     if (countdownTimer.current !== null) window.clearInterval(countdownTimer.current)
     if (transitionTimer.current !== null) window.clearTimeout(transitionTimer.current)
     countdownTimer.current = null; transitionTimer.current = null; setCountdownWasStopped(false)
-    setCountdown(null); setRoom(null); setStage('entry'); setViewId('host'); setNotice('')
+    setCountdown(null); setRoom(null); setStage('entry'); setViewId('host'); setRolePanelOpen(false); setNotice('')
   }
   const changeView = (id: string) => {
-    setRevealState({ key: '', open: false }); setTargetId(null); setViewId(id); setNotice('')
+    setRevealState({ key: '', open: false }); setRolePanelOpen(false); setTargetId(null); setViewId(id); setNotice('')
   }
   const sendRoom = (actor: string, type: string, payload: unknown = null) => {
     if (!room) return false
@@ -128,7 +131,7 @@ export default function CidadeDormePrototype() {
     if (!room) return false
     const result = room.gameCommand(actor, type, payload)
     setNotice(result.status === 'accepted' ? '' : errorText[result.error ?? ''] ?? 'Não foi possível concluir a ação.')
-    if (result.status === 'accepted') { setRevealed(false); setTargetId(null) }
+    if (result.status === 'accepted') { setRevealed(false); setRolePanelOpen(false); setTargetId(null) }
     tick()
     return result.status === 'accepted'
   }
@@ -154,7 +157,7 @@ export default function CidadeDormePrototype() {
       if (result.status !== 'accepted') {
         setNotice(errorText[result.error ?? ''] ?? 'Não foi possível iniciar a partida.'); tick(); return
       }
-      tick(); setStage('transition')
+      tick(); setRolePanelOpen(true); setStage('transition')
       transitionTimer.current = window.setTimeout(() => { setStage('game'); transitionTimer.current = null }, 900)
     }, 1_000)
   }
@@ -220,7 +223,7 @@ export default function CidadeDormePrototype() {
         </div>
       </main>}
 
-      {stage === 'room' && room && snapshot && <main className="cdp-room-main">
+      {stage === 'room' && room && snapshot && <main className="cdp-room-main" key="room">
         <div className="cdp-topline"><button type="button" onClick={reset}><ArrowLeft size={16}/> Início</button>
           <span><span className="cdp-online"/> SALA ABERTA · CD 04</span></div>
         <section className="cdp-room-hero" aria-labelledby="cdp-room-title">
@@ -231,7 +234,13 @@ export default function CidadeDormePrototype() {
               : 'O anfitrião escolhe o jogo. Cada participante entra antes do primeiro anoitecer.'}</p></div>
           <div className="cdp-room-code"><small>CÓDIGO DE EXEMPLO</small><strong>CD 04</strong></div>
         </section>
-        <div className="cdp-room-grid">
+        <nav className="cdp-room-tabs" aria-label="Áreas da sala">
+          <button type="button" aria-current={roomTab === 'residents' ? 'page' : undefined} onClick={() => setRoomTab('residents')}>
+            <Users size={16}/> Moradores <span>{members.length}</span></button>
+          <button type="button" aria-current={roomTab === 'settings' ? 'page' : undefined} onClick={() => setRoomTab('settings')}>
+            <Moon size={16}/> Regras {configured && <Check size={14}/>}</button>
+        </nav>
+        <div className={`cdp-room-grid cdp-room-tab-${roomTab}`}>
           <section className="cdp-panel cdp-roster" aria-labelledby="cdp-roster-title">
             <div className="cdp-section-head"><div><p className="cdp-kicker">MORADORES</p><h2 id="cdp-roster-title">Quem está na sala</h2></div>
               <span>{members.length} / 12</span></div>
@@ -296,9 +305,11 @@ export default function CidadeDormePrototype() {
         <p className="cdp-kicker">A PRIMEIRA NOITE COMEÇA</p><h1 ref={titleRef} tabIndex={-1}>As luzes se apagam.<br/><em>A cidade dorme.</em></h1>
       </main>}
 
-      {stage === 'game' && room && publicGame && snapshot && <main className="cdp-game-main">
+      {stage === 'game' && room && publicGame && snapshot && <main className="cdp-game-main" key={`game-${publicGame.round}-${publicGame.step}`}>
         <div className="cdp-topline"><span><span className="cdp-online"/> RODADA {String(publicGame.round).padStart(2, '0')}</span>
-          <span>{night ? <Moon size={16}/> : <Sun size={16}/>} {night ? 'NOITE' : 'DIA'} · {publicGame.players.filter(p => p.alive).length} VIVOS</span></div>
+          <span>{night ? <Moon size={16}/> : <Sun size={16}/>} {night ? 'NOITE' : 'DIA'} · {publicGame.players.filter(p => p.alive).length} VIVOS</span>
+          {privateGame && publicGame.step !== 'summary' && <button type="button" className="cdp-role-access"
+            onClick={() => { setRevealed(false); setRolePanelOpen(true) }}><LockKeyhole size={15}/> Meu papel</button>}</div>
         <div className={`cdp-chapter cdp-step-${publicGame.step}`}>
           <div className="cdp-chapter-art" aria-hidden="true"/>
           <div className="cdp-chapter-copy"><p className="cdp-kicker">{stepCopy[publicGame.step].overline}</p>
@@ -306,7 +317,8 @@ export default function CidadeDormePrototype() {
             <p>{stepCopy[publicGame.step].intro}</p></div>
         </div>
         <div className="cdp-game-grid">
-          {privateGame && publicGame.step !== 'summary' && <section className={`cdp-role-panel ${revealed ? 'is-revealed' : ''}`} aria-label="Seu papel secreto">
+          {privateGame && publicGame.step !== 'summary' && <section className={`cdp-role-panel ${revealed ? 'is-revealed' : ''} ${rolePanelOpen ? 'is-open' : ''}`} aria-label="Seu papel secreto">
+            <button type="button" className="cdp-role-close" onClick={() => { setRevealed(false); setRolePanelOpen(false) }} aria-label="Fechar papel secreto"><X size={20}/></button>
             <div className="cdp-role-top"><LockKeyhole size={16}/><span>APENAS PARA SEUS OLHOS</span><span>0{publicGame.round}</span></div>
             {revealed ? <div className="cdp-role-content"><p>SEU PAPEL</p>
               <h2 data-testid="preview-role-name">{roleName[privateGame.role]}</h2>
@@ -319,13 +331,14 @@ export default function CidadeDormePrototype() {
                 <span>Vire a carta longe dos olhares da galera.</span></div>}
             <button type="button" className="cdp-secondary" onClick={() => setRevealed(value => !value)}>
               {revealed ? <EyeOff size={17}/> : <Eye size={17}/>}{revealed ? 'Ocultar meu papel' : 'Revelar meu papel'}</button>
+            {publicGame.step === 'reveal' && !privateGame.acknowledged && <button type="button" className="cdp-primary cdp-role-confirm"
+              disabled={!revealed} onClick={() => sendGame(viewId, 'ACK_ROLE')}><Check size={18}/> Entendi meu papel</button>}
           </section>}
           <section className="cdp-story-panel" aria-label="Ação da rodada">
             {publicGame.step === 'reveal' && <>
               <p className="cdp-kicker">TODOS TÊM UM SEGREDO</p><h2>Conheça seu papel.</h2>
               <p>{publicGame.seenCount} de {publicGame.totalPlayers} pessoas confirmaram.</p>
-              {!privateGame?.acknowledged && <button type="button" className="cdp-primary" disabled={!revealed}
-                onClick={() => sendGame(viewId, 'ACK_ROLE')}><Check size={18}/> Entendi meu papel</button>}
+              {!privateGame?.acknowledged && <p>Abra seu papel secreto, revele sua identidade e confirme.</p>}
               {privateGame?.acknowledged && <p className="cdp-saved"><Check size={16}/> Confirmado. Aguarde os demais.</p>}
               {isHost && <button type="button" className="cdp-secondary"
                 disabled={publicGame.seenCount !== publicGame.totalPlayers}

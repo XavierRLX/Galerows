@@ -115,6 +115,8 @@ body:has(.cdp-root) { min-width: 320px; background: #07111c; }
 
 .cdp-chapter { min-height: 260px; position: relative; isolation: isolate; overflow: hidden; display: flex; align-items: end; border: 1px solid #e9c89435; padding: clamp(25px, 4vw, 48px); }
 .cdp-chapter-art { position: absolute; inset: 0; z-index: -2; background: url('/assets/games/cidade-dorme.jpg') center 35% / cover no-repeat; }
+.cdp-chapter-art { animation: cdp-art-drift 14s ease-in-out infinite alternate; }
+@keyframes cdp-art-drift { to { transform: scale(1.08) translateX(-1.5%); } }
 .cdp-chapter::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #07111cf1 0%, #07111cd2 46%, #07111c55 100%); }
 .cdp-chapter:not(.cdp-step-reveal):not(.cdp-step-killer-turn):not(.cdp-step-doctor-turn):not(.cdp-step-detective-turn) .cdp-chapter-art { filter: sepia(.35) brightness(1.45); }
 .cdp-chapter:not(.cdp-step-reveal):not(.cdp-step-killer-turn):not(.cdp-step-doctor-turn):not(.cdp-step-detective-turn)::after { background: linear-gradient(90deg, #142b37f0 0%, #142b37cf 46%, #1d364478 100%); }
@@ -135,7 +137,8 @@ body:has(.cdp-root) { min-width: 320px; background: #07111c; }
 .cdp-role-content > span { max-width: 32ch; color: #e3ebed; font-size: 12px; line-height: 1.5; }
 .cdp-role-content small { color: var(--cdp-gold); line-height: 1.4; }
 .cdp-role-panel > .cdp-secondary { width: 100%; }
-.cdp-story-panel { min-height: 315px; min-width: 0; padding: clamp(24px, 3vw, 40px); background: var(--cdp-panel); border: 1px solid var(--cdp-line); }
+.cdp-story-panel { position: relative; isolation: isolate; min-height: 315px; min-width: 0; padding: clamp(24px, 3vw, 40px); background: var(--cdp-panel); border: 1px solid var(--cdp-line); }
+.cdp-story-panel::before { content: ''; position: absolute; z-index: -1; inset: 32% 0 0; opacity: .11; background: url('/assets/games/cidade-dorme.jpg') center bottom / cover no-repeat; mask-image: linear-gradient(transparent, #000 70%); pointer-events: none; }
 .cdp-story-panel h2 { margin-top: 10px; }
 .cdp-story-panel > p:not(.cdp-kicker) { max-width: 55ch; margin-top: 12px; color: var(--cdp-muted); font-size: 13px; line-height: 1.5; }
 .cdp-story-panel > .cdp-primary, .cdp-story-panel > .cdp-secondary { margin-top: 24px; margin-right: 8px; }
@@ -167,6 +170,10 @@ body:has(.cdp-root) { min-width: 320px; background: #07111c; }
 .cdp-lab-views { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 5px; }
 .cdp-notice { position: fixed; bottom: 20px; left: 50%; z-index: 10; width: min(440px, calc(100% - 28px)); transform: translateX(-50%); padding: 13px 15px; display: flex; justify-content: space-between; align-items: center; gap: 15px; background: #4e2527; color: #fff4ef; border: 1px solid #f5b1a3; box-shadow: 0 15px 45px #0008; font-size: 12px; line-height: 1.5; }
 .cdp-notice button { background: none; border: 0; color: inherit; }
+.cdp-room-tabs, .cdp-role-close, .cdp-role-access { display: none; }
+.cdp-role-confirm { width: 100%; margin-top: 8px; }
+.cdp-room-main, .cdp-game-main, .cdp-results-main { animation: cdp-scene-enter .55s var(--cdp-ease) both; }
+@keyframes cdp-scene-enter { from { opacity: 0; } to { opacity: 1; } }
 
 @media (max-width: 780px) {
   .cdp-room-grid, .cdp-game-grid { grid-template-columns: 1fr; }
@@ -210,8 +217,165 @@ body:has(.cdp-root) { min-width: 320px; background: #07111c; }
   .cdp-story-panel { min-height: 0; }
   .cdp-transition-moon { width: 92px; height: 92px; }
 }
+@media (max-width: 620px) {
+  body:has(.cdp-root) { height: 100dvh; margin: 0; overflow: hidden; }
+  .cdp-root { height: 100dvh; min-height: 0; overflow: hidden; background: radial-gradient(circle at 50% 0%, #183044, #07111c 55%); }
+  .cdp-shell { height: 100%; min-height: 0; padding: 0 14px max(7px, env(safe-area-inset-bottom)); }
+  .cdp-header { flex: 0 0 43px; min-height: 0; }
+  .cdp-brand-moon { width: 24px; height: 24px; }
+  .cdp-preview-label { font-size: 8px; }
+  .cdp-footer { display: none; }
+  .cdp-entry { flex: 1; min-height: 0; overflow: hidden; align-items: end; }
+  .cdp-entry-copy { padding: 0 2px 22px; }
+  .cdp-entry h1 { font-size: clamp(35px, 9vw, 49px); margin-top: 12px; }
+  .cdp-entry-copy > p:not(.cdp-kicker) { font-size: 12px; line-height: 1.4; margin-top: 12px; }
+  .cdp-entry-actions { margin-top: 17px; gap: 8px; }
+  .cdp-entry-actions :is(.cdp-primary,.cdp-secondary) { min-height: 45px; }
+  .cdp-entry-copy > small { margin-top: 11px; font-size: 10px; }
+  .cdp-room-main, .cdp-game-main, .cdp-results-main { flex: 1; min-height: 0; width: 100%; padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+  .cdp-topline { flex: 0 0 30px; min-height: 0; margin: 0; font-size: 9px; }
+  .cdp-room-hero { flex: 0 0 76px; min-height: 0; padding: 10px 13px; border-radius: 0; }
+  .cdp-room-hero h1 { font-size: 28px; margin-top: 4px; }
+  .cdp-room-hero-content > p:last-child { display: none; }
+  .cdp-room-code { top: 10px; right: 10px; min-width: 64px; padding: 5px; }
+  .cdp-room-code small { display: none; }
+  .cdp-room-code strong { font-size: 17px; margin: 0; }
+  .cdp-room-tabs { display: grid; grid-template-columns: 1fr 1fr; flex: 0 0 35px; gap: 3px; margin-top: 5px; }
+  .cdp-room-tabs button { display: flex; justify-content: center; align-items: center; gap: 7px; border: 0; border-bottom: 2px solid transparent; background: #142535; color: var(--cdp-muted); font-size: 11px; font-weight: 700; }
+  .cdp-room-tabs button[aria-current=page] { color: var(--cdp-gold); border-color: var(--cdp-gold); background: #1a3143; }
+  .cdp-room-tabs span { color: var(--cdp-gold); }
+  .cdp-room-grid { flex: 1; min-height: 0; display: block; margin-top: 4px; }
+  .cdp-room-tab-residents .cdp-settings, .cdp-room-tab-settings .cdp-roster { display: none; }
+  .cdp-room-grid .cdp-panel { height: 100%; min-height: 0; overflow: hidden; padding: 10px 13px; border-radius: 0; }
+  .cdp-section-head { margin-bottom: 5px; }
+  .cdp-section-head h2 { font-size: 20px; margin-top: 2px; }
+  .cdp-roster ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px 7px; }
+  .cdp-roster li { min-height: clamp(33px, 5dvh, 45px); gap: 6px; }
+  .cdp-avatar { width: 25px; height: 25px; font-size: 11px; }
+  .cdp-member-name strong { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cdp-member-name small { font-size: 8px; }
+  .cdp-ready-chip { font-size: 8px; }
+  .cdp-hint { margin-top: 9px !important; font-size: 10px; }
+  .cdp-game-choice { padding: 7px 9px; margin-bottom: 6px; gap: 9px; }
+  .cdp-game-choice > svg { width: 21px; height: 21px; }
+  .cdp-game-choice strong { font-size: 17px; }
+  .cdp-game-choice span { font-size: 9px; }
+  .cdp-config h3 { font-size: 17px; }
+  .cdp-config > p:not(.cdp-config-note):not(.cdp-saved) { display: none; }
+  .cdp-config .cdp-toggle { min-height: clamp(37px, 5.5dvh, 47px); padding: 2px 0; }
+  .cdp-toggle strong { font-size: 11px; }
+  .cdp-toggle small { display: none; }
+  .cdp-switch { transform: scale(.86); transform-origin: right center; }
+  .cdp-config-note { margin: 3px 0 !important; font-size: 10px !important; }
+  .cdp-config > .cdp-secondary, .cdp-settings > .cdp-secondary { min-height: 37px; padding: 5px 9px; }
+  .cdp-saved { font-size: 10px; margin-top: 5px !important; }
+  .cdp-guest-rules { font-size: 12px; }
+  .cdp-launch { flex: 0 0 auto; min-height: 74px; display: flex; flex-direction: column; align-items: stretch; gap: 5px; margin-top: 5px; padding: 8px 10px; }
+  .cdp-launch h2 { display: none; }
+  .cdp-launch p:not(.cdp-kicker) { margin-top: 1px; }
+  .cdp-launch-actions { display: flex; flex-wrap: nowrap; gap: 6px; width: 100%; }
+  .cdp-launch-actions > :is(button,p) { flex: 1; min-width: 0; width: auto; }
+  .cdp-launch-actions button { min-height: 35px; padding: 5px 7px; font-size: 10px !important; }
+  .cdp-launch-actions button svg:last-child { display: none; }
+  .cdp-lab { flex: 0 0 37px; min-height: 0; margin-top: 5px; }
+  .cdp-lab summary { min-height: 36px; }
+  .cdp-lab[open] { position: fixed; z-index: 80; left: 0; right: 0; bottom: 0; max-height: min(450px, calc(100dvh - 45px)); overflow-y: auto; margin: 0; box-shadow: 0 -24px 80px #000b; border-top: 2px solid var(--cdp-gold); border-radius: 15px 15px 0 0; animation: cdp-sheet-in .3s var(--cdp-ease) both; }
+  .cdp-lab[open] summary { min-height: 49px; }
+  .cdp-lab > div { padding: 10px 13px calc(15px + env(safe-area-inset-bottom)); gap: 7px; }
+  .cdp-lab-views { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .cdp-lab button { min-height: 32px; padding: 5px 7px; }
+  @keyframes cdp-sheet-in { from { opacity: .4; transform: translateY(45px); } to { opacity: 1; transform: translateY(0); } }
+
+  .cdp-launch:has(.cdp-countdown) { position: fixed; z-index: 60; inset: 0; margin: 0; padding: 30px; min-height: 100dvh; align-items: center; justify-content: center; text-align: center; border: 0; background: radial-gradient(circle at 50% 39%, #274460 0, #0c1c2c 48%, #061019 100%); animation: cdp-nightfall .65s ease-out both; }
+  .cdp-launch:has(.cdp-countdown)::before { content: ''; width: 96px; height: 96px; border-radius: 50%; background: #efe5c9; box-shadow: 0 0 75px #d6e3ee7a, 0 0 160px #9ebed844; margin-bottom: 16px; animation: cdp-moon-in .65s var(--cdp-ease) both; }
+  .cdp-launch:has(.cdp-countdown) h2 { display: block; font-size: 30px; }
+  .cdp-launch:has(.cdp-countdown) > div:first-child p:last-child { display: none; }
+  .cdp-countdown { flex-direction: column; gap: 9px; margin-top: 14px; }
+  .cdp-countdown strong { width: 106px; height: 106px; border: 1px solid #e9c89488; border-radius: 50%; display: grid; place-items: center; font-size: 76px; background: #e9c89412; box-shadow: 0 0 0 8px #e9c8940d, 0 0 55px #e9c89427; animation: cdp-count-pulse 1s ease-in-out infinite alternate; }
+  .cdp-countdown button { margin-top: 25px; }
+  @keyframes cdp-count-pulse { to { transform: scale(1.055); box-shadow: 0 0 0 14px #e9c89408, 0 0 80px #e9c89460; } }
+  @keyframes cdp-nightfall { from { opacity: 0; } to { opacity: 1; } }
+
+  .cdp-game-main .cdp-topline { gap: 6px; font-size: 8px; }
+  .cdp-game-main .cdp-topline > span:nth-child(2) { margin-left: auto; }
+  .cdp-game-main .cdp-topline svg { width: 12px; height: 12px; }
+  .cdp-role-access { display: inline-flex; align-items: center; gap: 3px; flex: none; border: 1px solid #e9c89455; color: var(--cdp-gold); background: #e9c8940c; min-height: 24px; padding: 3px 5px; font-size: 9px; }
+  .cdp-chapter { flex: 0 0 105px; min-height: 0; padding: 11px 14px; }
+  .cdp-chapter h1 { font-size: clamp(28px, 8vw, 35px); margin-top: 4px; }
+  .cdp-chapter p:last-child { font-size: 10px; line-height: 1.3; margin-top: 5px; }
+  .cdp-game-grid { flex: 1; min-height: 0; display: block; margin-top: 5px; }
+  .cdp-story-panel { height: 100%; min-height: 0; display: flex; flex-direction: column; padding: 13px 15px; overflow: hidden; }
+  .cdp-story-panel h2 { font-size: clamp(22px, 7vw, 30px); margin-top: 4px; }
+  .cdp-story-panel > p:not(.cdp-kicker) { font-size: 11px; line-height: 1.35; margin-top: 7px; }
+  .cdp-story-panel > :is(.cdp-primary,.cdp-secondary) { margin: auto 0 0; min-height: 42px; }
+  .cdp-targets { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; gap: 7px; margin-top: 11px; }
+  .cdp-targets > button:not(.cdp-primary) { min-height: clamp(34px, 5.2dvh, 45px); padding: 5px; }
+  .cdp-targets > .cdp-primary { grid-column: 1 / -1; min-height: 43px; margin-top: auto; }
+  .cdp-game-main .cdp-lab { margin-top: 5px; }
+  .cdp-fallen { margin-top: 4px !important; font-size: 10px; }
+  .cdp-final-roles { min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; margin-top: 10px !important; }
+  .cdp-final-roles li { min-width: 0; padding: 5px 0; font-size: 10px; }
+  .cdp-final-roles li span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+  .cdp-role-panel { display: none; position: fixed; z-index: 70; inset: 0; min-height: 0; padding: calc(21px + env(safe-area-inset-top)) 24px calc(25px + env(safe-area-inset-bottom)); flex-direction: column; background: radial-gradient(circle at 50% 28%, #344c60 0, #132538 47%, #08131f 100%); border: 0; box-shadow: none; }
+  .cdp-role-panel.is-open { display: flex; animation: cdp-card-in .45s var(--cdp-ease) both; }
+  .cdp-role-panel::before { content: ''; position: absolute; z-index: -1; inset: 15% 0 16%; background: url('/assets/games/cidade-dorme.jpg') center / cover no-repeat; opacity: .13; mask-image: linear-gradient(transparent, #000 25%, #000 72%, transparent); }
+  .cdp-role-close { display: grid; place-items: center; position: absolute; top: calc(18px + env(safe-area-inset-top)); right: 20px; width: 36px; height: 36px; border: 1px solid #e9c89470; background: #e9c89412; color: var(--cdp-gold); border-radius: 50%; }
+  .cdp-role-top { min-height: 44px; padding-right: 45px; }
+  .cdp-role-covered, .cdp-role-content { flex: 1; min-height: 0; gap: 15px; }
+  .cdp-role-covered svg { width: 60px; height: 60px; filter: drop-shadow(0 0 24px #e9c89477); }
+  .cdp-role-covered strong { font-size: 33px; }
+  .cdp-role-content h2 { font-size: clamp(44px, 13vw, 65px); }
+  .cdp-role-panel > .cdp-secondary, .cdp-role-panel > .cdp-primary { width: 100%; min-height: 47px; flex: none; margin-top: 9px; }
+  .cdp-role-confirm { display: inline-flex; }
+  @keyframes cdp-card-in { from { opacity: 0; transform: scale(.94) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+  .cdp-results-main { max-width: none; }
+  .cdp-results-art { flex: 0 0 100px; height: auto; margin: 0 0 10px; }
+  .cdp-results-main h1 { font-size: clamp(31px, 8vw, 43px); margin-top: 5px; }
+  .cdp-results-main > p:not(.cdp-kicker) { font-size: 11px; line-height: 1.35; margin: 9px 0; }
+  .cdp-score-list { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; align-content: start; gap: 0 10px; margin-bottom: 6px; }
+  .cdp-score-list > div { padding: 7px 0; font-size: 11px; }
+  .cdp-results-main > .cdp-primary { min-height: 43px; flex: none; }
+}
+@media (max-width: 620px) and (max-height: 700px) {
+  .cdp-entry-copy > p:not(.cdp-kicker), .cdp-entry-copy > small { display: none; }
+  .cdp-entry h1 { font-size: clamp(31px, 8vw, 40px); }
+  .cdp-room-hero { flex-basis: 62px; }
+  .cdp-room-hero h1 { font-size: 24px; }
+  .cdp-settings .cdp-section-head { min-height: 24px; margin-bottom: 2px; }
+  .cdp-settings .cdp-section-head .cdp-kicker { display: none; }
+  .cdp-settings .cdp-section-head h2 { margin: 0; font-size: 18px; }
+  .cdp-game-choice { min-height: 37px; padding: 4px 8px; }
+  .cdp-game-choice span { display: none; }
+  .cdp-config h3 { font-size: 15px; line-height: 19px; }
+  .cdp-config .cdp-toggle { min-height: 31px; }
+  .cdp-config-note { display: none; }
+  .cdp-config > .cdp-secondary { min-height: 34px; }
+  .cdp-launch { min-height: 65px; }
+  .cdp-chapter { flex-basis: 85px; }
+  .cdp-chapter p:last-child { display: none; }
+  .cdp-story-panel { padding: 10px 12px; }
+  .cdp-role-covered strong { font-size: 27px; }
+}
+@media (max-width: 620px) and (max-height: 600px) {
+  .cdp-room-hero { flex-basis: 40px; }
+  .cdp-room-hero .cdp-kicker { display: none; }
+  .cdp-room-hero h1 { font-size: 20px; }
+  .cdp-launch { min-height: 56px; padding: 4px 8px; gap: 2px; }
+  .cdp-launch .cdp-kicker { display: none; }
+  .cdp-launch:has(.cdp-countdown) .cdp-kicker { display: block; }
+  .cdp-chapter { flex-basis: 78px; padding: 8px 11px; }
+  .cdp-chapter h1 { font-size: 25px; }
+  .cdp-targets { gap: 5px; }
+  .cdp-targets > button:not(.cdp-primary) { min-height: 30px; }
+  .cdp-results-art { flex-basis: 70px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .cdp-transition-moon, .cdp-transition-scene .cdp-kicker, .cdp-transition-scene h1 { animation: cdp-soft-appear .2s ease-out both; }
   .cdp-primary, .cdp-secondary, .cdp-switch, .cdp-switch::after { transition-duration: .01ms; }
+  .cdp-room-main, .cdp-game-main, .cdp-results-main, .cdp-lab[open], .cdp-role-panel.is-open,
+  .cdp-launch:has(.cdp-countdown), .cdp-launch:has(.cdp-countdown)::before, .cdp-countdown strong,
+  .cdp-chapter-art { animation: none; }
   @keyframes cdp-soft-appear { from { opacity: .5; } to { opacity: 1; } }
 }

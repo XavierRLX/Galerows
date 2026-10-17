@@ -41,7 +41,7 @@ function view(frame = snapshot(), role:'host'|'guest'='host') {
 
 describe('Impostor LAN real immersion, replacing lobby during a GameSession',()=>{
   it('goes straight to the secret card with no duplicate lobby or prominent game heading',()=>{
-    const {callbacks} = view()
+    const {callbacks, props, rerender} = view()
     expect(screen.getByTestId('impostor-immersive')).toBeInTheDocument()
     expect(screen.queryByTestId('pl03-lobby')).not.toBeInTheDocument()
     expect(screen.queryByRole('heading',{name:'Sala da galera'})).not.toBeInTheDocument()
@@ -55,6 +55,10 @@ describe('Impostor LAN real immersion, replacing lobby during a GameSession',()=
     fireEvent.click(screen.getByRole('button',{name:'Revelar minha informação'}))
     expect(screen.getByText('Abacaxi')).toBeInTheDocument()
     expect(screen.getByText('Todos visualizaram!')).toBeInTheDocument()
+    const confirmed = {...props.snapshot, privateState: {...props.snapshot.privateState!, data: {kind:'word', word:'Abacaxi', wasSeen:true}}}
+    rerender(<LobbyRoomView {...props} snapshot={confirmed}/>)
+    fireEvent.click(screen.getByRole('button',{name:'Ir para a conversa'}))
+    expect(screen.queryByText('Abacaxi')).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole('button',{name:/Abrir votação para todos/}))
     expect(callbacks.onGameCommand).toHaveBeenCalledWith('START_VOTING',null)
   })
