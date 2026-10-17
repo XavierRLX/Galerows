@@ -20,15 +20,12 @@ const renderHeader = () => render(
 )
 
 describe('Hub header — landing-page brand identity', () => {
-  it('uses the landing lettering and subtitle in the heading, with the lime-G mark in the background', () => {
-    const { container } = renderHeader()
-    expect(screen.getByRole('heading', { level: 1, name: 'Galerows — Jogos da Galera' })).toBeInTheDocument()
-    const mark = container.querySelector('.hub-header-panel > img[aria-hidden="true"]')
-    expect(mark).toHaveAttribute('src', '/assets/brand/galerows-mark.svg')
-    expect(mark).toHaveAttribute('alt', '')
-    const headingWordmark = screen.getByRole('heading', { name: 'Galerows — Jogos da Galera' }).querySelector('img')
-    expect(headingWordmark).toHaveAttribute('src', '/assets/brand/galerows-wordmark.svg')
-    expect(headingWordmark).toHaveAttribute('alt', '')
+  it('preserves the existing wordmark and explains in-person play', () => {
+    renderHeader()
+    const heading = screen.getByRole('heading', { level: 1, name: 'Galerows — Jogos da Galera' })
+    expect(heading.querySelector('img')).toHaveAttribute('src', '/assets/brand/galerows-wordmark.svg')
+    expect(heading.querySelector('img')).toHaveAttribute('alt', '')
+    expect(screen.getByText('Jogos presenciais com amigos')).toBeInTheDocument()
   })
 
   it.each([
@@ -41,34 +38,13 @@ describe('Hub header — landing-page brand identity', () => {
     expect(screen.getByText(destination)).toBeInTheDocument()
   })
 
-  it('uses existing Galerows brand accents for the group, trophy and settings actions', () => {
-    renderHeader()
-    expect(screen.getByRole('button', { name: 'Minha Galera' })).toHaveClass('text-[#B8A0FF]')
-    expect(screen.getByRole('button', { name: 'Ranking da Galera' })).toHaveClass('text-[#D2F86A]')
-    expect(screen.getByRole('button', { name: 'Abrir configurações' })).toHaveClass('text-[#FFA9B9]')
-  })
-  it('places three shortcuts outside and below the brand banner, with players left and ranking/settings right', () => {
+  it('reveals the difference between a shared phone, personal sheets and local multiplayer', async () => {
     const { container } = renderHeader()
-    const banner = container.querySelector('.hub-header-panel')
-    const nav = screen.getByRole('navigation', { name: 'Atalhos do Galerows' })
-    expect(banner).not.toContainElement(nav)
-    expect(nav).toHaveClass('justify-between')
-    expect(nav.querySelectorAll('button')).toHaveLength(3)
-    const [players, rightSide] = Array.from(nav.children)
-    expect(players?.querySelector('button')).toHaveAttribute('aria-label', 'Minha Galera')
-    expect(Array.from(rightSide?.querySelectorAll('button') ?? []).map((button) => button.getAttribute('aria-label')))
-      .toEqual(['Ranking da Galera', 'Abrir configurações'])
-    expect(banner).not.toBeNull()
-    expect(((banner?.compareDocumentPosition(nav) ?? 0) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0).toBe(true)
+    expect(container.querySelector('details')).not.toHaveAttribute('open')
+    await userEvent.setup().click(screen.getByText('Como vocês vão jogar?'))
+    expect(container.querySelector('details')).toHaveAttribute('open')
+    expect(screen.getByText(/Um celular guia a partida/)).toBeVisible()
+    expect(screen.getByText(/Na Adedonha, cada pessoa usa sua folha digital/)).toBeVisible()
+    expect(screen.getByText(/Joguem Impostor da Palavra, Cidade Dorme ou Pista Única/)).toBeVisible()
   })
-
-  it('uses solid-color icons with transparent, borderless touch targets', () => {
-    renderHeader()
-    for (const label of ['Minha Galera', 'Ranking da Galera', 'Abrir configurações']) {
-      const button = screen.getByRole('button', { name: label })
-      expect(button).toHaveClass('border-0', 'bg-transparent', 'shadow-none')
-      expect(button.querySelector('svg')).toHaveAttribute('fill', 'currentColor')
-    }
-  })
-
 })

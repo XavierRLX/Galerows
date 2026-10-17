@@ -2,7 +2,7 @@
   "brand": "Galerows",
   "subtitle": "Juegos para Grupos",
   "description": "Reúne al grupo. Que gane el mejor.",
-  "gamesTitle": "¿Cuál será el juego de esta ronda?",
+  "gamesTitle": "¿Jugamos?",
   "settings": "Abrir configuración",
   "playNow": "Jugar ahora",
   "comingSoon": "Próximamente",
@@ -85,5 +85,48 @@
       "name": "Ludo",
       "shortDescription": "Lleva todas tus piezas hasta la meta."
     }
+  },
+  "play": "Jugar",
+  "opening": "Abriendo…",
+  "myGroup": "Mi grupo",
+  "ranking": "Ranking del grupo",
+  "shortcuts": "Accesos de Galerows",
+  "playerRange": "{{range}} personas",
+  "gameCount_one": "{{count}} juego",
+  "gameCount_other": "{{count}} juegos",
+  "filterLabel": "Filtrar por modo de juego",
+  "filters": {
+    "all": "Todos",
+    "personal": "Por persona"
+  },
+  "upcomingTitle": "Se vienen más juegos",
+  "endnote": "Lo mejor es jugar juntos.",
+  "welcome": {
+    "eyebrow": "Juegos presenciales con amigos",
+    "title": "Reúne al grupo.",
+    "accent": "Inicia una ronda.",
+    "description": "Cartas, papel y tableros en el celular. Elijan un juego y dejen que la app guíe la diversión."
+  },
+  "modes": {
+    "guide": "¿Cómo van a jugar?",
+    "shared": "1 celular",
+    "sharedDescription": "Un celular guía la partida. Todos juegan juntos, en el mismo lugar.",
+    "personal": "1 por persona",
+    "personalDescription": "En Basta, cada persona usa su hoja digital. Compartan los temas por QR y revisen juntos las respuestas.",
+    "lan": "Multijugador local",
+    "lanDescription": "Cada persona en su celular, todos en la misma red Wi-Fi. Jueguen Impostor de la Palabra, La Ciudad Duerme o Pista Única en una sala local.",
+    "preparing": "Multijugador pronto"
+  },
+  "categories": {
+    "pista-unica": "Pistas en grupo",
+    "ultima-pista": "Enigmas y deducción",
+    "nem-ferrando": "Respuestas locas",
+    "impostor-da-palavra": "Encuentra al impostor",
+    "top-10": "Rankings y respuestas",
+    "quem-sou-eu": "Adivinanzas",
+    "adedonha": "Hoja digital",
+    "mimica": "Sin decir una palabra",
+    "taboo": "Palabras prohibidas",
+    "cidade-dorme": "Engaño y deducción"
   }
 }

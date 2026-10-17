@@ -10,17 +10,18 @@ beforeAll(async () => { await initializeI18n() })
 afterEach(() => cleanup())
 
 describe('games-first card navigation', () => {
-  it('explains the available mode without claiming that LAN is playable', () => {
-    render(<MemoryRouter><GameCard game={getGameById('impostor-da-palavra')!} /></MemoryRouter>)
-    expect(screen.getByText('Jogar neste celular')).toBeInTheDocument()
-    expect(screen.getByText('LAN em preparação')).toBeInTheDocument()
+  it.each(['impostor-da-palavra', 'cidade-dorme', 'pista-unica'])('shows both shared-device and local multiplayer for %s', (id) => {
+    render(<MemoryRouter><GameCard game={getGameById(id)!} /></MemoryRouter>)
+    expect(screen.getByText('1 celular')).toBeInTheDocument()
+    expect(screen.getByText('Multiplayer local')).toBeInTheDocument()
+    expect(screen.queryByText('Multiplayer em breve')).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /Cada um no seu celular/i })).not.toBeInTheDocument()
   })
 
   it('labels Adedonha as a personal sheet, not a shared-device LAN session', () => {
     render(<MemoryRouter><GameCard game={getGameById('adedonha')!} /></MemoryRouter>)
-    expect(screen.getByText('Minha folha no celular')).toBeInTheDocument()
-    expect(screen.getByText('LAN em preparação')).toBeInTheDocument()
+    expect(screen.getByText('1 por pessoa')).toBeInTheDocument()
+    expect(screen.getByText('Multiplayer em breve')).toBeInTheDocument()
   })
 
   it('lets newcomers open the existing game information screen', async () => {
@@ -32,7 +33,7 @@ describe('games-first card navigation', () => {
         <Route path="/games/impostor-da-palavra" element={<h1>Informações do Impostor</h1>} />
       </Routes>
     </MemoryRouter>)
-    await user.click(screen.getByRole('button', { name: 'Conhecer Impostor da Palavra' }))
+    await user.click(screen.getByRole('button', { name: 'Jogar agora Impostor da Palavra' }))
     expect(screen.getByRole('heading', { name: 'Informações do Impostor' })).toBeInTheDocument()
   })
 

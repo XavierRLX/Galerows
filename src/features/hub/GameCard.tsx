@@ -1,144 +1,18 @@
-import { ArrowRight, Heart, Play, Smartphone, Wifi } from 'lucide-react'
-import { Capacitor } from '@capacitor/core'
+import { Heart, Play, Smartphone, Users, Wifi } from 'lucide-react'
 import type { CSSProperties } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Button } from '../../components/ui/Button'
-import { Card } from '../../components/ui/Card'
-import { cn } from '../../lib/utils/cn'
 import { AppHaptics } from '../../lib/capacitor/haptics'
 import { useFakeAd } from '../ads/useFakeAd'
-import { GameStatusBadge } from '../games/GameStatusBadge'
+import { GameIcon } from '../games/GameIcon'
 import { getGameModeCapabilities } from '../games/gameModes.registry'
 import type { GameModule } from '../games/games.types'
 
-const coverFallbacks: Record<string, string> = {
-  'pista-unica': 'radial-gradient(circle at 82% 20%, rgba(45,212,191,0.3), transparent 24%), linear-gradient(135deg, rgba(4,47,46,0.98), rgba(15,23,42,0.94) 58%, rgba(15,118,110,0.72))',
-  'ultima-pista': 'radial-gradient(circle at 82% 22%, rgba(139,92,246,0.34), transparent 24%), linear-gradient(135deg, rgba(24,8,43,0.98), rgba(15,23,42,0.94) 58%, rgba(76,29,149,0.72))',
-  'impostor-da-palavra': 'radial-gradient(circle at 88% 24%, rgba(127,29,29,0.34), transparent 22%), linear-gradient(135deg, rgba(30,5,8,0.96), rgba(15,23,42,0.92) 58%, rgba(69,10,10,0.72))',
-  taboo: 'radial-gradient(circle at 12% 34%, rgba(153,27,27,0.36), transparent 24%), linear-gradient(135deg, rgba(69,10,10,0.98), rgba(15,23,42,0.92) 58%, rgba(127,29,29,0.76))',
-  'nem-ferrando': 'radial-gradient(circle at 18% 28%, rgba(120,74,35,0.32), transparent 26%), linear-gradient(135deg, rgba(24,10,2,0.98), rgba(49,31,18,0.95) 58%, rgba(15,23,42,0.9))',
-  'quem-sou-eu': 'radial-gradient(circle at 18% 26%, rgba(56,189,248,0.32), transparent 24%), linear-gradient(135deg, rgba(8,47,73,0.98), rgba(15,23,42,0.94) 58%, rgba(14,116,144,0.68))',
-  adedonha: 'radial-gradient(circle at 18% 26%, rgba(250,204,21,0.32), transparent 24%), linear-gradient(135deg, rgba(66,32,6,0.98), rgba(15,23,42,0.94) 58%, rgba(133,77,14,0.68))',
-  'top-10': 'radial-gradient(circle at 16% 26%, rgba(190,242,100,0.34), transparent 24%), linear-gradient(135deg, rgba(20,35,8,0.98), rgba(15,23,42,0.94) 58%, rgba(63,98,18,0.74))',
-  'cidade-dorme': 'radial-gradient(circle at 18% 26%, rgba(37,99,235,0.3), transparent 24%), linear-gradient(135deg, rgba(2,6,23,0.98), rgba(15,23,42,0.94) 58%, rgba(30,58,138,0.68))',
-}
-
-const defaultCover = 'radial-gradient(circle at 18% 24%, rgba(139,92,246,0.28), transparent 24%), linear-gradient(135deg, rgba(15,23,42,0.98), rgba(30,27,75,0.9))'
-
-const coverOverlays: Record<string, string> = {
-  'ultima-pista': 'linear-gradient(90deg, rgba(20,7,38,0.97), rgba(46,16,101,0.66) 48%, rgba(15,10,31,0.24) 76%, rgba(15,10,31,0.32)), radial-gradient(circle at 88% 24%, rgba(167,139,250,0.16), transparent 28%)',
-  taboo: 'linear-gradient(90deg, rgba(69,10,10,0.94), rgba(127,29,29,0.62) 52%, rgba(15,23,42,0.82)), radial-gradient(circle at 86% 28%, rgba(248,113,113,0.22), transparent 26%)',
-  'top-10': 'linear-gradient(90deg, rgba(20,35,8,0.95), rgba(77,124,15,0.58) 52%, rgba(15,23,42,0.82)), radial-gradient(circle at 86% 28%, rgba(190,242,100,0.24), transparent 26%)',
-}
-
-const defaultDepthShadow = [
-  '0 30px 62px -30px rgba(139,92,246,0.56)',
-  '0 18px 34px -22px rgba(0,0,0,0.9)',
-  'inset 0 1px 0 rgba(255,255,255,0.12)',
-  'inset 0 -26px 42px rgba(0,0,0,0.22)',
-].join(', ')
-
-const cardDepthShadows: Record<string, string> = {
-  'pista-unica': [
-    '0 30px 62px -30px rgba(13,148,136,0.54)',
-    '0 18px 34px -22px rgba(0,0,0,0.92)',
-    'inset 0 1px 0 rgba(255,255,255,0.1)',
-    'inset 0 -26px 42px rgba(0,0,0,0.22)',
-  ].join(', '),
-  'ultima-pista': [
-    '0 30px 62px -30px rgba(109,40,217,0.62)',
-    '0 18px 34px -22px rgba(0,0,0,0.92)',
-    'inset 0 1px 0 rgba(255,255,255,0.1)',
-    'inset 0 -26px 42px rgba(0,0,0,0.22)',
-  ].join(', '),
-  'impostor-da-palavra': [
-    '0 30px 62px -30px rgba(239,68,68,0.52)',
-    '0 18px 34px -22px rgba(0,0,0,0.92)',
-    'inset 0 1px 0 rgba(255,255,255,0.1)',
-    'inset 0 -26px 42px rgba(0,0,0,0.24)',
-  ].join(', '),
-  taboo: [
-    '0 30px 62px -30px rgba(248,113,113,0.5)',
-    '0 18px 34px -22px rgba(0,0,0,0.9)',
-    'inset 0 1px 0 rgba(255,255,255,0.1)',
-    'inset 0 -26px 42px rgba(0,0,0,0.24)',
-  ].join(', '),
-  'nem-ferrando': [
-    '0 30px 62px -30px rgba(184,135,84,0.5)',
-    '0 18px 34px -22px rgba(0,0,0,0.92)',
-    'inset 0 1px 0 rgba(255,255,255,0.1)',
-    'inset 0 -26px 42px rgba(0,0,0,0.24)',
-  ].join(', '),
-  'quem-sou-eu': [
-    '0 30px 62px -30px rgba(56,189,248,0.5)',
-    '0 18px 34px -22px rgba(0,0,0,0.9)',
-    'inset 0 1px 0 rgba(255,255,255,0.1)',
-    'inset 0 -26px 42px rgba(0,0,0,0.22)',
-  ].join(', '),
-  adedonha: [
-    '0 30px 62px -30px rgba(250,204,21,0.54)',
-    '0 18px 34px -22px rgba(0,0,0,0.88)',
-    'inset 0 1px 0 rgba(255,255,255,0.1)',
-    'inset 0 -26px 42px rgba(0,0,0,0.18)',
-  ].join(', '),
-  'top-10': [
-    '0 30px 62px -30px rgba(132,204,22,0.58)',
-    '0 18px 34px -22px rgba(0,0,0,0.92)',
-    'inset 0 1px 0 rgba(255,255,255,0.1)',
-    'inset 0 -26px 42px rgba(0,0,0,0.2)',
-  ].join(', '),
-  'cidade-dorme': [
-    '0 30px 62px -30px rgba(96,165,250,0.52)',
-    '0 18px 34px -22px rgba(0,0,0,0.94)',
-    'inset 0 1px 0 rgba(255,255,255,0.1)',
-    'inset 0 -26px 42px rgba(0,0,0,0.25)',
-  ].join(', '),
-}
-
-const cardThemes: Record<string, { title: string; action: string }> = {
-  'pista-unica': {
-    title: 'text-teal-200',
-    action: 'border-teal-400 text-teal-200 hover:border-transparent hover:bg-teal-400 hover:text-teal-950',
-  },
-  'ultima-pista': {
-    title: 'text-[#ddd6fe]',
-    action: 'border-[#8b5cf6] text-[#ddd6fe] hover:border-transparent hover:bg-[#6d28d9] hover:text-white',
-  },
-  'impostor-da-palavra': {
-    title: 'text-[#ef4444]',
-    action: 'border-[#7f1d1d] text-[#ef4444] hover:border-transparent hover:bg-[#7f1d1d] hover:text-white',
-  },
-  'nem-ferrando': {
-    title: 'text-[#b88754]',
-    action: 'border-[#8a5a32] text-[#b88754] hover:border-transparent hover:bg-[#8a5a32] hover:text-white',
-  },
-  taboo: {
-    title: 'text-red-300',
-    action: 'border-[#7f1d1d] text-red-300 hover:border-transparent hover:bg-[#7f1d1d] hover:text-white',
-  },
-  'quem-sou-eu': {
-    title: 'text-sky-300',
-    action: 'border-sky-400 text-sky-300 hover:border-transparent hover:bg-sky-400 hover:text-slate-950',
-  },
-  adedonha: {
-    title: 'text-yellow-300',
-    action: 'border-yellow-300 text-yellow-300 hover:border-transparent hover:bg-yellow-300 hover:text-slate-950',
-  },
-  'top-10': {
-    title: 'text-lime-300',
-    action: 'border-lime-400 text-lime-300 hover:border-transparent hover:bg-lime-400 hover:text-lime-950',
-  },
-  'cidade-dorme': {
-    title: 'text-blue-200',
-    action: 'border-blue-300 text-blue-200 hover:border-transparent hover:bg-blue-300 hover:text-slate-950',
-  },
-}
-
-const defaultTheme = {
-  title: 'text-violet-300',
-  action: 'border-violet-400 text-violet-300 hover:border-transparent hover:bg-violet-500 hover:text-white',
+const accents: Record<string, string> = {
+  'cidade-dorme': '#b8c9ff', 'impostor-da-palavra': '#ffa9b9', 'pista-unica': '#81e3d4',
+  'ultima-pista': '#c8b5ff', 'nem-ferrando': '#edc394', 'top-10': '#d2f86a',
+  'quem-sou-eu': '#9bdeff', adedonha: '#f5da8e', mimica: '#ffc4a3', taboo: '#ffa9b9',
 }
 
 type GameCardProps = {
@@ -146,149 +20,65 @@ type GameCardProps = {
   badgeLabels?: string[]
   badgeLabel?: string
   isFavorite?: boolean
+  featured?: boolean
   onOpenGame?: (gameId: string) => Promise<void> | void
   revealIndex?: number
 }
 
-export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLabel] : [], isFavorite = false, onOpenGame, revealIndex = 0 }: GameCardProps) {
+export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLabel] : [], isFavorite = false, featured = false, onOpenGame, revealIndex = 0 }: GameCardProps) {
   const { t } = useTranslation('hub')
   const navigate = useNavigate()
   const { showFakeAd } = useFakeAd()
-  const cardRef = useRef<HTMLDivElement>(null)
-  const revealDelayTimer = useRef<number | null>(null)
-  const [isRevealed, setIsRevealed] = useState(false)
-  const [revealDelayActive, setRevealDelayActive] = useState(false)
+  const opening = useRef(false)
+  const [busy, setBusy] = useState(false)
   const available = game.status === 'available'
   const modes = getGameModeCapabilities(game)
   const name = t(`games.${game.id}.name`, { defaultValue: game.name })
   const description = t(`games.${game.id}.shortDescription`, { defaultValue: game.shortDescription })
-  const theme = cardThemes[game.id] ?? defaultTheme
-  const revealDelay = Math.min(revealIndex, 7) * 45
-  const depthShadow = available
-    ? cardDepthShadows[game.id] ?? defaultDepthShadow
-    : '0 18px 36px -24px rgba(0,0,0,0.82), inset 0 1px 0 rgba(255,255,255,0.1)'
-  const cardStyle: CSSProperties = {
-    backgroundImage: game.coverImage
-      ? `${coverOverlays[game.id] ?? 'linear-gradient(90deg, rgba(2,6,23,0.9), rgba(2,6,23,0.58) 52%, rgba(2,6,23,0.86))'}, url("${game.coverImage}")`
-      : coverFallbacks[game.id] ?? defaultCover,
-    backgroundPosition: game.coverImage ? 'center right' : 'center',
-    backgroundSize: 'cover',
-    boxShadow: depthShadow,
-    transitionDelay: revealDelayActive ? `${revealDelay}ms` : '0ms',
-  }
-  const openGame = async () => {
-    if (!available) return
-    await AppHaptics.light()
-    await showFakeAd({ placement: 'hub-play' })
+  const players = game.maxPlayers ? (game.minPlayers === game.maxPlayers ? `${game.minPlayers}` : `${game.minPlayers}–${game.maxPlayers}`) : `${game.minPlayers}+`
+  const style = { '--game-accent': accents[game.id] ?? '#b8a0ff', '--card-delay': `${Math.min(revealIndex, 5) * 35}ms` } as CSSProperties
+
+  async function openGame() {
+    if (!available || opening.current) return
+    opening.current = true
+    setBusy(true)
     try {
-      await onOpenGame?.(game.id)
-    } catch {
-      // Usage metrics should never block opening a game.
-    }
-    navigate(game.route)
-  }
-
-  useEffect(() => {
-    const node = cardRef.current
-    if (!node) return
-
-    const revealCard = (withDelay = true) => {
-      setRevealDelayActive(withDelay && revealDelay > 0)
-      setIsRevealed(true)
-
-      if (withDelay && revealDelay > 0) {
-        revealDelayTimer.current = window.setTimeout(() => setRevealDelayActive(false), revealDelay + 540)
+      await AppHaptics.light()
+      await showFakeAd({ placement: 'hub-play' })
+      try {
+        await onOpenGame?.(game.id)
+      } catch {
+        // Usage metrics should never block opening a game.
       }
+      navigate(game.route)
+    } finally {
+      opening.current = false
+      setBusy(false)
     }
-
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduceMotion || !('IntersectionObserver' in window)) {
-      revealCard(false)
-      return
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry?.isIntersecting) return
-      revealCard()
-      observer.disconnect()
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.2 })
-
-    observer.observe(node)
-    return () => {
-      observer.disconnect()
-      if (revealDelayTimer.current) window.clearTimeout(revealDelayTimer.current)
-    }
-  }, [revealDelay])
+  }
 
   return (
-    <div ref={cardRef}>
-      <Card
-        className={cn(
-          'relative min-h-36 overflow-hidden !border-0 !border-none p-0 transition-[filter,opacity,transform] duration-500 ease-out',
-          isRevealed
-            ? cn(available ? 'opacity-100' : 'opacity-80 grayscale-[0.15]', '[transform:perspective(900px)_rotateX(1.3deg)_translateY(0)_scale(1)]')
-            : 'opacity-0 blur-[1px] [transform:perspective(900px)_rotateX(7deg)_translateY(18px)_scale(0.985)]',
-          available
-            ? 'will-change-transform hover:brightness-110 hover:[transform:perspective(900px)_rotateX(0deg)_translateY(-4px)_scale(1.012)] active:[transform:perspective(900px)_rotateX(0deg)_translateY(-1px)_scale(1.004)]'
-            : '',
-        )}
-        style={cardStyle}
-      >
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/78 via-slate-950/42 to-slate-950/68" />
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/8 via-white/3 to-transparent" />
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.1)_0%,rgba(255,255,255,0.035)_18%,transparent_46%)] opacity-50" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/38 to-transparent" />
-          <div className="relative flex min-h-36 flex-col justify-between gap-4 p-4">
-            <div className="flex items-start justify-between gap-3">
-              <h2 className={cn('min-w-0 text-2xl font-black uppercase leading-none tracking-tight', available ? theme.title : 'text-slate-300')}>
-                {name}
-              </h2>
-              <div className="flex flex-wrap items-center justify-end gap-2">
-                {isFavorite ? (
-                  <span aria-label={t('favoriteBadge')} className="inline-flex size-7 items-center justify-center rounded-full border border-rose-300/30 bg-rose-400/15 text-rose-300 shadow-sm backdrop-blur" title={t('favoriteBadge')}>
-                    <Heart aria-hidden="true" className="fill-current" size={14} />
-                  </span>
-                ) : null}
-                {badgeLabels.map((label) => (
-                  <span className="rounded-full border border-blue-200/25 bg-blue-200/12 px-2.5 py-0.5 text-[0.58rem] font-black uppercase tracking-[0.13em] text-blue-100 shadow-sm backdrop-blur" key={label}>
-                    {label}
-                  </span>
-                ))}
-                {!available ? <GameStatusBadge status={game.status} /> : null}
-              </div>
-            </div>
-
-            <div className="flex items-end justify-between gap-4">
-              <div className="min-w-0">
-                <p className="line-clamp-2 max-w-sm text-sm leading-5 text-slate-200">
-                  {description}
-                </p>
-                {available && <>
-                  <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.69rem] font-semibold leading-4 text-slate-200">
-                    <span className="inline-flex items-center gap-1.5"><Smartphone aria-hidden="true" size={13} />{modes.local.label}</span>
-                    {modes.lan === 'comingSoon' && <span className="inline-flex items-center gap-1.5 text-violet-200"><Wifi aria-hidden="true" size={13} />
-                      {game.id === 'impostor-da-palavra' && import.meta.env.VITE_GAMES_FIRST_LAN_ENTRY === '1'
-                        && import.meta.env.VITE_LAN_PERSISTENT_LOBBY_UI === '1' && Capacitor.isNativePlatform()
-                        ? 'LAN experimental' : 'LAN em preparação'}</span>}
-                  </div>
-                  <button aria-label={`Conhecer ${name}`} className="mt-2 inline-flex min-h-8 items-center gap-1.5 rounded-md text-xs font-bold text-white underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" type="button" onClick={() => void openGame()}>
-                    Conhecer jogo <ArrowRight aria-hidden="true" size={13} />
-                  </button>
-                </>}
-              </div>
-              <Button
-                aria-label={available ? `${t('playNow')} ${name}` : `${t('comingSoon')} ${name}`}
-                className={cn('group size-11 shrink-0 rounded-full bg-transparent p-0', available ? theme.action : 'border-white/15 text-slate-300 hover:bg-white/10')}
-                disabled={!available}
-                size="icon"
-                variant="secondary"
-                onClick={openGame}
-              >
-                <Play className="fill-current stroke-transparent transition group-hover:fill-slate-950" size={18} />
-              </Button>
-            </div>
-          </div>
-      </Card>
-    </div>
+    <article className={`hub-game${featured ? ' hub-game-featured' : ''}${available ? '' : ' hub-game-soon'}`} style={style} aria-labelledby={`hub-game-${game.id}`}>
+      <div className="hub-game-art">
+        {game.coverImage ? <img src={game.coverImage} alt="" loading={featured ? 'eager' : 'lazy'} decoding="async" /> : <GameIcon name={game.iconName} size={38} />}
+        <div className="hub-game-badges">
+          {badgeLabels.map(label => <span key={label}>{label}</span>)}
+          {isFavorite ? <span className="hub-favorite" aria-label={t('favoriteBadge')}><Heart aria-hidden="true" size={13} fill="currentColor" /></span> : null}
+        </div>
+        {available ? <span className="hub-game-category">{t(`categories.${game.id}`, { defaultValue: t('welcome.eyebrow') })}</span> : null}
+      </div>
+      <div className="hub-game-body">
+        <h3 id={`hub-game-${game.id}`}>{name}</h3>
+        <p className="hub-game-description">{description}</p>
+        <div className="hub-game-meta">
+          <span><Users aria-hidden="true" size={13} />{t('playerRange', { range: players })}</span>
+          {available ? <span className="hub-game-mode"><Smartphone aria-hidden="true" size={13} />{t(modes.local.kind === 'localPersonalSheet' ? 'modes.personal' : 'modes.shared')}</span> : null}
+          {available && modes.lan !== 'unsupported' ? <span className="hub-game-lan"><Wifi aria-hidden="true" size={13} />{t(modes.lan === 'available' ? 'modes.lan' : 'modes.preparing')}</span> : null}
+        </div>
+        <button type="button" className="hub-play" aria-label={available ? `${t('playNow')} ${name}` : `${t('comingSoon')} ${name}`} disabled={!available || busy} aria-busy={busy} onClick={() => void openGame()}>
+          {available ? <><Play aria-hidden="true" size={14} fill="currentColor" />{t(busy ? 'opening' : 'play')}</> : t('comingSoon')}
+        </button>
+      </div>
+    </article>
   )
 }
