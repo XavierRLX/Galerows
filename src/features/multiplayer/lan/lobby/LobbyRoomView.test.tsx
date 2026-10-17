@@ -255,3 +255,18 @@ it('host configures the same room for immersive Impostor voting, with optional t
   expect(screen.queryByTestId('impostor-immersive')).not.toBeInTheDocument()
   expect(screen.getByRole('heading', { name: 'Sala da galera' })).toBeInTheDocument()
 })
+
+it('opens the Pista workshop directly during gameplay without another lobby and keeps reconnect/back controls', () => {
+  const snapshot = scene('playing')
+  snapshot.roomState.selectedGameId = 'pista-unica'
+  snapshot.roomState.selectedConfig = { categories: ['words'] }
+  snapshot.gamePublicState = { gameSessionId: 's', gameId: 'pista-unica', data: { step: 'writing', round: 1, totalRounds: 3, guesserId: 'host', reviewerId: 'guest', submittedCount: 0, requiredCount: 2, clues: [], excludedCount: 0, lastResult: null, scores: { host: 0, guest: 0 } } }
+  snapshot.privateState = { gameSessionId: 's', gameId: 'pista-unica', data: { kind: 'writer', submitted: false, target: 'Dinossauro' } }
+  const callbacks = actions(); const onBack = vi.fn()
+  render(<LobbyRoomView snapshot={snapshot} role="guest" playerId="guest" busy={false} connected={false} status="Sem conexão" {...callbacks} onBack={onBack} onGameCommand={vi.fn()} />)
+  expect(screen.queryByRole('heading', { name: 'Sala da galera' })).not.toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: 'Reconectar' }))
+  expect(callbacks.onReconnect).toHaveBeenCalledOnce()
+  fireEvent.click(screen.getByRole('button', { name: 'Voltar' }))
+  expect(onBack).toHaveBeenCalledOnce()
+})

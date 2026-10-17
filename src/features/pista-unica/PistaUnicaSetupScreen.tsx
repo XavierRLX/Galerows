@@ -1,11 +1,8 @@
-import { Check, Film, Lightbulb, Plus, Settings2, Tv, UserPlus, Users } from 'lucide-react'
+import { ArrowRight, Check, Film, Lightbulb, Plus, Tv, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Header } from '../../components/layout/Header'
-import { Button } from '../../components/ui/Button'
-import { Card } from '../../components/ui/Card'
-import { cn } from '../../lib/utils/cn'
+import { CardDeck, PistaWorkshop, WorkshopHeading } from './PistaWorkshop'
 import { createGuestParticipant, normalizePlayerName, playerToParticipant } from '../players/players.model'
 import { usePlayersStore } from '../players/players.store'
 import type { GameParticipant } from '../players/players.types'
@@ -26,6 +23,8 @@ export function PistaUnicaSetupScreen() {
   const [guestName, setGuestName] = useState('')
   const [categories, setCategories] = useState<PistaUnicaCategory[]>([...PISTA_UNICA_CATEGORIES])
   const [error, setError] = useState('')
+  const [step, setStep] = useState<'players' | 'categories'>('players')
+  const [busy, setBusy] = useState(false)
   useEffect(() => { if (!hydrated) void load() }, [hydrated, load])
   const selectedPlayers = useMemo(() => group?.players.filter((player) => selectedIds.includes(player.id)) ?? [], [group, selectedIds])
   const participantCount = selectedPlayers.length + guests.length
@@ -41,15 +40,29 @@ export function PistaUnicaSetupScreen() {
   }
   const begin = async () => {
     if (participantCount < 3) { setError(t('setup.errors.players')); return }
-    await start([...selectedPlayers.map(playerToParticipant), ...guests], categories)
-    navigate('/games/pista-unica/play')
+    if (busy) return
+    setBusy(true)
+    try {
+      await start([...selectedPlayers.map(playerToParticipant), ...guests], categories)
+      navigate('/games/pista-unica/play')
+    } catch { setError('Não foi possível preparar a partida. Tente novamente.'); setBusy(false) }
   }
-  return <div className="min-h-dvh pb-10"><Header backTo="/games/pista-unica" title={t('setup.title')} /><section className="px-5 py-6">
-    <div className="flex items-center justify-between gap-3"><div><h1 className="text-2xl font-black">{t('setup.players')}</h1><p className="text-sm text-slate-400">{t('setup.selected', { count: participantCount })}</p></div><Button variant="secondary" onClick={() => navigate('/players')}><Settings2 size={18} />{t('setup.manage')}</Button></div>
-    <Card className="mt-5 overflow-hidden border-emerald-500/15">{group?.players.length ? group.players.map((player) => { const selected = selectedIds.includes(player.id); return <button className={cn('flex min-h-14 w-full items-center gap-3 border-b border-white/10 px-4 text-left last:border-0', selected && 'bg-emerald-400/10 text-emerald-200')} key={player.id} type="button" onClick={() => togglePlayer(player.id)}><span className={cn('flex size-6 items-center justify-center rounded-full border', selected ? 'border-emerald-400 bg-emerald-400 text-emerald-950' : 'border-white/20')}>{selected ? <Check size={16} /> : null}</span><span className="font-bold">{player.name}</span></button> }) : <div className="p-5 text-center"><Users className="mx-auto text-slate-500" /><p className="mt-2 text-sm text-slate-400">{t('setup.empty')}</p></div>}</Card>
-    <form className="mt-5 flex gap-2" onSubmit={(event) => { event.preventDefault(); addGuest() }}><input aria-label={t('setup.guestLabel')} className="min-h-12 min-w-0 flex-1 rounded-2xl border border-white/15 bg-white/5 px-4 outline-none focus:border-emerald-300" placeholder={t('setup.guestPlaceholder')} value={guestName} onChange={(event) => setGuestName(event.target.value)} /><Button className="bg-emerald-600 text-white hover:bg-emerald-500" type="submit"><UserPlus size={18} /><Plus className="sr-only" />{t('setup.add')}</Button></form>
-    {guests.map((guest) => <div className="mt-2 flex items-center justify-between rounded-2xl bg-emerald-400/10 px-4 py-3" key={guest.id}><span className="font-bold">{guest.name} <small className="text-emerald-300">{t('setup.guest')}</small></span><Button aria-label={t('setup.remove', { name: guest.name })} size="icon" variant="ghost" onClick={() => setGuests((current) => current.filter((item) => item.id !== guest.id))}>×</Button></div>)}
-    <h2 className="mt-7 text-xl font-black">{t('setup.categories')}</h2><p className="mt-1 text-sm leading-6 text-slate-400">{t('setup.categoriesDescription')}</p><div className="mt-4 grid gap-3 sm:grid-cols-3">{PISTA_UNICA_CATEGORIES.map((category) => { const Icon = categoryIcons[category]; const active = categories.includes(category); return <button className={cn('rounded-3xl border p-4 text-left transition', active ? 'border-emerald-400 bg-emerald-400/15 ring-1 ring-emerald-400' : 'border-white/10 bg-white/[0.05]')} key={category} type="button" onClick={() => toggleCategory(category)}><Icon className="text-emerald-300" size={23} /><p className="mt-3 font-black">{t(`categories.${category}.name`)}</p><p className="mt-1 text-sm leading-5 text-slate-300">{t(`categories.${category}.description`)}</p></button> })}</div>
-    {error ? <p className="mt-5 text-sm font-bold text-rose-300" role="alert">{error}</p> : null}<Button className="mt-7 w-full bg-emerald-500 text-emerald-950 hover:bg-emerald-400" disabled={participantCount < 3} size="lg" onClick={() => void begin()}>{t('setup.start')}</Button>
-  </section></div>
+  return <PistaWorkshop mode="1 celular" onBack={() => step === 'categories' ? setStep('players') : navigate('/games/pista-unica')} footer={<>
+    {error && <p className="pw-alert" role="alert">{error}</p>}
+    <button className="pw-button" type="button" disabled={participantCount < 3 || busy} onClick={() => step === 'players' ? setStep('categories') : void begin()}>{step === 'players' ? 'Escolher categorias' : busy ? 'Preparando...' : t('setup.start')}<ArrowRight size={18} /></button>
+    <p className="pw-footer-note">{step === 'players' ? '3 a 12 pessoas · um celular passa de mão em mão' : 'Acerto: +2 · Cada autor de pista válida: +1'}</p>
+  </>}>
+    <WorkshopHeading eyebrow={step === 'players' ? '01 / Monte sua mesa' : '02 / Escolha seu baralho'} title={step === 'players' ? t('setup.players') : 'O que vamos adivinhar?'}>{step === 'players' ? 'Chame a galera. Cada pessoa será o adivinhador uma vez.' : 'Misture os temas ou escolha seu favorito.'}</WorkshopHeading>
+    {step === 'players' ? <>
+      <div className="pw-setup-meta"><span>{participantCount} / 12 na mesa</span><button type="button" onClick={() => navigate('/players')}>{t('setup.manage')}</button></div>
+      {(group?.players.length || guests.length) ? <CardDeck label="Jogadores" pageSize={3}>{[
+        ...(group?.players ?? []).map(player => <div className="pw-person" key={player.id}><button type="button" aria-pressed={selectedIds.includes(player.id)} onClick={() => togglePlayer(player.id)}><span className="pw-person-check">{selectedIds.includes(player.id) && <Check size={14} />}</span><strong>{player.name}</strong></button></div>),
+        ...guests.map(guest => <div className="pw-person" key={guest.id}><strong>{guest.name}<small>{t('setup.guest')}</small></strong><button className="pw-person-remove" type="button" aria-label={t('setup.remove', { name: guest.name })} onClick={() => setGuests(current => current.filter(item => item.id !== guest.id))}><X size={16} /></button></div>),
+      ]}</CardDeck> : <p className="pw-note">{t('setup.empty')}</p>}
+      <form className="pw-guest-form" onSubmit={event => { event.preventDefault(); addGuest() }}><input aria-label={t('setup.guestLabel')} maxLength={32} placeholder={t('setup.guestPlaceholder')} value={guestName} onChange={event => setGuestName(event.target.value)} /><button className="pw-button" type="submit" aria-label="Adicionar convidado" disabled={participantCount >= 12}><Plus size={20} /></button></form>
+    </> : <div className="pw-categories">{PISTA_UNICA_CATEGORIES.map(category => {
+      const Icon = categoryIcons[category]
+      return <button className="pw-category" key={category} type="button" aria-pressed={categories.includes(category)} onClick={() => toggleCategory(category)}><Icon size={27} /><span><strong>{t(`categories.${category}.name`)}</strong><small>{t(`categories.${category}.description`)}</small></span>{categories.includes(category) && <Check size={17} />}</button>
+    })}</div>}
+  </PistaWorkshop>
 }

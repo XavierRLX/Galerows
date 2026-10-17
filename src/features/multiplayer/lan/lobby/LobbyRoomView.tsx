@@ -254,6 +254,14 @@ export function LobbyRoomView({
       onClose={() => void onClose()} />
   }
 
+  if ((summary.phase === 'playing' || summary.phase === 'results')
+    && summary.gameId === 'pista-unica' && onGameCommand) {
+    return <PistaUnicaLanRound snapshot={snapshot} playerId={playerId} isHost={isHost}
+      busy={busy} connected={connected} onAction={onGameCommand} onEnd={onEnd}
+      onBack={onBack ?? onBrowseGames} onReconnect={onReconnect} onReplay={onReplay}
+      onBackToLobby={onBackToLobby} onLeave={onLeave} onClose={onClose} error={error} />
+  }
+
   function selectGame(id: LobbyGameId) {
     setShowCatalog(false)
     setConfigNumber(lobbyGameCatalog[id].defaultValue)
@@ -562,10 +570,6 @@ export function LobbyRoomView({
 
             {summary.phase === 'playing' && summary.gameId === 'impostor-da-palavra' && onGameCommand &&
               <ImpostorLanRound snapshot={snapshot} playerId={playerId} isHost={isHost}
-                busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
-                onEnd={() => void onEnd()} />}
-            {summary.phase === 'playing' && summary.gameId === 'pista-unica' && onGameCommand &&
-              <PistaUnicaLanRound snapshot={snapshot} playerId={playerId} isHost={isHost}
                 busy={busy} connected={connected} onAction={(type, payload) => void onGameCommand(type, payload)}
                 onEnd={() => void onEnd()} />}
             {summary.phase === 'playing' && summary.gameId !== 'impostor-da-palavra'

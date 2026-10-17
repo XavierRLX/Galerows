@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { RoomSnapshotV2 } from '../../persistentProtocol'
 import { PistaUnicaLanRound } from './PistaUnicaLanRound'
@@ -85,16 +85,20 @@ describe('G6 Pista Única private LAN screen', () => {
     const final = show(done, true, true)
     expect(screen.getByText('Resultado da Pista Única')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Finalizar partida e pontuar' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Confirmar encerramento' }))
     expect(final.onEnd).toHaveBeenCalledOnce()
   })
 })
 
 it('allows only the private assigned reviewer to exclude clues and confirm the review', () => {
   const s = show(scene('review'))
+  fireEvent.click(screen.getByRole('button', { name: 'Abrir revisão privada' }))
   expect(screen.getByText('Gigante')).toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: 'Revisão: próxima carta' }))
   expect(screen.getByText('DINOSSAURO')).toBeInTheDocument()
   expect(screen.getByText(/Dica igual à palavra secreta/i)).toBeInTheDocument()
   expect(screen.queryByRole('button', { name: 'Reincluir pista de third' })).not.toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: 'Revisão: carta anterior' }))
   fireEvent.click(screen.getByRole('button', { name: 'Remover pista de guest' }))
   expect(s.onAction).toHaveBeenCalledWith('SET_CLUE_INCLUDED',{playerId:'guest',included:false})
   fireEvent.click(screen.getByRole('button',{name:'Confirmar pistas'}))
@@ -113,5 +117,44 @@ it('shows round awards with two points for the guesser and one per valid hint', 
   }
   show(snap)
   expect(screen.getByText(/Acertou! \+2 pontos/)).toBeInTheDocument()
-  expect(screen.getByText(/guest.*\+1/)).toBeInTheDocument()
+  const awards = screen.getByRole('region', { name: 'Pontuação da rodada' })
+  expect(within(awards).getByText('guest').closest('.pw-award')).toHaveTextContent('+1')
+})
+
+it('exposes accessible received progress and preserves private review privacy on blur', () => {
+  const { rerender, props } = show()
+  expect(screen.getByRole('progressbar', { name: 'Pistas recebidas' })).toHaveAttribute('aria-valuenow', '0')
+  rerender(<PistaUnicaLanRound {...props} snapshot={scene('review')} />)
+  expect(screen.queryByText('Gigante')).not.toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: 'Abrir revisão privada' }))
+  expect(screen.getByText('Gigante')).toBeInTheDocument()
+  fireEvent(window, new Event('blur'))
+  expect(screen.queryByText('Gigante')).not.toBeInTheDocument()
+})
+it('paginates reviewer cards, displays automatic/manual states and blocks offline review', () => {
+  const snap = scene('review')
+  snap.privateState!.data = { kind: 'writer', target: 'Dinossauro', submitted: true, reviewClues: [
+    { playerId: 'guest', text: 'Gigante', included: false, reason: 'manual' },
+    { playerId: 'third', text: 'Grande', included: false, reason: 'duplicate' },
+  ] }
+  const { rerender, props } = show(snap)
+  fireEvent.click(screen.getByRole('button', { name: 'Abrir revisão privada' }))
+  expect(screen.getByText('Removida pelo revisor')).toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: 'Revisão: próxima carta' }))
+  expect(screen.getByText('Repetida — removida automaticamente')).toBeInTheDocument()
+  expect(screen.queryByText('Gigante')).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: /Reincluir pista de third/ })).not.toBeInTheDocument()
+  rerender(<PistaUnicaLanRound {...props} connected={false} />)
+  expect(screen.queryByText('Grande')).not.toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: 'Confirmar pistas' })).not.toBeInTheDocument()
+})
+it('requires host confirmation before ending and distinguishes totals from round awards', () => {
+  const snap = scene('summary')
+  snap.gamePublicState!.data = { ...(snap.gamePublicState!.data as Record<string, unknown>), scores: { host: 5, guest: 3, third: 0 } }
+  const s = show(snap, true, true)
+  expect(screen.getByText('5 pt')).toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: 'Finalizar partida e pontuar' }))
+  expect(s.onEnd).not.toHaveBeenCalled()
+  fireEvent.click(screen.getByRole('button', { name: 'Confirmar encerramento' }))
+  expect(s.onEnd).toHaveBeenCalledOnce()
 })
