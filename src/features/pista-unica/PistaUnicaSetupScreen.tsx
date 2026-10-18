@@ -2,7 +2,7 @@ import { ArrowRight, Check, Film, Lightbulb, Plus, Tv, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { CardDeck, PistaWorkshop, WorkshopHeading } from './PistaWorkshop'
+import { PistaWorkshop, WorkshopHeading } from './PistaWorkshop'
 import { createGuestParticipant, normalizePlayerName, playerToParticipant } from '../players/players.model'
 import { usePlayersStore } from '../players/players.store'
 import type { GameParticipant } from '../players/players.types'
@@ -28,7 +28,38 @@ export function PistaUnicaSetupScreen() {
   useEffect(() => { if (!hydrated) void load() }, [hydrated, load])
   const selectedPlayers = useMemo(() => group?.players.filter((player) => selectedIds.includes(player.id)) ?? [], [group, selectedIds])
   const participantCount = selectedPlayers.length + guests.length
-  const togglePlayer = (id: string) => setSelectedIds((current) => current.includes(id) ? current.filter((item) => item !== id) : participantCount < 12 ? [...current, id] : current)
+  const availableSlots = Math.max(0, 12 - guests.length)
+  const eligiblePlayers = useMemo(() => {
+    const names = new Set(guests.map(guest => guest.name.toLocaleLowerCase('pt-BR')))
+    return (group?.players ?? []).filter(player => {
+      const name = player.name.toLocaleLowerCase('pt-BR')
+      if (names.has(name)) return false
+      names.add(name)
+      return true
+    })
+  }, [group, guests])
+  const allSelected = availableSlots > 0 && eligiblePlayers.length > 0 && selectedPlayers.length === Math.min(eligiblePlayers.length, availableSlots)
+  const togglePlayer = (id: string) => {
+    if (selectedIds.includes(id)) { setSelectedIds(current => current.filter(item => item !== id)); setError(''); return }
+    const player = group?.players.find(item => item.id === id)
+    if (!player) return
+    const normalized = player.name.toLocaleLowerCase('pt-BR')
+    if (guests.some(guest => guest.name.toLocaleLowerCase('pt-BR') === normalized)
+      || selectedPlayers.some(item => item.name.toLocaleLowerCase('pt-BR') === normalized)) {
+      setError(t('setup.errors.duplicate')); return
+    }
+    if (participantCount >= 12) { setError(t('setup.errors.limit')); return }
+    setSelectedIds(current => [...current, id]); setError('')
+  }
+  const toggleAllPlayers = () => {
+    if (allSelected) { setSelectedIds([]); setError(''); return }
+    const chosen = selectedPlayers.map(player => player.id)
+    for (const player of eligiblePlayers) {
+      if (chosen.length >= availableSlots) break
+      if (!chosen.includes(player.id)) chosen.push(player.id)
+    }
+    setSelectedIds(chosen); setError('')
+  }
   const toggleCategory = (category: PistaUnicaCategory) => setCategories((current) => current.includes(category) ? current.length === 1 ? current : current.filter((item) => item !== category) : [...current, category])
   const addGuest = () => {
     const name = normalizePlayerName(guestName)
@@ -54,11 +85,13 @@ export function PistaUnicaSetupScreen() {
   </>}>
     <WorkshopHeading eyebrow={step === 'players' ? '01 / Monte sua mesa' : '02 / Escolha seu baralho'} title={step === 'players' ? t('setup.players') : 'O que vamos adivinhar?'}>{step === 'players' ? 'Chame a galera. Cada pessoa será o adivinhador uma vez.' : 'Misture os temas ou escolha seu favorito.'}</WorkshopHeading>
     {step === 'players' ? <>
-      <div className="pw-setup-meta"><span>{participantCount} / 12 na mesa</span><button type="button" onClick={() => navigate('/players')}>{t('setup.manage')}</button></div>
-      {(group?.players.length || guests.length) ? <CardDeck label="Jogadores" pageSize={3}>{[
-        ...(group?.players ?? []).map(player => <div className="pw-person" key={player.id}><button type="button" aria-pressed={selectedIds.includes(player.id)} onClick={() => togglePlayer(player.id)}><span className="pw-person-check">{selectedIds.includes(player.id) && <Check size={14} />}</span><strong>{player.name}</strong></button></div>),
-        ...guests.map(guest => <div className="pw-person" key={guest.id}><strong>{guest.name}<small>{t('setup.guest')}</small></strong><button className="pw-person-remove" type="button" aria-label={t('setup.remove', { name: guest.name })} onClick={() => setGuests(current => current.filter(item => item.id !== guest.id))}><X size={16} /></button></div>),
-      ]}</CardDeck> : <p className="pw-note">{t('setup.empty')}</p>}
+      <div className="pw-setup-meta"><span>{participantCount} / 12 selecionados</span><button type="button" onClick={() => navigate('/players')}>{t('setup.manage')}</button></div>
+      <div className="pw-player-toolbar"><button type="button" disabled={!eligiblePlayers.length || availableSlots === 0} onClick={toggleAllPlayers}>{allSelected ? 'Desmarcar todos' : 'Selecionar todos'}</button></div>
+      {(group?.players.length || guests.length) ? <div className="pw-player-list" role="region" aria-label="Jogadores da mesa" tabIndex={0}>
+        {(group?.players ?? []).map(player => <div className="pw-person" key={player.id}><button type="button" aria-pressed={selectedIds.includes(player.id)} onClick={() => togglePlayer(player.id)}><span className="pw-person-check">{selectedIds.includes(player.id) && <Check size={14} />}</span><strong>{player.name}</strong></button></div>)}
+        {guests.map(guest => <div className="pw-person" key={guest.id}><strong>{guest.name}<small>{t('setup.guest')}</small></strong><button className="pw-person-remove" type="button" aria-label={t('setup.remove', { name: guest.name })} onClick={() => { setGuests(current => current.filter(item => item.id !== guest.id)); setError('') }}><X size={16} /></button></div>)}
+      </div> : <p className="pw-note">{t('setup.empty')}</p>}
+      {(group?.players.length ?? 0) > availableSlots && <p className="pw-player-limit">Limite de 12 participantes. Os convidados ocupam vagas na mesa.</p>}
       <form className="pw-guest-form" onSubmit={event => { event.preventDefault(); addGuest() }}><input aria-label={t('setup.guestLabel')} maxLength={32} placeholder={t('setup.guestPlaceholder')} value={guestName} onChange={event => setGuestName(event.target.value)} /><button className="pw-button" type="submit" aria-label="Adicionar convidado" disabled={participantCount >= 12}><Plus size={20} /></button></form>
     </> : <div className="pw-categories">{PISTA_UNICA_CATEGORIES.map(category => {
       const Icon = categoryIcons[category]
