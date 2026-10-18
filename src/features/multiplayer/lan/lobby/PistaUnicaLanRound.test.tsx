@@ -1,8 +1,10 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
+import { initializeI18n } from '../../../../i18n'
 import type { RoomSnapshotV2 } from '../../persistentProtocol'
 import { PistaUnicaLanRound } from './PistaUnicaLanRound'
 
+beforeAll(async () => { await initializeI18n() })
 afterEach(cleanup)
 function scene(step: string = 'writing', guesser = 'host'): RoomSnapshotV2 {
   return { protocolVersion: 2, roomId: 'r', revision: 5, nextClientSeq: 2,
@@ -15,6 +17,7 @@ function scene(step: string = 'writing', guesser = 'host'): RoomSnapshotV2 {
     gamePublicState: { gameId: 'pista-unica', gameSessionId: 's1', data: {
       step, round: 1, totalRounds: 3, guesserId: guesser, reviewerId: guesser === 'host' ? 'guest' : 'host', submittedCount: 0,
       requiredCount: 2, clues: step === 'guessing' ? ['Animal', 'Grande'] : [],
+      roundCategory: step === 'guessing' ? 'words' : null,
       excludedCount: 0, lastResult: null, scores: { host: 0, guest: 0, third: 0 } } },
     privateState: { gameId: 'pista-unica', gameSessionId: 's1',
       data: guesser === 'guest' ? { kind: 'guesser', submitted: false }
@@ -57,6 +60,16 @@ describe('G6 Pista Única private LAN screen', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Ver desafio secreto' }))
     rerender(<PistaUnicaLanRound {...props} snapshot={scene('guessing')} />)
     expect(screen.queryByText('Dinossauro')).not.toBeInTheDocument()
+  })
+  it('shows localized round category from public LAN projection, not the configured selection', () => {
+    for (const [category, label] of [['words', 'PALAVRAS'], ['movies', 'FILMES'], ['series', 'SÉRIES']] as const) {
+      const snap = scene('guessing', 'guest')
+      snap.gamePublicState!.data = { ...(snap.gamePublicState!.data as Record<string, unknown>), roundCategory: category }
+      const view = show(snap)
+      expect(screen.getByText(`TEMA DA RODADA · ${label}`)).toBeInTheDocument()
+      expect(screen.queryByText('Dinossauro')).not.toBeInTheDocument()
+      view.unmount()
+    }
   })
   it('guesser sees shared filtered clues without secret and sends own answer', () => {
     const snap = scene('guessing', 'guest')

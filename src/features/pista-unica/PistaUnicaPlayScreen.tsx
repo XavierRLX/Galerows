@@ -6,10 +6,10 @@ import { AppHaptics } from '../../lib/capacitor/haptics'
 import { getPistaUnicaTarget } from './pistaUnica.content'
 import { getVisiblePistaUnicaClues, normalizeClue } from './pistaUnica.session'
 import { usePistaUnicaStore } from './pistaUnica.store'
-import type { PistaUnicaClue, PistaUnicaSession } from './pistaUnica.types'
+import type { PistaUnicaCategory, PistaUnicaClue, PistaUnicaSession } from './pistaUnica.types'
 import { usePistaUnicaInitialization } from './usePistaUnicaInitialization'
 import { usePistaUnicaTheme } from './usePistaUnicaTheme'
-import { AwardReceipt, CardDeck, ClueProgress, PaperCard, PistaWorkshop, SealedCard, WorkshopConfirm, WorkshopHeading } from './PistaWorkshop'
+import { AwardReceipt, CardDeck, ClueProgress, PaperCard, PistaWorkshop, RoundCategoryBadge, SealedCard, WorkshopConfirm, WorkshopHeading } from './PistaWorkshop'
 
 export function PistaUnicaPlayScreen() {
   const navigate = useNavigate()
@@ -44,7 +44,7 @@ function LocalRound({ session }: { session: PistaUnicaSession }) {
   </LocalTable>
   if (session.phase === 'write-clue' && contributor) return <WriteClue session={session} contributorId={contributor.id} contributorName={contributor.name} target={target.title} />
   if (session.phase === 'review') return <ReviewClues session={session} target={target.title} />
-  if (session.phase === 'guess') return <GuessScreen session={session} clues={getVisiblePistaUnicaClues(session.clues, target.title)} guesserName={guesser.name} />
+  if (session.phase === 'guess') return <GuessScreen session={session} clues={getVisiblePistaUnicaClues(session.clues, target.title)} guesserName={guesser.name} category={target.category} />
   if (session.phase === 'round-result') {
     const result = session.lastRoundResult
     if (!result) return null
@@ -130,7 +130,7 @@ function ReviewClues({ session, target }: { session: PistaUnicaSession; target: 
   </PrivateSurface>
 }
 
-function GuessScreen({ session, guesserName, clues }: { session: PistaUnicaSession; guesserName: string; clues: PistaUnicaClue[] }) {
+function GuessScreen({ session, guesserName, clues, category }: { session: PistaUnicaSession; guesserName: string; clues: PistaUnicaClue[]; category: PistaUnicaCategory }) {
   const { t } = useTranslation('pista-unica')
   const finishRound = usePistaUnicaStore(state => state.finishRound)
   const [busy, setBusy] = useState(false)
@@ -142,6 +142,7 @@ function GuessScreen({ session, guesserName, clues }: { session: PistaUnicaSessi
   }
   return <LocalTable session={session} footer={<><button className="pw-button" type="button" disabled={busy} onClick={() => void finish(true)}><Check size={19} />{t('guess.correct')}</button><button className="pw-button pw-button--secondary" type="button" disabled={busy} onClick={() => void finish(false)}><SkipForward size={18} />{t('guess.skip')}</button></>}>
     <WorkshopHeading eyebrow={`${guesserName}, o palco é seu`} title={t('guess.instruction')}>Leia as cartas e diga seu palpite em voz alta.</WorkshopHeading>
+    <RoundCategoryBadge category={category} />
     <CardDeck label="Pistas">{clues.map((clue, i) => <PaperCard key={clue.id} label={`Pista ${String(i + 1).padStart(2, '0')}`} tone={i % 2 ? 'lavender' : 'cream'} stamp="ÚNICA · APROVADA">{clue.text}</PaperCard>)}</CardDeck>
     <p className="pw-note">{clues.length === 1 ? '1 pista sobreviveu à revisão.' : `${clues.length} pistas sobreviveram à revisão.`}<br />Acertou? +2 para você e +1 para cada autor válido.</p>
     {error && <p className="pw-alert" role="alert">{error}</p>}

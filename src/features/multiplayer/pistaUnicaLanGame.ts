@@ -42,6 +42,7 @@ export interface PistaUnicaLanPublic {
   submittedCount: number
   requiredCount: number
   clues: string[]
+  roundCategory: PistaUnicaCategory | null
   excludedCount: number
   lastResult: PistaUnicaLanRoundResult | null
   scores: Record<string, number>
@@ -219,7 +220,9 @@ export const pistaUnicaLanGame = defineMultiplayerGame<PistaUnicaLanConfig, Pist
     return { step: state.step, round: state.roundIndex + 1, totalRounds: state.participants.length,
       guesserId: currentGuesser(state), reviewerId: currentReviewer(state), submittedCount: Object.keys(state.submissions).length,
       requiredCount: state.participants.length - 1,
-      clues: exposed ? unique.map(clue => clue.text) : [], excludedCount: exposed ? Object.keys(state.submissions).length - unique.length : 0,
+      clues: exposed ? unique.map(clue => clue.text) : [],
+      roundCategory: exposed ? getPistaUnicaTarget(state.targetIds[state.roundIndex]!)!.category : null,
+      excludedCount: exposed ? Object.keys(state.submissions).length - unique.length : 0,
       lastResult: state.step === 'round-result' || state.step === 'summary' ? state.lastResult : null,
       scores: { ...state.scores } }
   },

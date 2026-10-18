@@ -1,6 +1,8 @@
 import { Capacitor } from '@capacitor/core'
 import { ArrowLeft, ArrowRight, Check, ChevronLeft, ChevronRight, DoorOpen, EyeOff, Layers, LockKeyhole, Sparkles } from 'lucide-react'
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
+import type { PistaUnicaCategory } from './pistaUnica.types'
 import './pistaWorkshop.css'
 
 export function PistaWorkshop({ children, mode, round, total, stage, onBack, onExit, footer }: {
@@ -23,6 +25,11 @@ export function PistaWorkshop({ children, mode, round, total, stage, onBack, onE
       {footer && <footer className="pw-footer">{footer}</footer>}
     </div>
   </main>
+}
+
+export function RoundCategoryBadge({ category }: { category: PistaUnicaCategory }) {
+  const { t } = useTranslation('pista-unica')
+  return <p className="pw-round-category">TEMA DA RODADA · {t(`categories.${category}.name`).toLocaleUpperCase('pt-BR')}</p>
 }
 
 export function WorkshopHeading({ eyebrow, title, children }: { eyebrow: string; title: string; children?: ReactNode }) {

@@ -25,6 +25,21 @@ async function play(value: PistaUnicaSession) {
   </Routes></MemoryRouter>) })
 }
 describe('Oficina das Pistas on one phone', () => {
+  it.each([
+    ['word-pizza', 'PALAVRAS'],
+    ['movie-titanic', 'FILMES'],
+    ['series-friends', 'SÉRIES'],
+  ])('shows only the current %s category above approved clue cards', async (targetId, label) => {
+    const value = session('guess')
+    value.currentTargetId = targetId
+    value.usedTargetIds = [targetId]
+    value.clues = [{ id: 'a', participantId: '1', text: 'Pista autorizada', included: true }]
+    await play(value)
+    expect(screen.getByText(`TEMA DA RODADA · ${label}`)).toBeInTheDocument()
+    expect(screen.getByText('Pista autorizada')).toBeInTheDocument()
+    expect(screen.queryByText(getPistaUnicaTarget(targetId)!.title)).not.toBeInTheDocument()
+  })
+
   it('keeps a resumed private target concealed until its author reveals it and conceals again on blur', async () => {
     const value = session('write-clue'); const target = getPistaUnicaTarget(value.currentTargetId)!.title
     await play(value)

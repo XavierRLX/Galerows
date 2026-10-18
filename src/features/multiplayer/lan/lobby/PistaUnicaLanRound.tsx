@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { ArrowRight, CheckCircle2, Eye, EyeOff, Pencil, RotateCcw, Trophy, WifiOff } from 'lucide-react'
 import type { RoomSnapshotV2 } from '../../persistentProtocol'
 import type { PistaUnicaLanPrivate, PistaUnicaLanPublic } from '../../pistaUnicaLanGame'
-import { AwardReceipt, CardDeck, ClueProgress, PaperCard, PistaWorkshop, SealedCard, WorkshopConfirm, WorkshopHeading } from '../../../pista-unica/PistaWorkshop'
+import { AwardReceipt, CardDeck, ClueProgress, PaperCard, PistaWorkshop, RoundCategoryBadge, SealedCard, WorkshopConfirm, WorkshopHeading } from '../../../pista-unica/PistaWorkshop'
 
 type Props = {
   snapshot: RoomSnapshotV2
@@ -111,6 +111,7 @@ function PistaUnicaLanBody({ snapshot, playerId, isHost, busy, connected, onActi
   if (data.step === 'guessing') {
     content = <>
       <WorkshopHeading eyebrow={isGuesser ? 'O palco é seu' : 'Hora de conectar as pistas'} title={isGuesser ? 'Agora é sua vez de adivinhar!' : `${label(data.guesserId)} está pensando...`} />
+      {data.roundCategory && <RoundCategoryBadge category={data.roundCategory} />}
       <div aria-label="Pistas válidas"><CardDeck label="Pistas">{data.clues.map((text, index) => <PaperCard key={index} label={`Pista ${String(index + 1).padStart(2, '0')}`} tone={index % 2 ? 'lavender' : 'cream'} stamp="ÚNICA · APROVADA">{text}</PaperCard>)}</CardDeck></div>
       <p className="pw-note">{data.clues.length} pistas na mesa{data.excludedCount > 0 ? ` · ${data.excludedCount} removidas na revisão` : ''}</p>
       {isGuesser && <div className="pw-field"><label htmlFor="pl03-pista-answer">Meu palpite</label><input id="pl03-pista-answer" value={answer} maxLength={80} autoComplete="off" onChange={event => setAnswer(event.target.value)} disabled={blocked} placeholder="Qual é a palavra?" /></div>}

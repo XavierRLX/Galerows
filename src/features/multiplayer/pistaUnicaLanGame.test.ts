@@ -52,6 +52,37 @@ function sim(guestCount = 2) {
 }
 
 describe('G6 — Pista Única LAN with private targets and authoritative rounds', () => {
+  it.each([
+    ['words', 'words'],
+    ['movies', 'movies'],
+    ['series', 'series'],
+  ])('projects only the authorized %s category when clue cards become public', (configured, expected) => {
+    const s = sim()
+    s.begin([configured])
+    const secret = s.priv(s.writers()[0]).target!
+    expect(s.pub().roundCategory).toBeNull()
+    s.clues(['Uma pista', 'Outra pista'])
+    expect(s.pub().roundCategory).toBeNull()
+    expect(s.pub().clues).toEqual([])
+    s.review()
+    expect(s.pub().roundCategory).toBe(expected)
+    for (const p of s.players) {
+      const snapshot = s.view(p)
+      const publicJson = JSON.stringify(snapshot.gamePublicState)
+      expect(publicJson).not.toContain(secret)
+      expect(publicJson).not.toContain('targetId')
+      if (p.id === s.guesser().id) expect(JSON.stringify(snapshot.privateState)).not.toContain(secret)
+    }
+    s.ok(s.guesser(), 'SUBMIT_GUESS', { text: 'palpite errado' }, 'game')
+    s.ok(s.players[0], 'NEXT_ROUND', null, 'game')
+    expect(s.pub().roundCategory).toBeNull()
+    expect(s.pub().round).toBe(2)
+    s.clues(['Terceira pista', 'Quarta pista'])
+    s.review()
+    expect(s.pub().roundCategory).toBe(expected)
+    expect(s.view(s.guesser()).gamePublicState!.data).toMatchObject({ round: 2, roundCategory: expected })
+  })
+
   it('enforces category config and 3 to 12 players', () => {
     const a = sim(1)
     a.ok(a.players[0], 'SELECT_GAME', { gameId: 'pista-unica' })
