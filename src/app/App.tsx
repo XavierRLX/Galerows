@@ -10,6 +10,7 @@ import { FirstRunGuide } from '../features/onboarding/FirstRunGuide'
 import { AppRoutes } from './routes'
 import { ScrollToTop } from './ScrollToTop'
 import { AsyncErrorNotice, GlobalErrorBoundary } from './AppErrorBoundary'
+import { ActiveGameAwakeManager } from './ActiveGameAwakeManager'
 import { useNativeAppSetup } from './useNativeAppSetup'
 
 // Release builds do not import, mount, or bundle the experimental LAN owner.
@@ -29,9 +30,14 @@ export function App() {
   useEffect(() => {
     void initializeReviewPromptState()
   }, [])
-  return <BrowserRouter><GlobalErrorBoundary><FakeAdProvider><ScrollToTop /><PrivacyNotice /><FirstRunGuide /><AsyncErrorNotice />
+  return <BrowserRouter><FakeAdProvider><ScrollToTop /><PrivacyNotice /><FirstRunGuide /><AsyncErrorNotice />
     {ExperimentalRoomSessionProvider
-      ? <Suspense fallback={<div className="min-h-dvh bg-[#101014]" role="status" aria-label="Preparando jogos" />}><ExperimentalRoomSessionProvider><AppRoutes /></ExperimentalRoomSessionProvider></Suspense>
-      : <AppRoutes />}
-  </FakeAdProvider></GlobalErrorBoundary></BrowserRouter>
+      ? <Suspense fallback={<div className="min-h-dvh bg-[#101014]" role="status" aria-label="Preparando jogos" />}>
+          <ExperimentalRoomSessionProvider>
+            <ActiveGameAwakeManager />
+            <GlobalErrorBoundary><AppRoutes /></GlobalErrorBoundary>
+          </ExperimentalRoomSessionProvider>
+        </Suspense>
+      : <><ActiveGameAwakeManager /><GlobalErrorBoundary><AppRoutes /></GlobalErrorBoundary></>}
+  </FakeAdProvider></BrowserRouter>
 }
