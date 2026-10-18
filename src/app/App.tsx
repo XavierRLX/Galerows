@@ -6,6 +6,7 @@ import { canDisplayAds } from '../features/ads/ads.visibility'
 import { initializeReviewPromptState } from '../features/play-store/reviewPrompt.service'
 import { usePremiumStore } from '../features/premium/premium.store'
 import { PrivacyNotice } from '../features/privacy/PrivacyNotice'
+import { FirstRunGuide } from '../features/onboarding/FirstRunGuide'
 import { AppRoutes } from './routes'
 import { ScrollToTop } from './ScrollToTop'
 import { AsyncErrorNotice, GlobalErrorBoundary } from './AppErrorBoundary'
@@ -28,7 +29,7 @@ export function App() {
   useEffect(() => {
     void initializeReviewPromptState()
   }, [])
-  return <BrowserRouter><GlobalErrorBoundary><FakeAdProvider><ScrollToTop /><PrivacyNotice /><AsyncErrorNotice />
+  return <BrowserRouter><GlobalErrorBoundary><FakeAdProvider><ScrollToTop /><PrivacyNotice /><FirstRunGuide /><AsyncErrorNotice />
     {ExperimentalRoomSessionProvider
       ? <Suspense fallback={<div className="min-h-dvh bg-[#101014]" role="status" aria-label="Preparando jogos" />}><ExperimentalRoomSessionProvider><AppRoutes /></ExperimentalRoomSessionProvider></Suspense>
       : <AppRoutes />}

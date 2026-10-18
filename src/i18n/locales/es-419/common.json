@@ -10,6 +10,19 @@
     "asyncLan": "Hubo un problema de conexión. Verifica la red y retoma la sala si es necesario.",
     "dismiss": "Descartar aviso"
   },
+  "guide": {
+    "title": "Cómo jugar",
+    "intro": "Elige cómo quiere jugar tu grupo. Puedes iniciar un juego en cualquier momento.",
+    "sharedTitle": "1 celular",
+    "sharedDescription": "Todos juegan juntos compartiendo un solo dispositivo.",
+    "lanTitle": "Multijugador local",
+    "lanDescription": "Cada persona usa su celular en la misma red Wi-Fi o punto de acceso, sin internet.",
+    "groupTitle": "Mi Grupo",
+    "groupDescription": "Guarda nombres para juegos de un celular. Guardar nombres no crea una sala LAN.",
+    "skip": "Omitir",
+    "gotIt": "Entendido",
+    "reopen": "Ver guía de inicio"
+  },
   "settings": {
     "title": "Configuración",
     "language": "Idioma",

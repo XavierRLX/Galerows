@@ -1,4 +1,4 @@
-import { Check, FileJson, Info, Mail, ShieldCheck, Star, Wifi } from 'lucide-react'
+import { BookOpen, Check, FileJson, Info, Mail, ShieldCheck, Star, Wifi } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -102,6 +102,10 @@ export function SettingsScreen() {
             <Mail size={18} aria-hidden="true" />
             {t('settings.reportProblem')}
           </a>
+          <Button className="w-full" variant="secondary" onClick={() => navigate('/settings/guide')}>
+            <BookOpen size={18} aria-hidden="true" />
+            {t('guide.reopen')}
+          </Button>
           <Button className="w-full" variant="secondary" onClick={() => navigate('/settings/privacy')}>
             <ShieldCheck size={18} aria-hidden="true" />
             {t('settings.privacyCenter')}

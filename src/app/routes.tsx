@@ -35,6 +35,7 @@ const PistaUnicaPlayScreen = lazy(() => import('../features/pista-unica/PistaUni
 const PistaUnicaResultScreen = lazy(() => import('../features/pista-unica/PistaUnicaResultScreen').then((module) => ({ default: module.PistaUnicaResultScreen })))
 const PistaUnicaSetupScreen = lazy(() => import('../features/pista-unica/PistaUnicaSetupScreen').then((module) => ({ default: module.PistaUnicaSetupScreen })))
 const PlayersScreen = lazy(() => import('../features/players/PlayersScreen').then((module) => ({ default: module.PlayersScreen })))
+const GuideScreen = lazy(() => import('../features/onboarding/FirstRunGuide').then((module) => ({ default: module.GuideScreen })))
 const PrivacyScreen = lazy(() => import('../features/privacy/PrivacyScreen').then((module) => ({ default: module.PrivacyScreen })))
 const QuemSouEuHomeScreen = lazy(() => import('../features/quem-sou-eu/QuemSouEuHomeScreen').then((module) => ({ default: module.QuemSouEuHomeScreen })))
 const RankingScreen = lazy(() => import('../features/ranking/RankingScreen').then((module) => ({ default: module.RankingScreen })))
@@ -98,6 +99,7 @@ export function AppRoutes() {
           <Route index element={<HubScreen />} />
           <Route path="settings" element={<SettingsScreen />} />
           <Route path="settings/privacy" element={<PrivacyScreen />} />
+          <Route path="settings/guide" element={<GuideScreen />} />
           {canDisplayAds() ? <Route path="premium" element={<PremiumScreen />} /> : null}
           <Route path="games/pista-unica" element={<PistaUnicaHomeScreen />} />
           <Route path="games/pista-unica/setup" element={<PistaUnicaSetupScreen />} />

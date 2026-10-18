@@ -10,6 +10,19 @@
     "asyncLan": "There was a connection issue. Check the network and resume the room if needed.",
     "dismiss": "Dismiss notice"
   },
+  "guide": {
+    "title": "How to play",
+    "intro": "Choose how your group wants to play. You can start a game anytime.",
+    "sharedTitle": "1 phone",
+    "sharedDescription": "Everyone plays together, sharing a single device.",
+    "lanTitle": "Local multiplayer",
+    "lanDescription": "Each person uses their phone on the same Wi-Fi or hotspot, with no internet required.",
+    "groupTitle": "My Group",
+    "groupDescription": "Save player names for single-phone games. Saving names does not create a LAN room.",
+    "skip": "Skip",
+    "gotIt": "Got it",
+    "reopen": "View first-use guide"
+  },
   "settings": {
     "title": "Settings",
     "language": "Language",

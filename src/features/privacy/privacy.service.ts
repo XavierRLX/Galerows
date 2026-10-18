@@ -13,7 +13,7 @@ export async function markCurrentPrivacyNoticeSeen() {
 }
 
 export async function clearGameplayData() {
-  const preservedKeys = new Set<string>([STORAGE_KEYS.locale, STORAGE_KEYS.privacyNoticeVersion])
+  const preservedKeys = new Set<string>([STORAGE_KEYS.locale, STORAGE_KEYS.privacyNoticeVersion, STORAGE_KEYS.firstRunGuideCompleted])
   const keys = await LocalPreferences.keys()
   await Promise.all(keys
     .filter((key) => key.startsWith(APP_STORAGE_PREFIX) && !preservedKeys.has(key))

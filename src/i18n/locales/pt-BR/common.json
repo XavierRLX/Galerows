@@ -10,6 +10,19 @@
     "asyncLan": "Houve um problema de conexão. Confira a rede e use Retomar sala quando necessário.",
     "dismiss": "Dispensar aviso"
   },
+  "guide": {
+    "title": "Como jogar?",
+    "intro": "Escolha o jeito que combina com a sua galera. Você pode começar um jogo a qualquer momento.",
+    "sharedTitle": "1 celular",
+    "sharedDescription": "Todo mundo joga junto, compartilhando um único aparelho.",
+    "lanTitle": "Multiplayer local",
+    "lanDescription": "Cada pessoa usa seu celular na mesma rede Wi-Fi ou hotspot, sem precisar de internet.",
+    "groupTitle": "Minha Galera",
+    "groupDescription": "Salve nomes para os jogos de 1 celular. Salvar jogadores não cria uma sala LAN.",
+    "skip": "Pular",
+    "gotIt": "Entendi",
+    "reopen": "Ver guia de primeiros passos"
+  },
   "settings": {
     "title": "Configurações",
     "language": "Idioma",

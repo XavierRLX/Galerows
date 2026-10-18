@@ -22,6 +22,7 @@ export function PrivacyNotice() {
   const dismiss = async () => {
     await markCurrentPrivacyNoticeSeen()
     setOpen(false)
+    window.dispatchEvent(new Event('galerows:privacy-notice-dismissed'))
   }
 
   return (
