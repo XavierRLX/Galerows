@@ -51,18 +51,48 @@ export function SealedCard({ name, children }: { name: string; children?: ReactN
   return <div className="pw-sealed"><div className="pw-sealed-inner"><LockKeyhole size={24} aria-hidden="true" /><span className="pw-sealed-symbol" aria-hidden="true">?</span><strong>{name}</strong>{children && <p>{children}</p>}<EyeOff size={17} aria-hidden="true" /></div></div>
 }
 
-/** Pages remain presentational; edits and submitted values belong to the caller. */
+/** Paging changes only visible cards; game data and review drafts belong to the caller. */
 export function CardDeck({ children, label, pageSize = 1 }: { children: ReactNode[]; label: string; pageSize?: number }) {
   const [page, setPage] = useState(0)
+  const [hasNavigated, setHasNavigated] = useState(false)
+  const pointer = useRef<{ id: number; x: number; y: number } | null>(null)
   const pages = Math.max(1, Math.ceil(children.length / pageSize))
   const current = Math.min(page, pages - 1)
+  const changePage = (delta: number) => {
+    setPage(previous => Math.max(0, Math.min(pages - 1, Math.min(previous, pages - 1) + delta)))
+    setHasNavigated(true)
+  }
   return <div className="pw-deck">
-    <div className="pw-deck-cards" key={current}>{children.slice(current * pageSize, (current + 1) * pageSize)}</div>
-    {pages > 1 && <nav className="pw-pager" aria-label={label}>
-      <button type="button" aria-label={`${label}: carta anterior`} disabled={current === 0} onClick={() => setPage(current - 1)}><ChevronLeft size={20} /></button>
-      <span aria-live="polite">{current + 1} <span>/ {pages}</span></span>
-      <button type="button" aria-label={`${label}: próxima carta`} disabled={current >= pages - 1} onClick={() => setPage(current + 1)}><ChevronRight size={20} /></button>
-    </nav>}
+    <div
+      className="pw-deck-cards"
+      role="group"
+      aria-label={`${label}: cartas`}
+      onPointerDown={event => {
+        if (pages <= 1 || !['touch', 'pen'].includes(event.pointerType) || event.isPrimary === false) return
+        if ((event.target as Element).closest('button, input, textarea, select, a, [contenteditable="true"], [role="button"]')) return
+        pointer.current = { id: event.pointerId, x: event.clientX, y: event.clientY }
+        event.currentTarget.setPointerCapture?.(event.pointerId)
+      }}
+      onPointerUp={event => {
+        const start = pointer.current
+        pointer.current = null
+        if (!start || start.id !== event.pointerId) return
+        const dx = event.clientX - start.x
+        const dy = event.clientY - start.y
+        if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.25) return
+        changePage(dx < 0 ? 1 : -1)
+      }}
+      onPointerCancel={() => { pointer.current = null }}
+      onLostPointerCapture={() => { pointer.current = null }}
+    >{children.slice(current * pageSize, (current + 1) * pageSize)}</div>
+    {pages > 1 && <>
+      <nav className="pw-pager" aria-label={label}>
+        <button type="button" aria-label={`${label}: carta anterior`} disabled={current === 0} onClick={() => changePage(-1)}><ChevronLeft size={20} /></button>
+        <span aria-live="polite">{current + 1} <span>/ {pages}</span></span>
+        <button type="button" aria-label={`${label}: próxima carta`} disabled={current >= pages - 1} onClick={() => changePage(1)}><ChevronRight size={20} /></button>
+      </nav>
+      {!hasNavigated && <p className="pw-swipe-hint">Deslize para ver outras cartas</p>}
+    </>}
   </div>
 }
 

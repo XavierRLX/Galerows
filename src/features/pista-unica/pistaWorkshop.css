@@ -57,7 +57,8 @@ body:has(.pista-workshop) { min-width: 0; background: #072d30; }
 .pw-sealed p { margin: 0; font-size: 10px; line-height: 1.4; color: #d5e2c9; }
 .pw-round-category { align-self: center; margin: 0; padding: 7px 12px; border: 1px solid #d2f86a66; border-radius: 99px; background: #d2f86a14; color: var(--pw-lime); font-size: 10px; font-weight: 850; letter-spacing: .1em; text-align: center; }
 .pw-deck { width: 100%; min-width: 0; }
-.pw-deck-cards { display: grid; gap: 12px; }
+.pw-deck-cards { display: grid; gap: 12px; touch-action: pan-y; }
+.pw-swipe-hint { margin: 5px 0 0; color: var(--pw-muted); font-size: 10px; text-align: center; }
 .pw-pager { display: flex; justify-content: center; align-items: center; gap: 23px; padding-top: 16px; }
 .pw-pager button { display: grid; place-items: center; width: 44px; height: 38px; border: 1px solid #d5e4cd30; border-radius: 10px; color: var(--pw-cream); background: #ffffff08; }
 .pw-pager > span { min-width: 44px; text-align: center; font-size: 12px; font-weight: 800; color: var(--pw-lime); }
