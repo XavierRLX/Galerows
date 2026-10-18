@@ -35,7 +35,7 @@ const PistaUnicaPlayScreen = lazy(() => import('../features/pista-unica/PistaUni
 const PistaUnicaResultScreen = lazy(() => import('../features/pista-unica/PistaUnicaResultScreen').then((module) => ({ default: module.PistaUnicaResultScreen })))
 const PistaUnicaSetupScreen = lazy(() => import('../features/pista-unica/PistaUnicaSetupScreen').then((module) => ({ default: module.PistaUnicaSetupScreen })))
 const PlayersScreen = lazy(() => import('../features/players/PlayersScreen').then((module) => ({ default: module.PlayersScreen })))
-const GuideScreen = lazy(() => import('../features/onboarding/FirstRunGuide').then((module) => ({ default: module.GuideScreen })))
+const GuideScreen = lazy(() => import('../features/onboarding/GuideScreen').then((module) => ({ default: module.GuideScreen })))
 const LanHelpScreen = lazy(() => import('../features/multiplayer/lan/LanHelpScreen').then((module) => ({ default: module.LanHelpScreen })))
 const PrivacyScreen = lazy(() => import('../features/privacy/PrivacyScreen').then((module) => ({ default: module.PrivacyScreen })))
 const QuemSouEuHomeScreen = lazy(() => import('../features/quem-sou-eu/QuemSouEuHomeScreen').then((module) => ({ default: module.QuemSouEuHomeScreen })))
