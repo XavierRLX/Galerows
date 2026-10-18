@@ -1,4 +1,15 @@
 {
+  "errors": {
+    "renderTitle": "Something went wrong",
+    "renderDescription": "We could not display this screen. Your saved games and local data were not deleted.",
+    "roomRecovery": "The room screen encountered a problem. Avoid creating another room; return and use the reconnect option.",
+    "retry": "Try again",
+    "home": "Back to home",
+    "report": "Report a problem",
+    "asyncGeneral": "An action failed. Check its result before trying again; your progress has not been deleted.",
+    "asyncLan": "There was a connection issue. Check the network and resume the room if needed.",
+    "dismiss": "Dismiss notice"
+  },
   "settings": {
     "title": "Settings",
     "language": "Language",

@@ -8,6 +8,7 @@ import { usePremiumStore } from '../features/premium/premium.store'
 import { PrivacyNotice } from '../features/privacy/PrivacyNotice'
 import { AppRoutes } from './routes'
 import { ScrollToTop } from './ScrollToTop'
+import { AsyncErrorNotice, GlobalErrorBoundary } from './AppErrorBoundary'
 import { useNativeAppSetup } from './useNativeAppSetup'
 
 // Release builds do not import, mount, or bundle the experimental LAN owner.
@@ -27,9 +28,9 @@ export function App() {
   useEffect(() => {
     void initializeReviewPromptState()
   }, [])
-  return <BrowserRouter><FakeAdProvider><ScrollToTop /><PrivacyNotice />
+  return <BrowserRouter><GlobalErrorBoundary><FakeAdProvider><ScrollToTop /><PrivacyNotice /><AsyncErrorNotice />
     {ExperimentalRoomSessionProvider
       ? <Suspense fallback={<div className="min-h-dvh bg-[#101014]" role="status" aria-label="Preparando jogos" />}><ExperimentalRoomSessionProvider><AppRoutes /></ExperimentalRoomSessionProvider></Suspense>
       : <AppRoutes />}
-  </FakeAdProvider></BrowserRouter>
+  </FakeAdProvider></GlobalErrorBoundary></BrowserRouter>
 }

@@ -1,4 +1,15 @@
 {
+  "errors": {
+    "renderTitle": "Algo salió mal",
+    "renderDescription": "No pudimos mostrar esta pantalla. Tus partidas y datos guardados no fueron eliminados.",
+    "roomRecovery": "Hubo un error en la pantalla de la sala. Evita crear otra sala; vuelve y usa la opción de reconectar.",
+    "retry": "Intentar de nuevo",
+    "home": "Volver al inicio",
+    "report": "Reportar problema",
+    "asyncGeneral": "Una acción falló. Verifica el resultado antes de intentar de nuevo; tu progreso no se ha borrado.",
+    "asyncLan": "Hubo un problema de conexión. Verifica la red y retoma la sala si es necesario.",
+    "dismiss": "Descartar aviso"
+  },
   "settings": {
     "title": "Configuración",
     "language": "Idioma",

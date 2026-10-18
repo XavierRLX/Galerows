@@ -1,4 +1,15 @@
 {
+  "errors": {
+    "renderTitle": "Algo não saiu como esperado",
+    "renderDescription": "Não foi possível mostrar esta tela. Seus dados e partidas salvas não foram apagados.",
+    "roomRecovery": "Houve uma falha na tela da sala. Evite criar outra sala; volte e procure a opção de retomar a conexão.",
+    "retry": "Tentar novamente",
+    "home": "Voltar à home",
+    "report": "Relatar problema",
+    "asyncGeneral": "Uma ação falhou. Confira o resultado antes de tentar de novo; seu progresso não foi apagado.",
+    "asyncLan": "Houve um problema de conexão. Confira a rede e use Retomar sala quando necessário.",
+    "dismiss": "Dispensar aviso"
+  },
   "settings": {
     "title": "Configurações",
     "language": "Idioma",
