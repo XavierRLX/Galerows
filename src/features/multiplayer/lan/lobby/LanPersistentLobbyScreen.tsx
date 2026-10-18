@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { ArrowRight, LoaderCircle, QrCode, Users, WifiOff } from 'lucide-react'
 import { LanScreenHeader } from './LanScreenHeader'
 import { LanQrScanner } from '../LanQrScanner'
 import { LobbyRoomView } from './LobbyRoomView'
 import { armCityAutomaticNarrator } from './cidadeAutomaticAudio'
 import { LanRoomDiscoveryList } from './LanRoomDiscoveryList'
+import { LanConnectionHelpHint } from '../LanHelpScreen'
 import type { LobbyGameId } from './lobbyView'
 import { RoomSessionProvider } from './RoomSessionProvider'
 import { useRoomSession, useRoomSessionOptional } from './RoomSessionContext'
@@ -112,6 +113,8 @@ function LanPersistentLobbyView({ initialMode }: { initialMode: 'entry' | 'join'
         </button>
       </div>}
       {error && <p className="pl03-error" role="alert"><WifiOff size={17} aria-hidden="true" /> {error}</p>}
+      <LanConnectionHelpHint busy={busy} connected={connected} error={error} />
+      {mode !== 'create' ? <Link className="mt-3 inline-flex min-h-11 items-center text-sm font-bold text-[#B8A0FF] underline underline-offset-4" to="/settings/multiplayer-help">Ajuda de conexão LAN</Link> : null}
       {mode !== 'join' && <details className="pl03-network-options">
         <summary>Opções de rede</summary>
         <label className="pl03-network-choice">
