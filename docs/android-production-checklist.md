@@ -26,11 +26,12 @@
 
 ## Play Console App Content
 
-- Data safety:
-  - Answer that this release does not collect or share user data.
-  - Do not declare gameplay/player/settings data as collected: it is processed only on-device.
-  - State that Galerows has no account or own backend for personal data storage.
-  - Confirm that the declaration is updated before adding any SDK that transmits data off-device.
+- Data safety (revisão obrigatória antes do upload):
+  - **Não reutilizar a resposta antiga de “não coleta nem compartilha dados” sem análise**: no modo LAN, apelidos e comandos de jogo são transmitidos diretamente entre aparelhos.
+  - Reavaliar os tipos de dados transmitidos (especialmente nomes/apelidos, informações da sessão e identificadores técnicos), se há processamento efêmero e possíveis exceções de transmissão criptografada ponta a ponta ou compartilhamento iniciado pelo usuário, conforme as definições oficiais da Play Console: https://support.google.com/googleplay/android-developer/answer/10787469.
+  - Distinguir transmissão peer-to-peer de coleta por servidores externos próprios; inexistência de backend próprio não equivale a ausência de transferência para fora do aparelho.
+  - Validar comportamento real, bibliotecas incorporadas e versões ativas da Play antes de preencher o formulário. Não afirmar nenhuma exceção sem evidência do pacote final.
+  - Galerows permanece sem cadastro/conta e não deve conter analytics, ads ou coleta por SDKs nesta entrega.
 - Permissions:
   - `INTERNET` for Google Play update/review/store flows.
   - `CAMERA` only for local QR code scanning.

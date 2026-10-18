@@ -5,8 +5,8 @@ Use this checklist after uploading the new AAB that excludes monetization.
 ## App content
 
 - Ads: change the answer to **No** for the current release.
-- Data safety: answer that the app does not collect or share user data.
-- Privacy policy: use `https://xavierrlx.github.io/Galerows/privacy.html`; its source is `public/privacy.html` and it matches the in-app policy.
+- Data safety: **refazer o questionário antes do upload**; a antiga resposta de nenhum dado coletado/compartilhado foi formulada antes do LAN peer-to-peer. Avaliar transmissão de apelidos, comandos, votações, dados técnicos e exceções aplicáveis com base na documentação oficial do Google; não equiparar ‘sem servidor próprio’ a ‘sem dados fora do dispositivo’.
+- Privacy policy: publicar **manualmente, após autorização**, a revisão de `public/privacy.html` em `https://xavierrlx.github.io/Galerows/privacy.html` e confirmar que o endereço HTTPS e a versão in-app correspondem. O commit local não publica a política.
 - Target audience: select only 13+ age groups intended for teens and adults.
 - Content rating: disclose non-graphic references to murder, death, victims and elimination.
 - App access: no login or special credentials are required.

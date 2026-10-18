@@ -37,6 +37,9 @@ export function PrivacyScreen() {
         <h2 className="mt-7 text-sm font-bold uppercase tracking-wider text-slate-400">{t('privacy.storedTitle')}</h2>
         <Card className="mt-3 p-5"><p className="text-sm leading-6 text-slate-300">{t('privacy.storedDescription')}</p></Card>
 
+        <h2 className="mt-7 text-sm font-bold uppercase tracking-wider text-slate-400">{t('privacy.lanTitle')}</h2>
+        <Card className="mt-3 border-[#B8A0FF]/20 p-5"><p className="text-sm leading-6 text-slate-300">{t('privacy.lanDescription')}</p></Card>
+
         <div className="mt-6 grid gap-3">
           <a className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-bold text-white transition hover:bg-white/15" href={privacyPolicyUrl} rel="noopener noreferrer" target="_blank">
             <ExternalLink size={18} />{t('privacy.openPolicy')}
