@@ -1,9 +1,11 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
-import { afterEach, expect, it } from 'vitest'
+import { afterEach, beforeAll, expect, it } from 'vitest'
+import { initializeI18n } from '../../../../i18n'
 import { AuthoritativeRoomRuntimeV2, RoomLifecycleAdapter } from '../../persistentRoom'
 import { pistaUnicaLanGame, type PistaUnicaLanPrivate, type PistaUnicaLanPublic } from '../../pistaUnicaLanGame'
 import { PistaUnicaLanRound } from './PistaUnicaLanRound'
 
+beforeAll(async () => { await initializeI18n() })
 afterEach(cleanup)
 function room(size = 3) {
   let n = 0
