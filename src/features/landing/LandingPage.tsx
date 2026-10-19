@@ -20,9 +20,13 @@ const categoryLabels: Record<string, string> = {
   'quem-sou-eu': 'A resposta está na sua testa', adedonha: 'O clássico da galera', taboo: 'Cuidado com a palavra', 'cidade-dorme': 'Ninguém é inocente',
 }
 
+function publicAsset(path: string) {
+  return `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`
+}
+
 function Brand() {
   return <a className="gl-brand" href="#inicio" aria-label="Galerows, início">
-    <img className="gl-brand-lockup" src="/assets/brand/galerows-logo.svg" width="196" height="49" alt="" />
+    <img className="gl-brand-lockup" src={publicAsset('/assets/brand/galerows-logo.svg')} width="196" height="49" alt="" />
   </a>
 }
 
@@ -46,7 +50,7 @@ function StoreButtons() {
 }
 
 function GameArtwork({ game, className = '' }: { game: GameModule; className?: string }) {
-  return <img className={className} src={game.coverImage} alt="" loading="lazy" width="640" height="360" />
+  return <img className={className} src={publicAsset(game.coverImage!)} alt="" loading="lazy" width="640" height="360" />
 }
 
 function HeroStage() {
@@ -54,11 +58,11 @@ function HeroStage() {
     <div className="gl-orbit gl-orbit-one" /><div className="gl-orbit gl-orbit-two" />
     <Plus className="gl-stage-plus" size={28} aria-hidden="true" />
     <Spade className="gl-stage-spade" size={36} aria-hidden="true" />
-    <div className="gl-fan-card gl-fan-left"><img src="/assets/games/mimica.webp" alt="" width="340" height="460" /><span>FAÇA A CENA.<strong>MÍMICA</strong><small>SEM DIZER UMA PALAVRA.</small></span><Club size={25} aria-hidden="true" /></div>
-    <div className="gl-fan-card gl-fan-right"><img src="/assets/games/impostor-palavra.jpg" alt="" width="340" height="460" /><span>QUEM ESTÁ BLEFANDO?<strong>IMPOSTOR<br />DA PALAVRA</strong></span><Spade size={24} aria-hidden="true" /></div>
+    <div className="gl-fan-card gl-fan-left"><img src={publicAsset('/assets/games/mimica.webp')} alt="" width="340" height="460" /><span>FAÇA A CENA.<strong>MÍMICA</strong><small>SEM DIZER UMA PALAVRA.</small></span><Club size={25} aria-hidden="true" /></div>
+    <div className="gl-fan-card gl-fan-right"><img src={publicAsset('/assets/games/impostor-palavra.jpg')} alt="" width="340" height="460" /><span>QUEM ESTÁ BLEFANDO?<strong>IMPOSTOR<br />DA PALAVRA</strong></span><Spade size={24} aria-hidden="true" /></div>
     <div className="gl-phone">
       <div className="gl-phone-top"><span>9:41</span><span className="gl-phone-camera" /><span>▮▮▮ ▰</span></div>
-      <div className="gl-phone-header"><img src="/assets/brand/galerows-mark.svg" width="34" height="34" alt="" /><span>galerows.</span><Settings2 size={17} aria-hidden="true" /></div>
+      <div className="gl-phone-header"><img src={publicAsset('/assets/brand/galerows-mark.svg')} width="34" height="34" alt="" /><span>galerows.</span><Settings2 size={17} aria-hidden="true" /></div>
       <div className="gl-phone-greeting"><small>A GALERA CHEGOU.</small><strong>Qual vai ser<br />o jogo da vez?</strong><span>Escolha um jogo e reúna a turma.</span></div>
       <div className="gl-phone-games">{[games[0], games[1], games[4]].map((game) => <div className={`gl-phone-game gl-game-${game.id}`} key={game.id}><GameArtwork game={game} /><div><small>{categoryLabels[game.id]}</small><strong>{game.name}</strong><span><Users size={10} /> {game.minPlayers}{game.maxPlayers ? `–${game.maxPlayers}` : '+'} jogadores</span></div><ArrowRight size={18} aria-hidden="true" /></div>)}</div>
       <div className="gl-phone-bottom"><span /><span /><span /></div>
@@ -132,6 +136,6 @@ export function LandingPage() {
       <section className="gl-download gl-container" id="baixar" aria-labelledby="download-title"><div className="gl-download-panel"><Spade className="gl-download-spade" aria-hidden="true" /><Club className="gl-download-club" aria-hidden="true" /><p className="gl-eyebrow"><span className="gl-status-dot" />{releaseLabel}</p><h2 id="download-title">O próximo “bora jogar?”<br /><span>já tem nome.</span></h2><p>Galerows. Jogos da galera, no seu celular.</p><StoreButtons /><p className="gl-download-note"><Check size={14} aria-hidden="true" />{anyAvailable ? 'Baixe pelos links oficiais das lojas.' : 'Em desenvolvimento. A gente se encontra na próxima rodada.'}</p></div></section>
     </main>
 
-    <footer className="gl-footer gl-container"><div className="gl-footer-top"><Brand /><p>Feito para reunir.<br /><strong>E render boas histórias.</strong></p><a href="/privacy.html">Política de privacidade<ArrowUpRight size={14} aria-hidden="true" /></a></div><div className="gl-footer-bottom"><span>© {new Date().getFullYear()} Galerows. Jogos da galera.</span><span>FEITO PARA JOGAR JUNTO <Heart size={12} aria-hidden="true" /></span><a href="#inicio">Voltar ao topo<ChevronDown size={14} aria-hidden="true" /></a></div></footer>
+    <footer className="gl-footer gl-container"><div className="gl-footer-top"><Brand /><p>Feito para reunir.<br /><strong>E render boas histórias.</strong></p><a href={publicAsset('/privacy.html')}>Política de privacidade<ArrowUpRight size={14} aria-hidden="true" /></a></div><div className="gl-footer-bottom"><span>© {new Date().getFullYear()} Galerows. Jogos da galera.</span><span>FEITO PARA JOGAR JUNTO <Heart size={12} aria-hidden="true" /></span><a href="#inicio">Voltar ao topo<ChevronDown size={14} aria-hidden="true" /></a></div></footer>
   </div>
 }

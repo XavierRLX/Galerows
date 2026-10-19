@@ -4,9 +4,18 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { LandingPage } from './LandingPage'
 
 vi.mock('./landing.config', () => ({ storeLinks: { apple: undefined, google: undefined } }))
-afterEach(cleanup)
+afterEach(() => { cleanup(); vi.unstubAllEnvs() })
 
 describe('landing visitor experience', () => {
+  it('keeps branding, catalog images and privacy within the Pages subpath', () => {
+    vi.stubEnv('BASE_URL', '/Galerows/')
+    const { container } = render(<LandingPage />)
+    for (const image of container.querySelectorAll('img')) {
+      expect(image.getAttribute('src')).toMatch(/^\/Galerows\/assets\//)
+    }
+    expect(screen.getByRole('link', { name: /política de privacidade/i })).toHaveAttribute('href', '/Galerows/privacy.html')
+  })
+
   it('does not send visitors to unpublished stores or browser games', () => {
     render(<LandingPage />)
     for (const store of ['App Store', 'Google Play']) {
