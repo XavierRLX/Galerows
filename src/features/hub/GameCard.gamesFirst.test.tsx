@@ -9,37 +9,42 @@ import { GameCard } from './GameCard'
 beforeAll(async () => { await initializeI18n() })
 afterEach(() => cleanup())
 
-describe('games-first card navigation', () => {
-  it.each(['impostor-da-palavra', 'cidade-dorme', 'pista-unica'])('shows both shared-device and local multiplayer for %s', (id) => {
+describe('games-first poster card', () => {
+  it.each(['impostor-da-palavra', 'cidade-dorme', 'pista-unica'])('shows shared-device and real multiplayer capability for %s', (id) => {
     render(<MemoryRouter><GameCard game={getGameById(id)!} /></MemoryRouter>)
     expect(screen.getByText('1 celular')).toBeInTheDocument()
-    expect(screen.getByText('Multiplayer local')).toBeInTheDocument()
+    expect(screen.getByText('Multiplayer')).toBeInTheDocument()
     expect(screen.queryByText('Multiplayer em breve')).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /Cada um no seu celular/i })).not.toBeInTheDocument()
   })
 
-  it('labels Adedonha as a personal sheet, not a shared-device LAN session', () => {
+  it('labels Adedonha as a personal sheet, not an available LAN session', () => {
     render(<MemoryRouter><GameCard game={getGameById('adedonha')!} /></MemoryRouter>)
     expect(screen.getByText('1 por pessoa')).toBeInTheDocument()
     expect(screen.getByText('Multiplayer em breve')).toBeInTheDocument()
   })
 
-  it('lets newcomers open the existing game information screen', async () => {
+  it('uses the entire illustrated poster as the only game-opening button', async () => {
     const user = userEvent.setup()
     const game = getGameById('impostor-da-palavra')!
-    render(<MemoryRouter initialEntries={['/']}>
+    const { container } = render(<MemoryRouter initialEntries={['/']}>
       <Routes>
         <Route path="/" element={<GameCard game={game} />} />
         <Route path="/games/impostor-da-palavra" element={<h1>Informações do Impostor</h1>} />
       </Routes>
     </MemoryRouter>)
-    await user.click(screen.getByRole('button', { name: 'Jogar agora Impostor da Palavra' }))
+    const card = container.querySelector('.hub-game')
+    expect(card?.querySelector('.hub-game-art img')).toHaveAttribute('src', game.coverImage)
+    const hitArea = screen.getByRole('button', { name: 'Jogar agora Impostor da Palavra' })
+    expect(hitArea).toHaveClass('hub-card-hit-area')
+    expect(card?.querySelectorAll('button')).toHaveLength(1)
+    await user.click(hitArea)
     expect(await screen.findByRole('heading', { name: 'Informações do Impostor' })).toBeInTheDocument()
   })
 
-  it('keeps unimplemented games unplayable', () => {
+  it('keeps unimplemented games visible but unplayable', () => {
     render(<MemoryRouter><GameCard game={getGameById('damas')!} /></MemoryRouter>)
-    expect(screen.queryByRole('button', { name: /Conhecer Damas/i })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Em breve Damas/i })).toBeDisabled()
+    const unavailable = screen.getByRole('button', { name: 'Em breve Damas' })
+    expect(unavailable).toHaveClass('hub-card-hit-area')
+    expect(unavailable).toBeDisabled()
   })
 })

@@ -27,6 +27,14 @@ describe('HubScreen usage badges', () => {
     expect(screen.queryByRole('button', { name: /Voltar à sala/ })).not.toBeInTheDocument()
   })
 
+  it('starts with a stable two-column game selection, without a full-width hero card', () => {
+    const { container } = render(<MemoryRouter><HubScreen /></MemoryRouter>)
+    const grid = container.querySelector('.hub-game-grid')
+    const names = Array.from(grid?.querySelectorAll('.hub-game h3') ?? []).slice(0, 4).map((node) => node.textContent)
+    expect(names).toEqual(['Cidade Dorme', 'Impostor da Palavra', 'Pista Única', 'Nem Ferrando'])
+    expect(grid?.querySelector('.hub-game-featured')).not.toBeInTheDocument()
+  })
+
   it('filters by the actual device mode and restores the available catalog', async () => {
     render(<MemoryRouter><HubScreen /></MemoryRouter>)
     const user = userEvent.setup()

@@ -1,11 +1,15 @@
-import { ChevronDown, Settings, Smartphone, Spade, Users, Wifi } from 'lucide-react'
+import { ArrowUpRight, Settings, UsersRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
+import { lanNativeMvpAvailable } from '../multiplayer/lan/lanPlatform'
 
 export function HubHeader() {
   const { t } = useTranslation('hub')
   const navigate = useNavigate()
+  const roomLobbyAvailable = import.meta.env.VITE_GAMES_FIRST_LAN_ENTRY === '1'
+    && import.meta.env.VITE_LAN_PERSISTENT_LOBBY_UI === '1'
+    && lanNativeMvpAvailable()
 
   return (
     <header className="hub-header">
@@ -17,25 +21,26 @@ export function HubHeader() {
           <Settings aria-hidden="true" size={21} />
         </Button>
       </div>
-      <div className="hub-welcome">
-        <div>
-          <p className="hub-eyebrow">{t('welcome.eyebrow')}</p>
-          <p className="hub-welcome-title">{t('welcome.title')}<br /><span>{t('welcome.accent')}</span></p>
-        </div>
-        <div className="hub-card-fan" aria-hidden="true"><span><Spade size={26} fill="currentColor" /></span><span><img src="/assets/brand/galerows-mark.svg" alt="" width="256" height="256" /></span></div>
-      </div>
-      <p className="hub-concept">{t('welcome.description')}</p>
+
       <nav className="hub-shortcuts" aria-label={t('shortcuts')}>
-        <button type="button" onClick={() => navigate('/players')}><Users aria-hidden="true" size={17} />{t('myGroup')}</button>
+        <button
+          type="button"
+          className="hub-group-card"
+          aria-label={t('myGroup')}
+          aria-describedby="hub-group-hint"
+          onClick={() => navigate('/players')}
+        >
+          <span className="hub-group-icon" aria-hidden="true">
+            <UsersRound size={29} strokeWidth={2.3} />
+            <span className="hub-group-sparkle">✦</span>
+          </span>
+          <span className="hub-group-copy">
+            <strong>{t('myGroup')}</strong>
+            <span id="hub-group-hint">{t(roomLobbyAvailable ? 'groupLobbyHint' : 'groupLobbyUnavailableHint')}</span>
+          </span>
+          <span className="hub-group-arrow" aria-hidden="true"><ArrowUpRight size={19} strokeWidth={2.6} /></span>
+        </button>
       </nav>
-      <details className="hub-mode-guide">
-        <summary><span><Smartphone aria-hidden="true" size={16} />{t('modes.guide')}</span><ChevronDown aria-hidden="true" size={16} /></summary>
-        <div className="hub-mode-guide-content">
-          <div><Smartphone aria-hidden="true" size={19} /><p><strong>{t('modes.shared')}</strong>{t('modes.sharedDescription')}</p></div>
-          <div><Users aria-hidden="true" size={19} /><p><strong>{t('modes.personal')}</strong>{t('modes.personalDescription')}</p></div>
-          <div><Wifi aria-hidden="true" size={19} /><p><strong>{t('modes.lan')}</strong>{t('modes.lanDescription')}</p></div>
-        </div>
-      </details>
     </header>
   )
 }

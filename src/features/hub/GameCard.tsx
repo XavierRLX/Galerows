@@ -1,4 +1,4 @@
-import { Heart, Play, Smartphone, Users, Wifi } from 'lucide-react'
+import { Heart, Smartphone, Users, Wifi } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -58,27 +58,38 @@ export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLa
   }
 
   return (
-    <article className={`hub-game${featured ? ' hub-game-featured' : ''}${available ? '' : ' hub-game-soon'}`} style={style} aria-labelledby={`hub-game-${game.id}`}>
-      <div className="hub-game-art">
+    <article className={`hub-game${available ? '' : ' hub-game-soon'}`} style={style} aria-labelledby={`hub-game-${game.id}`}>
+      <div className="hub-game-art" aria-hidden="true">
         {game.coverImage ? <img src={game.coverImage} alt="" loading={featured ? 'eager' : 'lazy'} decoding="async" /> : <GameIcon name={game.iconName} size={38} />}
-        <div className="hub-game-badges">
+      </div>
+      {available ? (
+        <div className="hub-game-badges" aria-hidden={badgeLabels.length === 0 && !isFavorite}>
           {badgeLabels.map(label => <span key={label}>{label}</span>)}
           {isFavorite ? <span className="hub-favorite" aria-label={t('favoriteBadge')}><Heart aria-hidden="true" size={13} fill="currentColor" /></span> : null}
         </div>
-        {available ? <span className="hub-game-category">{t(`categories.${game.id}`, { defaultValue: t('welcome.eyebrow') })}</span> : null}
-      </div>
+      ) : null}
+      {available && modes.lan === 'available' ? (
+        <span className="hub-game-lan" title={t('modes.lan')}><Wifi aria-hidden="true" size={12} />{t('modes.multiplayer')}</span>
+      ) : null}
       <div className="hub-game-body">
         <h3 id={`hub-game-${game.id}`}>{name}</h3>
-        <p className="hub-game-description">{description}</p>
         <div className="hub-game-meta">
-          <span><Users aria-hidden="true" size={13} />{t('playerRange', { range: players })}</span>
-          {available ? <span className="hub-game-mode"><Smartphone aria-hidden="true" size={13} />{t(modes.local.kind === 'localPersonalSheet' ? 'modes.personal' : 'modes.shared')}</span> : null}
-          {available && modes.lan !== 'unsupported' ? <span className="hub-game-lan"><Wifi aria-hidden="true" size={13} />{t(modes.lan === 'available' ? 'modes.lan' : 'modes.preparing')}</span> : null}
+          <span><Users aria-hidden="true" size={12} />{t('playerRange', { range: players })}</span>
+          {available ? <span className="hub-game-mode"><Smartphone aria-hidden="true" size={12} />{t(modes.local.kind === 'localPersonalSheet' ? 'modes.personal' : 'modes.shared')}</span> : null}
+          {available && modes.lan === 'comingSoon' ? <span className="hub-game-preparing">{t('modes.preparing')}</span> : null}
+          {!available ? <span className="hub-soon-label">{t('comingSoon')}</span> : null}
         </div>
-        <button type="button" className="hub-play" aria-label={available ? `${t('playNow')} ${name}` : `${t('comingSoon')} ${name}`} disabled={!available || busy} aria-busy={busy} onClick={() => void openGame()}>
-          {available ? <><Play aria-hidden="true" size={14} fill="currentColor" />{t(busy ? 'opening' : 'play')}</> : t('comingSoon')}
-        </button>
       </div>
+      <p id={`hub-game-description-${game.id}`} className="hub-visually-hidden">{description}</p>
+      <button
+        type="button"
+        className="hub-card-hit-area"
+        aria-label={available ? `${t('playNow')} ${name}` : `${t('comingSoon')} ${name}`}
+        aria-describedby={`hub-game-description-${game.id}`}
+        disabled={!available || busy}
+        aria-busy={busy}
+        onClick={() => void openGame()}
+      />
     </article>
   )
 }

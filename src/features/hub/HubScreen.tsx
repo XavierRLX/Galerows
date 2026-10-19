@@ -9,17 +9,19 @@ import { loadGameUsageSnapshot, recordGameOpened } from '../games/gameUsage.serv
 import type { GameUsageSnapshot } from '../games/gameUsage.types'
 import { getGameModeCapabilities } from '../games/gameModes.registry'
 import { gamesRegistry } from '../games/games.registry'
-import { shuffle } from '../../lib/utils/shuffle'
 import { usePremiumStore } from '../premium/premium.store'
 import { GameCard } from './GameCard'
 import { HubHeader } from './HubHeader'
 import { HubNativeAdCard } from './HubNativeAdCard'
-import { orderHubGames } from './hubGames.model'
+import { orderHubGames, shouldInsertHubAdAfterCard } from './hubGames.model'
 
 import './hub.css'
 
 const featuredGameId = 'cidade-dorme'
-const sessionGameOrder = shuffle(gamesRegistry).map((game) => game.id)
+const sessionGameOrder = [
+  'impostor-da-palavra', 'pista-unica', 'nem-ferrando',
+  ...gamesRegistry.map((game) => game.id),
+]
 const sessionDiscoverRandom = Math.random()
 
 export function HubScreen() {
@@ -59,9 +61,8 @@ export function HubScreen() {
     gamesRegistry,
     featuredGameId,
     favoritesSnapshot?.favorites.map((favorite) => favorite.gameId) ?? [],
-    badgeIds.discover,
     sessionGameOrder,
-  ), [badgeIds.discover, favoritesSnapshot])
+  ), [favoritesSnapshot])
 
   const handleOpenGame = useCallback(async (gameId: string) => {
     const next = await recordGameOpened(gameId)
@@ -109,7 +110,7 @@ export function HubScreen() {
               onOpenGame={handleOpenGame}
             />
           )).flatMap((card, index) => (
-            canDisplayAds() && !isPremium && (index + 1) % 3 === 0 && index < availableGames.length - 1
+            canDisplayAds() && !isPremium && shouldInsertHubAdAfterCard(index, availableGames.length)
               ? [card, <div className="hub-ad" key={`hub-native-ad-${index}`}><HubNativeAdCard /></div>]
               : [card]
           ))}
