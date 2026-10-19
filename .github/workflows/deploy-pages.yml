@@ -32,7 +32,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: npm run build -- --base=/Galerows/
         env:
           VITE_PRIVACY_POLICY_URL: https://xavierrlx.github.io/Galerows/privacy.html
 
