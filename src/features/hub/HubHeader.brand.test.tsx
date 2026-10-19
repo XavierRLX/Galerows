@@ -42,17 +42,17 @@ describe('Hub header — game launcher', () => {
     expect(shortcuts.querySelectorAll('button')).toHaveLength(1)
     expect(groupButton).toHaveClass('hub-group-card')
     expect(groupButton).toHaveAttribute('aria-describedby', 'hub-group-hint')
-    expect(screen.getByText('Jogadores • Salas em breve')).toBeInTheDocument()
-    expect(screen.queryByText('Criar sala • Entrar em sala')).not.toBeInTheDocument()
+    expect(screen.getByText('Criar • Entrar')).toBeInTheDocument()
+    expect(screen.queryByText('Jogadores • Salas em breve')).not.toBeInTheDocument()
     expect(container.querySelector('.hub-group-card')).toBe(groupButton)
   })
 
-  it('shows create/join only on a native Android build with the lobby flags active', () => {
+  it('keeps the create/join hint visible when native lobby flags are enabled', () => {
     vi.stubEnv('VITE_GAMES_FIRST_LAN_ENTRY', '1')
     vi.stubEnv('VITE_LAN_PERSISTENT_LOBBY_UI', '1')
     nativeLanAvailable.mockReturnValue(true)
     renderHeader()
-    expect(screen.getByText('Criar sala • Entrar em sala')).toBeInTheDocument()
+    expect(screen.getByText('Criar • Entrar')).toBeInTheDocument()
     expect(screen.queryByText('Jogadores • Salas em breve')).not.toBeInTheDocument()
   })
 

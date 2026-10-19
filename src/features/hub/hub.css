@@ -53,10 +53,10 @@
   isolation: isolate;
   display: flex;
   width: 100%;
-  min-height: 116px;
+  min-height: 102px;
   align-items: center;
-  gap: 14px;
-  padding: 18px;
+  gap: 12px;
+  padding: 14px 16px;
   border: 1px solid #d8ccff;
   border-radius: 20px;
   background: #b8a0ff;
@@ -79,10 +79,10 @@
 .hub-group-icon {
   position: relative;
   display: grid;
-  flex: 0 0 66px;
-  height: 69px;
+  flex: 0 0 58px;
+  height: 60px;
   place-items: center;
-  border-radius: 19px;
+  border-radius: 17px;
   background: #241e35;
   color: var(--hub-lime);
   transform: rotate(-6deg);
@@ -90,18 +90,18 @@
 }
 .hub-group-icon svg { transform: rotate(6deg); }
 .hub-group-sparkle { position: absolute; top: -11px; right: -5px; font-size: 20px; color: #fff8d5; }
-.hub-group-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 6px; }
+.hub-group-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 4px; }
 .hub-group-copy strong {
-  font: 800 clamp(20px, 6vw, 25px)/1.05 'Hub Bricolage', sans-serif;
+  font: 800 clamp(19px, 5.8vw, 24px)/1.05 'Hub Bricolage', sans-serif;
   letter-spacing: -.6px;
 }
 .hub-group-copy > span { font-size: 11px; font-weight: 700; line-height: 1.4; color: #3d3053; }
 .hub-group-arrow {
   display: grid;
-  flex: 0 0 33px;
-  height: 33px;
+  flex: 0 0 32px;
+  height: 32px;
   place-items: center;
-  align-self: flex-end;
+  align-self: center;
   border-radius: 50%;
   background: #211a2c;
   color: var(--hub-lime);
@@ -261,8 +261,8 @@
 @media (max-width: 359px) {
   .hub-header, .hub-catalog, .hub-upcoming { padding-inline: 15px; }
   .hub-brand-row h1 img { width: 130px; }
-  .hub-group-card { gap: 11px; padding: 14px; min-height: 110px; }
-  .hub-group-icon { flex-basis: 54px; height: 57px; border-radius: 15px; }
+  .hub-group-card { gap: 10px; padding: 12px; min-height: 96px; }
+  .hub-group-icon { flex-basis: 51px; height: 54px; border-radius: 15px; }
   .hub-group-copy strong { font-size: 19px; }
   .hub-group-copy > span { font-size: 10px; }
   .hub-group-arrow { flex-basis: 30px; height: 30px; }

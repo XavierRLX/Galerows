@@ -2,15 +2,10 @@ import { ArrowUpRight, Settings, UsersRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../../components/ui/Button'
-import { lanNativeMvpAvailable } from '../multiplayer/lan/lanPlatform'
 
 export function HubHeader() {
   const { t } = useTranslation('hub')
   const navigate = useNavigate()
-  const roomLobbyAvailable = import.meta.env.VITE_GAMES_FIRST_LAN_ENTRY === '1'
-    && import.meta.env.VITE_LAN_PERSISTENT_LOBBY_UI === '1'
-    && lanNativeMvpAvailable()
-
   return (
     <header className="hub-header">
       <div className="hub-brand-row">
@@ -36,7 +31,7 @@ export function HubHeader() {
           </span>
           <span className="hub-group-copy">
             <strong>{t('myGroup')}</strong>
-            <span id="hub-group-hint">{t(roomLobbyAvailable ? 'groupLobbyHint' : 'groupLobbyUnavailableHint')}</span>
+            <span id="hub-group-hint">{t('groupLobbyHint')}</span>
           </span>
           <span className="hub-group-arrow" aria-hidden="true"><ArrowUpRight size={19} strokeWidth={2.6} /></span>
         </button>
