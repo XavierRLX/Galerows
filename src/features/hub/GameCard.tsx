@@ -1,4 +1,4 @@
-import { Heart, Smartphone, Users, Wifi } from 'lucide-react'
+import { Heart, Play, Smartphone, Users, Wifi } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,11 +21,13 @@ type GameCardProps = {
   badgeLabel?: string
   isFavorite?: boolean
   featured?: boolean
+  presentation?: 'standard' | 'coverflow'
+  isActive?: boolean
   onOpenGame?: (gameId: string) => Promise<void> | void
   revealIndex?: number
 }
 
-export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLabel] : [], isFavorite = false, featured = false, onOpenGame, revealIndex = 0 }: GameCardProps) {
+export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLabel] : [], isFavorite = false, featured = false, presentation = 'standard', isActive = true, onOpenGame, revealIndex = 0 }: GameCardProps) {
   const { t } = useTranslation('hub')
   const navigate = useNavigate()
   const { showFakeAd } = useFakeAd()
@@ -58,7 +60,7 @@ export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLa
   }
 
   return (
-    <article className={`hub-game${available ? '' : ' hub-game-soon'}`} style={style} aria-labelledby={`hub-game-${game.id}`}>
+    <article className={`hub-game${presentation === 'coverflow' ? ' hub-game-coverflow' : ''}${available ? '' : ' hub-game-soon'}`} style={style} aria-hidden={presentation === 'coverflow' && !isActive ? true : undefined} aria-labelledby={`hub-game-${game.id}`}>
       <div className="hub-game-art" aria-hidden="true">
         {game.coverImage ? <img src={game.coverImage} alt="" loading={featured ? 'eager' : 'lazy'} decoding="async" /> : <GameIcon name={game.iconName} size={38} />}
       </div>
@@ -73,15 +75,17 @@ export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLa
       ) : null}
       <div className="hub-game-body">
         <h3 id={`hub-game-${game.id}`}>{name}</h3>
+        {presentation === 'coverflow' ? <p id={`hub-game-description-${game.id}`} className="hub-game-description">{description}</p> : null}
         <div className="hub-game-meta">
           <span><Users aria-hidden="true" size={12} />{t('playerRange', { range: players })}</span>
           {available ? <span className="hub-game-mode"><Smartphone aria-hidden="true" size={12} />{t(modes.local.kind === 'localPersonalSheet' ? 'modes.personal' : 'modes.shared')}</span> : null}
           {available && modes.lan === 'comingSoon' ? <span className="hub-game-preparing">{t('modes.preparing')}</span> : null}
           {!available ? <span className="hub-soon-label">{t('comingSoon')}</span> : null}
         </div>
+        {presentation === 'coverflow' && isActive ? <span className="hub-play" aria-hidden="true"><Play size={15} fill="currentColor" />{t('playNow')}</span> : null}
       </div>
-      <p id={`hub-game-description-${game.id}`} className="hub-visually-hidden">{description}</p>
-      <button
+      {presentation !== 'coverflow' ? <p id={`hub-game-description-${game.id}`} className="hub-visually-hidden">{description}</p> : null}
+      {(presentation !== 'coverflow' || isActive) ? <button
         type="button"
         className="hub-card-hit-area"
         aria-label={available ? `${t('playNow')} ${name}` : `${t('comingSoon')} ${name}`}
@@ -89,7 +93,7 @@ export function GameCard({ game, badgeLabel, badgeLabels = badgeLabel ? [badgeLa
         disabled={!available || busy}
         aria-busy={busy}
         onClick={() => void openGame()}
-      />
+      /> : null}
     </article>
   )
 }

@@ -1,0 +1,393 @@
+/* The carousel inherits the existing Galerows brand tokens from hub.css. */
+/* A game keeps its identity and DOM node for the full orbit, including wraparound. */
+.hub-discovery { min-width: 0; }
+.hub-coverflow {
+  margin-inline: -20px;
+  outline-offset: -3px;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.hub-coverflow-stage {
+  position: relative;
+  display: block;
+  height: clamp(340px, 101vw, 450px);
+  overflow: hidden;
+  isolation: isolate;
+  perspective: 780px;
+}
+.hub-coverflow-item {
+  position: absolute;
+  width: clamp(195px, 60vw, 264px);
+  height: clamp(328px, 96vw, 416px);
+  left: 50%;
+  top: 50%;
+  border-radius: 22px;
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+.hub-coverflow-item .hub-game-coverflow {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #18131f;
+  border: 1.5px solid color-mix(in srgb, var(--game-accent) 68%, #fff 32%);
+  border-radius: 22px;
+  box-shadow: 0 9px 25px #0009;
+  overflow: hidden;
+  animation: none;
+}
+.hub-coverflow-item[data-active='true'] .hub-game-coverflow {
+  border-color: color-mix(in srgb, var(--game-accent) 90%, #fff 10%);
+  box-shadow: 0 14px 36px #0009, 0 0 18px #b8a0ff23;
+}
+.hub-game-coverflow .hub-game-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  aspect-ratio: auto;
+}
+.hub-game-coverflow .hub-game-art > img { object-position: center 36%; }
+.hub-game-coverflow .hub-game-art::after {
+  background: linear-gradient(0deg, #100e18 0%, #100e18ed 20%, #100e18bc 40%, #100e1832 72%, #100e1820 100%);
+}
+.hub-game-coverflow .hub-game-badges {
+  inset: 13px 12px auto;
+  opacity: var(--card-focus, 0);
+}
+.hub-game-coverflow .hub-game-badges > span {
+  font-size: 10px;
+  padding: 5px 9px;
+  border-radius: 9px;
+}
+.hub-game-coverflow .hub-game-category { display: none; }
+.hub-game-coverflow .hub-game-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  justify-content: end;
+  padding: 148px 15px 15px;
+  opacity: var(--card-focus, 0);
+}
+.hub-coverflow-item[data-active='false'] .hub-game-body { pointer-events: none; }
+.hub-game-coverflow .hub-game-body h3 {
+  font-size: clamp(24px, 6vw, 30px);
+  line-height: 1.06;
+  max-width: 100%;
+  margin-bottom: 7px;
+  letter-spacing: -.8px;
+}
+.hub-game-coverflow .hub-game-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  color: #e2dce8;
+}
+.hub-game-coverflow .hub-game-meta {
+  font-size: 10px;
+  margin-bottom: 10px;
+  gap: 6px 10px;
+  color: #e9e0ef;
+}
+.hub-game-coverflow .hub-game-meta svg { width: 14px; height: 14px; }
+.hub-game-coverflow .hub-play {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  font-weight: 800;
+  pointer-events: none;
+  min-height: 44px;
+  border-radius: 14px;
+  background: var(--hub-lime);
+  color: #1d2510;
+  font-size: 13px;
+}
+.hub-coverflow-side-title {
+  position: absolute;
+  z-index: 2;
+  left: 14px;
+  right: 14px;
+  bottom: 21px;
+  color: #f5f3ef;
+  font: 800 clamp(17px, 4.7vw, 22px)/1.08 'Hub Bricolage', sans-serif;
+  text-shadow: 0 2px 9px #000b;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  opacity: calc(1 - var(--card-focus, 0));
+  pointer-events: none;
+}
+.hub-coverflow-select {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
+  background: transparent;
+  border: 0;
+}
+.hub-coverflow-item[data-active='true'] .hub-coverflow-side-title {
+  pointer-events: none;
+}
+.hub-carousel-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 13px;
+  margin-top: -1px;
+}
+.hub-carousel-controls > button,
+.hub-carousel-controls > span:first-child,
+.hub-carousel-controls > span:last-child {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #ffffff1b;
+  border-radius: 50%;
+  background: #ffffff06;
+  color: #d8cde8;
+}
+.hub-carousel-controls > span:first-child,
+.hub-carousel-controls > span:last-child { visibility: hidden; }
+.hub-carousel-position {
+  display: inline-flex;
+  justify-content: center;
+  gap: 9px;
+  min-width: 60px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--hub-lime);
+  font-variant-numeric: tabular-nums;
+}
+.hub-carousel-position span { color: #827b8e; }
+.hub-quick-access { margin: 9px 0 0; }
+.hub-quick-heading { display: flex; gap: 10px; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+.hub-quick-heading h3 { display: flex; align-items: center; gap: 8px; margin: 0; font: 800 18px/1.2 'Hub Bricolage', sans-serif; }
+.hub-quick-heading h3 svg { color: var(--hub-purple); }
+.hub-quick-heading > span { color: #aba2b6; font-size: 10px; flex-shrink: 0; }
+.hub-quick-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+.hub-quick-list-expanded { grid-template-columns: repeat(auto-fill, minmax(66px, 1fr)); }
+.hub-quick-card, .hub-quick-more {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 3 / 4.3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+  border: 1px solid #b8a0ff40;
+  border-radius: 13px;
+  padding: 5px 4px 8px;
+  background: #211a2f;
+  color: #f5f3ef;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: 0 4px 12px #0004;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+.hub-quick-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hub-quick-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, #120e18f5 0%, #120e18bf 30%, transparent 68%); }
+.hub-quick-card > span,
+.hub-quick-more > span {
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.hub-quick-card[aria-pressed='true'] { border-color: var(--hub-lime); box-shadow: 0 0 0 1px var(--hub-lime), 0 4px 15px #d2f86a1c; }
+.hub-quick-favorite { color: #ffa9b9; position: absolute; z-index: 2; top: 4px; right: 4px; }
+.hub-quick-more {
+  justify-content: center;
+  gap: 8px;
+  border-color: #b8a0ff38;
+  background: linear-gradient(135deg, #302244, #1f192d);
+  color: #e2d4ff;
+}
+.hub-quick-more svg { color: var(--hub-purple); }
+.hub-carousel-empty { color: #c3bbce; padding: 28px 0; text-align: center; }
+.hub-ad-after-discovery { margin-top: 20px; }
+@media (min-width: 540px) {
+  .hub-coverflow { margin-inline: -28px; }
+  .hub-coverflow-stage { max-width: 820px; margin-inline: auto; }
+  .hub-quick-access { max-width: 700px; margin-inline: auto; }
+  .hub-quick-list { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  .hub-quick-list-expanded { grid-template-columns: repeat(auto-fill, minmax(108px, 1fr)); }
+  .hub-quick-card, .hub-quick-more { aspect-ratio: 4 / 4.2; }
+}
+@media (max-width: 359px) {
+  .hub-coverflow { margin-inline: -16px; }
+  .hub-quick-list { gap: 5px; }
+  .hub-quick-card, .hub-quick-more { border-radius: 10px; }
+  .hub-quick-card > span, .hub-quick-more > span { font-size: 9px; }
+  .hub-quick-heading h3 { font-size: 16px; }
+}
+@media (hover: hover) {
+  .hub-quick-card:hover, .hub-quick-more:hover { border-color: var(--hub-purple); transform: translateY(-2px); }
+  .hub-carousel-controls > button:hover { background: #b8a0ff18; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hub-quick-card, .hub-quick-more { transition: none; }
+  .hub-coverflow-item .hub-game { animation: none; }
+}
+
+
+.hub-carousel-dots {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  max-width: min(90vw, 360px);
+  margin: 5px auto 15px;
+  gap: 1px;
+}
+.hub-carousel-dots button {
+  width: 23px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 100px;
+  background: none;
+  color: var(--hub-purple);
+}
+.hub-carousel-dots button span {
+  width: 6px;
+  height: 6px;
+  border-radius: 99px;
+  background: #756880;
+  transition: width 180ms ease, background-color 180ms ease;
+}
+.hub-carousel-dots button[aria-current='true'] span {
+  width: 18px;
+  height: 7px;
+  background: var(--hub-lime);
+  box-shadow: 0 0 10px #d2f86a55;
+}
+@media (max-width: 359px) {
+  .hub-coverflow-item { width: clamp(195px, 60vw, 228px); }
+  .hub-carousel-dots button { width: 21px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hub-carousel-dots button span { transition: none; }
+}
+
+/* All currently available games remain discoverable as a two-row launcher.
+   The single hero slide scales by viewport HEIGHT, not by screen WIDTH alone. */
+@media (max-width: 539px) {
+  .hub-coverflow { margin-inline: -18px; }
+  .hub-coverflow-stage {
+    height: clamp(190px, calc(100dvh - 535px), 320px);
+  }
+  .hub-coverflow-item {
+    width: clamp(158px, 48vw, 215px);
+    height: calc(100% - 12px);
+  }
+  .hub-game-coverflow .hub-game-body { padding: 48px 10px 10px; }
+  .hub-game-coverflow .hub-game-body h3 {
+    font-size: clamp(18px, 4.9vw, 22px);
+    letter-spacing: -0.4px;
+    margin-bottom: 4px;
+  }
+  .hub-game-coverflow .hub-game-description {
+    font-size: 9.5px;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .hub-game-coverflow .hub-game-meta {
+    font-size: 9px;
+    gap: 3px 7px;
+    margin-bottom: 7px;
+  }
+  .hub-game-coverflow .hub-game-meta svg { width: 12px; height: 12px; }
+  .hub-game-coverflow .hub-play {
+    min-height: 36px;
+    font-size: 11.5px;
+    border-radius: 11px;
+  }
+  .hub-game-coverflow .hub-game-badges { inset: 9px 9px auto; }
+  .hub-game-coverflow .hub-game-badges > span { font-size: 9px; padding: 3px 6px; }
+  .hub-coverflow-side-title { bottom: 15px; font-size: clamp(14px, 4.1vw, 18px); }
+  .hub-carousel-controls { margin-top: 0; gap: 10px; }
+  .hub-carousel-controls > button,
+  .hub-carousel-controls > span:first-child,
+  .hub-carousel-controls > span:last-child { width: 36px; height: 36px; }
+  .hub-carousel-dots { margin: 0 auto 6px; gap: 0; }
+  .hub-carousel-dots button { width: 25px; height: 22px; }
+  .hub-quick-access { margin-top: 0; }
+  .hub-quick-heading { margin-bottom: 6px; align-items: center; }
+  .hub-quick-heading h3 { font-size: 15px; gap: 6px; }
+  .hub-quick-heading h3 svg { width: 15px; height: 15px; }
+  .hub-quick-list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .hub-quick-card {
+    aspect-ratio: 1;
+    min-height: 44px;
+    padding: 4px 2px 5px;
+    border-radius: 10px;
+  }
+  .hub-quick-card > span {
+    font-size: clamp(8px, 2.15vw, 9px);
+    line-height: 1.08;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+@media (max-width: 359px) {
+  .hub-coverflow { margin-inline: -15px; }
+  .hub-quick-list { gap: 5px; }
+  .hub-quick-card > span { font-size: 8px; }
+}
+@media (max-width: 539px) and (max-height: 735px) {
+  .hub-game-coverflow .hub-game-description { display: none; }
+  .hub-game-coverflow .hub-game-body { padding-top: 42px; }
+  .hub-game-coverflow .hub-game-body h3 { font-size: 18px; }
+}
+@media (min-width: 540px) {
+  .hub-quick-list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .hub-quick-card {
+    aspect-ratio: 1;
+    min-height: 52px;
+  }
+}
+
+/* Very short phones keep the complete game launcher above the gesture bar
+   when possible; for extreme display scaling the Home still scrolls naturally. */
+@media (max-width: 539px) and (max-height: 700px) {
+  .hub-coverflow-stage { height: 184px; }
+  .hub-carousel-dots button { height: 18px; }
+  .hub-quick-heading { margin-bottom: 4px; }
+  .hub-coverflow-item { width: clamp(142px, 43vw, 165px); }
+}
+
+/* Tablets and foldables retain the exact same five-column game hub,
+   without scaling the cards and empty spacing proportionally to width. */
+@media (min-width: 540px) and (max-height: 1120px) {
+  .hub-coverflow-stage { height: clamp(288px, 40dvh, 340px); }
+  .hub-coverflow-item { height: calc(100% - 14px); width: clamp(210px, 29vw, 240px); }
+  .hub-quick-list { grid-template-columns: repeat(5, minmax(0, 96px)); justify-content: center; }
+  .hub-quick-card { min-height: 70px; }
+}

@@ -130,5 +130,21 @@
     "mimica": "Sin decir una palabra",
     "taboo": "Palabras prohibidas",
     "cidade-dorme": "Engaño y deducción"
+  },
+  "carousel": {
+    "ariaLabel": "Carrusel de juegos",
+    "previous": "Juego anterior",
+    "next": "Siguiente juego",
+    "view": "Ver {{name}}",
+    "select": "Seleccionar {{name}}",
+    "allGames": "Todos los juegos",
+    "availableCount": "{{count}} disponibles",
+    "showAll": "Mostrar todos los juegos",
+    "collapse": "Ocultar juegos",
+    "moreGames": "+{{count}} juegos",
+    "lessGames": "Menos juegos",
+    "empty": "No hay juegos disponibles en este modo.",
+    "pagination": "Paginación de juegos",
+    "goTo": "Ir a {{name}}"
   }
 }

@@ -4,7 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.galerows.app',
   appName: 'Galerows',
   webDir: 'dist',
-  backgroundColor: '#020617',
+  backgroundColor: '#101014',
   android: {
     // LAN invite/resume/rekey credentials pass through the Capacitor bridge. Its debug
     // logger includes complete plugin arguments and WebView console payloads in logcat.
@@ -33,7 +33,7 @@ const config: CapacitorConfig = {
     StatusBar: {
       overlaysWebView: true,
       style: 'DARK',
-      backgroundColor: '#020617',
+      backgroundColor: '#101014',
     },
   },
 }

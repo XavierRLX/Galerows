@@ -21,18 +21,22 @@ afterEach(async () => {
 describe('HubScreen usage badges', () => {
   it('shows the complete catalog to a newcomer without LAN setup', () => {
     render(<MemoryRouter initialEntries={['/']}><HubScreen /></MemoryRouter>)
-    expect(screen.getAllByRole('button', { name: /^Jogar agora / })).toHaveLength(10)
+    expect(screen.getAllByRole('button', { name: /^Jogar agora / })).toHaveLength(1)
     expect(screen.getAllByRole('button', { name: /^Em breve / })).toHaveLength(3)
-    expect(screen.getByRole('heading', { name: 'Impostor da Palavra' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Selecionar Impostor da Palavra' })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /^Ir para / })).toHaveLength(10)
     expect(screen.queryByRole('button', { name: /Voltar à sala/ })).not.toBeInTheDocument()
   })
 
-  it('starts with a stable two-column game selection, without a full-width hero card', () => {
-    const { container } = render(<MemoryRouter><HubScreen /></MemoryRouter>)
-    const grid = container.querySelector('.hub-game-grid')
-    const names = Array.from(grid?.querySelectorAll('.hub-game h3') ?? []).slice(0, 4).map((node) => node.textContent)
-    expect(names).toEqual(['Cidade Dorme', 'Impostor da Palavra', 'Pista Única', 'Nem Ferrando'])
-    expect(grid?.querySelector('.hub-game-featured')).not.toBeInTheDocument()
+  it('shows the featured coverflow with all ten quick-access previews on the Home', () => {
+    render(<MemoryRouter><HubScreen /></MemoryRouter>)
+    expect(screen.getByRole('region', { name: 'Carrossel de jogos' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Cidade Dorme' })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /^Selecionar / })).toHaveLength(10)
+    expect(screen.queryByRole('button', { name: 'Mostrar todos os jogos' })).not.toBeInTheDocument()
+    for (const name of ['Cidade Dorme', 'Impostor da Palavra', 'Pista Única', 'Nem Ferrando']) {
+      expect(screen.getByRole('button', { name: `Selecionar ${name}` })).toBeInTheDocument()
+    }
   })
 
   it('filters by the actual device mode and restores the available catalog', async () => {
@@ -47,12 +51,13 @@ describe('HubScreen usage badges', () => {
     expect(screen.queryByRole('button', { name: 'Jogar agora Adedonha' })).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Multiplayer local' }))
     expect(screen.getByRole('status')).toHaveTextContent('3 jogos')
-    for (const name of ['Cidade Dorme', 'Impostor da Palavra', 'Pista Única']) {
-      expect(screen.getByRole('button', { name: `Jogar agora ${name}` })).toBeInTheDocument()
-    }
-    expect(screen.getAllByRole('button', { name: /^Jogar agora / })).toHaveLength(3)
+    expect(screen.getAllByRole('button', { name: /^Ir para / })).toHaveLength(3)
+    await user.click(screen.getByRole('button', { name: 'Selecionar Impostor da Palavra' }))
+    expect(screen.getByRole('button', { name: 'Jogar agora Impostor da Palavra' })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /^Jogar agora / })).toHaveLength(1)
     await user.click(screen.getByRole('button', { name: 'Todos' }))
-    expect(screen.getAllByRole('button', { name: /^Jogar agora / })).toHaveLength(10)
+    expect(screen.getAllByRole('button', { name: /^Jogar agora / })).toHaveLength(1)
+    expect(screen.getAllByRole('button', { name: /^Ir para / })).toHaveLength(10)
   })
 
   it('keeps the featured badge and shows a discovery badge for an unplayed game', async () => {
@@ -84,7 +89,7 @@ describe('HubScreen usage badges', () => {
 
     render(<MemoryRouter><HubScreen /></MemoryRouter>)
 
-    expect(await screen.findByLabelText('Jogo favorito')).toBeInTheDocument()
+    expect((await screen.findAllByLabelText('Jogo favorito')).length).toBeGreaterThan(0)
   })
 
   it('does not show a discovery badge when every available game has been opened', async () => {

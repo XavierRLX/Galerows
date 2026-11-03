@@ -134,5 +134,21 @@
     "mimica": "Sem dizer uma palavra",
     "taboo": "Palavras proibidas",
     "cidade-dorme": "Blefe e dedução"
+  },
+  "carousel": {
+    "ariaLabel": "Carrossel de jogos",
+    "previous": "Jogo anterior",
+    "next": "Próximo jogo",
+    "view": "Ver {{name}}",
+    "select": "Selecionar {{name}}",
+    "allGames": "Todos os jogos",
+    "availableCount": "{{count}} disponíveis",
+    "showAll": "Mostrar todos os jogos",
+    "collapse": "Recolher jogos",
+    "moreGames": "+{{count}} jogos",
+    "lessGames": "Menos jogos",
+    "empty": "Nenhum jogo disponível neste modo.",
+    "pagination": "Navegação por páginas",
+    "goTo": "Ir para {{name}}"
   }
 }

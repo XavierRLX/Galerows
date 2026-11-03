@@ -3,16 +3,17 @@
 :root {
   color-scheme: dark;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #020617;
+  background: #101014;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
 * { box-sizing: border-box; }
-html { background: #020617; }
+html { background: #101014; }
 html, body, #root { min-height: 100%; }
-body { margin: 0; min-width: 320px; min-height: 100dvh; overscroll-behavior-y: none; background: #020617; }
+body { margin: 0; min-width: 320px; min-height: 100dvh; overscroll-behavior-y: none; background: #101014; }
+#root { background: #101014; }
 button, a { touch-action: manipulation; }
 .hub-header-panel {
   border-bottom-left-radius: 2.5rem;
@@ -73,6 +74,8 @@ button, a { touch-action: manipulation; }
   .nf-card-enter, .nf-answer-reveal, .ultima-pista-card-settle, .ultima-pista-shuffle-top, .ultima-pista-shuffle-middle, .ultima-pista-shuffle-bottom, .ultima-pista-order-top, .ultima-pista-order-middle, .ultima-pista-back { animation: none; }
 }
 .safe-area {
+  box-sizing: border-box;
+  background: transparent;
   padding-top: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
   padding-right: var(--safe-area-inset-right, env(safe-area-inset-right, 0px));
   padding-bottom: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));

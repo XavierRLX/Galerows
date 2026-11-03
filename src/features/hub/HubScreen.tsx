@@ -11,9 +11,10 @@ import { getGameModeCapabilities } from '../games/gameModes.registry'
 import { gamesRegistry } from '../games/games.registry'
 import { usePremiumStore } from '../premium/premium.store'
 import { GameCard } from './GameCard'
+import { GameCoverflow } from './GameCoverflow'
 import { HubHeader } from './HubHeader'
 import { HubNativeAdCard } from './HubNativeAdCard'
-import { orderHubGames, shouldInsertHubAdAfterCard } from './hubGames.model'
+import { orderHubGames } from './hubGames.model'
 
 import './hub.css'
 
@@ -98,23 +99,15 @@ export function HubScreen() {
         </div>
         {modeFilter === 'lan' ? <p className="hub-filter-note">{t('modes.lanDescription')}</p> : null}
         {modeFilter === 'personal' ? <p className="hub-filter-note">{t('modes.personalDescription')}</p> : null}
-        <div className="hub-game-grid">
-          {availableGames.map((game, index) => (
-            <GameCard
-              badgeLabels={getBadgeLabels(game.id)}
-              game={game}
-              featured={game.id === featuredGameId}
-              isFavorite={favoritesSnapshot?.favorites.some((favorite) => favorite.gameId === game.id) ?? false}
-              key={game.id}
-              revealIndex={index}
-              onOpenGame={handleOpenGame}
-            />
-          )).flatMap((card, index) => (
-            canDisplayAds() && !isPremium && shouldInsertHubAdAfterCard(index, availableGames.length)
-              ? [card, <div className="hub-ad" key={`hub-native-ad-${index}`}><HubNativeAdCard /></div>]
-              : [card]
-          ))}
-        </div>
+        <GameCoverflow
+          games={availableGames}
+          getBadges={getBadgeLabels}
+          isFavorite={gameId => favoritesSnapshot?.favorites.some(favorite => favorite.gameId === gameId) ?? false}
+          onOpenGame={handleOpenGame}
+        />
+        {canDisplayAds() && !isPremium && availableGames.length > 3
+          ? <div className="hub-ad hub-ad-after-discovery"><HubNativeAdCard /></div>
+          : null}
       </section>
       {modeFilter === 'all' ? <section className="hub-upcoming" aria-labelledby="hub-upcoming-title">
         <div className="hub-section-heading"><h2 id="hub-upcoming-title">{t('upcomingTitle')}</h2><span>{t('comingSoon')}</span></div>

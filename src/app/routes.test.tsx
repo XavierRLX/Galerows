@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeAll, describe, expect, it } from 'vitest'
@@ -7,6 +7,15 @@ import { AppRoutes } from './routes'
 
 beforeAll(async () => { await initializeI18n() })
 afterEach(() => cleanup())
+async function playGameFromHub(user: ReturnType<typeof userEvent.setup>, name: string) {
+  // The complete quick-access grid is always visible; no expansion is required.
+  await user.click(screen.getByRole('button', { name: `Selecionar ${name}` }))
+  const play = await screen.findByRole('button', { name: `Jogar agora ${name}` })
+  await waitFor(() => {
+    expect(Number(play.closest<HTMLElement>('.hub-coverflow-item')?.style.getPropertyValue('--card-focus'))).toBeGreaterThan(.95)
+  }, { timeout: 2000 })
+  await user.click(play)
+}
 describe('app navigation', () => {
   it('keeps privacy information permanently accessible from settings', async () => {
     const user = userEvent.setup()
@@ -33,7 +42,7 @@ describe('app navigation', () => {
   it('opens Nem Ferrando internally and returns to the Hub', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getByRole('button', { name: /jogar agora nem ferrando/i }))
+    await playGameFromHub(user, 'Nem Ferrando')
     expect(await screen.findByRole('heading', { name: 'Nem Ferrando', level: 1 })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /voltar/i }))
     expect(screen.getByRole('heading', { name: /jogos da galera/i })).toBeInTheDocument()
@@ -42,42 +51,42 @@ describe('app navigation', () => {
   it('opens Impostor da Palavra internally', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getByRole('button', { name: /jogar agora impostor da palavra/i }))
+    await playGameFromHub(user, 'Impostor da Palavra')
     expect(await screen.findByRole('heading', { name: 'Impostor da Palavra', level: 1 })).toBeInTheDocument()
   })
 
   it('opens Quem Sou Eu internally', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getByRole('button', { name: /jogar agora quem sou eu/i }))
+    await playGameFromHub(user, 'Quem Sou Eu')
     expect(await screen.findByRole('heading', { name: 'Quem Sou Eu', level: 1 })).toBeInTheDocument()
   })
 
   it('opens Adedonha internally', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getByRole('button', { name: /jogar agora adedonha/i }))
+    await playGameFromHub(user, 'Adedonha')
     expect(await screen.findByRole('heading', { name: 'Adedonha', level: 1 })).toBeInTheDocument()
   })
 
   it('opens Mímica internally', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getByRole('button', { name: /jogar agora mímica/i }))
+    await playGameFromHub(user, 'Mímica')
     expect(await screen.findByRole('heading', { name: 'Mímica', level: 1 })).toBeInTheDocument()
   })
 
   it('opens Cidade Dorme from the Hub', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getByRole('button', { name: /jogar agora cidade dorme/i }))
+    await playGameFromHub(user, 'Cidade Dorme')
     expect(await screen.findByRole('heading', { name: 'Cidade Dorme', level: 1 })).toBeInTheDocument()
   })
 
   it('opens Última Pista from the Hub', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/']}><AppRoutes /></MemoryRouter>)
-    await user.click(screen.getByRole('button', { name: /jogar agora última pista/i }))
+    await playGameFromHub(user, 'Última Pista')
     expect(await screen.findByRole('heading', { name: 'Última Pista', level: 1 })).toBeInTheDocument()
   })
 })

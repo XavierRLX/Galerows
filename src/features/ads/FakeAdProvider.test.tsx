@@ -52,6 +52,7 @@ describe('FakeAdProvider', () => {
     vi.useRealTimers()
     renderAppAt('/')
 
+    fireEvent.click(screen.getByRole('button', { name: 'Selecionar Nem Ferrando' }))
     fireEvent.click(screen.getByRole('button', { name: /jogar agora nem ferrando/i }))
     await flushAsyncWork()
 
@@ -82,6 +83,7 @@ describe('FakeAdProvider', () => {
     usePremiumStore.setState({ isPremium: true })
     renderAppAt('/')
 
+    fireEvent.click(screen.getByRole('button', { name: 'Selecionar Nem Ferrando' }))
     fireEvent.click(screen.getByRole('button', { name: /jogar agora nem ferrando/i }))
     await flushAsyncWork()
 

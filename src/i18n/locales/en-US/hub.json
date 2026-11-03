@@ -130,5 +130,21 @@
     "mimica": "Without a word",
     "taboo": "Forbidden words",
     "cidade-dorme": "Bluff and deduction"
+  },
+  "carousel": {
+    "ariaLabel": "Game carousel",
+    "previous": "Previous game",
+    "next": "Next game",
+    "view": "View {{name}}",
+    "select": "Select {{name}}",
+    "allGames": "All games",
+    "availableCount": "{{count}} available",
+    "showAll": "Show all games",
+    "collapse": "Collapse games",
+    "moreGames": "+{{count}} games",
+    "lessGames": "Fewer games",
+    "empty": "No games available in this mode.",
+    "pagination": "Game pagination",
+    "goTo": "Go to {{name}}"
   }
 }
